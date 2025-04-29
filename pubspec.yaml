@@ -47,7 +47,8 @@ dependencies:
   web: ^1.1.0
   flutter_colorpicker: ^1.1.0
   flutter_typeahead: ^5.2.0
-  pdfx: ^2.9.0
+  pdfx:
+    git: https://github.com/pauloalvesdesenv/pdfx
   mime: ^2.0.0
   cached_network_image: ^3.3.1
   collection: any
@@ -62,7 +63,7 @@ dependencies:
   share_plus: ^11.0.0
   printing: ^5.13.1
   info_popup:
-    path: packages/info_popup
+    git: https://github.com/pauloalvesdesenv/info_popup
   gap: ^3.0.1
   http: any
 
