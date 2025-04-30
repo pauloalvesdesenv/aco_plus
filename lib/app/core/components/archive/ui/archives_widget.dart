@@ -61,7 +61,9 @@ class ArchivesWidget extends StatelessWidget {
                   inList: true,
                   onDelete: (e) async {
                     if (!await showConfirmDialog('Deseja excluir anexo?',
-                        'Anexo não estará mais disponível')) return false;
+                        'Anexo não estará mais disponível')) {
+                      return false;
+                    }
                     archives.remove(e);
                     onChanged.call();
                   },

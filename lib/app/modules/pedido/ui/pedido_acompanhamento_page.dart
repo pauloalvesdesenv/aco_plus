@@ -47,8 +47,9 @@ class _PedidoAcompanhamentoPageState extends State<PedidoAcompanhamentoPage>
           backgroundColor: AppColors.primaryMain,
           actions: [
             IconButton(
-                onPressed: () async =>
-                    Clipboard.setData(ClipboardData(text: 'https://aco-plus-fa455.web.app/acompanhamento/pedidos/${pedido.id}')),
+                onPressed: () async => Clipboard.setData(ClipboardData(
+                    text:
+                        'https://aco-plus-fa455.web.app/acompanhamento/pedidos/${pedido.id}')),
                 icon: Icon(Icons.copy, color: AppColors.white)),
             const W(12),
             IconButton(

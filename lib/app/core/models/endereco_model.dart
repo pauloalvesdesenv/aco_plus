@@ -10,7 +10,7 @@ class EnderecoModel {
   String bairro = '';
   String localidade = '';
   String estado = '';
-String numero = '';
+  String numero = '';
   String complemento = '';
   double lat = 0.0;
   double lon = 0.0;
@@ -71,7 +71,8 @@ String numero = '';
 
   String toJson() => json.encode(toMap());
 
-  factory EnderecoModel.fromJson(String source) => EnderecoModel.fromMap(json.decode(source));
+  factory EnderecoModel.fromJson(String source) =>
+      EnderecoModel.fromMap(json.decode(source));
 
   @override
   String toString() {

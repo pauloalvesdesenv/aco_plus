@@ -140,14 +140,15 @@ Future selectNotification(String? payload) async {
 
 void handleClickNotification(String payload) {
   if (payload.isNotEmpty) {
-      final response = jsonDecode(payload);
-      switch (response['type']) {
-        case 'event':
+    final response = jsonDecode(payload);
+    switch (response['type']) {
+      case 'event':
         final pedido = FirestoreClient.pedidos.getById(response['id']);
-        push(contextGlobal, PedidoPage(pedido: pedido, reason: PedidoInitReason.page));
-          break;
-        default:
-          break;
-      }
+        push(contextGlobal,
+            PedidoPage(pedido: pedido, reason: PedidoInitReason.page));
+        break;
+      default:
+        break;
+    }
   }
 }

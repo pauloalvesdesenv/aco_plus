@@ -8,13 +8,11 @@ class ProdutoModel {
   final String nome;
   final String descricao;
   final double massaFinal;
-  final FabricanteModel fabricante;
 
   factory ProdutoModel.empty() => ProdutoModel(
       id: HashService.get,
       nome: 'Produto não encontrado',
       descricao: 'Este produto não foi encontrado no sistema',
-      fabricante: FabricanteModel.empty(),
       massaFinal: 0.0);
 
   String get descricaoReplaced =>
@@ -27,11 +25,10 @@ class ProdutoModel {
     required this.id,
     required this.nome,
     required this.descricao,
-    required this.fabricante,
     required this.massaFinal,
   });
 
-  String get label => '$nome - $descricao - $fabricante - $massaFinal';
+  String get label => '$nome - $descricao - $massaFinal';
 
   String get labelMinified => '$nome - $descricao';
 
@@ -40,7 +37,6 @@ class ProdutoModel {
       'id': id,
       'nome': nome,
       'descricao': descricao,
-      'fabricante': fabricante.toMap(),
       'massaFinal': massaFinal,
     };
   }
@@ -51,9 +47,6 @@ class ProdutoModel {
       nome: map['nome'] ?? '',
       descricao: map['descricao'] ?? '',
       massaFinal: double.tryParse(map['massaFinal'].toString()) ?? 0.0,
-      fabricante: map['fabricante'] != null
-          ? FabricanteModel.fromMap(map['fabricante'])
-          : FabricanteModel.empty(),
     );
   }
 
@@ -73,7 +66,6 @@ class ProdutoModel {
       id: id ?? this.id,
       nome: nome ?? this.nome,
       descricao: descricao ?? this.descricao,
-      fabricante: fabricante ?? this.fabricante,
       massaFinal: massaFinal ?? this.massaFinal,
     );
   }

@@ -5,14 +5,12 @@ import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
-import 'package:aco_plus/app/core/utils/global_resource.dart';
-import 'package:aco_plus/app/modules/pedido/ui/pedido_page.dart';
 import 'package:flutter/material.dart';
 
 class PedidoItemWidget extends StatelessWidget {
   final PedidoModel pedido;
   final Function(PedidoModel) onTap;
-    const PedidoItemWidget({
+  const PedidoItemWidget({
     super.key,
     required this.pedido,
     required this.onTap,

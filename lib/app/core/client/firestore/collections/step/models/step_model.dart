@@ -22,19 +22,18 @@ class StepModel {
   bool isPermiteProducao = false;
 
   static StepModel notFound = StepModel(
-    createdAt: DateTime.now(),
-    fromStepsIds: [],
-    isDefault: false,
-    moveRoles: [],
-    color: Colors.transparent,
-    id: 'step-not-found',
-    name: 'step-not-found',
-    index: 100000000,
-    isShipping: false,
-    shipping: null,
-    isArchivedAvailable: false,
-    isPermiteProducao: false
-  );
+      createdAt: DateTime.now(),
+      fromStepsIds: [],
+      isDefault: false,
+      moveRoles: [],
+      color: Colors.transparent,
+      id: 'step-not-found',
+      name: 'step-not-found',
+      index: 100000000,
+      isShipping: false,
+      shipping: null,
+      isArchivedAvailable: false,
+      isPermiteProducao: false);
 
   List<StepModel> get fromSteps => fromStepsIds
       .map((e) => FirestoreClient.steps
@@ -59,21 +58,20 @@ class StepModel {
     required this.isPermiteProducao,
   });
 
-  StepModel copyWith({
-    String? id,
-    String? name,
-    Color? color,
-    List<String>? fromStepsIds,
-    List<String>? toStepsIds,
-    List<UsuarioRole>? moveRoles,
-    DateTime? createdAt,
-    int? index,
-    bool? isDefault,
-    bool? isShipping,
-    StepShippingModel? shipping,
-    bool? isArchivedAvailable,
-    bool? isPermiteProducao
-  }) {
+  StepModel copyWith(
+      {String? id,
+      String? name,
+      Color? color,
+      List<String>? fromStepsIds,
+      List<String>? toStepsIds,
+      List<UsuarioRole>? moveRoles,
+      DateTime? createdAt,
+      int? index,
+      bool? isDefault,
+      bool? isShipping,
+      StepShippingModel? shipping,
+      bool? isArchivedAvailable,
+      bool? isPermiteProducao}) {
     return StepModel(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -133,8 +131,8 @@ class StepModel {
         shipping: map['shipping'] != null
             ? StepShippingModel.fromMap(map['shipping'])
             : null,
-            isArchivedAvailable: false,
-            isPermiteProducao: false,
+        isArchivedAvailable: false,
+        isPermiteProducao: false,
       );
     }
     return StepModel(

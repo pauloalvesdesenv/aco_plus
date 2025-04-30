@@ -1,6 +1,5 @@
 import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
-import 'package:aco_plus/app/core/models/endereco_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 
@@ -77,7 +76,8 @@ class ClienteCollection {
     });
   }
 
-  ClienteModel getById(String id) => data.firstWhereOrNull((e) => e.id == id) ?? ClienteModel.empty();
+  ClienteModel getById(String id) =>
+      data.firstWhereOrNull((e) => e.id == id) ?? ClienteModel.empty();
 
   Future<ClienteModel?> add(ClienteModel model) async {
     await collection.doc(model.id).set(model.toMap());

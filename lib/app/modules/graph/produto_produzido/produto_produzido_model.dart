@@ -1,9 +1,4 @@
-
-enum ProdutoProduzido {
-  day,
-  week,
-  month
-}
+enum ProdutoProduzido { day, week, month }
 
 class ProdutoProduzidoModel {
   final DateTime date;

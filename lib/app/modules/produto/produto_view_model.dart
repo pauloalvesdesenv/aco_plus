@@ -25,15 +25,12 @@ class ProdutoCreateModel {
         isEdit = true {
     nome.text = produto.nome;
     descricao.text = produto.descricao;
-    fabricante = produto.fabricante;
     massaFinal = TextController.number(value: produto.massaFinal);
   }
 
   ProdutoModel toProdutoModel() => ProdutoModel(
-        id: id,
-        nome: nome.text,
-        descricao: descricao.text,
-        fabricante: fabricante!,
-        massaFinal: massaFinal.doubleValue
-      );
+      id: id,
+      nome: nome.text,
+      descricao: descricao.text,
+      massaFinal: massaFinal.doubleValue);
 }

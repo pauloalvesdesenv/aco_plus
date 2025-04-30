@@ -204,7 +204,9 @@ class StepController {
   void onUndoStep(PedidoModel pedido) async {
     final step = pedido.steps[pedido.steps.length - 2].step;
     if (!await showConfirmDialog('Deseja voltar para etapa anterior?',
-        'Seu pedido será movido para ${step.name}')) return;
+        'Seu pedido será movido para ${step.name}')) {
+      return;
+    }
     _onMovePedido(pedido, step, 0);
     _onAddStep(pedido, step);
     utilsStream.update();

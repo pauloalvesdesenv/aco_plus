@@ -17,16 +17,17 @@ class NotificationService {
           position: position,
           duration: const Duration(seconds: 4));
 
-  static void showPending(String title, String subtitle) => showOverlayNotification(
-      (context) => NotificationWidget(
-            title: title,
-            subtitle: subtitle,
-            color: AppColors.pending,
-            colorOpacity: AppColors.pending.withOpacity(0.13),
-            icon: Icons.warning_rounded,
-          ),
-      position: NotificationPosition.top,
-      duration: const Duration(seconds: 4));
+  static void showPending(String title, String subtitle) =>
+      showOverlayNotification(
+          (context) => NotificationWidget(
+                title: title,
+                subtitle: subtitle,
+                color: AppColors.pending,
+                colorOpacity: AppColors.pending.withOpacity(0.13),
+                icon: Icons.warning_rounded,
+              ),
+          position: NotificationPosition.top,
+          duration: const Duration(seconds: 4));
 
   static void showNegative(String title, String subtitle,
           {NotificationPosition position = NotificationPosition.top}) =>

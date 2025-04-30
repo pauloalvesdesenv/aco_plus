@@ -60,7 +60,7 @@ class _OrdensConcluidasPageState extends State<OrdensConcluidasPage> {
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<OrdemModel>>(
-        stream: FirestoreClient.ordens.dataConcluidasStream.listen,
+        stream: FirestoreClient.ordens.ordensArquivadasStream.listen,
         builder: (_, __) => StreamOut<OrdemConcluidasUtils>(
           stream: ordemCtrl.utilsConcluidasStream.listen,
           builder: (_, utilsConcluidas) {

@@ -169,11 +169,11 @@ class _PedidosPageState extends State<PedidosPage> {
                           physics: const NeverScrollableScrollPhysics(),
                           cacheExtent: 200,
                           separatorBuilder: (_, i) => const Divisor(),
-                          itemBuilder: (_, i) =>
-                              PedidoItemWidget(pedido: pedidos[i],
-                              onTap: (pedido) =>
-                                  push(PedidoPage(pedido: pedido, reason: PedidoInitReason.page)),
-                              ),
+                          itemBuilder: (_, i) => PedidoItemWidget(
+                            pedido: pedidos[i],
+                            onTap: (pedido) => push(PedidoPage(
+                                pedido: pedido, reason: PedidoInitReason.page)),
+                          ),
                         ),
                 ],
               ),

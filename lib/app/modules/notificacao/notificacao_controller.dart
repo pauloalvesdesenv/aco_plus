@@ -17,10 +17,12 @@ class NotificacaoController {
 
   factory NotificacaoController() => _instance;
 
-  final AppStream<NotificacaoModel?> notificacaoStream = AppStream<NotificacaoModel?>.seed(null);
+  final AppStream<NotificacaoModel?> notificacaoStream =
+      AppStream<NotificacaoModel?>.seed(null);
   NotificacaoModel? get notificacao => notificacaoStream.value;
 
-  final AppStream<NotificacaoUtils> utilsStream = AppStream<NotificacaoUtils>.seed(NotificacaoUtils());
+  final AppStream<NotificacaoUtils> utilsStream =
+      AppStream<NotificacaoUtils>.seed(NotificacaoUtils());
   NotificacaoUtils get utils => utilsStream.value;
 
   void onInit() {
@@ -28,7 +30,8 @@ class NotificacaoController {
     FirestoreClient.notificacoes.fetch();
   }
 
-  List<NotificacaoModel> getNotificacaoesFiltered(String search, List<NotificacaoModel> notificacoes) {
+  List<NotificacaoModel> getNotificacaoesFiltered(
+      String search, List<NotificacaoModel> notificacoes) {
     if (search.length < 3) return notificacoes;
     List<NotificacaoModel> filtered = [];
     for (final notificacao in notificacoes) {
@@ -43,14 +46,18 @@ class NotificacaoController {
     if (await _isDeleteUnavailable(notificacao)) return;
     await FirestoreClient.notificacoes.delete(notificacao);
     pop(_);
-    NotificationService.showPositive('Notificacao Excluido', 'Operação realizada com sucesso', position: NotificationPosition.bottom);
+    NotificationService.showPositive(
+        'Notificacao Excluido', 'Operação realizada com sucesso',
+        position: NotificationPosition.bottom);
   }
 
-  Future<bool> _isDeleteUnavailable(NotificacaoModel notificacao) async => !await onDeleteProcess(
-      deleteTitle: 'Deseja excluir o notificacao?',
-      deleteMessage: 'Todos seus dados serão apagados do sistema',
-      infoMessage: 'Não é possível excluir o notificacao, pois ele está vinculado a outras partes do sistema.',
-      conditional: true);
+  Future<bool> _isDeleteUnavailable(NotificacaoModel notificacao) async =>
+      !await onDeleteProcess(
+          deleteTitle: 'Deseja excluir o notificacao?',
+          deleteMessage: 'Todos seus dados serão apagados do sistema',
+          infoMessage:
+              'Não é possível excluir o notificacao, pois ele está vinculado a outras partes do sistema.',
+          conditional: true);
 
   Future<void> setViewed() async {
     for (final notificacao in FirestoreClient.notificacoes.data) {

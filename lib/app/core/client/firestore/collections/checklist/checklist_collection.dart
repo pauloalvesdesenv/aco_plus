@@ -1,4 +1,3 @@
-
 import 'package:aco_plus/app/core/client/firestore/collections/checklist/models/checklist_model.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -86,7 +85,7 @@ class ChecklistCollection {
 
   Future<ChecklistModel?> update(ChecklistModel model) async {
     await collection.doc(model.id).update(model.toMap());
-      return model;
+    return model;
   }
 
   Future<void> delete(ChecklistModel model) async {

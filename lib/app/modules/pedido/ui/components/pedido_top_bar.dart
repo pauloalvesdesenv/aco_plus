@@ -23,9 +23,9 @@ class PedidoTopBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return reason == PedidoInitReason.page
-        ? _pedidoWidget(context)
-        : _kanbanWidget(context);
+    return reason == PedidoInitReason.kanban
+        ? _kanbanWidget(context)
+        : _pedidoWidget(context);
   }
 
   Widget _kanbanWidget(BuildContext context) => Container(
@@ -142,6 +142,14 @@ class PedidoTopBar extends StatelessWidget implements PreferredSizeWidget {
               child: IconButton(
                   onPressed: () => pedidoCtrl.onArchive(context, pedido),
                   icon: Icon(Icons.archive, color: AppColors.white)),
+            ),
+          if (pedido.isArchived)
+            Tooltip(
+              message: 'Desarquivar pedido',
+              child: IconButton(
+                  onPressed: () =>
+                      pedidoCtrl.onUnArchivePedido(context, pedido),
+                  icon: Icon(Icons.unarchive, color: AppColors.white)),
             ),
           Tooltip(
             message: 'Editar pedido',

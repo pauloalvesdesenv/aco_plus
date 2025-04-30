@@ -5,7 +5,8 @@ import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-AutomatizacaoModel get automatizacaoConfig => FirestoreClient.automatizacao.data;
+AutomatizacaoModel get automatizacaoConfig =>
+    FirestoreClient.automatizacao.data;
 
 class AutomatizacaoCollection {
   static final AutomatizacaoCollection _instance = AutomatizacaoCollection._();

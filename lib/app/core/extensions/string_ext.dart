@@ -1,4 +1,3 @@
-
 import 'package:aco_plus/app/core/components/archive/archive_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';

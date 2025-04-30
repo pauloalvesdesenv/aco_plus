@@ -59,6 +59,15 @@ class _OrdensPageState extends State<OrdensPage> {
             ? []
             : [
                 Tooltip(
+                  message: 'Marcar como arquivada',
+                  child: IconButton(
+                      onPressed: () => ordemCtrl.setArquivadas(),
+                      icon: Icon(
+                        Icons.domain_verification,
+                        color: AppColors.white,
+                      )),
+                ),
+                Tooltip(
                   message: 'Ordens concluídas',
                   child: IconButton(
                       onPressed: () =>
@@ -98,7 +107,7 @@ class _OrdensPageState extends State<OrdensPage> {
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<OrdemModel>>(
-        stream: FirestoreClient.ordens.naoConcluidasStream.listen,
+        stream: FirestoreClient.ordens.ordensNaoArquivadasStream.listen,
         builder: (_, __) => StreamOut<OrdemUtils>(
           stream: ordemCtrl.utilsStream.listen,
           builder: (_, utils) {
@@ -157,6 +166,7 @@ class _OrdensPageState extends State<OrdensPage> {
                             itens: const [
                               PedidoProdutoStatus.aguardandoProducao,
                               PedidoProdutoStatus.produzindo,
+                              PedidoProdutoStatus.pronto
                             ],
                             itemLabel: (e) => e.label,
                             itemColor: (e) => e.color,
@@ -207,9 +217,9 @@ class _OrdensPageState extends State<OrdensPage> {
                   if (usuario.isNotOperador)
                     Builder(
                       builder: (_) {
-                        final ordensCongeladas =
-                            ordemCtrl.getOrdensFiltered(utils.search.text,
-                                FirestoreClient.ordens.ordensCongeladas);
+                        final ordensCongeladas = ordemCtrl.getOrdensFiltered(
+                            utils.search.text,
+                            FirestoreClient.ordens.ordensCongeladas);
                         ordensCongeladas.sort((a, b) =>
                             b.freezed.updatedAt.compareTo(a.freezed.updatedAt));
                         return ListView.builder(
@@ -262,6 +272,14 @@ class _OrdensPageState extends State<OrdensPage> {
                               .setSize(11)
                               .setColor(AppColors.black),
                         ),
+                        if (ordem.materiaPrima != null) ...[
+                          Text(
+                            ordem.materiaPrima!.label,
+                            style: AppCss.minimumRegular
+                                .setSize(11)
+                                .setColor(AppColors.black),
+                          ),
+                        ],
                         Text(
                           'Criada ${ordem.createdAt.textHour()}',
                           style: AppCss.minimumRegular

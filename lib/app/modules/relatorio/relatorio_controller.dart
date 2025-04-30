@@ -202,7 +202,9 @@ class PedidoController {
         .toList();
     for (final ordem in ordens) {
       ordem.produtos = ordem.produtos
-          .where((e) => !e.pedido.localizador.contains('NOTFOUND') && _whereProductStatus(e, ordemViewModel.status))
+          .where((e) =>
+              !e.pedido.localizador.contains('NOTFOUND') &&
+              _whereProductStatus(e, ordemViewModel.status))
           .toList();
     }
 
@@ -269,7 +271,7 @@ class PedidoController {
       for (var produto in ordem.produtos) {
         if (produtos.map((e) => e.id).contains(produto.produto.id) == false) {
           if (produto.produto.nome != 'Produto não encontrado') {
-          produtos.add(produto.produto);
+            produtos.add(produto.produto);
           }
         }
       }

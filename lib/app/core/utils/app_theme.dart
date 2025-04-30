@@ -30,9 +30,10 @@ class AppTheme {
                 const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)
                     .setColor(AppColors.neutralLightest)),
             foregroundColor: WidgetStatePropertyAll(AppColors.white),
-            padding:
-                const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16, vertical: 12)),
-            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: AppCss.radius8))),
+            padding: const WidgetStatePropertyAll(
+                EdgeInsets.symmetric(horizontal: 16, vertical: 12)),
+            shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(borderRadius: AppCss.radius8))),
       ),
       iconButtonTheme: IconButtonThemeData(
         style: ButtonStyle(
@@ -41,7 +42,8 @@ class AppTheme {
           ),
           foregroundColor: WidgetStatePropertyAll(AppColors.white),
           iconSize: const WidgetStatePropertyAll(24),
-          shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: AppCss.radius8)),
+          shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(borderRadius: AppCss.radius8)),
           padding: const WidgetStatePropertyAll(EdgeInsets.all(12)),
         ),
       ),
@@ -55,8 +57,10 @@ class AppTheme {
             borderSide: BorderSide(color: AppColors.primaryMain, width: 2),
             borderRadius: AppCss.radius8,
           ),
-          hintStyle:
-              TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.neutralMedium)),
+          hintStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              color: AppColors.neutralMedium)),
       appBarTheme: AppBarTheme(
           backgroundColor: AppColors.primaryMain,
           elevation: 0,

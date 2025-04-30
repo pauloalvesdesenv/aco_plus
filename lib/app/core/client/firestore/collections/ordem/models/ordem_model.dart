@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
@@ -17,6 +18,7 @@ class OrdemModel {
   List<PedidoProdutoModel> produtos;
   bool selected = true;
   final OrdemFreezedModel freezed;
+  bool isArchived;
   int? beltIndex;
 
   String get localizator => id.contains('_') ? id.split('_').first : id;
@@ -131,6 +133,7 @@ class OrdemModel {
     required this.produto,
     required this.produtos,
     required this.freezed,
+    this.isArchived = false,
     this.materiaPrima,
     this.beltIndex,
     this.endAt,
@@ -148,30 +151,31 @@ class OrdemModel {
       'freezed': freezed.toMap(),
       'beltIndex': beltIndex,
       'materiaPrima': materiaPrima?.toMap(),
+      'isArchived': isArchived
     };
     return map;
   }
 
   factory OrdemModel.fromMap(Map<String, dynamic> map) {
     return OrdemModel(
-      id: map['id'] ?? '',
-      produto: ProdutoModel.fromMap(map['produto']),
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
-      endAt: map['endAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['endAt'])
-          : null,
-      produtos: List<PedidoProdutoModel>.from(
-        map['idPedidosProdutos']?.map((x) => FirestoreClient.pedidos
-            .getProdutoByPedidoId(x['pedidoId'], x['produtoId'])),
-      ),
-      freezed: map['freezed'] != null
-          ? OrdemFreezedModel.fromMap(map['freezed'])
-          : OrdemFreezedModel.static().copyWith(),
-      beltIndex: map['beltIndex'],
-      materiaPrima: map['materiaPrima'] != null
-          ? MateriaPrimaModel.fromMap(map['materiaPrima'])
-          : null,
-    );
+        id: map['id'] ?? '',
+        produto: ProdutoModel.fromMap(map['produto']),
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+        endAt: map['endAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['endAt'])
+            : null,
+        produtos: List<PedidoProdutoModel>.from(
+          map['idPedidosProdutos']?.map((x) => FirestoreClient.pedidos
+              .getProdutoByPedidoId(x['pedidoId'], x['produtoId'])),
+        ),
+        freezed: map['freezed'] != null
+            ? OrdemFreezedModel.fromMap(map['freezed'])
+            : OrdemFreezedModel.static().copyWith(),
+        beltIndex: map['beltIndex'],
+        materiaPrima: map['materiaPrima'] != null
+            ? MateriaPrimaModel.fromMap(map['materiaPrima'])
+            : null,
+        isArchived: map['isArchived'] ?? false);
   }
 
   String toJson() => json.encode(toMap());

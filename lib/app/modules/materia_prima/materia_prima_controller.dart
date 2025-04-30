@@ -1,4 +1,7 @@
+import 'package:aco_plus/app/core/client/firestore/collections/fabricante/fabricante_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/enums/materia_prima_status.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
@@ -83,14 +86,14 @@ class MateriaPrimaController {
 
   Future<bool> _isDeleteUnavailable(MateriaPrimaModel materiaPrima) async =>
       !await onDeleteProcess(
-          deleteTitle: 'Deseja excluir a Matéria Prima?',
-          deleteMessage: 'Todos seus dados serão apagados do sistema',
-          infoMessage:
-              'Não é possível exlcuir a Matéria Prima, pois ela está vinculada a uma Ordem.',
-              conditional: true,
-          // conditional: FirestoreClient.produtos.data
-          //     .any((e) => e.materiaPrima.id == materiaPrima.id),
-          );
+        deleteTitle: 'Deseja excluir a Matéria Prima?',
+        deleteMessage: 'Todos seus dados serão apagados do sistema',
+        infoMessage:
+            'Não é possível exlcuir a Matéria Prima, pois ela está vinculada a uma Ordem.',
+        conditional: true,
+        // conditional: FirestoreClient.produtos.data
+        //     .any((e) => e.materiaPrima.id == materiaPrima.id),
+      );
 
   void onValid(MateriaPrimaModel? materiaPrima) {
     if (form.fabricanteModel == null) {
@@ -102,6 +105,16 @@ class MateriaPrimaController {
     if (form.corridaLote.text.length < 2) {
       throw Exception('Corrida deve conter no mínimo 3 caracteres');
     }
+  }
 
+  List<ProdutoModel> getProdutosAvailable(FabricanteModel? fabricante) {
+    if (fabricante == null) return [];
+    final produtos = FirestoreClient.produtos.data;
+    final materiaPrimas = FirestoreClient.materiaPrimas.data.where((e) =>
+        e.status == MateriaPrimaStatus.disponivel &&
+        e.fabricanteModel.id == fabricante.id);
+    return produtos
+        .where((e) => !materiaPrimas.any((m) => m.produto.id == e.id))
+        .toList();
   }
 }

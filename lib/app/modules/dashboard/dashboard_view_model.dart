@@ -17,7 +17,6 @@ extension DashboardClienteRankingTypeExt on DashboardClienteRankingType {
 class DashboardUtils {
   DashboardClienteRankingType clienteRankingType =
       DashboardClienteRankingType.values.first;
-
 }
 
 class RankingModel<T> {

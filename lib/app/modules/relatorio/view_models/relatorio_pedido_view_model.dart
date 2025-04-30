@@ -52,5 +52,6 @@ class RelatorioPedidoModel {
   final DateTime createdAt = DateTime.now();
   final RelatorioPedidoTipo tipo;
 
-  RelatorioPedidoModel(this.cliente, this.status, this.pedidos, this.tipo , this.produtos);
+  RelatorioPedidoModel(
+      this.cliente, this.status, this.pedidos, this.tipo, this.produtos);
 }

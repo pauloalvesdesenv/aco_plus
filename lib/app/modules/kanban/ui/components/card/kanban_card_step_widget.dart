@@ -13,15 +13,20 @@ class KanbanCardStepWidget extends StatefulWidget {
   final StepModel step;
   final CalendarFormat calendarFormat;
 
-  const KanbanCardStepWidget(this.step, {required this.viewMode, required this.calendarFormat, super.key});
+  const KanbanCardStepWidget(this.step,
+      {required this.viewMode, required this.calendarFormat, super.key});
 
   @override
   State<KanbanCardStepWidget> createState() => _KanbanCardStepWidgetState();
 }
 
 class _KanbanCardStepWidgetState extends State<KanbanCardStepWidget> {
-  bool get isCollapsed => widget.viewMode == KanbanCardStepViewMode.collapsed && widget.calendarFormat == CalendarFormat.month;
-  bool get isExpanded => widget.viewMode == KanbanCardStepViewMode.expanded || widget.calendarFormat == CalendarFormat.week;
+  bool get isCollapsed =>
+      widget.viewMode == KanbanCardStepViewMode.collapsed &&
+      widget.calendarFormat == CalendarFormat.month;
+  bool get isExpanded =>
+      widget.viewMode == KanbanCardStepViewMode.expanded ||
+      widget.calendarFormat == CalendarFormat.week;
 
   @override
   Widget build(BuildContext context) {

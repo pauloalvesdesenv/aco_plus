@@ -1,5 +1,4 @@
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
-import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -14,17 +13,19 @@ class OrdemCollection {
   AppStream<List<OrdemModel>> dataStream = AppStream<List<OrdemModel>>();
   List<OrdemModel> get data => dataStream.value;
 
-  AppStream<List<OrdemModel>> naoConcluidasStream =
+  AppStream<List<OrdemModel>> ordensNaoArquivadasStream =
       AppStream<List<OrdemModel>>();
-  List<OrdemModel> get naoConcluidas => naoConcluidasStream.value;
+  List<OrdemModel> get ordensNaoArquivadas => ordensNaoArquivadasStream.value;
+
+  AppStream<List<OrdemModel>> ordensArquivadasStream =
+      AppStream<List<OrdemModel>>();
+  List<OrdemModel> get ordensArquivadas => ordensArquivadasStream.value;
+
   List<OrdemModel> get ordensNaoCongeladas =>
-      naoConcluidas.where((e) => !e.freezed.isFreezed).toList();
+      ordensNaoArquivadas.where((e) => !e.freezed.isFreezed).toList();
+
   List<OrdemModel> get ordensCongeladas =>
       data.where((e) => e.freezed.isFreezed).toList();
-
-  AppStream<List<OrdemModel>> dataConcluidasStream =
-      AppStream<List<OrdemModel>>();
-  List<OrdemModel> get dataConcluidas => dataConcluidasStream.value;
 
   CollectionReference<Map<String, dynamic>> get collection =>
       FirebaseFirestore.instance.collection(name);
@@ -42,14 +43,12 @@ class OrdemCollection {
     final data = await FirebaseFirestore.instance.collection(name).get();
     final ordens = data.docs.map((e) => OrdemModel.fromMap(e.data())).toList();
 
-    final ordensConcluidas =
-        ordens.where((e) => e.status == PedidoProdutoStatus.pronto).toList();
-    dataConcluidasStream.add(ordensConcluidas);
+    final ordensArquivadas = ordens.where((e) => e.isArchived).toList();
+    ordensArquivadasStream.add(ordensArquivadas);
 
-    final ordensNaoConcluidas =
-        ordens.where((e) => e.status != PedidoProdutoStatus.pronto).toList();
+    final ordensNaoArquivadas = ordens.where((e) => !e.isArchived).toList();
 
-    ordensNaoConcluidas.sort((a, b) {
+    ordensNaoArquivadas.sort((a, b) {
       if (a.freezed.isFreezed && !b.freezed.isFreezed) {
         return 1;
       } else if (!a.freezed.isFreezed && b.freezed.isFreezed) {
@@ -62,9 +61,9 @@ class OrdemCollection {
       return a.beltIndex!.compareTo(b.beltIndex!);
     });
 
-    naoConcluidasStream.add(ordensNaoConcluidas);
+    ordensNaoArquivadasStream.add(ordensNaoArquivadas);
 
-    dataStream.add([...ordensConcluidas, ...ordensNaoConcluidas]);
+    dataStream.add([...ordensArquivadas, ...ordensNaoArquivadas]);
   }
 
   bool _isListen = false;
@@ -103,14 +102,12 @@ class OrdemCollection {
         .snapshots()
         .listen((e) {
       final ordens = e.docs.map((e) => OrdemModel.fromMap(e.data())).toList();
+      final ordensArquivadas = ordens.where((e) => e.isArchived).toList();
+      ordensArquivadasStream.add(ordensArquivadas);
 
-      final ordensConcluidas =
-          ordens.where((e) => e.status == PedidoProdutoStatus.pronto).toList();
-      dataConcluidasStream.add(ordensConcluidas);
+      final ordensNaoArquivadas = ordens.where((e) => !e.isArchived).toList();
 
-      final ordensNaoConcluidas =
-          ordens.where((e) => e.status != PedidoProdutoStatus.pronto).toList();
-      ordensNaoConcluidas.sort((a, b) {
+      ordensNaoArquivadas.sort((a, b) {
         if (a.freezed.isFreezed && !b.freezed.isFreezed) {
           return 1;
         } else if (!a.freezed.isFreezed && b.freezed.isFreezed) {
@@ -123,9 +120,9 @@ class OrdemCollection {
         return a.beltIndex!.compareTo(b.beltIndex!);
       });
 
-      naoConcluidasStream.add(ordensNaoConcluidas);
+      ordensNaoArquivadasStream.add(ordensNaoArquivadas);
 
-      dataStream.add([...ordensConcluidas, ...ordensNaoConcluidas]);
+      dataStream.add([...ordensArquivadas, ...ordensNaoArquivadas]);
     });
   }
 

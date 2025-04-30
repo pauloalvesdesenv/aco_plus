@@ -79,5 +79,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'aco-plus-fa455.appspot.com',
     measurementId: 'G-YK4WTJYYHL',
   );
-
 }

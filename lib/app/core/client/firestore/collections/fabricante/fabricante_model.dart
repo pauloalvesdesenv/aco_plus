@@ -7,7 +7,8 @@ class FabricanteModel {
     required this.nome,
   });
 
-  static FabricanteModel empty() => FabricanteModel(id: 'register_unavailable', nome: 'Sem Registro');
+  static FabricanteModel empty() =>
+      FabricanteModel(id: 'register_unavailable', nome: 'Sem Registro');
 
   factory FabricanteModel.fromMap(Map<String, dynamic> map) {
     return FabricanteModel(

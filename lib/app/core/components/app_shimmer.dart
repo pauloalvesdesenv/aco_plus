@@ -5,8 +5,7 @@ class AppShimmer extends StatelessWidget {
   final Widget child;
   final bool enable;
 
-  const AppShimmer({Key? key, required this.child, this.enable = true})
-      : super(key: key);
+  const AppShimmer({super.key, required this.child, this.enable = true});
 
   @override
   Widget build(BuildContext context) {

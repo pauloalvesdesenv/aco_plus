@@ -7,6 +7,7 @@ import 'package:aco_plus/app/core/components/app_drop_down_list.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
 import 'package:aco_plus/app/core/components/app_scaffold.dart';
 import 'package:aco_plus/app/core/components/divisor.dart';
+import 'package:aco_plus/app/core/components/done_button.dart';
 import 'package:aco_plus/app/core/components/empty_data.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
@@ -16,7 +17,9 @@ import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
+import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
+import 'package:aco_plus/app/modules/pedido/ui/pedido_page.dart';
 import 'package:aco_plus/app/modules/pedido/view_models/pedido_view_model.dart';
 import 'package:flutter/material.dart';
 
@@ -158,9 +161,11 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
 
   Widget _itemPedidoWidget(PedidoModel pedido) {
     return Container(
-      color: Colors.grey.withOpacity(0.1),
+      color: Colors.grey.withOpacity(0.07),
       child: InkWell(
-        onTap: () => pedidoCtrl.onUnArchivePedido(context, pedido),
+        // onTap: () => pedidoCtrl.onUnArchivePedido(context, pedido),
+        onTap: () => push(
+            context, PedidoPage(pedido: pedido, reason: PedidoInitReason.page)),
         child: Stack(
           children: [
             Container(
@@ -206,6 +211,11 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
                     ),
                   ),
                   const W(8),
+                  IconLoadingButton(
+                      () async =>
+                          await pedidoCtrl.onUnArchivePedido(context, pedido),
+                      icon: Icons.unarchive_outlined),
+                  const W(16),
                   _progressChartWidget(PedidoProdutoStatus.aguardandoProducao,
                       pedido.getPrcntgAguardandoProducao()),
                   const W(16),

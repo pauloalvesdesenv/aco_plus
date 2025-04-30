@@ -53,12 +53,8 @@ class BackupController {
         FirestoreClient.steps.data.map((e) => e.toMap()).toList());
     onAddCollection(backup, 'tags',
         FirestoreClient.tags.data.map((e) => e.toMap()).toList());
-    onAddCollection(
-        backup,
-        'pedidos',
-        FirestoreClient.pedidos.data
-            .map((e) => e.toMap())
-            .toList());
+    onAddCollection(backup, 'pedidos',
+        FirestoreClient.pedidos.data.map((e) => e.toMap()).toList());
     onAddCollection(backup, 'ordens',
         FirestoreClient.ordens.data.map((e) => e.toMap()).toList());
     onAddCollection(

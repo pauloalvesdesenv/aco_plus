@@ -14,7 +14,7 @@ class AppScaffold extends StatefulWidget {
   final Widget? drawer;
 
   const AppScaffold({
-    Key? key,
+    super.key,
     required this.body,
     this.bottomNav,
     this.fab,
@@ -24,7 +24,7 @@ class AppScaffold extends StatefulWidget {
     this.bottomColor,
     this.scaffoldKey,
     this.drawer,
-  }) : super(key: key);
+  });
 
   @override
   State<AppScaffold> createState() => _AppScaffoldState();
@@ -45,7 +45,8 @@ class _AppScaffoldState extends State<AppScaffold> {
             (widget.bottomColor ?? backgroundColor).computeLuminance() > 0.5
                 ? Brightness.dark
                 : Brightness.light,
-        systemNavigationBarDividerColor: (widget.bottomColor ?? backgroundColor),
+        systemNavigationBarDividerColor:
+            (widget.bottomColor ?? backgroundColor),
         systemNavigationBarContrastEnforced: true,
       ),
       child: Container(

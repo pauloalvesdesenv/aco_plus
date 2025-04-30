@@ -10,8 +10,7 @@ class StepShippingCreateModel {
     description.text = shipping.description;
   }
 
-  StepShippingModel toStepShippingModel() =>
-      StepShippingModel(
+  StepShippingModel toStepShippingModel() => StepShippingModel(
         description: description.text,
       );
 }

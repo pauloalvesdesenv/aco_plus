@@ -2,7 +2,6 @@ import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/orde
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_tipo.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/components/app_bottom.dart';
-import 'package:aco_plus/app/core/components/app_checkbox.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/components/w.dart';
@@ -87,7 +86,7 @@ class _OrderCreatePedidosSelecionadosBottomState
                                 .removeWhere((e) => e.id == produto.id)
                             : form.produtos.add(produto);
                         ordemCtrl.formStream.update();
-                        if(form.produtos.isEmpty) Navigator.pop(context);
+                        if (form.produtos.isEmpty) Navigator.pop(context);
                       }),
               ],
             ),

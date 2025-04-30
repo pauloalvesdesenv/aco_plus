@@ -88,8 +88,8 @@ class StepController {
         deleteMessage: 'Todos os dados da etapa serão excluidos do sistema',
         infoMessage:
             'Para excluir a etapa, nenhum pedido pode estar vinculado a ela',
-        conditional: !FirestoreClient.pedidos.data
-            .every((e) => e.step.id != step.id),
+        conditional:
+            !FirestoreClient.pedidos.data.every((e) => e.step.id != step.id),
       );
 
   void onValid() {

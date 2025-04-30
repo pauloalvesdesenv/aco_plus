@@ -1,4 +1,3 @@
-import 'package:aco_plus/app/core/client/firestore/collections/notificacao/notificacao_collection.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/notificacao/notificacao_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/services/push_notification_service.dart';
@@ -19,14 +18,13 @@ class FCMProvider {
   static Future<void> postSend(String userId, Map<String, dynamic> body) async {
     try {
       if (body['message']['token'] != null) {
-
-      await Dio().post(
-          'https://fcm.googleapis.com/v1/projects/aco-plus-fa455/messages:send',
-          options: Options(headers: {
-            'Authorization': 'Bearer ${await _getAccessToken()}',
-            'Content-Type': 'application/json'
-          }),
-          data: body);
+        await Dio().post(
+            'https://fcm.googleapis.com/v1/projects/aco-plus-fa455/messages:send',
+            options: Options(headers: {
+              'Authorization': 'Bearer ${await _getAccessToken()}',
+              'Content-Type': 'application/json'
+            }),
+            data: body);
       }
       await FirestoreClient.notificacoes
           .add(NotificacaoModel.fromFCMMap(userId, body));

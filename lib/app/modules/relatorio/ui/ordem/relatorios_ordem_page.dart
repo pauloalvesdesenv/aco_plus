@@ -245,7 +245,7 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
             children: [
               Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(ordem.localizator, style: AppCss.mediumBold),
                   if (ordem.materiaPrima != null)

@@ -1,6 +1,8 @@
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/components/h.dart';
+import 'package:aco_plus/app/core/components/w.dart';
 import 'package:aco_plus/app/core/enums/widget_view_mode.dart';
+import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/modules/kanban/kanban_controller.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_details_widget.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_tags_widget.dart';
@@ -38,10 +40,18 @@ class KanbanCardPedidoWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (pedido.tags.isNotEmpty) ...[
-                KanbanCardTagsWidget(pedido: pedido, viewMode: viewMode),
-                const H(8),
-              ],
+              Row(
+                children: [
+                  if (pedido.tags.isNotEmpty) ...[
+                    Expanded(
+                        child: KanbanCardTagsWidget(
+                            pedido: pedido, viewMode: viewMode)),
+                    const W(8),
+                    Text(pedido.getQtdeTotal().toKg())
+                  ],
+                ],
+              ),
+              const H(8),
               Text(pedido.localizador),
               const H(8),
               Row(

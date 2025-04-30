@@ -37,10 +37,11 @@ class CommentsWidget extends StatelessWidget {
                   FCMProvider.postSend(
                     user.id,
                     FCMDataModel(
-                        title: titleNotification,
-                        description: text,
-                        token: user.deviceTokens.lastOrNull,
-                        data: {'type': 'event', 'id': pedidoCtrl.pedido.id}).toMap(),
+                            title: titleNotification,
+                            description: text,
+                            token: user.deviceTokens.lastOrNull,
+                            data: {'type': 'event', 'id': pedidoCtrl.pedido.id})
+                        .toMap(),
                   );
                 }
                 items.add(

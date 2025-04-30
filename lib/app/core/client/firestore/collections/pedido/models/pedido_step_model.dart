@@ -31,10 +31,10 @@ class PedidoStepModel {
 
   factory PedidoStepModel.fromMap(Map<String, dynamic> map) {
     return PedidoStepModel(
-        id: map['id'],
-        step: FirestoreClient.steps.getById(map['step']),
-        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
-      );
+      id: map['id'],
+      step: FirestoreClient.steps.getById(map['step']),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+    );
   }
 
   String toJson() => json.encode(toMap());

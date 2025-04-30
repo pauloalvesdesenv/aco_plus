@@ -75,7 +75,7 @@ class _KanbanCardCalendarWidgetState extends State<KanbanCardCalendarWidget> {
                                 viewMode: stepViewMode ==
                                             KanbanCardStepViewMode.expanded ||
                                         widget.calendarFormat ==
-                                          CalendarFormat.week
+                                            CalendarFormat.week
                                     ? WidgetViewMode.normal
                                     : WidgetViewMode.minified)
                       ],

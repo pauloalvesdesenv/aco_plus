@@ -20,6 +20,8 @@ class MateriaPrimaModel {
     required this.status,
   });
 
+  String get label => '${fabricanteModel.nome} - $corridaLote';
+
   static MateriaPrimaModel empty() => MateriaPrimaModel(
         id: 'register_unavailable',
         fabricanteModel: FabricanteModel.empty(),

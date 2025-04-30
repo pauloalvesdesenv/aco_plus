@@ -46,7 +46,6 @@ class OrdemCreateModel {
   OrdemCreateModel()
       : id = '${[
               ...FirestoreClient.ordens.dataStream.value,
-              ...FirestoreClient.ordens.dataConcluidasStream.value
             ].length + 1}_${HashService.get}',
         isEdit = false,
         isCreate = true;

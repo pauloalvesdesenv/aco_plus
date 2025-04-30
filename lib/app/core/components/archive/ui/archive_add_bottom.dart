@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:mime/mime.dart';
-import 'package:share_plus/share_plus.dart';
 
 Future<ArchiveModel?> showArchiveAddBottom(String path) async =>
     showModalBottomSheet(
@@ -25,7 +24,6 @@ Future<ArchiveModel?> showArchiveAddBottom(String path) async =>
       isScrollControlled: true,
       builder: (_) => ArchiveAddBottom(path),
     );
-
 
 class ArchiveAddBottom extends StatefulWidget {
   final String path;

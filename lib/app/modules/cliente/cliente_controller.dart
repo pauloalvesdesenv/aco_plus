@@ -92,8 +92,8 @@ class ClienteController {
         deleteMessage: 'Todos seus dados serão apagados do sistema',
         infoMessage:
             'Não é possível exlcuir o cliente, pois ele está vinculado a um pedido.',
-        conditional: FirestoreClient.pedidos.data
-            .any((e) => e.cliente.id == cliente.id),
+        conditional:
+            FirestoreClient.pedidos.data.any((e) => e.cliente.id == cliente.id),
       );
 
   void onValid(ClienteModel? cliente) {

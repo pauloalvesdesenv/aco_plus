@@ -67,14 +67,14 @@ class VersionCollection {
               )
             : collection)
         .snapshots()
-        .listen((e)  async {
+        .listen((e) async {
       final version = VersionModel.fromMap(e.docs.first.data());
       dataStream.add(version);
       _checkVersion(version);
     });
   }
 
-  Future<void> _checkVersion(VersionModel version)  async {
+  Future<void> _checkVersion(VersionModel version) async {
     if (version.number > VersionCollection.version) {
       await showVersionDialog(version);
     }

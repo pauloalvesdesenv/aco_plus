@@ -123,7 +123,7 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
                                 backgroundColor: [6, 7].contains(day.weekday)
                                     ? Colors.grey[200]!
                                     : Colors.grey[50]!,
-                      calendarFormat: widget.utils.calendarFormat,
+                                calendarFormat: widget.utils.calendarFormat,
                               ),
                     disabledBuilder: (context, day, focusedDay) =>
                         KanbanCalendarBuilderWidget(
@@ -150,7 +150,10 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
                               : CalendarFormat.month;
                       kanbanCtrl.utilsStream.update();
                     },
-                    icon: Icon(widget.utils.calendarFormat == CalendarFormat.month ? Symbols.view_week : Icons.calendar_month),
+                    icon: Icon(
+                        widget.utils.calendarFormat == CalendarFormat.month
+                            ? Symbols.view_week
+                            : Icons.calendar_month),
                     label: Text(
                       widget.utils.calendarFormat == CalendarFormat.month
                           ? 'Semanal'

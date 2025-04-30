@@ -40,7 +40,7 @@ class PedidoChecksWidget extends StatelessWidget {
               );
             },
             onRemove: (item) {
-              pedido.checks.remove(item); 
+              pedido.checks.remove(item);
               pedidoCtrl.updatePedidoFirestore();
               pedidoCtrl.onAddHistory(
                 pedido: pedido,

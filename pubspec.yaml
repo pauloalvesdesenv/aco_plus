@@ -65,6 +65,8 @@ dependencies:
 
   # f pub run flutter_launcher_icons && dart run flutter_native_splash:create
 
+  http: any
+  flutter_web_plugins: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

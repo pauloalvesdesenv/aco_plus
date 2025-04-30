@@ -19,7 +19,8 @@ class ObraController {
   ObraCreateModel get form => formStream.value;
 
   void init(ObraModel? obra, EnderecoModel? enderecoModel) {
-    formStream.add(obra != null ? ObraCreateModel.edit(obra) : ObraCreateModel());
+    formStream
+        .add(obra != null ? ObraCreateModel.edit(obra) : ObraCreateModel());
     if (!form.isEdit) {
       form.endereco = enderecoModel;
       formStream.update();
@@ -31,10 +32,12 @@ class ObraController {
       onValid();
       Navigator.pop(_, formStream.value.toObraModel());
       NotificationService.showPositive(
-          'Obra ${form.isEdit ? 'Editada' : 'Adicionada'}', 'Operação realizada com sucesso',
+          'Obra ${form.isEdit ? 'Editada' : 'Adicionada'}',
+          'Operação realizada com sucesso',
           position: NotificationPosition.bottom);
     } catch (e) {
-      NotificationService.showNegative('Erro', e.toString(), position: NotificationPosition.bottom);
+      NotificationService.showNegative('Erro', e.toString(),
+          position: NotificationPosition.bottom);
     }
   }
 

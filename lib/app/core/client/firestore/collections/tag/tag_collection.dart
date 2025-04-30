@@ -1,4 +1,3 @@
-
 import 'package:aco_plus/app/core/client/firestore/collections/tag/models/tag_model.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,8 +13,10 @@ class TagCollection {
   AppStream<List<TagModel>> dataStream = AppStream<List<TagModel>>();
   List<TagModel> get data => dataStream.value;
 
-  TagModel get cd => data.firstWhere((e) => e.nome.replaceAll(' ', '').toLowerCase() == 'cd');
-  TagModel get cda => data.firstWhere((e) => e.nome.replaceAll(' ', '').toLowerCase() == 'cda');
+  TagModel get cd =>
+      data.firstWhere((e) => e.nome.replaceAll(' ', '').toLowerCase() == 'cd');
+  TagModel get cda =>
+      data.firstWhere((e) => e.nome.replaceAll(' ', '').toLowerCase() == 'cda');
 
   CollectionReference<Map<String, dynamic>> get collection =>
       FirebaseFirestore.instance.collection(name);
@@ -31,8 +32,7 @@ class TagCollection {
     if (_isStarted && lock) return;
     _isStarted = true;
     final data = await FirebaseFirestore.instance.collection(name).get();
-    final countries =
-        data.docs.map((e) => TagModel.fromMap(e.data())).toList();
+    final countries = data.docs.map((e) => TagModel.fromMap(e.data())).toList();
     countries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     dataStream.add(countries);
   }
@@ -82,12 +82,12 @@ class TagCollection {
 
   Future<TagModel?> add(TagModel model) async {
     await collection.doc(model.id).set(model.toMap());
-      return model;
+    return model;
   }
 
   Future<TagModel?> update(TagModel model) async {
     await collection.doc(model.id).update(model.toMap());
-      return model;
+    return model;
   }
 
   Future<void> delete(TagModel model) async {

@@ -31,18 +31,16 @@ class KanbanCardUsersWidget extends StatelessWidget {
             ),
           ),
         ],
-        ...pedido.users
-            .map((e) => InkWell(
-                  onTap: () async {
-                    await showPedidoUsersBottom(pedido);
-                    kanbanCtrl.utilsStream.update();
-                  },
-                  child: AppAvatar(
-                      radius: viewMode == WidgetViewMode.minified ? 9 : 14,
-                      name: e.nome.getInitials(),
-                      backgroundColor: Colors.grey[200]),
-                ))
-            .toList(),
+        ...pedido.users.map((e) => InkWell(
+              onTap: () async {
+                await showPedidoUsersBottom(pedido);
+                kanbanCtrl.utilsStream.update();
+              },
+              child: AppAvatar(
+                  radius: viewMode == WidgetViewMode.minified ? 9 : 14,
+                  name: e.nome.getInitials(),
+                  backgroundColor: Colors.grey[200]),
+            )),
       ],
     );
   }

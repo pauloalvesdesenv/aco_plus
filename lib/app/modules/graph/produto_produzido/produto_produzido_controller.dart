@@ -18,7 +18,6 @@ class ProdutoProduzidoController {
 
   factory ProdutoProduzidoController() => _instance;
 
-
   List<BarSeries<ProdutoProduzidoModel, DateTime>> getSource() =>
       getDates(ProdutoProduzido.day)
           .reversed

@@ -70,7 +70,7 @@ class _CheckListWidgetState extends State<CheckListWidget> {
           ],
         ),
         const H(16),
-        ...widget.items.map((e) => _itemWidget(e)).toList(),
+        ...widget.items.map((e) => _itemWidget(e)),
         const H(8),
         _addWidget(),
       ],

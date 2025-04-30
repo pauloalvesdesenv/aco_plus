@@ -1,4 +1,5 @@
 import 'package:aco_plus/app/core/client/firestore/collections/fabricante/fabricante_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/enums/materia_prima_status.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
@@ -15,6 +16,7 @@ import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/materia_prima/materia_prima_controller.dart';
 import 'package:aco_plus/app/modules/materia_prima/materia_prima_view_model.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class MateriaPrimaCreatePage extends StatefulWidget {
@@ -80,16 +82,22 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
           },
         ),
         const H(16),
-        AppDropDown<ProdutoModel?>(
-          label: 'Produto',
-          itens: FirestoreClient.produtos.data,
-          itemLabel: (item) => item!.labelMinified,
-          onSelect: (item) {
-            form.produtoModel = item;
-            materiaPrimaCtrl.formStream.update();
-          },
-          item: form.produtoModel,
-        ),
+        Builder(builder: (context) {
+          final produtos =
+              materiaPrimaCtrl.getProdutosAvailable(form.fabricanteModel);
+          return AppDropDown<ProdutoModel?>(
+            label: 'Produto',
+            item:
+                produtos.firstWhereOrNull((e) => e.id == form.produtoModel?.id),
+            disable: form.fabricanteModel == null,
+            itens: produtos,
+            itemLabel: (item) => item!.labelMinified,
+            onSelect: (item) {
+              form.produtoModel = item;
+              materiaPrimaCtrl.formStream.update();
+            },
+          );
+        }),
         const H(16),
         AppField(
           label: 'Corrida/Lote',
@@ -97,11 +105,23 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
           onChanged: (_) => materiaPrimaCtrl.formStream.update(),
         ),
         const H(16),
+        AppDropDown<MateriaPrimaStatus?>(
+          label: 'Status',
+          item: form.status,
+          itens: MateriaPrimaStatus.values,
+          itemLabel: (item) => item!.label,
+          onSelect: (item) {
+            form.status = item!;
+            materiaPrimaCtrl.formStream.update();
+          },
+        ),
+        const H(16),
         ArchivesWidget(
           path: 'materia_primas/${form.id}',
           archives: form.anexos,
           onChanged: () => materiaPrimaCtrl.formStream.update(),
         ),
+        const H(16),
         if (form.isEdit)
           TextButton.icon(
               style: ButtonStyle(

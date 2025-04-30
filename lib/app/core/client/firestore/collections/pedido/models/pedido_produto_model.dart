@@ -43,7 +43,9 @@ class PedidoProdutoModel {
           endereco: null,
           status: ObraStatus.emAndamento);
 
-  PedidoProdutoStatusModel get status => statusess.isNotEmpty ? statusess.last : PedidoProdutoStatusModel.create(PedidoProdutoStatus.pronto);
+  PedidoProdutoStatusModel get status => statusess.isNotEmpty
+      ? statusess.last
+      : PedidoProdutoStatusModel.create(PedidoProdutoStatus.pronto);
 
   PedidoProdutoStatusModel get statusView => status.copyWith(
       status: status.status == PedidoProdutoStatus.separado

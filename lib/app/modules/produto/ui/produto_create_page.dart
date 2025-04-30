@@ -1,7 +1,4 @@
-import 'package:aco_plus/app/core/client/firestore/collections/fabricante/fabricante_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
-import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
-import 'package:aco_plus/app/core/components/app_drop_down.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
 import 'package:aco_plus/app/core/components/app_scaffold.dart';
 import 'package:aco_plus/app/core/components/done_button.dart';
@@ -64,24 +61,9 @@ class _ProdutoCreatePageState extends State<ProdutoCreatePage> {
   }
 
   Widget body(ProdutoCreateModel form) {
-    final fabricantes = [
-      FabricanteModel.empty(),
-      ...FirestoreClient.fabricantes.data
-    ];
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        AppDropDown<FabricanteModel?>(
-          label: 'Fabricante',
-          item: fabricantes.firstWhere((e) => e.id == form.fabricante?.id),
-          itens: fabricantes,
-          itemLabel: (e) => e!.nome,
-          onSelect: (e) {
-            form.fabricante = e;
-            produtoCtrl.formStream.update();
-          },
-        ),
-        const H(16),
         AppField(
           label: 'Nome',
           controller: form.nome,

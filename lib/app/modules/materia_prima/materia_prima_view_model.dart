@@ -17,6 +17,7 @@ class MateriaPrimaCreateModel {
   ProdutoModel? produtoModel;
   TextController corridaLote = TextController();
   List<ArchiveModel> anexos = [];
+  MateriaPrimaStatus status = MateriaPrimaStatus.disponivel;
 
   late bool isEdit;
 
@@ -27,10 +28,12 @@ class MateriaPrimaCreateModel {
   MateriaPrimaCreateModel.edit(MateriaPrimaModel materiaPrima)
       : id = materiaPrima.id,
         isEdit = true {
-    fabricanteModel = FirestoreClient.fabricantes.getById(materiaPrima.fabricanteModel.id);
+    fabricanteModel =
+        FirestoreClient.fabricantes.getById(materiaPrima.fabricanteModel.id);
     produtoModel = FirestoreClient.produtos.getById(materiaPrima.produto.id);
     corridaLote.text = materiaPrima.corridaLote;
     anexos = materiaPrima.anexos;
+    status = materiaPrima.status;
   }
 
   MateriaPrimaModel toMateriaPrimaModel() => MateriaPrimaModel(
@@ -39,6 +42,6 @@ class MateriaPrimaCreateModel {
         produto: produtoModel!,
         corridaLote: corridaLote.text,
         anexos: anexos,
-        status: MateriaPrimaStatus.disponivel,
+        status: status,
       );
 }

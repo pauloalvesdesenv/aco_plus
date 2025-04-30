@@ -27,7 +27,6 @@ class KanbanPedidoSelectedWidget extends StatelessWidget {
                   pedido: utils.pedido!,
                   reason: PedidoInitReason.kanban,
                   onDelete: () => kanbanCtrl.setPedido(null),
-                  
                 ),
               ),
             ),

@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_tipo.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/components/app_scaffold.dart';
 import 'package:aco_plus/app/core/components/divisor.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/components/w.dart';
-import 'package:aco_plus/app/modules/kanban/kanban_controller.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_anexos_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_armacao_widget.dart';
@@ -24,9 +21,8 @@ import 'package:aco_plus/app/modules/pedido/ui/components/pedido_timeline_widget
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_top_bar.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_users_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-enum PedidoInitReason { page, kanban }
+enum PedidoInitReason { page, kanban, archived }
 
 class PedidoPage extends StatefulWidget {
   final PedidoModel pedido;
@@ -57,6 +53,7 @@ class _PedidoPageState extends State<PedidoPage>
   }
 
   bool get isKanban => widget.reason == PedidoInitReason.kanban;
+  bool get isArchived => widget.reason == PedidoInitReason.archived;
 
   @override
   Widget build(BuildContext context) {
@@ -104,50 +101,58 @@ class _PedidoPageState extends State<PedidoPage>
             const W(12),
           ],
         ),
-        PedidoDescWidget(pedido),
-        const Divisor(),
-        PedidoStepsWidget(pedido),
-        const Divisor(),
-        PedidoStatusWidget(pedido),
-        const Divisor(),
-        if (pedido.isAguardandoEntradaProducao()) ...[
-          PedidoProdutosWidget(pedido),
-          const Divisor(),
-        ],
-        if (!pedido.isAguardandoEntradaProducao())
-          Column(
+        ColorFiltered(
+          colorFilter: ColorFilter.mode(
+            widget.pedido.isArchived
+                ? Colors.grey.withOpacity(0.1)
+                : Colors.transparent,
+            BlendMode.srcIn,
+          ),
+          child: Column(
             children: [
-              PedidoCorteDobraWidget(pedido),
+              PedidoDescWidget(pedido),
               const Divisor(),
-              PedidoProdutosWidget(pedido),
+              PedidoStepsWidget(pedido),
               const Divisor(),
-              if (pedido.tipo == PedidoTipo.cda) ...[
-                PedidoArmacaoWidget(pedido),
-                const Divisor()
+              PedidoStatusWidget(pedido),
+              const Divisor(),
+              if (pedido.isAguardandoEntradaProducao()) ...[
+                PedidoProdutosWidget(pedido),
+                const Divisor(),
               ],
+              if (!pedido.isAguardandoEntradaProducao())
+                Column(
+                  children: [
+                    PedidoCorteDobraWidget(pedido),
+                    const Divisor(),
+                    PedidoProdutosWidget(pedido),
+                    const Divisor(),
+                    if (pedido.tipo == PedidoTipo.cda) ...[
+                      PedidoArmacaoWidget(pedido),
+                      const Divisor()
+                    ],
+                  ],
+                ),
+              if (pedido.instrucoesEntrega.isNotEmpty) ...[
+                PedidoEntregaWidget(pedido),
+                const Divisor(),
+              ],
+              if (pedido.instrucoesEntrega.isNotEmpty ||
+                  pedido.instrucoesFinanceiras.isNotEmpty) ...[
+                PedidoFinancWidget(pedido),
+                const Divisor(),
+              ],
+              PedidoAnexosWidget(pedido),
+              const Divisor(),
+              PedidoChecksWidget(pedido),
+              const Divisor(),
+              PedidoCommentsWidget(pedido),
+              const Divisor(),
+              if (pedido.histories.isNotEmpty)
+                PedidoTimelineWidget(pedido: pedido),
             ],
           ),
-        if (pedido.instrucoesEntrega.isNotEmpty) ...[
-          PedidoEntregaWidget(pedido),
-          const Divisor(),
-        ],
-        
-        if (pedido.instrucoesEntrega.isNotEmpty ||
-            pedido.instrucoesFinanceiras.isNotEmpty) ...[
-          PedidoFinancWidget(pedido),
-          const Divisor(),
-        ],
-        PedidoAnexosWidget(pedido),
-        const Divisor(),
-        PedidoChecksWidget(pedido),
-        const Divisor(),
-        PedidoCommentsWidget(pedido),
-        const Divisor(),
-        if (pedido.histories.isNotEmpty) PedidoTimelineWidget(pedido: pedido),
-        // if (!kIsWeb)
-        //   KeyboardVisibilityBuilder(
-        //       builder: (_, isVisible) =>
-        //           isVisible ? const H(250) : const SizedBox())
+        )
       ],
     );
   }

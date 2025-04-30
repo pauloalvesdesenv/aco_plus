@@ -10,14 +10,14 @@ class StreamOut<T> extends StatelessWidget {
   final Widget loading;
 
   const StreamOut({
-    Key? key,
+    super.key,
     required this.stream,
     required this.builder,
     this.preFunction,
     this.condition = true,
     this.request,
     this.loading = const LoadingStreamOut(),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +49,14 @@ class StreamOutNull<T> extends StatelessWidget {
   final Widget loading;
 
   const StreamOutNull({
-    Key? key,
+    super.key,
     required this.stream,
     required this.child,
     this.preFunction,
     this.condition = true,
     this.request,
     this.loading = const SizedBox(),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,7 @@ class StreamOutResponse<ApiResponse, T> extends StatelessWidget {
   final double columnLength;
 
   const StreamOutResponse({
-    Key? key,
+    super.key,
     required this.stream,
     required this.child,
     this.preFunction,
@@ -97,7 +97,7 @@ class StreamOutResponse<ApiResponse, T> extends StatelessWidget {
     this.loading,
     this.emptyLoading,
     this.columnLength = 1,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

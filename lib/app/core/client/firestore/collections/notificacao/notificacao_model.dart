@@ -22,14 +22,13 @@ class NotificacaoModel {
   });
 
   static NotificacaoModel empty() => NotificacaoModel(
-        id: '',
-        title: '',
-        description: '',
-        viewed: false,
-        createdAt: DateTime.now(),
-        userId: '',
-        payload: ''
-      );
+      id: '',
+      title: '',
+      description: '',
+      viewed: false,
+      createdAt: DateTime.now(),
+      userId: '',
+      payload: '');
 
   NotificacaoModel copyWith({
     String? id,
@@ -76,19 +75,19 @@ class NotificacaoModel {
   }
   factory NotificacaoModel.fromFCMMap(String userId, Map<String, dynamic> map) {
     return NotificacaoModel(
-      id: HashService.get,
-      title: map['message']['notification']['title'] ?? '',
-      description: map['message']['notification']['body'] ?? '',
-      viewed: false,
-      createdAt: DateTime.now(),
-      userId: userId,
-      payload: jsonEncode(map['data'])
-    );
+        id: HashService.get,
+        title: map['message']['notification']['title'] ?? '',
+        description: map['message']['notification']['body'] ?? '',
+        viewed: false,
+        createdAt: DateTime.now(),
+        userId: userId,
+        payload: jsonEncode(map['data']));
   }
 
   String toJson() => json.encode(toMap());
 
-  factory NotificacaoModel.fromJson(String source) => NotificacaoModel.fromMap(json.decode(source));
+  factory NotificacaoModel.fromJson(String source) =>
+      NotificacaoModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -110,6 +109,11 @@ class NotificacaoModel {
 
   @override
   int get hashCode {
-    return id.hashCode ^ title.hashCode ^ description.hashCode ^ viewed.hashCode ^ createdAt.hashCode ^ userId.hashCode;
+    return id.hashCode ^
+        title.hashCode ^
+        description.hashCode ^
+        viewed.hashCode ^
+        createdAt.hashCode ^
+        userId.hashCode;
   }
 }

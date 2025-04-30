@@ -48,12 +48,10 @@ class KanbanStepTitleWidget extends StatelessWidget {
               )
             ],
           )),
-          ...SortStepType.values
-              .map((e) => PopupMenuItem(
-                    value: e,
-                    child: Text(e.label),
-                  ))
-              .toList(),
+          ...SortStepType.values.map((e) => PopupMenuItem(
+                value: e,
+                child: Text(e.label),
+              )),
         ],
       ),
       title: Row(

@@ -42,10 +42,9 @@ class PedidoProdutoStatusModel {
   final DateTime createdAt;
 
   factory PedidoProdutoStatusModel.empty() => PedidoProdutoStatusModel(
-    createdAt: DateTime.now(),
-    id: HashService.get,
-    status: PedidoProdutoStatus.pronto
-  );
+      createdAt: DateTime.now(),
+      id: HashService.get,
+      status: PedidoProdutoStatus.pronto);
 
   PedidoProdutoStatus getStatusMinified() {
     if (status == PedidoProdutoStatus.separado) {

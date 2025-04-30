@@ -105,21 +105,23 @@ class _OrdemPageState extends State<OrdemPage> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RowItensLabel([
-            ItemLabel(
-                'Produto', '${ordem.produto.nome} - ${ordem.produto.descricao}'),
+            ItemLabel('Produto',
+                '${ordem.produto.nome} - ${ordem.produto.descricao}'),
             ItemLabel('Iniciada', ordem.createdAt.text()),
-            if (ordem.endAt != null) ItemLabel('Finalizada', ordem.endAt.text()),
+            if (ordem.endAt != null)
+              ItemLabel('Finalizada', ordem.endAt.text()),
           ]),
           const H(16),
-          RowItensLabel([
-            ItemLabel('Matéria Prima', ordem.materiaPrima != null ? '${ordem.materiaPrima?.fabricanteModel.nome} - ${ordem.materiaPrima?.produto.labelMinified.replaceAll(' - ', ' ')}'  : 'Não especificado'),
-            ItemLabel('Fabricante', ordem.materiaPrima?.fabricanteModel.nome ?? 'Não especificado'),
-          ]),
+          ItemLabel(
+              'Matéria Prima',
+              ordem.materiaPrima != null
+                  ? '${ordem.materiaPrima?.fabricanteModel.nome} - ${ordem.materiaPrima?.produto.labelMinified.replaceAll(' - ', ' ')}'
+                  : 'Não especificado'),
         ],
       ),
-
     );
   }
 

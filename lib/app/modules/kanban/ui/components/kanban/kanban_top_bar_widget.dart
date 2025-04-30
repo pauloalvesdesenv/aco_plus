@@ -28,9 +28,7 @@ class KanbanTopBarWidget extends StatelessWidget
 }
 
 class _KanbanTopbarConcreteWidget extends StatefulWidget {
-  const _KanbanTopbarConcreteWidget({
-    super.key,
-  });
+  const _KanbanTopbarConcreteWidget();
 
   @override
   State<_KanbanTopbarConcreteWidget> createState() =>
@@ -158,8 +156,7 @@ class _KanbanTopbarConcreteWidgetState
             IconButton(
                 onPressed: () async {
                   await push(context, const PedidoCreatePage());
-                  final pedidos =
-                      FirestoreClient.pedidos.data;
+                  final pedidos = FirestoreClient.pedidos.data;
                   pedidos.sort((a, b) => a.id.compareTo(b.id));
                   kanbanCtrl.onAccept(pedidos.last.step, pedidos.last, 0);
                 },

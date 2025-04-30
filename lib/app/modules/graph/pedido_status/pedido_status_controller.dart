@@ -23,8 +23,7 @@ class PedidoStatusController {
   List<GraphModel> getCartesianChart(
     PedidoStatusGraphModel filter,
   ) {
-    List<PedidoModel> pedidos = FirestoreClient
-        .pedidos.data
+    List<PedidoModel> pedidos = FirestoreClient.pedidos.data
         .map((e) =>
             e.copyWith(produtos: e.produtos.map((e) => e.copyWith()).toList()))
         .toList()

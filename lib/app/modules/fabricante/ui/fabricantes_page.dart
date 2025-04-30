@@ -1,5 +1,4 @@
 import 'package:aco_plus/app/core/client/firestore/collections/fabricante/fabricante_model.dart';
-import 'package:aco_plus/app/core/client/firestore/collections/usuario/enums/user_permission_type.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/app_drawer.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
@@ -14,7 +13,6 @@ import 'package:aco_plus/app/modules/base/base_controller.dart';
 import 'package:aco_plus/app/modules/fabricante/fabricante_controller.dart';
 import 'package:aco_plus/app/modules/fabricante/fabricante_view_model.dart';
 import 'package:aco_plus/app/modules/fabricante/ui/fabricante_create_page.dart';
-import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
 
 class FabricantesPage extends StatefulWidget {
@@ -46,12 +44,12 @@ class _FabricantesPageState extends State<FabricantesPage> {
         title: Text('Fabricantes',
             style: AppCss.largeBold.setColor(AppColors.white)),
         actions: [
-            IconButton(
-                onPressed: () => push(context, const FabricanteCreatePage()),
-                icon: Icon(
-                  Icons.add,
-                  color: AppColors.white,
-                ))
+          IconButton(
+              onPressed: () => push(context, const FabricanteCreatePage()),
+              icon: Icon(
+                Icons.add,
+                color: AppColors.white,
+              ))
         ],
         backgroundColor: AppColors.primaryMain,
       ),

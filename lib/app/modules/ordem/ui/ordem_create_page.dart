@@ -1,3 +1,4 @@
+import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/enums/materia_prima_status.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_tipo.dart';
@@ -101,8 +102,9 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
                       item: form.materiaPrima,
                       itens: [
                         MateriaPrimaModel.empty(),
-                        ...FirestoreClient.materiaPrimas.data
-                            .where((e) => e.produto.id == form.produto?.id)
+                        ...FirestoreClient.materiaPrimas.data.where((e) =>
+                            e.produto.id == form.produto?.id &&
+                            e.status == MateriaPrimaStatus.disponivel)
                       ],
                       itemLabel: (e) =>
                           '${e!.fabricanteModel.nome} - ${e.corridaLote}',

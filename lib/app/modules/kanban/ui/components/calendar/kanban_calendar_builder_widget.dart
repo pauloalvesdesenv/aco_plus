@@ -65,7 +65,8 @@ class _KanbanCalendarBuilderWidgetState
                   Align(
                     alignment: Alignment.centerRight,
                     child: InkWell(
-                      onTap: () => kanbanCtrl.setDay({widget.day: widget.pedidos}),
+                      onTap: () =>
+                          kanbanCtrl.setDay({widget.day: widget.pedidos}),
                       child: Icon(
                         Icons.fullscreen,
                         size: 16,

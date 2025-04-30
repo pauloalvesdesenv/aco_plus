@@ -86,8 +86,7 @@ class OrdemController {
 
   List<PedidoProdutoModel> _getPedidosProdutosSeparados(ProdutoModel produto) {
     List<PedidoProdutoModel> pedidos = [];
-    for (final pedido in FirestoreClient
-        .pedidos.data
+    for (final pedido in FirestoreClient.pedidos.data
         .where(
             (e) => FirestoreClient.steps.getById(e.step.id).isPermiteProducao)
         .toList()) {
@@ -299,7 +298,8 @@ class OrdemController {
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
   }
 
-  Future<void> onSelectProdutoStatus(PedidoProdutoModel produto, PedidoProdutoStatus status) async {
+  Future<void> onSelectProdutoStatus(
+      PedidoProdutoModel produto, PedidoProdutoStatus status) async {
     await onChangeProdutoStatus(produto, status);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
   }
@@ -325,12 +325,16 @@ class OrdemController {
   Future<void> onFreezed(_, OrdemModel ordem) async {
     if (ordem.freezed.isFreezed) {
       if (!await showConfirmDialog('Deseja descongelar a ordem?',
-          'A ordem voltará na ultima posição da esteira de produção.')) return;
+          'A ordem voltará na ultima posição da esteira de produção.')) {
+        return;
+      }
       ordem.freezed.isFreezed = false;
       ordem.freezed.reason.controller.clear();
     } else {
       if (!await showConfirmDialog('Deseja congelar a ordem?',
-          'A ordem irá sair da esteira de produção.')) return;
+          'A ordem irá sair da esteira de produção.')) {
+        return;
+      }
       ordem.freezed.isFreezed = true;
     }
     await FirestoreClient.ordens.update(ordem);
@@ -365,5 +369,15 @@ class OrdemController {
 
     await relatorioCtrl
         .onExportRelatorioOrdemUniquePDF(RelatorioOrdemModel.ordem(ordem));
+  }
+
+  Future<void> setArquivadas() async {
+    // for (OrdemModel ordem in FirestoreClient.ordens.data
+    //     .where((e) => e.status == PedidoProdutoStatus.pronto)
+    //     .toList()) {
+    //   ordem.isArchived = true;
+    //   await FirestoreClient.ordens.update(ordem);
+    // }
+    // log('terminou');
   }
 }
