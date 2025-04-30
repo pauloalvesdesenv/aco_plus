@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 extension StringExt on String {
-  String get toCompare =>
-      replaceAll(
+  String get toCompare => replaceAll(
         ' ',
         '',
       ).toLowerCase().removeSpecialCharacters().toNonDiacritics();
@@ -25,9 +24,9 @@ extension StringExt on String {
   }
 
   String get phone => replaceAll(
-    ' ',
-    '',
-  ).replaceAll('-', '').replaceAll('(', '').replaceAll(')', '');
+        ' ',
+        '',
+      ).replaceAll('-', '').replaceAll('(', '').replaceAll(')', '');
 
   String toFileName({String id = '', String type = ''}) =>
       (id.isNotEmpty ? '${id}_' : '') +
@@ -41,11 +40,9 @@ extension StringExt on String {
         'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
     return splitMapJoin(
       '',
-      onNonMatch:
-          (char) =>
-              char.isNotEmpty && diacritics.contains(char)
-                  ? nonDiacritics[diacritics.indexOf(char)]
-                  : char,
+      onNonMatch: (char) => char.isNotEmpty && diacritics.contains(char)
+          ? nonDiacritics[diacritics.indexOf(char)]
+          : char,
     );
   }
 

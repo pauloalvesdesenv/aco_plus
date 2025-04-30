@@ -44,12 +44,11 @@ class _ArchiveImageWidgetState extends State<ArchiveImageWidget> {
         width: 150,
         height: 180,
         imageUrl: widget.archive.url!,
-        placeholder:
-            (_, __) => const SizedBox(
-              width: 150,
-              height: 180,
-              child: Center(child: CircularProgressIndicator()),
-            ),
+        placeholder: (_, __) => const SizedBox(
+          width: 150,
+          height: 180,
+          child: Center(child: CircularProgressIndicator()),
+        ),
         errorWidget: (_, __, ___) => ArchiveErrorWidget(widget.archive),
       ),
     );

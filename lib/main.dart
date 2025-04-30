@@ -17,6 +17,4 @@ void main() async {
   // };
   await Service.initAplicationServices();
   runApp(const App());
-
-  
 }

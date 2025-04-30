@@ -39,46 +39,44 @@ class _PedidoTimelinAcompanhamentoeWidgetState
         const Divisor(),
         histories.isEmpty
             ? Container(
-              width: double.maxFinite,
-              padding: const EdgeInsets.all(16),
-              color: Colors.grey[50],
-              child: const Text('Sem histórico disponível'),
-            )
+                width: double.maxFinite,
+                padding: const EdgeInsets.all(16),
+                color: Colors.grey[50],
+                child: const Text('Sem histórico disponível'),
+              )
             : Expanded(
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  primaryColor: AppColors.primaryMain,
-                  colorScheme: ColorScheme.light(
-                    primary: AppColors.primaryMain,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    primaryColor: AppColors.primaryMain,
+                    colorScheme: ColorScheme.light(
+                      primary: AppColors.primaryMain,
+                    ),
+                  ),
+                  child: Stepper(
+                    controller: controller,
+                    elevation: 0,
+                    controlsBuilder: (context, details) => Container(),
+                    margin: EdgeInsets.zero,
+                    stepIconBuilder: (i, state) => Icon(
+                      histories[i].icon,
+                      color: Colors.white,
+                      size: 14,
+                    ),
+                    steps: histories.map((e) {
+                      final StepModel step = e.data as StepModel;
+                      return Step(
+                        content: const SizedBox(),
+                        isActive: histories.indexOf(e) == 0,
+                        title: Text(step.shipping?.description ?? step.name),
+                        subtitle: Text(
+                          step.createdAt.textHour(),
+                          style: AppCss.smallRegular.setSize(12),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
-                child: Stepper(
-                  controller: controller,
-                  elevation: 0,
-                  controlsBuilder: (context, details) => Container(),
-                  margin: EdgeInsets.zero,
-                  stepIconBuilder:
-                      (i, state) => Icon(
-                        histories[i].icon,
-                        color: Colors.white,
-                        size: 14,
-                      ),
-                  steps:
-                      histories.map((e) {
-                        final StepModel step = e.data as StepModel;
-                        return Step(
-                          content: const SizedBox(),
-                          isActive: histories.indexOf(e) == 0,
-                          title: Text(step.shipping?.description ?? step.name),
-                          subtitle: Text(
-                            step.createdAt.textHour(),
-                            style: AppCss.smallRegular.setSize(12),
-                          ),
-                        );
-                      }).toList(),
-                ),
               ),
-            ),
         const H(16),
       ],
     );

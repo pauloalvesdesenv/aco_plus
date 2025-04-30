@@ -57,26 +57,24 @@ class _AppTextButtonState extends State<AppTextButton> {
   Widget build(BuildContext context) {
     return AppShimmer(
       enable: loading,
-      child:
-          widget.icon != null
-              ? TextButton.icon(
-                style: style,
-                onPressed: onPressed,
-                label: text,
-                icon: Icon(widget.icon),
-              )
-              : TextButton(style: style, onPressed: onPressed, child: text),
+      child: widget.icon != null
+          ? TextButton.icon(
+              style: style,
+              onPressed: onPressed,
+              label: text,
+              icon: Icon(widget.icon),
+            )
+          : TextButton(style: style, onPressed: onPressed, child: text),
     );
   }
 
-  Function()? get onPressed =>
-      !widget.isEnable
-          ? null
-          : () async {
-            setState(() => loading = true);
-            await widget.onPressed.call();
-            setState(() => loading = false);
-          };
+  Function()? get onPressed => !widget.isEnable
+      ? null
+      : () async {
+          setState(() => loading = true);
+          await widget.onPressed.call();
+          setState(() => loading = false);
+        };
 
   Widget get text => Text(widget.label);
 
@@ -93,15 +91,14 @@ class _AppTextButtonState extends State<AppTextButton> {
           outlined ? WidgetStatePropertyAll(AppColors.primaryMain) : null,
       backgroundColor:
           outlined ? WidgetStatePropertyAll(AppColors.white) : null,
-      shape:
-          outlined
-              ? WidgetStatePropertyAll(
-                RoundedRectangleBorder(
-                  borderRadius: AppCss.radius8,
-                  side: BorderSide(color: AppColors.primaryMain, width: 2),
-                ),
-              )
-              : null,
+      shape: outlined
+          ? WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: AppCss.radius8,
+                side: BorderSide(color: AppColors.primaryMain, width: 2),
+              ),
+            )
+          : null,
     );
   }
 }

@@ -14,15 +14,13 @@ class OrdemEtiquetasPdfPage {
   OrdemEtiquetasPdfPage(this.model);
 
   pw.Page build(Uint8List bytes) => pw.MultiPage(
-    margin: pw.EdgeInsets.zero,
-    orientation: pw.PageOrientation.portrait,
-    pageFormat: PdfPageFormat.a6,
-
-    build:
-        (pw.Context context) => [
+        margin: pw.EdgeInsets.zero,
+        orientation: pw.PageOrientation.portrait,
+        pageFormat: PdfPageFormat.a6,
+        build: (pw.Context context) => [
           for (var etiqueta in model) _etiquetaItem(etiqueta, bytes),
         ],
-  );
+      );
 
   pw.Widget _etiquetaItem(OrdemEtiquetaModel etiqueta, Uint8List bytes) {
     return pw.Container(

@@ -65,12 +65,12 @@ class FCMProvider {
     );
 
     // Obtain the access token
-    auth.AccessCredentials credentials = await auth
-        .obtainAccessCredentialsViaServiceAccount(
-          auth.ServiceAccountCredentials.fromJson(serviceAccountJson),
-          scopes,
-          client,
-        );
+    auth.AccessCredentials credentials =
+        await auth.obtainAccessCredentialsViaServiceAccount(
+      auth.ServiceAccountCredentials.fromJson(serviceAccountJson),
+      scopes,
+      client,
+    );
 
     // Close the HTTP client
     client.close();

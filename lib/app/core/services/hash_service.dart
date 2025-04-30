@@ -26,9 +26,9 @@ class HashService {
   static final Random _rnd = Random();
 
   static String _getRandomString(int length) => String.fromCharCodes(
-    Iterable.generate(
-      length,
-      (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length)),
-    ),
-  );
+        Iterable.generate(
+          length,
+          (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length)),
+        ),
+      );
 }

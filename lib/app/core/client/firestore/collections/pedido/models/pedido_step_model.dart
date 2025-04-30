@@ -16,10 +16,10 @@ class PedidoStepModel {
   });
 
   factory PedidoStepModel.create(StepModel step) => PedidoStepModel(
-    id: HashService.get,
-    step: step,
-    createdAt: DateTime.now(),
-  );
+        id: HashService.get,
+        step: step,
+        createdAt: DateTime.now(),
+      );
 
   Map<String, dynamic> toMap() {
     return {

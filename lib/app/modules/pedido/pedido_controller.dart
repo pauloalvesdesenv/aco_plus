@@ -63,10 +63,9 @@ class PedidoController {
     String search,
     List<PedidoModel> pedidos,
   ) {
-    pedidos =
-        utils.steps.isEmpty
-            ? pedidos
-            : pedidos.where((e) => e.step.id == utils.steps.last.id).toList();
+    pedidos = utils.steps.isEmpty
+        ? pedidos
+        : pedidos.where((e) => e.step.id == utils.steps.last.id).toList();
     if (search.length < 3) return pedidos;
     List<PedidoModel> filtered = [];
     for (final pedido in pedidos) {
@@ -81,15 +80,13 @@ class PedidoController {
     String search,
     List<PedidoModel> pedidos,
   ) {
-    pedidos =
-        utilsArquiveds.steps.isEmpty
-            ? pedidos
-            : pedidos
-                .where(
-                  (e) =>
-                      utilsArquiveds.steps.map((e) => e.id).contains(e.step.id),
-                )
-                .toList();
+    pedidos = utilsArquiveds.steps.isEmpty
+        ? pedidos
+        : pedidos
+            .where(
+              (e) => utilsArquiveds.steps.map((e) => e.id).contains(e.step.id),
+            )
+            .toList();
     if (search.length < 3) return pedidos;
     List<PedidoModel> filtered = [];
     for (final pedido in pedidos) {
@@ -235,38 +232,34 @@ class PedidoController {
     switch (utils.sortType) {
       case SortType.localizator:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? a.localizador.compareTo(b.localizador)
-                  : b.localizador.compareTo(a.localizador),
+          (a, b) => isAsc
+              ? a.localizador.compareTo(b.localizador)
+              : b.localizador.compareTo(a.localizador),
         );
         break;
       case SortType.alfabetic:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? a.localizador.compareTo(b.localizador)
-                  : b.localizador.compareTo(a.localizador),
+          (a, b) => isAsc
+              ? a.localizador.compareTo(b.localizador)
+              : b.localizador.compareTo(a.localizador),
         );
         break;
       case SortType.deliveryAt:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? (a.deliveryAt ?? DateTime.now()).compareTo(
-                    (b.deliveryAt ?? DateTime.now()),
-                  )
-                  : (b.deliveryAt ?? DateTime.now()).compareTo(
-                    (a.deliveryAt ?? DateTime.now()),
-                  ),
+          (a, b) => isAsc
+              ? (a.deliveryAt ?? DateTime.now()).compareTo(
+                  (b.deliveryAt ?? DateTime.now()),
+                )
+              : (b.deliveryAt ?? DateTime.now()).compareTo(
+                  (a.deliveryAt ?? DateTime.now()),
+                ),
         );
         break;
       case SortType.createdAt:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? a.createdAt.compareTo(b.createdAt)
-                  : b.createdAt.compareTo(a.createdAt),
+          (a, b) => isAsc
+              ? a.createdAt.compareTo(b.createdAt)
+              : b.createdAt.compareTo(a.createdAt),
         );
         break;
       default:
@@ -362,16 +355,14 @@ class PedidoController {
   }
 
   List<PedidoHistoryModel> getHistoricoAcompanhamento(PedidoModel pedido) {
-    List<PedidoHistoryModel> histories =
-        pedido.histories.reversed
-            .where((e) => e.type == PedidoHistoryType.step)
-            .toList();
+    List<PedidoHistoryModel> histories = pedido.histories.reversed
+        .where((e) => e.type == PedidoHistoryType.step)
+        .toList();
 
-    histories =
-        histories.where((e) {
-          final data = e.data as StepModel?;
-          return data?.isShipping ?? false;
-        }).toList();
+    histories = histories.where((e) {
+      final data = e.data as StepModel?;
+      return data?.isShipping ?? false;
+    }).toList();
 
     return histories;
   }
@@ -387,12 +378,11 @@ class PedidoController {
     relatorio.cliente = FirestoreClient.clientes.getById(pedido.cliente.id);
     relatorio.produtos =
         pedido.produtos.map((e) => e.copyWith()).map((e) => e.produto).toList();
-    relatorio.status =
-        pedido.produtos
-            .map((e) => e.copyWith())
-            .map((e) => e.status.status)
-            .toSet()
-            .toList();
+    relatorio.status = pedido.produtos
+        .map((e) => e.copyWith())
+        .map((e) => e.status.status)
+        .toSet()
+        .toList();
 
     relatorio.tipo = RelatorioPedidoTipo.pedidos;
 

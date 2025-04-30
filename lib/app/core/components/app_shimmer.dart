@@ -12,13 +12,13 @@ class AppShimmer extends StatelessWidget {
     return !enable
         ? child
         : IgnorePointer(
-          ignoring: true,
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey[200]!,
-            highlightColor: Colors.white,
-            period: const Duration(milliseconds: 800),
-            child: child,
-          ),
-        );
+            ignoring: true,
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[200]!,
+              highlightColor: Colors.white,
+              period: const Duration(milliseconds: 800),
+              child: child,
+            ),
+          );
   }
 }

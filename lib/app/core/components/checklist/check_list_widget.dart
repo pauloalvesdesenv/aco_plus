@@ -104,24 +104,21 @@ class _CheckListWidgetState extends State<CheckListWidget> {
                   color: item.isCheck ? AppColors.primaryMain : Colors.grey,
                 ),
               ),
-              child:
-                  item.isCheck
-                      ? const Icon(Icons.check, size: 16, color: Colors.white)
-                      : null,
+              child: item.isCheck
+                  ? const Icon(Icons.check, size: 16, color: Colors.white)
+                  : null,
             ),
             const W(12),
             Expanded(
               child: Text(
                 item.title,
                 style: AppCss.mediumRegular.copyWith(
-                  color:
-                      item.isCheck
-                          ? Colors.black.withValues(alpha: 0.5)
-                          : Colors.black,
-                  decoration:
-                      item.isCheck
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
+                  color: item.isCheck
+                      ? Colors.black.withValues(alpha: 0.5)
+                      : Colors.black,
+                  decoration: item.isCheck
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
                 ),
               ),
             ),

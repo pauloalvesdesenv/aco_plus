@@ -23,13 +23,13 @@ class MateriaPrimaModel {
   String get label => '${fabricanteModel.nome} - $corridaLote';
 
   static MateriaPrimaModel empty() => MateriaPrimaModel(
-    id: 'register_unavailable',
-    fabricanteModel: FabricanteModel.empty(),
-    produto: ProdutoModel.empty(),
-    corridaLote: 'Não especificado',
-    anexos: [],
-    status: MateriaPrimaStatus.disponivel,
-  );
+        id: 'register_unavailable',
+        fabricanteModel: FabricanteModel.empty(),
+        produto: ProdutoModel.empty(),
+        corridaLote: 'Não especificado',
+        anexos: [],
+        status: MateriaPrimaStatus.disponivel,
+      );
 
   factory MateriaPrimaModel.fromMap(Map<String, dynamic> map) {
     return MateriaPrimaModel(
@@ -37,12 +37,11 @@ class MateriaPrimaModel {
       fabricanteModel: FabricanteModel.fromMap(map['fabricanteModel']),
       produto: ProdutoModel.fromMap(map['produto']),
       corridaLote: map['corridaLote'] as String,
-      anexos:
-          map['anexos'] != null
-              ? (map['anexos'] as List<dynamic>)
-                  .map((e) => ArchiveModel.fromMap(e))
-                  .toList()
-              : [],
+      anexos: map['anexos'] != null
+          ? (map['anexos'] as List<dynamic>)
+              .map((e) => ArchiveModel.fromMap(e))
+              .toList()
+          : [],
       status: MateriaPrimaStatus.values[map['status']],
     );
   }

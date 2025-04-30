@@ -26,9 +26,13 @@ class StepCreateModel {
 
   late bool isEdit;
 
-  StepCreateModel() : id = HashService.get, isEdit = false;
+  StepCreateModel()
+      : id = HashService.get,
+        isEdit = false;
 
-  StepCreateModel.edit(StepModel etapa) : id = etapa.id, isEdit = true {
+  StepCreateModel.edit(StepModel etapa)
+      : id = etapa.id,
+        isEdit = true {
     name.text = etapa.name;
     color = etapa.color;
     fromSteps = etapa.fromSteps;
@@ -36,26 +40,25 @@ class StepCreateModel {
     createdAt = etapa.createdAt;
     isDefault = etapa.isDefault;
     isShipping = etapa.isShipping;
-    shipping =
-        etapa.shipping != null
-            ? StepShippingCreateModel.edit(etapa.shipping!)
-            : null;
+    shipping = etapa.shipping != null
+        ? StepShippingCreateModel.edit(etapa.shipping!)
+        : null;
     isArchivedAvailable = etapa.isArchivedAvailable;
     isPermiteProducao = etapa.isPermiteProducao;
   }
 
   StepModel toStepModel(StepModel? etapa) => StepModel(
-    id: id,
-    name: name.text,
-    color: color,
-    fromStepsIds: fromSteps.map((e) => e.id).toList(),
-    moveRoles: moveRoles,
-    createdAt: createdAt,
-    index: etapa?.index ?? FirestoreClient.steps.data.length,
-    isDefault: isDefault,
-    isShipping: isShipping,
-    shipping: shipping?.toStepShippingModel(),
-    isArchivedAvailable: isArchivedAvailable,
-    isPermiteProducao: isPermiteProducao,
-  );
+        id: id,
+        name: name.text,
+        color: color,
+        fromStepsIds: fromSteps.map((e) => e.id).toList(),
+        moveRoles: moveRoles,
+        createdAt: createdAt,
+        index: etapa?.index ?? FirestoreClient.steps.data.length,
+        isDefault: isDefault,
+        isShipping: isShipping,
+        shipping: shipping?.toStepShippingModel(),
+        isArchivedAvailable: isArchivedAvailable,
+        isPermiteProducao: isPermiteProducao,
+      );
 }

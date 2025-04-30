@@ -44,10 +44,9 @@ class _ArchivePDFWidgetState extends State<ArchivePDFWidget> {
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(4),
       ),
-      child:
-          controller != null
-              ? PdfView(controller: controller!)
-              : const SizedBox(width: 20, height: 20, child: Loading()),
+      child: controller != null
+          ? PdfView(controller: controller!)
+          : const SizedBox(width: 20, height: 20, child: Loading()),
     );
   }
 }

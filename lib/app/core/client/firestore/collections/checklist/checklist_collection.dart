@@ -53,27 +53,27 @@ class ChecklistCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-              field,
-              isEqualTo: isEqualTo,
-              isNotEqualTo: isNotEqualTo,
-              isLessThan: isLessThan,
-              isLessThanOrEqualTo: isLessThanOrEqualTo,
-              isGreaterThan: isGreaterThan,
-              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-              arrayContains: arrayContains,
-              arrayContainsAny: arrayContainsAny,
-              whereIn: whereIn,
-              whereNotIn: whereNotIn,
-              isNull: isNull,
-            )
+                field,
+                isEqualTo: isEqualTo,
+                isNotEqualTo: isNotEqualTo,
+                isLessThan: isLessThan,
+                isLessThanOrEqualTo: isLessThanOrEqualTo,
+                isGreaterThan: isGreaterThan,
+                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+                arrayContains: arrayContains,
+                arrayContainsAny: arrayContainsAny,
+                whereIn: whereIn,
+                whereNotIn: whereNotIn,
+                isNull: isNull,
+              )
             : collection)
         .snapshots()
         .listen((e) {
-          final countries =
-              e.docs.map((e) => ChecklistModel.fromMap(e.data())).toList();
-          countries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-          dataStream.add(countries);
-        });
+      final countries =
+          e.docs.map((e) => ChecklistModel.fromMap(e.data())).toList();
+      countries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      dataStream.add(countries);
+    });
   }
 
   ChecklistModel getById(String id) => data.singleWhere((e) => e.id == id);

@@ -52,8 +52,8 @@ class _TypeSelectorWidgetState<T> extends State<TypeSelectorWidget<T>> {
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.values.length,
                 separatorBuilder: (_, __) => const W(8),
-                itemBuilder:
-                    (_, i) => _goalFilterType(widget.value, widget.values[i]),
+                itemBuilder: (_, i) =>
+                    _goalFilterType(widget.value, widget.values[i]),
               ),
             ),
           ),
@@ -69,10 +69,9 @@ class _TypeSelectorWidgetState<T> extends State<TypeSelectorWidget<T>> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         decoration: BoxDecoration(
-          color:
-              isSelected
-                  ? (widget.itemColor?.call(value) ?? AppColors.primaryLight)
-                  : Colors.grey.withValues(alpha: 0.05),
+          color: isSelected
+              ? (widget.itemColor?.call(value) ?? AppColors.primaryLight)
+              : Colors.grey.withValues(alpha: 0.05),
           borderRadius: AppCss.radius16,
         ),
         child: Center(

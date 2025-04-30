@@ -89,8 +89,8 @@ class _FabricanteCreatePageState extends State<FabricanteCreatePage> {
                 ),
               ),
             ),
-            onPressed:
-                () => fabricanteCtrl.onDelete(context, widget.fabricante!),
+            onPressed: () =>
+                fabricanteCtrl.onDelete(context, widget.fabricante!),
             label: const Text('Excluir'),
             icon: const Icon(Icons.delete_outline),
           ),

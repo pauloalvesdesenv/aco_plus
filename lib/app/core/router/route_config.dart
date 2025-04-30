@@ -19,17 +19,16 @@ class RouteConfig {
       routes: [
         GoRoute(
           path: '/',
-          pageBuilder:
-              (context, state) => const NoTransitionPage(child: HomePage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: HomePage()),
         ),
         GoRoute(
           path: '/acompanhamento/pedidos/:id',
-          pageBuilder:
-              (context, state) => NoTransitionPage(
-                child: PedidoAcompanhamentoPage(
-                  id: state.pathParameters['id']!,
-                ),
-              ),
+          pageBuilder: (context, state) => NoTransitionPage(
+            child: PedidoAcompanhamentoPage(
+              id: state.pathParameters['id']!,
+            ),
+          ),
         ),
       ],
     );

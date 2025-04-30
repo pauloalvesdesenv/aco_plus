@@ -15,18 +15,22 @@ class ChecklistCreateModel {
 
   late bool isEdit;
 
-  ChecklistCreateModel() : id = HashService.get, isEdit = false;
+  ChecklistCreateModel()
+      : id = HashService.get,
+        isEdit = false;
 
-  ChecklistCreateModel.edit(ChecklistModel tag) : id = tag.id, isEdit = true {
+  ChecklistCreateModel.edit(ChecklistModel tag)
+      : id = tag.id,
+        isEdit = true {
     checklist = tag.checklist;
     createdAt = tag.createdAt;
     nome.text = tag.nome;
   }
 
   ChecklistModel toChecklistModel() => ChecklistModel(
-    id: id,
-    nome: nome.text,
-    checklist: checklist,
-    createdAt: createdAt,
-  );
+        id: id,
+        nome: nome.text,
+        checklist: checklist,
+        createdAt: createdAt,
+      );
 }

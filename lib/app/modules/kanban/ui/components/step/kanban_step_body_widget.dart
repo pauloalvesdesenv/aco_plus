@@ -17,10 +17,9 @@ class KanbanStepBodyWidget extends StatelessWidget {
     return Container(
       width: double.maxFinite,
       decoration: BoxDecoration(
-        color:
-            step.isEnable
-                ? Colors.grey[50]
-                : Colors.red.withValues(alpha: 0.05),
+        color: step.isEnable
+            ? Colors.grey[50]
+            : Colors.red.withValues(alpha: 0.05),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(8),
           bottomRight: Radius.circular(8),
@@ -39,10 +38,9 @@ class KanbanStepBodyWidget extends StatelessWidget {
         thumbVisibility: true,
         child: ListView(
           padding: const EdgeInsets.only(right: 2),
-          physics:
-              pedidos.isEmpty
-                  ? const NeverScrollableScrollPhysics()
-                  : const AlwaysScrollableScrollPhysics(),
+          physics: pedidos.isEmpty
+              ? const NeverScrollableScrollPhysics()
+              : const AlwaysScrollableScrollPhysics(),
           controller: step.scrollController,
           cacheExtent: 200,
           children: [
@@ -55,20 +53,17 @@ class KanbanStepBodyWidget extends StatelessWidget {
                     vertical: 8,
                   ),
                   child: SeparatedColumn(
-                    separatorBuilder:
-                        (_, i) =>
-                            utils.isPedidoVisibleFiltered(pedidos[i])
-                                ? _dragTargetWidget(step, pedidos, i + 1)
-                                : const SizedBox(),
-                    children:
-                        pedidos
-                            .map(
-                              (e) =>
-                                  utils.isPedidoVisibleFiltered(e)
-                                      ? KanbanCardDraggableWidget(e)
-                                      : const SizedBox(),
-                            )
-                            .toList(),
+                    separatorBuilder: (_, i) =>
+                        utils.isPedidoVisibleFiltered(pedidos[i])
+                            ? _dragTargetWidget(step, pedidos, i + 1)
+                            : const SizedBox(),
+                    children: pedidos
+                        .map(
+                          (e) => utils.isPedidoVisibleFiltered(e)
+                              ? KanbanCardDraggableWidget(e)
+                              : const SizedBox(),
+                        )
+                        .toList(),
                   ),
                 );
               },
@@ -85,31 +80,31 @@ class KanbanStepBodyWidget extends StatelessWidget {
     List<PedidoModel> pedidos,
     int index, {
     bool isLast = false,
-  }) => DragTarget<PedidoModel>(
-    onAcceptWithDetails:
-        (details) => kanbanCtrl.onAccept(step, details.data, index),
-    builder: (context, candidateData, rejectedData) {
-      bool isHover = candidateData.isNotEmpty;
-      bool isEnable = step.isEnable;
-      return AnimatedOpacity(
-        opacity: isEnable && isHover ? 1 : 0,
-        duration: const Duration(milliseconds: 100),
-        child: Container(
-          width: double.maxFinite,
-          margin:
-              isHover
+  }) =>
+      DragTarget<PedidoModel>(
+        onAcceptWithDetails: (details) =>
+            kanbanCtrl.onAccept(step, details.data, index),
+        builder: (context, candidateData, rejectedData) {
+          bool isHover = candidateData.isNotEmpty;
+          bool isEnable = step.isEnable;
+          return AnimatedOpacity(
+            opacity: isEnable && isHover ? 1 : 0,
+            duration: const Duration(milliseconds: 100),
+            child: Container(
+              width: double.maxFinite,
+              margin: isHover
                   ? EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: isLast ? 8 : 0,
-                  )
+                      vertical: 8,
+                      horizontal: isLast ? 8 : 0,
+                    )
                   : null,
-          height: isHover || isLast ? 70 : 16,
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
+              height: isHover || isLast ? 70 : 16,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          );
+        },
       );
-    },
-  );
 }

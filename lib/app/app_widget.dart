@@ -60,11 +60,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamOutNull<UsuarioModel?>(
       stream: usuarioCtrl.usuarioStream.listen,
-      child:
-          (_, data) =>
-              data == null
-                  ? const SignUpPage()
-                  : const Portal(child: BasePage()),
+      child: (_, data) =>
+          data == null ? const SignUpPage() : const Portal(child: BasePage()),
     );
   }
 }

@@ -110,19 +110,17 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
   ) {
     return Builder(
       builder: (context) {
-        bool isDisabled =
-            form.isEdit &&
+        bool isDisabled = form.isEdit &&
             FirestoreClient.ordens.data
                 .expand((e) => e.produtos.map((e) => e.id))
                 .any((e) => e == produto.id);
         return ColorFiltered(
-          colorFilter:
-              isDisabled
-                  ? ColorFilter.mode(
-                    Colors.grey.withValues(alpha: 0.4),
-                    BlendMode.softLight,
-                  )
-                  : const ColorFilter.mode(Colors.transparent, BlendMode.color),
+          colorFilter: isDisabled
+              ? ColorFilter.mode(
+                  Colors.grey.withValues(alpha: 0.4),
+                  BlendMode.softLight,
+                )
+              : const ColorFilter.mode(Colors.transparent, BlendMode.color),
           child: IgnorePointer(
             ignoring: isDisabled,
             child: Container(
@@ -236,15 +234,13 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
                   controller: form.produto.produtoEC,
                   nextFocus: form.produto.qtde.focus,
                   item: form.produto.produtoModel,
-                  itens:
-                      FirestoreClient.produtos.data
-                          .where(
-                            (e) =>
-                                !form.produtos
-                                    .map((e) => e.produtoModel?.id)
-                                    .contains(e.id),
-                          )
-                          .toList(),
+                  itens: FirestoreClient.produtos.data
+                      .where(
+                        (e) => !form.produtos
+                            .map((e) => e.produtoModel?.id)
+                            .contains(e.id),
+                      )
+                      .toList(),
                   itemLabel: (e) => e?.descricao ?? 'Selecione',
                   onSelect: (e) {
                     //TODO
@@ -283,16 +279,15 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
           Padding(
             padding: const EdgeInsets.only(top: 28),
             child: IconButton(
-              onPressed:
-                  !form.produto.isEnable
-                      ? null
-                      : () {
-                        form.produtos.add(form.produto);
-                        form.produto = PedidoProdutoCreateModel();
-                        form.produto.produtoEC.controller.clear();
-                        form.produto.produtoEC.focus.requestFocus();
-                        pedidoCtrl.formStream.update();
-                      },
+              onPressed: !form.produto.isEnable
+                  ? null
+                  : () {
+                      form.produtos.add(form.produto);
+                      form.produto = PedidoProdutoCreateModel();
+                      form.produto.produtoEC.controller.clear();
+                      form.produto.produtoEC.focus.requestFocus();
+                      pedidoCtrl.formStream.update();
+                    },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(
                   form.produto.isEnable
@@ -388,8 +383,7 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
           label: 'Obra',
           item: form.obra,
           disable: form.cliente == null,
-          itens:
-              form.cliente?.obras
+          itens: form.cliente?.obras
                   .where((e) => e.status == ObraStatus.emAndamento)
                   .toList() ??
               [],

@@ -69,26 +69,28 @@ class OrdemCreateModel {
   late bool isEdit;
 
   OrdemCreateModel()
-    : id =
-          '${[...FirestoreClient.ordens.dataStream.value].length + 1}_${HashService.get}',
-      isEdit = false,
-      isCreate = true;
+      : id = '${[
+              ...FirestoreClient.ordens.dataStream.value
+            ].length + 1}_${HashService.get}',
+        isEdit = false,
+        isCreate = true;
 
-  OrdemCreateModel.edit(OrdemModel ordem) : id = ordem.id, isEdit = true {
+  OrdemCreateModel.edit(OrdemModel ordem)
+      : id = ordem.id,
+        isEdit = true {
     isCreate = false;
     createdAt = ordem.createdAt;
     produto = FirestoreClient.produtos.data.firstWhere(
       (e) => e.id == ordem.produto.id,
     );
-    produtos =
-        ordem.produtos
-            .map(
-              (e) => e.copyWith(
-                isSelected: true,
-                isAvailable: e.isAvailableToChanges,
-              ),
-            )
-            .toList();
+    produtos = ordem.produtos
+        .map(
+          (e) => e.copyWith(
+            isSelected: true,
+            isAvailable: e.isAvailableToChanges,
+          ),
+        )
+        .toList();
     freezed = OrdemFreezedCreateModel.edit(ordem.freezed);
     beltIndex = ordem.beltIndex;
     if (ordem.materiaPrima != null) {
@@ -103,27 +105,25 @@ class OrdemCreateModel {
       id: id,
       createdAt: createdAt ?? DateTime.now(),
       produto: produto!,
-      produtos:
-          produtos
-              .map(
-                (e) => e.copyWith(
-                  statusess: [
-                    ...e.statusess,
-                    if (e.statusess.last.status !=
-                        PedidoProdutoStatus.aguardandoProducao)
-                      if (e.isSelected && e.isAvailableToChanges)
-                        PedidoProdutoStatusModel.create(
-                          PedidoProdutoStatus.aguardandoProducao,
-                        ),
-                  ],
-                ),
-              )
-              .toList(),
+      produtos: produtos
+          .map(
+            (e) => e.copyWith(
+              statusess: [
+                ...e.statusess,
+                if (e.statusess.last.status !=
+                    PedidoProdutoStatus.aguardandoProducao)
+                  if (e.isSelected && e.isAvailableToChanges)
+                    PedidoProdutoStatusModel.create(
+                      PedidoProdutoStatus.aguardandoProducao,
+                    ),
+              ],
+            ),
+          )
+          .toList(),
       freezed: isCreate ? OrdemFreezedModel.static() : freezed.toOrdemFreeze(),
-      beltIndex:
-          isCreate
-              ? FirestoreClient.ordens.ordensNaoCongeladas.length
-              : beltIndex,
+      beltIndex: isCreate
+          ? FirestoreClient.ordens.ordensNaoCongeladas.length
+          : beltIndex,
       materiaPrima:
           materiaPrima?.id == 'register_unavailable' ? null : materiaPrima,
     );

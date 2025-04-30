@@ -8,17 +8,18 @@ class NotificationService {
     String title,
     String subtitle, {
     NotificationPosition position = NotificationPosition.top,
-  }) => showOverlayNotification(
-    (context) => NotificationWidget(
-      title: title,
-      subtitle: subtitle,
-      color: AppColors.success,
-      colorOpacity: const Color(0xFFe4f4e7),
-      icon: Icons.done_rounded,
-    ),
-    position: position,
-    duration: const Duration(seconds: 4),
-  );
+  }) =>
+      showOverlayNotification(
+        (context) => NotificationWidget(
+          title: title,
+          subtitle: subtitle,
+          color: AppColors.success,
+          colorOpacity: const Color(0xFFe4f4e7),
+          icon: Icons.done_rounded,
+        ),
+        position: position,
+        duration: const Duration(seconds: 4),
+      );
 
   static void showPending(String title, String subtitle) =>
       showOverlayNotification(
@@ -49,15 +50,16 @@ class NotificationService {
     String title,
     String subtitle, {
     NotificationPosition position = NotificationPosition.top,
-  }) => showOverlayNotification(
-    (context) => NotificationWidget(
-      title: title,
-      subtitle: subtitle,
-      color: const Color(0xFF3faaff),
-      icon: Icons.info_outline_rounded,
-      colorOpacity: const Color(0xFF3faaff).withValues(alpha: 0.13),
-    ),
-    position: position,
-    duration: const Duration(seconds: 4),
-  );
+  }) =>
+      showOverlayNotification(
+        (context) => NotificationWidget(
+          title: title,
+          subtitle: subtitle,
+          color: const Color(0xFF3faaff),
+          icon: Icons.info_outline_rounded,
+          colorOpacity: const Color(0xFF3faaff).withValues(alpha: 0.13),
+        ),
+        position: position,
+        duration: const Duration(seconds: 4),
+      );
 }

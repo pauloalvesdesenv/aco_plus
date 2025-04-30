@@ -141,8 +141,8 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
                 ),
               ),
             ),
-            onPressed:
-                () => materiaPrimaCtrl.onDelete(context, widget.materiaPrima!),
+            onPressed: () =>
+                materiaPrimaCtrl.onDelete(context, widget.materiaPrima!),
             label: const Text('Excluir'),
             icon: const Icon(Icons.delete_outline),
           ),

@@ -52,26 +52,25 @@ class UsuarioCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-              field,
-              isEqualTo: isEqualTo,
-              isNotEqualTo: isNotEqualTo,
-              isLessThan: isLessThan,
-              isLessThanOrEqualTo: isLessThanOrEqualTo,
-              isGreaterThan: isGreaterThan,
-              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-              arrayContains: arrayContains,
-              arrayContainsAny: arrayContainsAny,
-              whereIn: whereIn,
-              whereNotIn: whereNotIn,
-              isNull: isNull,
-            )
+                field,
+                isEqualTo: isEqualTo,
+                isNotEqualTo: isNotEqualTo,
+                isLessThan: isLessThan,
+                isLessThanOrEqualTo: isLessThanOrEqualTo,
+                isGreaterThan: isGreaterThan,
+                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+                arrayContains: arrayContains,
+                arrayContainsAny: arrayContainsAny,
+                whereIn: whereIn,
+                whereNotIn: whereNotIn,
+                isNull: isNull,
+              )
             : collection)
         .snapshots()
         .listen((e) {
-          final data =
-              e.docs.map((e) => UsuarioModel.fromMap(e.data())).toList();
-          dataStream.add(data);
-        });
+      final data = e.docs.map((e) => UsuarioModel.fromMap(e.data())).toList();
+      dataStream.add(data);
+    });
   }
 
   UsuarioModel getById(String id) => data.singleWhere((e) => e.id == id);

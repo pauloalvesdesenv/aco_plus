@@ -12,14 +12,14 @@ class AutomatizacaoModel {
   final AutomatizacaoItemModel prontoArmacaoPedido;
 
   List<AutomatizacaoItemModel> get itens => [
-    criacaoPedido,
-    produtoPedidoSeparado,
-    produzindoCDPedido,
-    prontoCDPedido,
-    aguardandoArmacaoPedido,
-    produzindoArmacaoPedido,
-    prontoArmacaoPedido,
-  ];
+        criacaoPedido,
+        produtoPedidoSeparado,
+        produzindoCDPedido,
+        prontoCDPedido,
+        aguardandoArmacaoPedido,
+        produzindoArmacaoPedido,
+        prontoArmacaoPedido,
+      ];
 
   AutomatizacaoModel({
     required this.criacaoPedido,

@@ -55,53 +55,49 @@ class _StepsPageState extends State<StepsPage> {
       ),
       body: StreamOut<List<StepModel>>(
         stream: FirestoreClient.steps.dataStream.listen,
-        builder:
-            (_, __) => StreamOut<StepUtils>(
-              stream: stepCtrl.utilsStream.listen,
-              builder: (_, utils) {
-                final steps =
-                    stepCtrl.getStepesFiltered(utils.search.text, __).toList();
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: AppField(
-                        hint: 'Pesquisar',
-                        controller: utils.search,
-                        suffixIcon: Icons.search,
-                        onChanged: (_) => stepCtrl.utilsStream.update(),
-                      ),
-                    ),
-                    Expanded(
-                      child:
-                          steps.isEmpty
-                              ? const EmptyData()
-                              : RefreshIndicator(
-                                onRefresh:
-                                    () async => FirestoreClient.steps.fetch(),
-                                child: ReorderableListView(
-                                  onReorder: (oldIndex, newIndex) {
-                                    if (newIndex > oldIndex)
-                                      newIndex = newIndex - 1;
-                                    final step = steps.removeAt(oldIndex);
-                                    steps.insert(newIndex, step);
-                                    for (var i = 0; i < steps.length; i++) {
-                                      steps[i].index = i;
-                                      FirestoreClient.steps.dataStream.update();
-                                      FirestoreClient.steps.update(steps[i]);
-                                    }
-                                  },
-                                  children:
-                                      steps
-                                          .map((e) => _itemStepWidget(e))
-                                          .toList(),
-                                ),
-                              ),
-                    ),
-                  ],
-                );
-              },
-            ),
+        builder: (_, __) => StreamOut<StepUtils>(
+          stream: stepCtrl.utilsStream.listen,
+          builder: (_, utils) {
+            final steps =
+                stepCtrl.getStepesFiltered(utils.search.text, __).toList();
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: AppField(
+                    hint: 'Pesquisar',
+                    controller: utils.search,
+                    suffixIcon: Icons.search,
+                    onChanged: (_) => stepCtrl.utilsStream.update(),
+                  ),
+                ),
+                Expanded(
+                  child: steps.isEmpty
+                      ? const EmptyData()
+                      : RefreshIndicator(
+                          onRefresh: () async => FirestoreClient.steps.fetch(),
+                          child: ReorderableListView(
+                            onReorder: (oldIndex, newIndex) {
+                              if (newIndex > oldIndex) {
+                                newIndex = newIndex - 1;
+                              }
+                              final step = steps.removeAt(oldIndex);
+                              steps.insert(newIndex, step);
+                              for (var i = 0; i < steps.length; i++) {
+                                steps[i].index = i;
+                                FirestoreClient.steps.dataStream.update();
+                                FirestoreClient.steps.update(steps[i]);
+                              }
+                            },
+                            children:
+                                steps.map((e) => _itemStepWidget(e)).toList(),
+                          ),
+                        ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

@@ -50,9 +50,7 @@ class PedidoTagsWidget extends StatelessWidget {
                   children: [
                     Text(
                       tag.nome,
-                      style: AppCss.mediumRegular
-                          .setSize(13)
-                          .copyWith(
+                      style: AppCss.mediumRegular.setSize(13).copyWith(
                             fontWeight: FontWeight.w500,
                             color: tag.color,
                           ),

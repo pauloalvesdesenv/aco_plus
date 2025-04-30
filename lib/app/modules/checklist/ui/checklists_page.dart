@@ -45,46 +45,41 @@ class _ChecklistsPageState extends State<ChecklistsPage> {
       ),
       body: StreamOut<List<ChecklistModel>>(
         stream: FirestoreClient.checklists.dataStream.listen,
-        builder:
-            (_, __) => StreamOut<ChecklistUtils>(
-              stream: checklistCtrl.utilsStream.listen,
-              builder: (_, utils) {
-                final checklists =
-                    checklistCtrl
-                        .getChecklistsFiltered(utils.search.text, __)
-                        .toList();
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: AppField(
-                        hint: 'Pesquisar',
-                        controller: utils.search,
-                        suffixIcon: Icons.search,
-                        onChanged: (_) => checklistCtrl.utilsStream.update(),
-                      ),
-                    ),
-                    Expanded(
-                      child:
-                          checklists.isEmpty
-                              ? const EmptyData()
-                              : RefreshIndicator(
-                                onRefresh:
-                                    () async =>
-                                        FirestoreClient.checklists.fetch(),
-                                child: ListView.separated(
-                                  itemCount: checklists.length,
-                                  separatorBuilder: (_, i) => const Divisor(),
-                                  itemBuilder:
-                                      (_, i) =>
-                                          _itemChecklistWidget(checklists[i]),
-                                ),
-                              ),
-                    ),
-                  ],
-                );
-              },
-            ),
+        builder: (_, __) => StreamOut<ChecklistUtils>(
+          stream: checklistCtrl.utilsStream.listen,
+          builder: (_, utils) {
+            final checklists = checklistCtrl
+                .getChecklistsFiltered(utils.search.text, __)
+                .toList();
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: AppField(
+                    hint: 'Pesquisar',
+                    controller: utils.search,
+                    suffixIcon: Icons.search,
+                    onChanged: (_) => checklistCtrl.utilsStream.update(),
+                  ),
+                ),
+                Expanded(
+                  child: checklists.isEmpty
+                      ? const EmptyData()
+                      : RefreshIndicator(
+                          onRefresh: () async =>
+                              FirestoreClient.checklists.fetch(),
+                          child: ListView.separated(
+                            itemCount: checklists.length,
+                            separatorBuilder: (_, i) => const Divisor(),
+                            itemBuilder: (_, i) =>
+                                _itemChecklistWidget(checklists[i]),
+                          ),
+                        ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

@@ -61,109 +61,103 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
       ),
       body: StreamOut<List<PedidoModel>>(
         stream: FirestoreClient.pedidos.pedidosArchivedsStream.listen,
-        builder:
-            (_, pedidos) => StreamOut<PedidoArquivedUtils>(
-              stream: pedidoCtrl.utilsArquivedsStream.listen,
-              builder: (_, utils) {
-                pedidos =
-                    pedidoCtrl
-                        .getPedidosArchivedsFiltered(
-                          utils.search.text,
-                          FirestoreClient.pedidos.pedidosArchiveds
-                              .map((e) => e.copyWith())
-                              .toList(),
-                        )
-                        .toList();
-                return Column(
-                  children: [
-                    if (utils.showFilter)
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
+        builder: (_, pedidos) => StreamOut<PedidoArquivedUtils>(
+          stream: pedidoCtrl.utilsArquivedsStream.listen,
+          builder: (_, utils) {
+            pedidos = pedidoCtrl
+                .getPedidosArchivedsFiltered(
+                  utils.search.text,
+                  FirestoreClient.pedidos.pedidosArchiveds
+                      .map((e) => e.copyWith())
+                      .toList(),
+                )
+                .toList();
+            return Column(
+              children: [
+                if (utils.showFilter)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        AppField(
+                          hint: 'Pesquisar',
+                          controller: utils.search,
+                          suffixIcon: Icons.search,
+                          onChanged: (_) =>
+                              pedidoCtrl.utilsArquivedsStream.update(),
+                        ),
+                        const H(16),
+                        AppDropDownList<StepModel>(
+                          label: 'Etapas',
+                          itemColor: (e) => e.color,
+                          itens: FirestoreClient.steps.data,
+                          addeds: utils.steps,
+                          itemLabel: (e) => e.name,
+                          onChanged: () {
+                            pedidoCtrl.utilsArquivedsStream.update();
+                          },
+                        ),
+                        const H(16),
+                        Row(
                           children: [
-                            AppField(
-                              hint: 'Pesquisar',
-                              controller: utils.search,
-                              suffixIcon: Icons.search,
-                              onChanged:
-                                  (_) =>
-                                      pedidoCtrl.utilsArquivedsStream.update(),
+                            Expanded(
+                              child: AppDropDown<SortType>(
+                                label: 'Ordernar por',
+                                hasFilter: false,
+                                item: utils.sortType,
+                                itens: const [
+                                  SortType.createdAt,
+                                  SortType.deliveryAt,
+                                  SortType.localizator,
+                                  SortType.client,
+                                ],
+                                itemLabel: (e) => e.name,
+                                onSelect: (e) {
+                                  utils.sortType = e ?? SortType.localizator;
+                                  pedidoCtrl.utilsArquivedsStream.update();
+                                },
+                              ),
                             ),
-                            const H(16),
-                            AppDropDownList<StepModel>(
-                              label: 'Etapas',
-                              itemColor: (e) => e.color,
-                              itens: FirestoreClient.steps.data,
-                              addeds: utils.steps,
-                              itemLabel: (e) => e.name,
-                              onChanged: () {
-                                pedidoCtrl.utilsArquivedsStream.update();
-                              },
-                            ),
-                            const H(16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: AppDropDown<SortType>(
-                                    label: 'Ordernar por',
-                                    hasFilter: false,
-                                    item: utils.sortType,
-                                    itens: const [
-                                      SortType.createdAt,
-                                      SortType.deliveryAt,
-                                      SortType.localizator,
-                                      SortType.client,
-                                    ],
-                                    itemLabel: (e) => e.name,
-                                    onSelect: (e) {
-                                      utils.sortType =
-                                          e ?? SortType.localizator;
-                                      pedidoCtrl.utilsArquivedsStream.update();
-                                    },
-                                  ),
-                                ),
-                                const W(16),
-                                Expanded(
-                                  child: AppDropDown<SortOrder>(
-                                    hasFilter: false,
-                                    label: 'Ordernar',
-                                    item: utils.sortOrder,
-                                    itens: SortOrder.values,
-                                    itemLabel: (e) => e.name,
-                                    onSelect: (e) {
-                                      utils.sortOrder = e ?? SortOrder.asc;
-                                      pedidoCtrl.utilsArquivedsStream.update();
-                                    },
-                                  ),
-                                ),
-                              ],
+                            const W(16),
+                            Expanded(
+                              child: AppDropDown<SortOrder>(
+                                hasFilter: false,
+                                label: 'Ordernar',
+                                item: utils.sortOrder,
+                                itens: SortOrder.values,
+                                itemLabel: (e) => e.name,
+                                onSelect: (e) {
+                                  utils.sortOrder = e ?? SortOrder.asc;
+                                  pedidoCtrl.utilsArquivedsStream.update();
+                                },
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    Expanded(
-                      child:
-                          pedidos.isEmpty
-                              ? const SizedBox(
-                                width: double.maxFinite,
-                                child: EmptyData(),
-                              )
-                              : RefreshIndicator(
-                                onRefresh:
-                                    () async =>
-                                        await FirestoreClient.pedidos.fetch(),
-                                child: ListView.separated(
-                                  itemCount: pedidos.length,
-                                  separatorBuilder: (_, i) => const Divisor(),
-                                  itemBuilder:
-                                      (_, i) => _itemPedidoWidget(pedidos[i]),
-                                ),
-                              ),
+                      ],
                     ),
-                  ],
-                );
-              },
-            ),
+                  ),
+                Expanded(
+                  child: pedidos.isEmpty
+                      ? const SizedBox(
+                          width: double.maxFinite,
+                          child: EmptyData(),
+                        )
+                      : RefreshIndicator(
+                          onRefresh: () async =>
+                              await FirestoreClient.pedidos.fetch(),
+                          child: ListView.separated(
+                            itemCount: pedidos.length,
+                            separatorBuilder: (_, i) => const Divisor(),
+                            itemBuilder: (_, i) =>
+                                _itemPedidoWidget(pedidos[i]),
+                          ),
+                        ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -187,8 +181,8 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
               child: Row(
                 children: [
                   IconLoadingButton(
-                      () async =>
-                          await pedidoCtrl.onUnArchivePedido(context, pedido, 1),
+                      () async => await pedidoCtrl.onUnArchivePedido(
+                          context, pedido, 1),
                       icon: Icons.unarchive),
                   const W(16),
                   Expanded(

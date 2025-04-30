@@ -66,54 +66,48 @@ class _AppDropDown<T> extends State<AppDropDown<T>> {
     if (widget.hasFilter == false) return defaultWidget(context);
     return TypeAheadField<T>(
       offset: const Offset(0, 0),
-      builder:
-          (_, __, ___) => AppField(
-            hint: widget.hint ?? 'Selecione',
-            controllerObj: __,
-            focusObj: ___,
-            label: widget.label,
-            isDisable: widget.disable,
-            onChanged: (e) {
-              setState(() {
-                if (e.isEmpty) widget.onSelect.call(null);
-              });
-            },
-            suffixIcon: widget.onCreated == null ? null : Icons.add,
-            onSuffix:
-                widget.onCreated == null
-                    ? null
-                    : () async {
-                      final created = await widget.onCreated!.call();
-                      if (created == null) return;
-                      widget.onSelect.call(created);
-                    },
-          ),
+      builder: (_, __, ___) => AppField(
+        hint: widget.hint ?? 'Selecione',
+        controllerObj: __,
+        focusObj: ___,
+        label: widget.label,
+        isDisable: widget.disable,
+        onChanged: (e) {
+          setState(() {
+            if (e.isEmpty) widget.onSelect.call(null);
+          });
+        },
+        suffixIcon: widget.onCreated == null ? null : Icons.add,
+        onSuffix: widget.onCreated == null
+            ? null
+            : () async {
+                final created = await widget.onCreated!.call();
+                if (created == null) return;
+                widget.onSelect.call(created);
+              },
+      ),
       controller: controller.controller,
       focusNode: widget.focus ?? controller.focus,
-      suggestionsCallback:
-          (pattern) async =>
-              widget.itens
-                  .where(
-                    (e) =>
-                        !widget.hasFilter ||
-                        e.toString().toCompare.contains(pattern.toCompare),
-                  )
-                  .toList(),
+      suggestionsCallback: (pattern) async => widget.itens
+          .where(
+            (e) =>
+                !widget.hasFilter ||
+                e.toString().toCompare.contains(pattern.toCompare),
+          )
+          .toList(),
       hideOnEmpty: true,
-      emptyBuilder:
-          (context) => const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('Nenhum item encontrado'),
-          ),
-      itemBuilder:
-          (context, item) => Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              widget.itemLabel.call(item),
-              style: AppCss.mediumRegular,
-            ),
-          ),
+      emptyBuilder: (context) => const Padding(
+        padding: EdgeInsets.all(16),
+        child: Text('Nenhum item encontrado'),
+      ),
+      itemBuilder: (context, item) => Container(
+        color: Colors.white,
+        padding: const EdgeInsets.all(8),
+        child: Text(
+          widget.itemLabel.call(item),
+          style: AppCss.mediumRegular,
+        ),
+      ),
       onSelected: (e) {
         setState(() {
           widget.onSelect.call(e);
@@ -144,10 +138,9 @@ class _AppDropDown<T> extends State<AppDropDown<T>> {
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.neutralMedium),
               borderRadius: AppCss.radius8,
-              color:
-                  widget.disable
-                      ? AppColors.neutralMedium.withValues(alpha: 0.4)
-                      : null,
+              color: widget.disable
+                  ? AppColors.neutralMedium.withValues(alpha: 0.4)
+                  : null,
             ),
             child: DropdownButton<T>(
               focusNode: widget.focus ?? widget.controller?.focus,
@@ -157,36 +150,34 @@ class _AppDropDown<T> extends State<AppDropDown<T>> {
               underline: const SizedBox(),
               onChanged: (value) => widget.onSelect.call(value as T),
               hint: Text(widget.hint ?? 'Selecione'),
-              icon:
-                  widget.disable
-                      ? const SizedBox()
-                      : IgnorePointer(
-                        ignoring: widget.item == null,
-                        child: InkWell(
-                          onTap: () {
-                            if (widget.item != null) {
-                              widget.onSelect.call(null as T);
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Icon(
-                              widget.item != null
-                                  ? Icons.close
-                                  : Icons.arrow_drop_down,
-                            ),
+              icon: widget.disable
+                  ? const SizedBox()
+                  : IgnorePointer(
+                      ignoring: widget.item == null,
+                      child: InkWell(
+                        onTap: () {
+                          if (widget.item != null) {
+                            widget.onSelect.call(null as T);
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Icon(
+                            widget.item != null
+                                ? Icons.close
+                                : Icons.arrow_drop_down,
                           ),
                         ),
                       ),
-              items:
-                  widget.itens
-                      .map(
-                        (e) => DropdownMenuItem<T>(
-                          value: e,
-                          child: Text(widget.itemLabel.call(e)),
-                        ),
-                      )
-                      .toList(),
+                    ),
+              items: widget.itens
+                  .map(
+                    (e) => DropdownMenuItem<T>(
+                      value: e,
+                      child: Text(widget.itemLabel.call(e)),
+                    ),
+                  )
+                  .toList(),
             ),
           ),
         ],

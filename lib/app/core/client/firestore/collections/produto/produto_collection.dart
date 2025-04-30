@@ -52,27 +52,27 @@ class ProdutoCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-              field,
-              isEqualTo: isEqualTo,
-              isNotEqualTo: isNotEqualTo,
-              isLessThan: isLessThan,
-              isLessThanOrEqualTo: isLessThanOrEqualTo,
-              isGreaterThan: isGreaterThan,
-              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-              arrayContains: arrayContains,
-              arrayContainsAny: arrayContainsAny,
-              whereIn: whereIn,
-              whereNotIn: whereNotIn,
-              isNull: isNull,
-            )
+                field,
+                isEqualTo: isEqualTo,
+                isNotEqualTo: isNotEqualTo,
+                isLessThan: isLessThan,
+                isLessThanOrEqualTo: isLessThanOrEqualTo,
+                isGreaterThan: isGreaterThan,
+                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+                arrayContains: arrayContains,
+                arrayContainsAny: arrayContainsAny,
+                whereIn: whereIn,
+                whereNotIn: whereNotIn,
+                isNull: isNull,
+              )
             : collection)
         .snapshots()
         .listen((e) {
-          final countries =
-              e.docs.map((e) => ProdutoModel.fromMap(e.data())).toList();
-          countries.sort((a, b) => a.number.compareTo(b.number));
-          dataStream.add(countries);
-        });
+      final countries =
+          e.docs.map((e) => ProdutoModel.fromMap(e.data())).toList();
+      countries.sort((a, b) => a.number.compareTo(b.number));
+      dataStream.add(countries);
+    });
   }
 
   ProdutoModel getById(String id) => data.singleWhere((e) => e.id == id);

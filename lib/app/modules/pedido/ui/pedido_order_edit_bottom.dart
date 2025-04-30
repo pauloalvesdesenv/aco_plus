@@ -14,12 +14,13 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 Future<double?> showPedidoOrderEditBottom(
   PedidoProdutoCreateModel produto,
-) async => showModalBottomSheet(
-  backgroundColor: AppColors.white,
-  context: contextGlobal,
-  isScrollControlled: true,
-  builder: (_) => PedidoOrderEditBottom(produto),
-);
+) async =>
+    showModalBottomSheet(
+      backgroundColor: AppColors.white,
+      context: contextGlobal,
+      isScrollControlled: true,
+      builder: (_) => PedidoOrderEditBottom(produto),
+    );
 
 class PedidoOrderEditBottom extends StatefulWidget {
   final PedidoProdutoCreateModel produto;
@@ -48,94 +49,91 @@ class _PedidoOrderEditBottomState extends State<PedidoOrderEditBottom> {
   Widget build(BuildContext context) {
     return BottomSheet(
       onClosing: () {},
-      builder:
-          (context) => KeyboardVisibilityBuilder(
-            builder:
-                (context, isVisible) => Container(
-                  height: 390,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
+      builder: (context) => KeyboardVisibilityBuilder(
+        builder: (context, isVisible) => Container(
+          height: 390,
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+          ),
+          child: ListView(
+            children: [
+              const H(16),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: IconButton(
+                    style: ButtonStyle(
+                      padding: const WidgetStatePropertyAll(
+                        EdgeInsets.all(16),
+                      ),
+                      backgroundColor: WidgetStatePropertyAll(
+                        AppColors.white,
+                      ),
+                      foregroundColor: WidgetStatePropertyAll(
+                        AppColors.black,
+                      ),
                     ),
-                  ),
-                  child: ListView(
-                    children: [
-                      const H(16),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: IconButton(
-                            style: ButtonStyle(
-                              padding: const WidgetStatePropertyAll(
-                                EdgeInsets.all(16),
-                              ),
-                              backgroundColor: WidgetStatePropertyAll(
-                                AppColors.white,
-                              ),
-                              foregroundColor: WidgetStatePropertyAll(
-                                AppColors.black,
-                              ),
-                            ),
-                            onPressed: () => Navigator.pop(context),
-                            icon: const Icon(Icons.keyboard_backspace),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Editar Produto', style: AppCss.largeBold),
-                            const H(16),
-                            AppDropDown<ProdutoModel>(
-                              label: 'Produto',
-                              disable: true,
-                              controller: widget.produto.produtoEC,
-                              nextFocus: widget.produto.qtde.focus,
-                              item: widget.produto.produtoModel!,
-                              itens: [widget.produto.produtoModel!],
-                              itemLabel: (e) => e.descricao,
-                              onSelect: (e) {},
-                            ),
-                            const H(8),
-                            AppField(
-                              label: 'Quantidade',
-                              type: const TextInputType.numberWithOptions(
-                                decimal: true,
-                                signed: false,
-                              ),
-                              controller: qtdeEC,
-                              action: TextInputAction.done,
-                              suffixText: 'Kg',
-                              onChanged: (_) => setState(() {}),
-                              onEditingComplete: () {
-                                if (qtdeEC.doubleValue > 0) {
-                                  FocusScope.of(context).unfocus();
-                                  Navigator.pop(context, qtdeEC.doubleValue);
-                                }
-                              },
-                            ),
-                            const H(16),
-                            AppTextButton(
-                              isEnable: widget.produto.qtde.doubleValue > 0,
-                              label: 'Confirmar',
-                              onPressed:
-                                  () => Navigator.pop(
-                                    context,
-                                    qtdeEC.doubleValue,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.keyboard_backspace),
                   ),
                 ),
+              ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Editar Produto', style: AppCss.largeBold),
+                    const H(16),
+                    AppDropDown<ProdutoModel>(
+                      label: 'Produto',
+                      disable: true,
+                      controller: widget.produto.produtoEC,
+                      nextFocus: widget.produto.qtde.focus,
+                      item: widget.produto.produtoModel!,
+                      itens: [widget.produto.produtoModel!],
+                      itemLabel: (e) => e.descricao,
+                      onSelect: (e) {},
+                    ),
+                    const H(8),
+                    AppField(
+                      label: 'Quantidade',
+                      type: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: false,
+                      ),
+                      controller: qtdeEC,
+                      action: TextInputAction.done,
+                      suffixText: 'Kg',
+                      onChanged: (_) => setState(() {}),
+                      onEditingComplete: () {
+                        if (qtdeEC.doubleValue > 0) {
+                          FocusScope.of(context).unfocus();
+                          Navigator.pop(context, qtdeEC.doubleValue);
+                        }
+                      },
+                    ),
+                    const H(16),
+                    AppTextButton(
+                      isEnable: widget.produto.qtde.doubleValue > 0,
+                      label: 'Confirmar',
+                      onPressed: () => Navigator.pop(
+                        context,
+                        qtdeEC.doubleValue,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
+        ),
+      ),
     );
   }
 }

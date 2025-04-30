@@ -29,8 +29,8 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
     final nowDate = DateTime(now.year, now.month, 1);
     final dates = [
       ...widget.utils.calendar.keys.toList().map(
-        (e) => DateFormat('dd/MM/yyyy').parse(e),
-      ),
+            (e) => DateFormat('dd/MM/yyyy').parse(e),
+          ),
       nowDate,
     ];
     dates.sort();
@@ -90,57 +90,50 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
                       rightChevronIcon: Icon(Icons.chevron_right),
                     ),
                     calendarBuilders: CalendarBuilders(
-                      dowBuilder:
-                          (context, day) => KanbanCalendarWeekdayWidget(day),
-                      defaultBuilder:
-                          (context, day, focusedDay) =>
-                              KanbanCalendarBuilderWidget(
-                                day: day,
-                                pedidos: getPedidos(day),
-                                backgroundColor: [6, 7].contains(day.weekday)
-                                    ? Colors.grey[200]!
-                                    : Colors.grey[50]!,
-                                calendarFormat: widget.utils.calendarFormat,
-                              ),
-                      todayBuilder:
-                          (context, day, focusedDay) =>
-                              KanbanCalendarBuilderWidget(
-                                day: day,
-                                pedidos: getPedidos(day),
-                                backgroundColor:
-                                    [6, 7].contains(day.weekday)
-                                        ? const Color(0xFFE3EFF5)
-                                        : const Color(0xFFE3EFF5),
-                                calendarFormat: widget.utils.calendarFormat,
-                              ),
-                      outsideBuilder:
-                          (context, day, focusedDay) =>
-                              widget.utils.calendarFormat ==
-                                      CalendarFormat.month
-                                  ? Container(
-                                    width: double.maxFinite,
-                                    height: double.maxFinite,
-                                    color: Colors.grey.withValues(alpha: 0.9),
-                                  )
-                                  : KanbanCalendarBuilderWidget(
-                                    day: day,
-                                    pedidos: getPedidos(day),
-                                    backgroundColor:
-                                        [6, 7].contains(day.weekday)
-                                            ? Colors.grey[200]!
-                                            : Colors.grey[50]!,
-                                    calendarFormat: widget.utils.calendarFormat,
-                                  ),
-                      disabledBuilder:
-                          (context, day, focusedDay) =>
-                              KanbanCalendarBuilderWidget(
-                                day: day,
-                                pedidos: getPedidos(day),
-                                backgroundColor: const Color(0xFFE3EFF5),
-                                calendarFormat: widget.utils.calendarFormat,
-                              ),
-                      weekNumberBuilder:
-                          (context, weekNumber) => const SizedBox(),
+                      dowBuilder: (context, day) =>
+                          KanbanCalendarWeekdayWidget(day),
+                      defaultBuilder: (context, day, focusedDay) =>
+                          KanbanCalendarBuilderWidget(
+                        day: day,
+                        pedidos: getPedidos(day),
+                        backgroundColor: [6, 7].contains(day.weekday)
+                            ? Colors.grey[200]!
+                            : Colors.grey[50]!,
+                        calendarFormat: widget.utils.calendarFormat,
+                      ),
+                      todayBuilder: (context, day, focusedDay) =>
+                          KanbanCalendarBuilderWidget(
+                        day: day,
+                        pedidos: getPedidos(day),
+                        backgroundColor: [6, 7].contains(day.weekday)
+                            ? const Color(0xFFE3EFF5)
+                            : const Color(0xFFE3EFF5),
+                        calendarFormat: widget.utils.calendarFormat,
+                      ),
+                      outsideBuilder: (context, day, focusedDay) =>
+                          widget.utils.calendarFormat == CalendarFormat.month
+                              ? Container(
+                                  width: double.maxFinite,
+                                  height: double.maxFinite,
+                                  color: Colors.grey.withValues(alpha: 0.9),
+                                )
+                              : KanbanCalendarBuilderWidget(
+                                  day: day,
+                                  pedidos: getPedidos(day),
+                                  backgroundColor: [6, 7].contains(day.weekday)
+                                      ? Colors.grey[200]!
+                                      : Colors.grey[50]!,
+                                  calendarFormat: widget.utils.calendarFormat,
+                                ),
+                      disabledBuilder: (context, day, focusedDay) =>
+                          KanbanCalendarBuilderWidget(
+                        day: day,
+                        pedidos: getPedidos(day),
+                        backgroundColor: const Color(0xFFE3EFF5),
+                        calendarFormat: widget.utils.calendarFormat,
+                      ),
+                      weekNumberBuilder: (context, weekNumber) =>
+                          const SizedBox(),
                     ),
                   ),
                 ),

@@ -63,10 +63,9 @@ class CommentWidget extends StatelessWidget {
                 children: [
                   const Spacer(),
                   InkWell(
-                    onTap:
-                        () async => Clipboard.setData(
-                          ClipboardData(text: comment.delta.toString()),
-                        ),
+                    onTap: () async => Clipboard.setData(
+                      ClipboardData(text: comment.delta.toString()),
+                    ),
                     child: Icon(Icons.copy, color: Colors.grey[800], size: 22),
                   ),
                   const W(8),

@@ -58,11 +58,12 @@ class PedidoCreateModel {
   late bool isEdit;
 
   PedidoCreateModel()
-    : id = HashService.get,
-      isEdit = false,
-      step = FirestoreClient.steps.data.firstWhereOrNull(
-        (e) => e.id == FirestoreClient.automatizacao.data.criacaoPedido.step.id,
-      );
+      : id = HashService.get,
+        isEdit = false,
+        step = FirestoreClient.steps.data.firstWhereOrNull(
+          (e) =>
+              e.id == FirestoreClient.automatizacao.data.criacaoPedido.step.id,
+        );
 
   String getDetails() {
     List<String> localizador = [];
@@ -83,7 +84,9 @@ class PedidoCreateModel {
     return localizador.join(' - ');
   }
 
-  PedidoCreateModel.edit(PedidoModel pedido) : id = pedido.id, isEdit = true {
+  PedidoCreateModel.edit(PedidoModel pedido)
+      : id = pedido.id,
+        isEdit = true {
     localizador.text = pedido.localizador;
     descricao.text = pedido.descricao;
     cliente = FirestoreClient.clientes.getById(pedido.cliente.id);
@@ -106,10 +109,9 @@ class PedidoCreateModel {
         }
       }
     }
-    checklist =
-        pedido.checklistId != null
-            ? FirestoreClient.checklists.getById(pedido.checklistId!)
-            : null;
+    checklist = pedido.checklistId != null
+        ? FirestoreClient.checklists.getById(pedido.checklistId!)
+        : null;
     instrucoesEntrega.text = pedido.instrucoesEntrega;
     instrucoesFinanceiras.text = pedido.instrucoesFinanceiras;
     pedidoFinanceiro.text = pedido.pedidoFinanceiro;
@@ -136,12 +138,11 @@ class PedidoCreateModel {
       createdAt: pedido?.createdAt ?? DateTime.now(),
       cliente: cliente!,
       obra: obra!,
-      produtos:
-          produtos
-              .map(
-                (e) => e.toPedidoProdutoModel(id, cliente!, obra!).copyWith(),
-              )
-              .toList(),
+      produtos: produtos
+          .map(
+            (e) => e.toPedidoProdutoModel(id, cliente!, obra!).copyWith(),
+          )
+          .toList(),
       deliveryAt: deliveryAt,
       steps: pedido?.steps ?? [pedidoStepModel],
       tags: pedido?.tags ?? [tipo!.tag],
@@ -152,8 +153,7 @@ class PedidoCreateModel {
       index: pedido?.index ?? 0,
       isArchived: pedido?.isArchived ?? false,
       archives: pedido?.archives ?? [],
-      histories:
-          pedido?.histories ??
+      histories: pedido?.histories ??
           [
             PedidoHistoryModel(
               action: PedidoHistoryAction.create,

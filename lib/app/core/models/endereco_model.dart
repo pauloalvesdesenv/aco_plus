@@ -28,10 +28,9 @@ class EnderecoModel {
 
   EnderecoModel.empty();
 
-  String get name =>
-      localidade.isEmpty
-          ? 'Endereço Indisponível'
-          : '$logradouro, $numero - $bairro. $localidade-${estado.toUpperCase()}';
+  String get name => localidade.isEmpty
+      ? 'Endereço Indisponível'
+      : '$logradouro, $numero - $bairro. $localidade-${estado.toUpperCase()}';
 
   EnderecoModel.fromViacep(ViacepEndereco viacep) {
     cep = viacep.cep;
@@ -117,14 +116,14 @@ class EnderecoCreateModel {
   }
 
   EnderecoModel toEndereco() => EnderecoModel(
-    cep: cep.text,
-    logradouro: logradouro.text,
-    bairro: bairro.text,
-    localidade: localidade.text,
-    estado: estado.text,
-    numero: numero.text,
-    complemento: complemento.text,
-    lat: lat.doubleValue,
-    lon: lon.doubleValue,
-  );
+        cep: cep.text,
+        logradouro: logradouro.text,
+        bairro: bairro.text,
+        localidade: localidade.text,
+        estado: estado.text,
+        numero: numero.text,
+        complemento: complemento.text,
+        lat: lat.doubleValue,
+        lon: lon.doubleValue,
+      );
 }

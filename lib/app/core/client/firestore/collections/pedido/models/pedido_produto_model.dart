@@ -21,14 +21,14 @@ class PedidoProdutoModel {
   bool isAvailable = true;
 
   factory PedidoProdutoModel.empty(PedidoModel pedido) => PedidoProdutoModel(
-    id: HashService.get,
-    pedidoId: pedido.id,
-    clienteId: pedido.cliente.id,
-    obraId: pedido.obra.id,
-    produto: ProdutoModel.empty(),
-    statusess: [PedidoProdutoStatusModel.empty()],
-    qtde: 0,
-  );
+        id: HashService.get,
+        pedidoId: pedido.id,
+        clienteId: pedido.cliente.id,
+        obraId: pedido.obra.id,
+        produto: ProdutoModel.empty(),
+        statusess: [PedidoProdutoStatusModel.empty()],
+        qtde: 0,
+      );
   PedidoModel get pedido => FirestoreClient.pedidos.getById(pedidoId);
   bool get isAvailableToChanges => status.status.index < 2;
   bool get hasOrder => statusess.last.status == PedidoProdutoStatus.separado;
@@ -49,11 +49,10 @@ class PedidoProdutoModel {
       : PedidoProdutoStatusModel.create(PedidoProdutoStatus.pronto);
 
   PedidoProdutoStatusModel get statusView => status.copyWith(
-    status:
-        status.status == PedidoProdutoStatus.separado
+        status: status.status == PedidoProdutoStatus.separado
             ? PedidoProdutoStatus.aguardandoProducao
             : status.status,
-  );
+      );
 
   PedidoProdutoModel({
     required this.id,

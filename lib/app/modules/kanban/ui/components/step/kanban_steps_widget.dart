@@ -26,12 +26,11 @@ class KanbanStepsWidget extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         cacheExtent: 500,
         separatorBuilder: (_, i) => const W(16),
-        itemBuilder:
-            (_, i) => KanbanStepWidget(
-              utils,
-              utils.kanban.keys.toList()[i],
-              utils.kanban[utils.kanban.keys.toList()[i]]!,
-            ),
+        itemBuilder: (_, i) => KanbanStepWidget(
+          utils,
+          utils.kanban.keys.toList()[i],
+          utils.kanban[utils.kanban.keys.toList()[i]]!,
+        ),
       ),
     );
   }

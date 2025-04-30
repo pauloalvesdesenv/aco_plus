@@ -52,47 +52,42 @@ class _MateriasPrimasPageState extends State<MateriasPrimasPage> {
       ),
       body: StreamOut<List<MateriaPrimaModel>>(
         stream: FirestoreClient.materiaPrimas.dataStream.listen,
-        builder:
-            (_, __) => StreamOut<MateriaPrimaUtils>(
-              stream: materiaPrimaCtrl.utilsStream.listen,
-              builder: (_, utils) {
-                final materiaPrimas =
-                    materiaPrimaCtrl
-                        .getMateriaPrimaesFiltered(utils.search.text, __)
-                        .toList();
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: AppField(
-                        hint: 'Pesquisar',
-                        controller: utils.search,
-                        suffixIcon: Icons.search,
-                        onChanged: (_) => materiaPrimaCtrl.utilsStream.update(),
-                      ),
-                    ),
-                    Expanded(
-                      child:
-                          materiaPrimas.isEmpty
-                              ? const EmptyData()
-                              : RefreshIndicator(
-                                onRefresh:
-                                    () async =>
-                                        FirestoreClient.materiaPrimas.fetch(),
-                                child: ListView.separated(
-                                  itemCount: materiaPrimas.length,
-                                  separatorBuilder: (_, i) => const Divisor(),
-                                  itemBuilder:
-                                      (_, i) => _itemMateriaPrimaWidget(
-                                        materiaPrimas[i],
-                                      ),
-                                ),
-                              ),
-                    ),
-                  ],
-                );
-              },
-            ),
+        builder: (_, __) => StreamOut<MateriaPrimaUtils>(
+          stream: materiaPrimaCtrl.utilsStream.listen,
+          builder: (_, utils) {
+            final materiaPrimas = materiaPrimaCtrl
+                .getMateriaPrimaesFiltered(utils.search.text, __)
+                .toList();
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: AppField(
+                    hint: 'Pesquisar',
+                    controller: utils.search,
+                    suffixIcon: Icons.search,
+                    onChanged: (_) => materiaPrimaCtrl.utilsStream.update(),
+                  ),
+                ),
+                Expanded(
+                  child: materiaPrimas.isEmpty
+                      ? const EmptyData()
+                      : RefreshIndicator(
+                          onRefresh: () async =>
+                              FirestoreClient.materiaPrimas.fetch(),
+                          child: ListView.separated(
+                            itemCount: materiaPrimas.length,
+                            separatorBuilder: (_, i) => const Divisor(),
+                            itemBuilder: (_, i) => _itemMateriaPrimaWidget(
+                              materiaPrimas[i],
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

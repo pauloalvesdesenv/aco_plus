@@ -20,10 +20,9 @@ class KanbanBodyWidget extends StatelessWidget {
           Column(
             children: [
               Expanded(
-                child:
-                    utils.view == KanbanViewMode.calendar
-                        ? KanbanCalendarWidget(utils)
-                        : KanbanStepsWidget(utils),
+                child: utils.view == KanbanViewMode.calendar
+                    ? KanbanCalendarWidget(utils)
+                    : KanbanStepsWidget(utils),
               ),
             ],
           ),

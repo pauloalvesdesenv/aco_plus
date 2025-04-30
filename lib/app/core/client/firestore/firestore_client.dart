@@ -11,7 +11,6 @@ import 'package:aco_plus/app/core/client/firestore/collections/step/step_collect
 import 'package:aco_plus/app/core/client/firestore/collections/tag/tag_collection.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/usuario_collection.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/version/version_collection.dart';
-import 'package:flutter/foundation.dart';
 
 class FirestoreClient {
   static VersionCollection version = VersionCollection();
@@ -43,18 +42,18 @@ class FirestoreClient {
     await automatizacao.start();
     await notificacoes.start();
 
-      await version.listen();
-      await usuarios.listen();
-      await steps.listen();
-      await fabricantes.listen();
-      await produtos.listen();
-      await materiaPrimas.listen();
-      await tags.listen();
-      await checklists.listen();
-      await clientes.listen();
-      await pedidos.listen();
-      await ordens.listen();
-      await automatizacao.listen();
-      await notificacoes.listen();
+    await version.listen();
+    await usuarios.listen();
+    await steps.listen();
+    await fabricantes.listen();
+    await produtos.listen();
+    await materiaPrimas.listen();
+    await tags.listen();
+    await checklists.listen();
+    await clientes.listen();
+    await pedidos.listen();
+    await ordens.listen();
+    await automatizacao.listen();
+    await notificacoes.listen();
   }
 }

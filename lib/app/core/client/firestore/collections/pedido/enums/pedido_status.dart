@@ -60,8 +60,8 @@ extension PedidoStatusExtension on PedidoStatus {
 List<PedidoStatus> getPedidosStatusByPedido(PedidoModel pedido) =>
     pedido.tipo == PedidoTipo.cda
         ? [
-          PedidoStatus.aguardandoProducaoCDA,
-          PedidoStatus.produzindoCDA,
-          PedidoStatus.pronto,
-        ]
+            PedidoStatus.aguardandoProducaoCDA,
+            PedidoStatus.produzindoCDA,
+            PedidoStatus.pronto,
+          ]
         : [PedidoStatus.produzindoCD, PedidoStatus.pronto];
