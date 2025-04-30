@@ -36,60 +36,61 @@ class _ProdutosPageState extends State<ProdutosPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-          icon: Icon(
-            Icons.menu,
-            color: AppColors.white,
-          ),
+          icon: Icon(Icons.menu, color: AppColors.white),
         ),
-        title:
-            Text('Produtos', style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Produtos',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           IconButton(
-              onPressed: () => push(context, const ProdutoCreatePage()),
-              icon: Icon(
-                Icons.add,
-                color: AppColors.white,
-              ))
+            onPressed: () => push(context, const ProdutoCreatePage()),
+            icon: Icon(Icons.add, color: AppColors.white),
+          ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<ProdutoModel>>(
         stream: FirestoreClient.produtos.dataStream.listen,
-        builder: (_, __) => StreamOut<ProdutoUtils>(
-          stream: produtoCtrl.utilsStream.listen,
-          builder: (_, utils) {
-            final produtos = produtoCtrl
-                .getProdutoesFiltered(utils.search.text, __)
-                .toList();
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppField(
-                    hint: 'Pesquisar',
-                    controller: utils.search,
-                    suffixIcon: Icons.search,
-                    onChanged: (_) => produtoCtrl.utilsStream.update(),
-                  ),
-                ),
-                Expanded(
-                  child: produtos.isEmpty
-                      ? const EmptyData()
-                      : RefreshIndicator(
-                          onRefresh: () async =>
-                              FirestoreClient.produtos.fetch(),
-                          child: ListView.separated(
-                            itemCount: produtos.length,
-                            separatorBuilder: (_, i) => const Divisor(),
-                            itemBuilder: (_, i) =>
-                                _itemProdutoWidget(produtos[i]),
-                          ),
-                        ),
-                ),
-              ],
-            );
-          },
-        ),
+        builder:
+            (_, __) => StreamOut<ProdutoUtils>(
+              stream: produtoCtrl.utilsStream.listen,
+              builder: (_, utils) {
+                final produtos =
+                    produtoCtrl
+                        .getProdutoesFiltered(utils.search.text, __)
+                        .toList();
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppField(
+                        hint: 'Pesquisar',
+                        controller: utils.search,
+                        suffixIcon: Icons.search,
+                        onChanged: (_) => produtoCtrl.utilsStream.update(),
+                      ),
+                    ),
+                    Expanded(
+                      child:
+                          produtos.isEmpty
+                              ? const EmptyData()
+                              : RefreshIndicator(
+                                onRefresh:
+                                    () async =>
+                                        FirestoreClient.produtos.fetch(),
+                                child: ListView.separated(
+                                  itemCount: produtos.length,
+                                  separatorBuilder: (_, i) => const Divisor(),
+                                  itemBuilder:
+                                      (_, i) => _itemProdutoWidget(produtos[i]),
+                                ),
+                              ),
+                    ),
+                  ],
+                );
+              },
+            ),
       ),
     );
   }
@@ -98,10 +99,7 @@ class _ProdutosPageState extends State<ProdutosPage> {
     return ListTile(
       onTap: () => push(ProdutoCreatePage(produto: produto)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      title: Text(
-        produto.nome,
-        style: AppCss.mediumBold,
-      ),
+      title: Text(produto.nome, style: AppCss.mediumBold),
       subtitle: Text(produto.descricao),
       trailing: Icon(
         Icons.arrow_forward_ios,

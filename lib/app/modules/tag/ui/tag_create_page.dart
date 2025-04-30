@@ -31,34 +31,37 @@ class _TagCreatePageState extends State<TagCreatePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () async {
-                if (await showConfirmDialog(
-                    'Deseja realmente sair?',
-                    widget.tag != null
-                        ? 'A edição que realizou será perdida'
-                        : 'Os dados do Etapa serão perdidos.')) {
-                  pop(context);
-                }
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: AppColors.white,
-              )),
-          title: Text(
-              '${tagCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Etiqueta',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          actions: [
-            IconLoadingButton(
-                () async => await tagCtrl.onConfirm(context, widget.tag))
-          ],
-          backgroundColor: AppColors.primaryMain,
+      resizeAvoid: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async {
+            if (await showConfirmDialog(
+              'Deseja realmente sair?',
+              widget.tag != null
+                  ? 'A edição que realizou será perdida'
+                  : 'Os dados do Etapa serão perdidos.',
+            )) {
+              pop(context);
+            }
+          },
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        body: StreamOut(
-            stream: tagCtrl.formStream.listen,
-            builder: (_, form) => body(form)));
+        title: Text(
+          '${tagCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Etiqueta',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        actions: [
+          IconLoadingButton(
+            () async => await tagCtrl.onConfirm(context, widget.tag),
+          ),
+        ],
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: StreamOut(
+        stream: tagCtrl.formStream.listen,
+        builder: (_, form) => body(form),
+      ),
+    );
   }
 
   Widget body(TagCreateModel form) {
@@ -88,20 +91,23 @@ class _TagCreatePageState extends State<TagCreatePage> {
         const H(24),
         if (form.isEdit)
           TextButton.icon(
-              style: ButtonStyle(
-                fixedSize: const WidgetStatePropertyAll(
-                    Size.fromWidth(double.maxFinite)),
-                foregroundColor: WidgetStatePropertyAll(AppColors.error),
-                backgroundColor: WidgetStatePropertyAll(AppColors.white),
-                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: AppCss.radius8,
-                    side: BorderSide(color: AppColors.error))),
+            style: ButtonStyle(
+              fixedSize: const WidgetStatePropertyAll(
+                Size.fromWidth(double.maxFinite),
               ),
-              onPressed: () => tagCtrl.onDelete(context, widget.tag!),
-              label: const Text('Excluir'),
-              icon: const Icon(
-                Icons.delete_outline,
-              )),
+              foregroundColor: WidgetStatePropertyAll(AppColors.error),
+              backgroundColor: WidgetStatePropertyAll(AppColors.white),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: AppCss.radius8,
+                  side: BorderSide(color: AppColors.error),
+                ),
+              ),
+            ),
+            onPressed: () => tagCtrl.onDelete(context, widget.tag!),
+            label: const Text('Excluir'),
+            icon: const Icon(Icons.delete_outline),
+          ),
       ],
     );
   }

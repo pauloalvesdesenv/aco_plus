@@ -36,33 +36,37 @@ class _StepCreatePageState extends State<StepCreatePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () async {
-                if (await showConfirmDialog(
-                    'Deseja realmente sair?',
-                    widget.step != null
-                        ? 'A edição que realizou será perdida'
-                        : 'Os dados do Etapa serão perdidos.')) {
-                  pop(context);
-                }
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: AppColors.white,
-              )),
-          title: Text('${stepCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Etapa',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          actions: [
-            IconLoadingButton(
-                () async => await stepCtrl.onConfirm(context, widget.step))
-          ],
-          backgroundColor: AppColors.primaryMain,
+      resizeAvoid: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async {
+            if (await showConfirmDialog(
+              'Deseja realmente sair?',
+              widget.step != null
+                  ? 'A edição que realizou será perdida'
+                  : 'Os dados do Etapa serão perdidos.',
+            )) {
+              pop(context);
+            }
+          },
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        body: StreamOut(
-            stream: stepCtrl.formStream.listen,
-            builder: (_, form) => body(form)));
+        title: Text(
+          '${stepCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Etapa',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        actions: [
+          IconLoadingButton(
+            () async => await stepCtrl.onConfirm(context, widget.step),
+          ),
+        ],
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: StreamOut(
+        stream: stepCtrl.formStream.listen,
+        builder: (_, form) => body(form),
+      ),
+    );
   }
 
   Widget body(StepCreateModel form) {
@@ -85,24 +89,25 @@ class _StepCreatePageState extends State<StepCreatePage> {
         ),
         const H(16),
         AppDropDownList<StepModel>(
-            label: 'Recebe de',
-            addeds: form.fromSteps,
-            itens: FirestoreClient.steps.data
-                .where((e) => e.id != form.id)
-                .toList(),
-            itemLabel: (e) => e.name,
-            onChanged: () {
-              stepCtrl.formStream.add(form);
-            }),
+          label: 'Recebe de',
+          addeds: form.fromSteps,
+          itens:
+              FirestoreClient.steps.data.where((e) => e.id != form.id).toList(),
+          itemLabel: (e) => e.name,
+          onChanged: () {
+            stepCtrl.formStream.add(form);
+          },
+        ),
         const H(16),
         AppDropDownList<UsuarioRole>(
-            label: 'Movido por',
-            addeds: form.moveRoles,
-            itens: UsuarioRole.values,
-            itemLabel: (e) => e.label ?? 'Selecione',
-            onChanged: () {
-              stepCtrl.formStream.add(form);
-            }),
+          label: 'Movido por',
+          addeds: form.moveRoles,
+          itens: UsuarioRole.values,
+          itemLabel: (e) => e.label ?? 'Selecione',
+          onChanged: () {
+            stepCtrl.formStream.add(form);
+          },
+        ),
         const H(16),
         AppCheckbox(
           value: form.isShipping,
@@ -147,20 +152,23 @@ class _StepCreatePageState extends State<StepCreatePage> {
         const H(24),
         if (form.isEdit)
           TextButton.icon(
-              style: ButtonStyle(
-                fixedSize: const WidgetStatePropertyAll(
-                    Size.fromWidth(double.maxFinite)),
-                foregroundColor: WidgetStatePropertyAll(AppColors.error),
-                backgroundColor: WidgetStatePropertyAll(AppColors.white),
-                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: AppCss.radius8,
-                    side: BorderSide(color: AppColors.error))),
+            style: ButtonStyle(
+              fixedSize: const WidgetStatePropertyAll(
+                Size.fromWidth(double.maxFinite),
               ),
-              onPressed: () => stepCtrl.onDelete(context, widget.step!),
-              label: const Text('Excluir'),
-              icon: const Icon(
-                Icons.delete_outline,
-              )),
+              foregroundColor: WidgetStatePropertyAll(AppColors.error),
+              backgroundColor: WidgetStatePropertyAll(AppColors.white),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: AppCss.radius8,
+                  side: BorderSide(color: AppColors.error),
+                ),
+              ),
+            ),
+            onPressed: () => stepCtrl.onDelete(context, widget.step!),
+            label: const Text('Excluir'),
+            icon: const Icon(Icons.delete_outline),
+          ),
       ],
     );
   }

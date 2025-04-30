@@ -47,31 +47,31 @@ class PedidoModel {
   final String instrucoesFinanceiras;
 
   factory PedidoModel.empty() => PedidoModel(
-        id: HashService.get,
-        localizador: 'NOTFOUND${HashService.get}',
-        descricao: '',
-        createdAt: DateTime.now(),
-        deliveryAt: null,
-        cliente: ClienteModel.empty(),
-        obra: ObraModel.empty(),
-        produtos: [],
-        tipo: PedidoTipo.cda,
-        statusess: [],
-        steps: [],
-        tags: [],
-        checks: [],
-        comments: [],
-        users: [],
-        index: 10000000,
-        histories: [],
-        isArchived: false,
-        archives: [],
-        checklistId: '',
-        planilhamento: '',
-        pedidoFinanceiro: '',
-        instrucoesEntrega: '',
-        instrucoesFinanceiras: '',
-      );
+    id: HashService.get,
+    localizador: 'NOTFOUND${HashService.get}',
+    descricao: '',
+    createdAt: DateTime.now(),
+    deliveryAt: null,
+    cliente: ClienteModel.empty(),
+    obra: ObraModel.empty(),
+    produtos: [],
+    tipo: PedidoTipo.cda,
+    statusess: [],
+    steps: [],
+    tags: [],
+    checks: [],
+    comments: [],
+    users: [],
+    index: 10000000,
+    histories: [],
+    isArchived: false,
+    archives: [],
+    checklistId: '',
+    planilhamento: '',
+    pedidoFinanceiro: '',
+    instrucoesEntrega: '',
+    instrucoesFinanceiras: '',
+  );
 
   String get filtro => localizador + pedidoFinanceiro;
 
@@ -84,7 +84,7 @@ class PedidoModel {
       [
         PedidoStatus.aguardandoProducaoCDA,
         PedidoStatus.produzindoCDA,
-        PedidoStatus.pronto
+        PedidoStatus.pronto,
       ].contains(status);
 
   void addStep(step) => steps.add(PedidoStepModel.create(step));
@@ -98,12 +98,15 @@ class PedidoModel {
 
   List<PedidoStatusModel> getArmacaoStatusses() {
     final statusessFiltered = <PedidoStatusModel>[];
-    final status = statusess
-        .where((e) =>
-            e.status == PedidoStatus.produzindoCD ||
-            e.status == PedidoStatus.aguardandoProducaoCD)
-        .toList()
-        .first;
+    final status =
+        statusess
+            .where(
+              (e) =>
+                  e.status == PedidoStatus.produzindoCD ||
+                  e.status == PedidoStatus.aguardandoProducaoCD,
+            )
+            .toList()
+            .first;
     for (var status in statusess) {
       if (status.status != PedidoStatus.produzindoCD &&
           status.status != PedidoStatus.aguardandoProducaoCD) {
@@ -161,14 +164,18 @@ class PedidoModel {
 
   double getQtdeTotal() {
     return produtos.fold(
-        0, (previousValue, element) => previousValue + element.qtde);
+      0,
+      (previousValue, element) => previousValue + element.qtde,
+    );
   }
 
   double getQtdeAguardandoProducao() {
     return produtos
-        .where((e) =>
-            e.statusess.last.getStatusView() ==
-            PedidoProdutoStatus.aguardandoProducao)
+        .where(
+          (e) =>
+              e.statusess.last.getStatusView() ==
+              PedidoProdutoStatus.aguardandoProducao,
+        )
         .fold(0, (previousValue, element) => previousValue + element.qtde);
   }
 
@@ -241,41 +248,56 @@ class PedidoModel {
       descricao: map['descricao'] ?? '',
       id: map['id'] ?? '',
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
-      deliveryAt: map['deliveryAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['deliveryAt'])
-          : null,
+      deliveryAt:
+          map['deliveryAt'] != null
+              ? DateTime.fromMillisecondsSinceEpoch(map['deliveryAt'])
+              : null,
       cliente: ClienteModel.fromMap(map['cliente']),
       obra: ObraModel.fromMap(map['obra']),
       tipo: PedidoTipo.values[map['tipo']],
       statusess: List<PedidoStatusModel>.from(
-          map['status']?.map((x) => PedidoStatusModel.fromMap(x)) ?? []),
+        map['status']?.map((x) => PedidoStatusModel.fromMap(x)) ?? [],
+      ),
       produtos: List<PedidoProdutoModel>.from(
-          map['produtos']?.map((x) => PedidoProdutoModel.fromMap(x)) ?? []),
+        map['produtos']?.map((x) => PedidoProdutoModel.fromMap(x)) ?? [],
+      ),
       archives: List<ArchiveModel>.from(
-          map['archives']?.map((x) => ArchiveModel.fromMap(x)) ?? []),
+        map['archives']?.map((x) => ArchiveModel.fromMap(x)) ?? [],
+      ),
       checks: List<CheckItemModel>.from(
-          map['checks']?.map((x) => CheckItemModel.fromMap(x)) ?? []),
+        map['checks']?.map((x) => CheckItemModel.fromMap(x)) ?? [],
+      ),
       comments: List<CommentModel>.from(
-          map['comments']?.map((x) => CommentModel.fromMap(x)) ?? []),
-      steps: map['steps'] != null && map['steps'].isNotEmpty
-          ? List<PedidoStepModel>.from(
-              map['steps']?.map((x) => PedidoStepModel.fromMap(x)))
-          : [
-              PedidoStepModel(
+        map['comments']?.map((x) => CommentModel.fromMap(x)) ?? [],
+      ),
+      steps:
+          map['steps'] != null && map['steps'].isNotEmpty
+              ? List<PedidoStepModel>.from(
+                map['steps']?.map((x) => PedidoStepModel.fromMap(x)),
+              )
+              : [
+                PedidoStepModel(
                   id: HashService.get,
                   step: FirestoreClient.steps.data.first,
-                  createdAt: DateTime.now()),
-            ],
-      tags: map['tags'] != null
-          ? List<TagModel>.from(map['tags']?.map((x) => TagModel.fromMap(x)))
-          : [],
+                  createdAt: DateTime.now(),
+                ),
+              ],
+      tags:
+          map['tags'] != null
+              ? List<TagModel>.from(
+                map['tags']?.map((x) => TagModel.fromMap(x)),
+              )
+              : [],
       users: List<UsuarioModel>.from(
-          map['users']?.map((x) => FirestoreClient.usuarios.getById(x)) ?? []),
+        map['users']?.map((x) => FirestoreClient.usuarios.getById(x)) ?? [],
+      ),
       index: map['index'] ?? 0,
-      histories: map['histories'] != null
-          ? List<PedidoHistoryModel>.from(
-              map['histories']?.map((x) => PedidoHistoryModel.fromMap(x)))
-          : [],
+      histories:
+          map['histories'] != null
+              ? List<PedidoHistoryModel>.from(
+                map['histories']?.map((x) => PedidoHistoryModel.fromMap(x)),
+              )
+              : [],
       isArchived: map['isArchived'] ?? false,
       planilhamento: map['planilhamento'] ?? '',
       pedidoFinanceiro: map['pedidoFinanceiro'] ?? '',

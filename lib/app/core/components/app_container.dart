@@ -28,23 +28,31 @@ class AppContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: margin == null ? null : EdgeInsets.all(margin!),
-      padding: padding == null
-          ? null
-          : padding!.length == 1
+      padding:
+          padding == null
+              ? null
+              : padding!.length == 1
               ? EdgeInsets.all(padding!.first)
               : (padding!.length == 2
                   ? EdgeInsets.symmetric(
-                      horizontal: padding!.first, vertical: padding![1])
+                    horizontal: padding!.first,
+                    vertical: padding![1],
+                  )
                   : EdgeInsets.fromLTRB(
-                      padding![0], padding![1], padding![2], padding![3])),
+                    padding![0],
+                    padding![1],
+                    padding![2],
+                    padding![3],
+                  )),
       width: width,
       height: height,
       decoration: BoxDecoration(
         color: color,
         borderRadius: radius == null ? null : BorderRadius.circular(radius!),
-        border: borderColor == null
-            ? null
-            : Border.all(color: borderColor!, width: borderWidth ?? 1),
+        border:
+            borderColor == null
+                ? null
+                : Border.all(color: borderColor!, width: borderWidth ?? 1),
       ),
       child: child,
     );

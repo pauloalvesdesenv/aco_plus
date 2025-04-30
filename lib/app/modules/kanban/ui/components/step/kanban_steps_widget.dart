@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 
 class KanbanStepsWidget extends StatelessWidget {
   final KanbanUtils utils;
-  const KanbanStepsWidget(
-    this.utils, {
-    super.key,
-  });
+  const KanbanStepsWidget(this.utils, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +26,12 @@ class KanbanStepsWidget extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         cacheExtent: 500,
         separatorBuilder: (_, i) => const W(16),
-        itemBuilder: (_, i) => KanbanStepWidget(
-          utils,
-          utils.kanban.keys.toList()[i],
-          utils.kanban[utils.kanban.keys.toList()[i]]!,
-        ),
+        itemBuilder:
+            (_, i) => KanbanStepWidget(
+              utils,
+              utils.kanban.keys.toList()[i],
+              utils.kanban[utils.kanban.keys.toList()[i]]!,
+            ),
       ),
     );
   }

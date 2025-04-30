@@ -26,16 +26,18 @@ class _OrdemProdutosStatusBottomState extends State<OrdemProdutosStatusBottom> {
   @override
   Widget build(BuildContext context) {
     return BottomSheet(
-        onClosing: () {},
-        builder: (context) =>
-            KeyboardVisibilityBuilder(builder: (context, isVisible) {
+      onClosing: () {},
+      builder:
+          (context) => KeyboardVisibilityBuilder(
+            builder: (context, isVisible) {
               return Container(
                 height: 360,
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24)),
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
                 ),
                 child: ListView(
                   children: [
@@ -46,12 +48,16 @@ class _OrdemProdutosStatusBottomState extends State<OrdemProdutosStatusBottom> {
                         padding: const EdgeInsets.only(left: 8),
                         child: IconButton(
                           style: ButtonStyle(
-                              padding: const WidgetStatePropertyAll(
-                                  EdgeInsets.all(16)),
-                              backgroundColor:
-                                  WidgetStatePropertyAll(AppColors.white),
-                              foregroundColor:
-                                  WidgetStatePropertyAll(AppColors.black)),
+                            padding: const WidgetStatePropertyAll(
+                              EdgeInsets.all(16),
+                            ),
+                            backgroundColor: WidgetStatePropertyAll(
+                              AppColors.white,
+                            ),
+                            foregroundColor: WidgetStatePropertyAll(
+                              AppColors.black,
+                            ),
+                          ),
                           onPressed: () => Navigator.pop(context),
                           icon: const Icon(Icons.keyboard_backspace),
                         ),
@@ -62,10 +68,7 @@ class _OrdemProdutosStatusBottomState extends State<OrdemProdutosStatusBottom> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Selecione o Status',
-                            style: AppCss.largeBold,
-                          ),
+                          Text('Selecione o Status', style: AppCss.largeBold),
                           Text(
                             'Todos os produtos serão alterados para o status selecionado',
                             style: AppCss.minimumRegular,
@@ -78,18 +81,23 @@ class _OrdemProdutosStatusBottomState extends State<OrdemProdutosStatusBottom> {
                                 Container(
                                   margin: const EdgeInsets.only(bottom: 8),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: status.color),
-                                      color: status.color.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(4)),
+                                    border: Border.all(color: status.color),
+                                    color: status.color.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
                                   child: ListTile(
                                     onTap: () => Navigator.pop(context, status),
-                                    title: Text(status.label,
-                                        style: AppCss.mediumRegular),
+                                    title: Text(
+                                      status.label,
+                                      style: AppCss.mediumRegular,
+                                    ),
                                     trailing: Container(
                                       padding: const EdgeInsets.all(4),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: status.color.withOpacity(0.3),
+                                        color: status.color.withValues(
+                                          alpha: 0.3,
+                                        ),
                                         border: Border.all(color: status.color),
                                       ),
                                       child: Icon(
@@ -101,13 +109,15 @@ class _OrdemProdutosStatusBottomState extends State<OrdemProdutosStatusBottom> {
                                   ),
                                 ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
               );
-            }));
+            },
+          ),
+    );
   }
 }

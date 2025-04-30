@@ -89,10 +89,7 @@ class _NotificacoesPageState extends State<NotificacoesPage> {
         color: notificacao.viewed ? Colors.grey[200] : Colors.transparent,
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          title: Text(
-            notificacao.title,
-            style: AppCss.mediumBold,
-          ),
+          title: Text(notificacao.title, style: AppCss.mediumBold),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

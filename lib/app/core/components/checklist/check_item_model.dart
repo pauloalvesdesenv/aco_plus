@@ -6,10 +6,7 @@ class CheckItemModel {
   CheckItemModel({required this.title, required this.isCheck});
 
   Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'isCheck': isCheck,
-    };
+    return {'title': title, 'isCheck': isCheck};
   }
 
   factory CheckItemModel.fromMap(Map<String, dynamic> map) {
@@ -24,10 +21,7 @@ class CheckItemModel {
   factory CheckItemModel.fromJson(String source) =>
       CheckItemModel.fromMap(json.decode(source));
 
-  CheckItemModel copyWith({
-    String? title,
-    bool? isCheck,
-  }) {
+  CheckItemModel copyWith({String? title, bool? isCheck}) {
     return CheckItemModel(
       title: title ?? this.title,
       isCheck: isCheck ?? this.isCheck,

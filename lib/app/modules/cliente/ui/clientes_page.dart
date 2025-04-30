@@ -38,61 +38,62 @@ class _ClientesPageState extends State<ClientesPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-          icon: Icon(
-            Icons.menu,
-            color: AppColors.white,
-          ),
+          icon: Icon(Icons.menu, color: AppColors.white),
         ),
-        title:
-            Text('Clientes', style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Clientes',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           if (usuario.permission.cliente.contains(UserPermissionType.create))
             IconButton(
-                onPressed: () => push(context, const ClienteCreatePage()),
-                icon: Icon(
-                  Icons.add,
-                  color: AppColors.white,
-                ))
+              onPressed: () => push(context, const ClienteCreatePage()),
+              icon: Icon(Icons.add, color: AppColors.white),
+            ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<ClienteModel>>(
         stream: FirestoreClient.clientes.dataStream.listen,
-        builder: (_, __) => StreamOut<ClienteUtils>(
-          stream: clienteCtrl.utilsStream.listen,
-          builder: (_, utils) {
-            final clientes = clienteCtrl
-                .getClienteesFiltered(utils.search.text, __)
-                .toList();
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppField(
-                    hint: 'Pesquisar',
-                    controller: utils.search,
-                    suffixIcon: Icons.search,
-                    onChanged: (_) => clienteCtrl.utilsStream.update(),
-                  ),
-                ),
-                Expanded(
-                  child: clientes.isEmpty
-                      ? const EmptyData()
-                      : RefreshIndicator(
-                          onRefresh: () async =>
-                              FirestoreClient.clientes.fetch(),
-                          child: ListView.separated(
-                            itemCount: clientes.length,
-                            separatorBuilder: (_, i) => const Divisor(),
-                            itemBuilder: (_, i) =>
-                                _itemClienteWidget(clientes[i]),
-                          ),
-                        ),
-                ),
-              ],
-            );
-          },
-        ),
+        builder:
+            (_, __) => StreamOut<ClienteUtils>(
+              stream: clienteCtrl.utilsStream.listen,
+              builder: (_, utils) {
+                final clientes =
+                    clienteCtrl
+                        .getClienteesFiltered(utils.search.text, __)
+                        .toList();
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppField(
+                        hint: 'Pesquisar',
+                        controller: utils.search,
+                        suffixIcon: Icons.search,
+                        onChanged: (_) => clienteCtrl.utilsStream.update(),
+                      ),
+                    ),
+                    Expanded(
+                      child:
+                          clientes.isEmpty
+                              ? const EmptyData()
+                              : RefreshIndicator(
+                                onRefresh:
+                                    () async =>
+                                        FirestoreClient.clientes.fetch(),
+                                child: ListView.separated(
+                                  itemCount: clientes.length,
+                                  separatorBuilder: (_, i) => const Divisor(),
+                                  itemBuilder:
+                                      (_, i) => _itemClienteWidget(clientes[i]),
+                                ),
+                              ),
+                    ),
+                  ],
+                );
+              },
+            ),
       ),
     );
   }
@@ -101,10 +102,7 @@ class _ClientesPageState extends State<ClientesPage> {
     return ListTile(
       onTap: () => push(ClienteCreatePage(cliente: usuario)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      title: Text(
-        usuario.nome,
-        style: AppCss.mediumBold,
-      ),
+      title: Text(usuario.nome, style: AppCss.mediumBold),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

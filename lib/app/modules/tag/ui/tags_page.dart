@@ -37,57 +37,58 @@ class _TagsPageState extends State<TagsPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-          icon: Icon(
-            Icons.menu,
-            color: AppColors.white,
-          ),
+          icon: Icon(Icons.menu, color: AppColors.white),
         ),
-        title: Text('Etiquetas',
-            style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Etiquetas',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           IconButton(
-              onPressed: () => push(context, const TagCreatePage()),
-              icon: Icon(
-                Icons.add,
-                color: AppColors.white,
-              ))
+            onPressed: () => push(context, const TagCreatePage()),
+            icon: Icon(Icons.add, color: AppColors.white),
+          ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<TagModel>>(
         stream: FirestoreClient.tags.dataStream.listen,
-        builder: (_, __) => StreamOut<TagUtils>(
-          stream: tagCtrl.utilsStream.listen,
-          builder: (_, utils) {
-            final tags =
-                tagCtrl.getTagsFiltered(utils.search.text, __).toList();
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppField(
-                    hint: 'Pesquisar',
-                    controller: utils.search,
-                    suffixIcon: Icons.search,
-                    onChanged: (_) => tagCtrl.utilsStream.update(),
-                  ),
-                ),
-                Expanded(
-                  child: tags.isEmpty
-                      ? const EmptyData()
-                      : RefreshIndicator(
-                          onRefresh: () async => FirestoreClient.tags.fetch(),
-                          child: ListView.separated(
-                            itemCount: tags.length,
-                            separatorBuilder: (_, i) => const Divisor(),
-                            itemBuilder: (_, i) => _itemTagWidget(tags[i]),
-                          ),
-                        ),
-                ),
-              ],
-            );
-          },
-        ),
+        builder:
+            (_, __) => StreamOut<TagUtils>(
+              stream: tagCtrl.utilsStream.listen,
+              builder: (_, utils) {
+                final tags =
+                    tagCtrl.getTagsFiltered(utils.search.text, __).toList();
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppField(
+                        hint: 'Pesquisar',
+                        controller: utils.search,
+                        suffixIcon: Icons.search,
+                        onChanged: (_) => tagCtrl.utilsStream.update(),
+                      ),
+                    ),
+                    Expanded(
+                      child:
+                          tags.isEmpty
+                              ? const EmptyData()
+                              : RefreshIndicator(
+                                onRefresh:
+                                    () async => FirestoreClient.tags.fetch(),
+                                child: ListView.separated(
+                                  itemCount: tags.length,
+                                  separatorBuilder: (_, i) => const Divisor(),
+                                  itemBuilder:
+                                      (_, i) => _itemTagWidget(tags[i]),
+                                ),
+                              ),
+                    ),
+                  ],
+                );
+              },
+            ),
       ),
     );
   }
@@ -96,16 +97,11 @@ class _TagsPageState extends State<TagsPage> {
     return ListTile(
       onTap: () => push(TagCreatePage(tag: tag)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      title: Text(
-        tag.nome,
-        style: AppCss.mediumBold,
-      ),
-      subtitle: tag.descricao.isNotEmpty
-          ? Text(
-              tag.descricao,
-              style: AppCss.minimumRegular,
-            )
-          : null,
+      title: Text(tag.nome, style: AppCss.mediumBold),
+      subtitle:
+          tag.descricao.isNotEmpty
+              ? Text(tag.descricao, style: AppCss.minimumRegular)
+              : null,
       trailing: SizedBox(
         width: 50,
         child: Row(

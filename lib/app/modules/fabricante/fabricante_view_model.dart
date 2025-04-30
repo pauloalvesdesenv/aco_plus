@@ -11,18 +11,14 @@ class FabricanteCreateModel {
   TextController nome = TextController();
   late bool isEdit;
 
-  FabricanteCreateModel()
-      : id = HashService.get,
-        isEdit = false;
+  FabricanteCreateModel() : id = HashService.get, isEdit = false;
 
   FabricanteCreateModel.edit(FabricanteModel fabricante)
-      : id = fabricante.id,
-        isEdit = true {
+    : id = fabricante.id,
+      isEdit = true {
     nome.text = fabricante.nome;
   }
 
-  FabricanteModel toFabricanteModel() => FabricanteModel(
-        id: id,
-        nome: nome.text,
-      );
+  FabricanteModel toFabricanteModel() =>
+      FabricanteModel(id: id, nome: nome.text);
 }

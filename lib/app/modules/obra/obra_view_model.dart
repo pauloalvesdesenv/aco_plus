@@ -16,23 +16,19 @@ class ObraCreateModel {
   ObraStatus? status = ObraStatus.emAndamento;
   late bool isEdit;
 
-  ObraCreateModel()
-      : id = HashService.get,
-        isEdit = false;
+  ObraCreateModel() : id = HashService.get, isEdit = false;
 
-  ObraCreateModel.edit(ObraModel obra)
-      : id = obra.id,
-        isEdit = true {
+  ObraCreateModel.edit(ObraModel obra) : id = obra.id, isEdit = true {
     descricao.text = obra.descricao;
     endereco = obra.endereco;
     status = obra.status;
   }
 
   ObraModel toObraModel() => ObraModel(
-        id: id,
-        descricao: descricao.text,
-        endereco: endereco,
-        status: status!,
-        telefoneFixo: telefoneFixo.text,
-      );
+    id: id,
+    descricao: descricao.text,
+    endereco: endereco,
+    status: status!,
+    telefoneFixo: telefoneFixo.text,
+  );
 }

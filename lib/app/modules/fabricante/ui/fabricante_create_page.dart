@@ -30,34 +30,38 @@ class _FabricanteCreatePageState extends State<FabricanteCreatePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () async {
-                if (await showConfirmDialog(
-                    'Deseja realmente sair?',
-                    widget.fabricante != null
-                        ? 'A edição que realizou será perdida'
-                        : 'Os dados do fabricante serão perdidos.')) {
-                  pop(context);
-                }
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: AppColors.white,
-              )),
-          title: Text(
-              '${fabricanteCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Fabricante',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          actions: [
-            IconLoadingButton(() async =>
-                await fabricanteCtrl.onConfirm(context, widget.fabricante))
-          ],
-          backgroundColor: AppColors.primaryMain,
+      resizeAvoid: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async {
+            if (await showConfirmDialog(
+              'Deseja realmente sair?',
+              widget.fabricante != null
+                  ? 'A edição que realizou será perdida'
+                  : 'Os dados do fabricante serão perdidos.',
+            )) {
+              pop(context);
+            }
+          },
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        body: StreamOut(
-            stream: fabricanteCtrl.formStream.listen,
-            builder: (_, form) => body(form)));
+        title: Text(
+          '${fabricanteCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Fabricante',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        actions: [
+          IconLoadingButton(
+            () async =>
+                await fabricanteCtrl.onConfirm(context, widget.fabricante),
+          ),
+        ],
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: StreamOut(
+        stream: fabricanteCtrl.formStream.listen,
+        builder: (_, form) => body(form),
+      ),
+    );
   }
 
   Widget body(FabricanteCreateModel form) {
@@ -72,21 +76,24 @@ class _FabricanteCreatePageState extends State<FabricanteCreatePage> {
         const H(16),
         if (form.isEdit)
           TextButton.icon(
-              style: ButtonStyle(
-                fixedSize: const WidgetStatePropertyAll(
-                    Size.fromWidth(double.maxFinite)),
-                foregroundColor: WidgetStatePropertyAll(AppColors.error),
-                backgroundColor: WidgetStatePropertyAll(AppColors.white),
-                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: AppCss.radius8,
-                    side: BorderSide(color: AppColors.error))),
+            style: ButtonStyle(
+              fixedSize: const WidgetStatePropertyAll(
+                Size.fromWidth(double.maxFinite),
               ),
-              onPressed: () =>
-                  fabricanteCtrl.onDelete(context, widget.fabricante!),
-              label: const Text('Excluir'),
-              icon: const Icon(
-                Icons.delete_outline,
-              )),
+              foregroundColor: WidgetStatePropertyAll(AppColors.error),
+              backgroundColor: WidgetStatePropertyAll(AppColors.white),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: AppCss.radius8,
+                  side: BorderSide(color: AppColors.error),
+                ),
+              ),
+            ),
+            onPressed:
+                () => fabricanteCtrl.onDelete(context, widget.fabricante!),
+            label: const Text('Excluir'),
+            icon: const Icon(Icons.delete_outline),
+          ),
       ],
     );
   }

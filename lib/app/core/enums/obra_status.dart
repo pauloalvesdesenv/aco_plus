@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum ObraStatus {
-  emAndamento,
-  inativa,
-  encerrada,
-}
+enum ObraStatus { emAndamento, inativa, encerrada }
 
 extension ObraStatusExt on ObraStatus {
   String get label {

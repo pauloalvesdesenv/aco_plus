@@ -7,10 +7,7 @@ import 'package:flutter/material.dart';
 
 class PedidoCommentsWidget extends StatelessWidget {
   final PedidoModel pedido;
-  const PedidoCommentsWidget(
-    this.pedido, {
-    super.key,
-  });
+  const PedidoCommentsWidget(this.pedido, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +18,13 @@ class PedidoCommentsWidget extends StatelessWidget {
         children: [
           StreamOut(
             stream: pedidoCtrl.utilsStream.listen,
-            builder: (_, utils) => CommentsWidget(
-              titleNotification:
-                  '${usuario.nome} mencionou você no pedido ${pedido.localizador}',
-              items: pedido.comments,
-              onChanged: () => pedidoCtrl.updatePedidoFirestore(),
-            ),
+            builder:
+                (_, utils) => CommentsWidget(
+                  titleNotification:
+                      '${usuario.nome} mencionou você no pedido ${pedido.localizador}',
+                  items: pedido.comments,
+                  onChanged: () => pedidoCtrl.updatePedidoFirestore(),
+                ),
           ),
         ],
       ),

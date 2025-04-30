@@ -17,12 +17,14 @@ class ProdutoController {
 
   factory ProdutoController() => _instance;
 
-  final AppStream<ProdutoModel?> produtoStream =
-      AppStream<ProdutoModel?>.seed(null);
+  final AppStream<ProdutoModel?> produtoStream = AppStream<ProdutoModel?>.seed(
+    null,
+  );
   ProdutoModel? get produto => produtoStream.value;
 
-  final AppStream<ProdutoUtils> utilsStream =
-      AppStream<ProdutoUtils>.seed(ProdutoUtils());
+  final AppStream<ProdutoUtils> utilsStream = AppStream<ProdutoUtils>.seed(
+    ProdutoUtils(),
+  );
   ProdutoUtils get utils => utilsStream.value;
 
   void onInit() {
@@ -35,13 +37,15 @@ class ProdutoController {
   ProdutoCreateModel get form => formStream.value;
 
   void init(ProdutoModel? produto) {
-    formStream.add(produto != null
-        ? ProdutoCreateModel.edit(produto)
-        : ProdutoCreateModel());
+    formStream.add(
+      produto != null ? ProdutoCreateModel.edit(produto) : ProdutoCreateModel(),
+    );
   }
 
   List<ProdutoModel> getProdutoesFiltered(
-      String search, List<ProdutoModel> produtos) {
+    String search,
+    List<ProdutoModel> produtos,
+  ) {
     if (search.length < 3) return produtos;
     List<ProdutoModel> filtered = [];
     for (final produto in produtos) {
@@ -52,7 +56,7 @@ class ProdutoController {
     return filtered;
   }
 
-  Future<void> onConfirm(_, ProdutoModel? produto) async {
+  Future<void> onConfirm(value, ProdutoModel? produto) async {
     try {
       onValid(produto);
       if (form.isEdit) {
@@ -61,24 +65,30 @@ class ProdutoController {
       } else {
         await FirestoreClient.produtos.add(form.toProdutoModel());
       }
-      pop(_);
+      pop(value);
       NotificationService.showPositive(
-          'Produto ${form.isEdit ? 'Editado' : 'Adicionado'}',
-          'Operação realizada com sucesso',
-          position: NotificationPosition.bottom);
+        'Produto ${form.isEdit ? 'Editado' : 'Adicionado'}',
+        'Operação realizada com sucesso',
+        position: NotificationPosition.bottom,
+      );
     } catch (e) {
-      NotificationService.showNegative('Erro', e.toString(),
-          position: NotificationPosition.bottom);
+      NotificationService.showNegative(
+        'Erro',
+        e.toString(),
+        position: NotificationPosition.bottom,
+      );
     }
   }
 
-  Future<void> onDelete(_, ProdutoModel produto) async {
+  Future<void> onDelete(value, ProdutoModel produto) async {
     if (await _isDeleteUnavailable(produto)) return;
     await FirestoreClient.produtos.delete(produto);
-    pop(_);
+    pop(value);
     NotificationService.showPositive(
-        'Produto Excluido', 'Operação realizada com sucesso',
-        position: NotificationPosition.bottom);
+      'Produto Excluido',
+      'Operação realizada com sucesso',
+      position: NotificationPosition.bottom,
+    );
   }
 
   Future<bool> _isDeleteUnavailable(ProdutoModel produto) async =>

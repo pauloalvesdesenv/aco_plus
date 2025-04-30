@@ -24,7 +24,9 @@ class AppController {
     await usuarioCtrl.getCurrentUser();
     await kanbanCtrl.onInit();
     precacheImage(
-        const AssetImage('assets/images/kanban_background.png'), context);
+      const AssetImage('assets/images/kanban_background.png'),
+      context,
+    );
     Future.delayed(const Duration(milliseconds: 200));
     FlutterNativeSplash.remove();
   }

@@ -13,35 +13,38 @@ class AppTextButton extends StatefulWidget {
   final ButtonStyle? style;
   final bool isLoading;
 
-  const AppTextButton(
-      {required this.label,
-      required this.onPressed,
-      this.isEnable = true,
-      this.fill = Fill.filled,
-      this.icon,
-      this.style,
-      this.isLoading = false,
-      super.key});
+  const AppTextButton({
+    required this.label,
+    required this.onPressed,
+    this.isEnable = true,
+    this.fill = Fill.filled,
+    this.icon,
+    this.style,
+    this.isLoading = false,
+    super.key,
+  });
 
-  const AppTextButton.filled(
-      {required this.label,
-      required this.onPressed,
-      this.isEnable = true,
-      this.fill = Fill.filled,
-      this.icon,
-      this.style,
-      this.isLoading = false,
-      super.key});
+  const AppTextButton.filled({
+    required this.label,
+    required this.onPressed,
+    this.isEnable = true,
+    this.fill = Fill.filled,
+    this.icon,
+    this.style,
+    this.isLoading = false,
+    super.key,
+  });
 
-  const AppTextButton.outlined(
-      {required this.label,
-      required this.onPressed,
-      this.isEnable = true,
-      this.fill = Fill.outlined,
-      this.icon,
-      this.isLoading = false,
-      super.key,
-      this.style});
+  const AppTextButton.outlined({
+    required this.label,
+    required this.onPressed,
+    this.isEnable = true,
+    this.fill = Fill.outlined,
+    this.icon,
+    this.isLoading = false,
+    super.key,
+    this.style,
+  });
 
   @override
   State<AppTextButton> createState() => _AppTextButtonState();
@@ -54,35 +57,34 @@ class _AppTextButtonState extends State<AppTextButton> {
   Widget build(BuildContext context) {
     return AppShimmer(
       enable: loading,
-      child: widget.icon != null
-          ? TextButton.icon(
-              style: style,
-              onPressed: onPressed,
-              label: text,
-              icon: Icon(widget.icon),
-            )
-          : TextButton(
-              style: style,
-              onPressed: onPressed,
-              child: text,
-            ),
+      child:
+          widget.icon != null
+              ? TextButton.icon(
+                style: style,
+                onPressed: onPressed,
+                label: text,
+                icon: Icon(widget.icon),
+              )
+              : TextButton(style: style, onPressed: onPressed, child: text),
     );
   }
 
-  Function()? get onPressed => !widget.isEnable
-      ? null
-      : () async {
-          setState(() => loading = true);
-          await widget.onPressed.call();
-          setState(() => loading = false);
-        };
+  Function()? get onPressed =>
+      !widget.isEnable
+          ? null
+          : () async {
+            setState(() => loading = true);
+            await widget.onPressed.call();
+            setState(() => loading = false);
+          };
 
   Widget get text => Text(widget.label);
 
   ButtonStyle get style {
     if (widget.style != null) {
       return widget.style!.copyWith(
-          fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 43)));
+        fixedSize: const WidgetStatePropertyAll(Size(double.maxFinite, 43)),
+      );
     }
     final outlined = Fill.outlined == widget.fill;
     return ButtonStyle(
@@ -91,11 +93,15 @@ class _AppTextButtonState extends State<AppTextButton> {
           outlined ? WidgetStatePropertyAll(AppColors.primaryMain) : null,
       backgroundColor:
           outlined ? WidgetStatePropertyAll(AppColors.white) : null,
-      shape: outlined
-          ? WidgetStatePropertyAll(RoundedRectangleBorder(
-              borderRadius: AppCss.radius8,
-              side: BorderSide(color: AppColors.primaryMain, width: 2)))
-          : null,
+      shape:
+          outlined
+              ? WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: AppCss.radius8,
+                  side: BorderSide(color: AppColors.primaryMain, width: 2),
+                ),
+              )
+              : null,
     );
   }
 }

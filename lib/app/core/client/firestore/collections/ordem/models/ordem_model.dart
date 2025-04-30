@@ -29,47 +29,65 @@ class OrdemModel {
     return pedidosIds.map((e) => FirestoreClient.pedidos.getById(e)).toList();
   }
 
-  double get qtdeTotal => produtos.isEmpty
-      ? 0
-      : produtos.fold(
-          0, (previousValue, element) => previousValue + element.qtde);
+  double get qtdeTotal =>
+      produtos.isEmpty
+          ? 0
+          : produtos.fold(
+            0,
+            (previousValue, element) => previousValue + element.qtde,
+          );
 
   double quantideTotal() {
     return produtos.isEmpty
         ? 0
         : produtos.fold(
-            0, (previousValue, element) => previousValue + element.qtde);
+          0,
+          (previousValue, element) => previousValue + element.qtde,
+        );
   }
 
   double qtdeAguardando() {
-    var where = produtos
-        .where((e) =>
-            e.statusView.status == PedidoProdutoStatus.aguardandoProducao)
-        .toList();
+    var where =
+        produtos
+            .where(
+              (e) =>
+                  e.statusView.status == PedidoProdutoStatus.aguardandoProducao,
+            )
+            .toList();
     return where.isEmpty
         ? 0
         : where.fold(
-            0, (previousValue, element) => previousValue + element.qtde);
+          0,
+          (previousValue, element) => previousValue + element.qtde,
+        );
   }
 
   double qtdeProduzindo() {
-    var where = produtos
-        .where((e) => e.statusess.last.status == PedidoProdutoStatus.produzindo)
-        .toList();
+    var where =
+        produtos
+            .where(
+              (e) => e.statusess.last.status == PedidoProdutoStatus.produzindo,
+            )
+            .toList();
     return where.isEmpty
         ? 0
         : where.fold(
-            0, (previousValue, element) => previousValue + element.qtde);
+          0,
+          (previousValue, element) => previousValue + element.qtde,
+        );
   }
 
   double qtdePronto() {
-    var where = produtos
-        .where((e) => e.statusess.last.status == PedidoProdutoStatus.pronto)
-        .toList();
+    var where =
+        produtos
+            .where((e) => e.statusess.last.status == PedidoProdutoStatus.pronto)
+            .toList();
     return where.isEmpty
         ? 0
         : where.fold(
-            0, (previousValue, element) => previousValue + element.qtde);
+          0,
+          (previousValue, element) => previousValue + element.qtde,
+        );
   }
 
   IconData get icon {
@@ -145,9 +163,10 @@ class OrdemModel {
       'createdAt': createdAt.millisecondsSinceEpoch,
       'endAt': endAt?.millisecondsSinceEpoch,
       'produto': produto.toMap(),
-      'idPedidosProdutos': produtos
-          .map((x) => {'pedidoId': x.pedidoId, 'produtoId': x.id})
-          .toList(),
+      'idPedidosProdutos':
+          produtos
+              .map((x) => {'pedidoId': x.pedidoId, 'produtoId': x.id})
+              .toList(),
       'freezed': freezed.toMap(),
       'beltIndex': beltIndex,
       'materiaPrima': materiaPrima?.toMap(),
@@ -190,6 +209,7 @@ class OrdemModel {
     ValueGetter<DateTime?>? endAt,
     List<PedidoProdutoModel>? produtos,
     OrdemFreezedModel? freezed,
+    MateriaPrimaModel? materiaPrima,
   }) {
     return OrdemModel(
       id: id ?? this.id,
@@ -198,6 +218,7 @@ class OrdemModel {
       endAt: endAt != null ? endAt() : this.endAt,
       produtos: produtos ?? this.produtos,
       freezed: freezed ?? this.freezed,
+      materiaPrima: materiaPrima ?? this.materiaPrima,
     );
   }
 }
@@ -208,7 +229,10 @@ class OrdemFreezedModel {
   final DateTime updatedAt;
 
   static static() => OrdemFreezedModel(
-      isFreezed: false, reason: TextController(), updatedAt: DateTime.now());
+    isFreezed: false,
+    reason: TextController(),
+    updatedAt: DateTime.now(),
+  );
 
   OrdemFreezedModel({
     required this.isFreezed,
@@ -240,9 +264,10 @@ class OrdemFreezedModel {
     return OrdemFreezedModel(
       isFreezed: map['isFreezed'] ?? false,
       reason: TextController(text: map['reason']),
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.parse(map['updatedAt'])
-          : DateTime.now(),
+      updatedAt:
+          map['updatedAt'] != null
+              ? DateTime.parse(map['updatedAt'])
+              : DateTime.now(),
     );
   }
 

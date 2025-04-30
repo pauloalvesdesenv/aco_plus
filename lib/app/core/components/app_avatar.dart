@@ -36,10 +36,7 @@ class AppAvatar extends StatelessWidget {
       return Image.network(url!);
     }
     if (name != null) {
-      return Text(
-        name!.getInitials(),
-        style: AppCss.mediumBold.setSize(12),
-      );
+      return Text(name!.getInitials(), style: AppCss.mediumBold.setSize(12));
     }
     return const Icon(Icons.person, size: 16);
   }

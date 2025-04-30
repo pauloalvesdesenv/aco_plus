@@ -26,16 +26,17 @@ class KanbanCardPedidoWidget extends StatelessWidget {
         width: double.maxFinite,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-            color: const Color(0xFFFFFFFF),
-            borderRadius: const BorderRadius.all(Radius.circular(6)),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF000000).withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(0, 0),
-              ),
-            ]),
+          color: const Color(0xFFFFFFFF),
+          borderRadius: const BorderRadius.all(Radius.circular(6)),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF000000).withValues(alpha: 0.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 0),
+            ),
+          ],
+        ),
         child: IntrinsicHeight(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +60,7 @@ class KanbanCardPedidoWidget extends StatelessWidget {
                   Expanded(child: KanbanCardDetailsWidget(pedido)),
                   KanbanCardUsersWidget(pedido, viewMode: viewMode),
                 ],
-              )
+              ),
             ],
           ),
         ),

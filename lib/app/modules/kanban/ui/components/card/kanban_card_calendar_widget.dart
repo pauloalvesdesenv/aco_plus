@@ -12,11 +12,7 @@ import 'package:table_calendar/table_calendar.dart';
 class KanbanCardCalendarWidget extends StatefulWidget {
   final PedidoModel pedido;
   final CalendarFormat calendarFormat;
-  const KanbanCardCalendarWidget(
-    this.pedido,
-    this.calendarFormat, {
-    super.key,
-  });
+  const KanbanCardCalendarWidget(this.pedido, this.calendarFormat, {super.key});
 
   @override
   State<KanbanCardCalendarWidget> createState() =>
@@ -34,16 +30,21 @@ class _KanbanCardCalendarWidgetState extends State<KanbanCardCalendarWidget> {
         return InkWell(
           onTap: () => kanbanCtrl.setPedido(widget.pedido),
           child: MouseRegion(
-            onEnter: (event) =>
-                setState(() => stepViewMode = KanbanCardStepViewMode.expanded),
-            onExit: (event) =>
-                setState(() => stepViewMode = KanbanCardStepViewMode.collapsed),
+            onEnter:
+                (event) => setState(
+                  () => stepViewMode = KanbanCardStepViewMode.expanded,
+                ),
+            onExit:
+                (event) => setState(
+                  () => stepViewMode = KanbanCardStepViewMode.collapsed,
+                ),
             child: Container(
               width: double.maxFinite,
               padding: const EdgeInsets.fromLTRB(0.03, 0.03, 0.03, 1),
               decoration: const BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.all(Radius.circular(3))),
+                color: Colors.black,
+                borderRadius: BorderRadius.all(Radius.circular(3)),
+              ),
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: const BoxDecoration(
@@ -55,20 +56,26 @@ class _KanbanCardCalendarWidgetState extends State<KanbanCardCalendarWidget> {
                   children: [
                     if (widget.pedido.tags.isNotEmpty) ...[
                       KanbanCardTagsWidget(
-                          pedido: widget.pedido,
-                          viewMode: stepViewMode ==
-                                      KanbanCardStepViewMode.expanded ||
-                                  widget.calendarFormat == CalendarFormat.week
-                              ? WidgetViewMode.normal
-                              : WidgetViewMode.minified),
+                        pedido: widget.pedido,
+                        viewMode:
+                            stepViewMode == KanbanCardStepViewMode.expanded ||
+                                    widget.calendarFormat == CalendarFormat.week
+                                ? WidgetViewMode.normal
+                                : WidgetViewMode.minified,
+                      ),
                       const H(4),
                     ],
                     Row(
                       children: [
                         Expanded(
-                            child: Text(widget.pedido.localizador,
-                                style: AppCss.minimumRegular.copyWith(
-                                    fontSize: 10, color: Colors.black))),
+                          child: Text(
+                            widget.pedido.localizador,
+                            style: AppCss.minimumRegular.copyWith(
+                              fontSize: 10,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
                         if (!isSM)
                           if (widget.pedido.users.isNotEmpty)
                             KanbanCardUsersWidget(widget.pedido,
@@ -81,9 +88,11 @@ class _KanbanCardCalendarWidgetState extends State<KanbanCardCalendarWidget> {
                       ],
                     ),
                     const H(4),
-                    KanbanCardStepWidget(widget.pedido.step,
-                        viewMode: stepViewMode,
-                        calendarFormat: widget.calendarFormat),
+                    KanbanCardStepWidget(
+                      widget.pedido.step,
+                      viewMode: stepViewMode,
+                      calendarFormat: widget.calendarFormat,
+                    ),
                   ],
                 ),
               ),

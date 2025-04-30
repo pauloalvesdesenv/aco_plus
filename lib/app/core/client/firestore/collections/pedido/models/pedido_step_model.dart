@@ -16,10 +16,10 @@ class PedidoStepModel {
   });
 
   factory PedidoStepModel.create(StepModel step) => PedidoStepModel(
-        id: HashService.get,
-        step: step,
-        createdAt: DateTime.now(),
-      );
+    id: HashService.get,
+    step: step,
+    createdAt: DateTime.now(),
+  );
 
   Map<String, dynamic> toMap() {
     return {
@@ -42,11 +42,7 @@ class PedidoStepModel {
   factory PedidoStepModel.fromJson(String source) =>
       PedidoStepModel.fromMap(json.decode(source));
 
-  PedidoStepModel copyWith({
-    String? id,
-    StepModel? step,
-    DateTime? createdAt,
-  }) {
+  PedidoStepModel copyWith({String? id, StepModel? step, DateTime? createdAt}) {
     return PedidoStepModel(
       id: id ?? this.id,
       step: step ?? this.step,

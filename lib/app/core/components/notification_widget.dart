@@ -23,60 +23,65 @@ class NotificationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Colors.transparent,
-        child: Container(
-            margin: EdgeInsets.only(
-                top: MediaQuery.of(context).viewPadding.top + 16,
-                right: 24,
-                left: 24,
-                bottom: 36),
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: color),
-                borderRadius: BorderRadius.circular(12)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                      color: color, borderRadius: BorderRadius.circular(8)),
-                  child: Icon(
-                    icon,
-                    color: Colors.white,
-                    size: 16,
+      color: Colors.transparent,
+      child: Container(
+        margin: EdgeInsets.only(
+          top: MediaQuery.of(context).viewPadding.top + 16,
+          right: 24,
+          left: 24,
+          bottom: 36,
+        ),
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: color),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: Colors.white, size: 16),
+            ),
+            const W(16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppCss.smallBold.setColor(AppColors.black),
                   ),
-                ),
-                const W(16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title,
-                          style: AppCss.smallBold.setColor(AppColors.black)),
-                      Text(
-                        subtitle,
-                        style: AppCss.minimumRegular
-                            .setColor(AppColors.neutralDark),
-                      ),
-                    ],
-                  ),
-                ),
-                const W(16),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: InkWell(
-                    onTap: () => OverlaySupportEntry.of(context)!.dismiss(),
-                    child: Icon(
-                      Icons.close,
-                      color: AppColors.neutralMedium,
-                      size: 24,
+                  Text(
+                    subtitle,
+                    style: AppCss.minimumRegular.setColor(
+                      AppColors.neutralDark,
                     ),
                   ),
-                )
-              ],
-            )));
+                ],
+              ),
+            ),
+            const W(16),
+            Align(
+              alignment: Alignment.topRight,
+              child: InkWell(
+                onTap: () => OverlaySupportEntry.of(context)!.dismiss(),
+                child: Icon(
+                  Icons.close,
+                  color: AppColors.neutralMedium,
+                  size: 24,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

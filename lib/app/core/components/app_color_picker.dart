@@ -23,8 +23,9 @@ class AppColorPicker extends StatefulWidget {
 }
 
 class _AppColorPickerState extends State<AppColorPicker> {
-  final MaskedTextController _controller =
-      MaskedTextController(mask: '#******');
+  final MaskedTextController _controller = MaskedTextController(
+    mask: '#******',
+  );
 
   @override
   void initState() {
@@ -37,10 +38,7 @@ class _AppColorPickerState extends State<AppColorPicker> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.label,
-          style: AppCss.smallBold,
-        ),
+        Text(widget.label, style: AppCss.smallBold),
         const H(4),
         Row(
           children: [
@@ -65,9 +63,10 @@ class _AppColorPickerState extends State<AppColorPicker> {
                   child: Icon(
                     Icons.color_lens,
                     size: 18,
-                    color: widget.color.computeLuminance() > 0.5
-                        ? Colors.black
-                        : Colors.white,
+                    color:
+                        widget.color.computeLuminance() > 0.5
+                            ? Colors.black
+                            : Colors.white,
                   ),
                 ),
               ),

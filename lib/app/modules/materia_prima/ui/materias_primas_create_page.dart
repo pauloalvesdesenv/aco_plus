@@ -37,34 +37,38 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () async {
-                if (await showConfirmDialog(
-                    'Deseja realmente sair?',
-                    widget.materiaPrima != null
-                        ? 'A edição que realizou será perdida'
-                        : 'Os dados da Matéria Prima serão perdidos.')) {
-                  pop(context);
-                }
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: AppColors.white,
-              )),
-          title: Text(
-              '${materiaPrimaCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Matéria Prima',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          actions: [
-            IconLoadingButton(() async =>
-                await materiaPrimaCtrl.onConfirm(context, widget.materiaPrima))
-          ],
-          backgroundColor: AppColors.primaryMain,
+      resizeAvoid: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async {
+            if (await showConfirmDialog(
+              'Deseja realmente sair?',
+              widget.materiaPrima != null
+                  ? 'A edição que realizou será perdida'
+                  : 'Os dados da Matéria Prima serão perdidos.',
+            )) {
+              pop(context);
+            }
+          },
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        body: StreamOut(
-            stream: materiaPrimaCtrl.formStream.listen,
-            builder: (_, form) => body(form)));
+        title: Text(
+          '${materiaPrimaCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Matéria Prima',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        actions: [
+          IconLoadingButton(
+            () async =>
+                await materiaPrimaCtrl.onConfirm(context, widget.materiaPrima),
+          ),
+        ],
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: StreamOut(
+        stream: materiaPrimaCtrl.formStream.listen,
+        builder: (_, form) => body(form),
+      ),
+    );
   }
 
   Widget body(MateriaPrimaCreateModel form) {
@@ -124,21 +128,24 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
         const H(16),
         if (form.isEdit)
           TextButton.icon(
-              style: ButtonStyle(
-                fixedSize: const WidgetStatePropertyAll(
-                    Size.fromWidth(double.maxFinite)),
-                foregroundColor: WidgetStatePropertyAll(AppColors.error),
-                backgroundColor: WidgetStatePropertyAll(AppColors.white),
-                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: AppCss.radius8,
-                    side: BorderSide(color: AppColors.error))),
+            style: ButtonStyle(
+              fixedSize: const WidgetStatePropertyAll(
+                Size.fromWidth(double.maxFinite),
               ),
-              onPressed: () =>
-                  materiaPrimaCtrl.onDelete(context, widget.materiaPrima!),
-              label: const Text('Excluir'),
-              icon: const Icon(
-                Icons.delete_outline,
-              )),
+              foregroundColor: WidgetStatePropertyAll(AppColors.error),
+              backgroundColor: WidgetStatePropertyAll(AppColors.white),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: AppCss.radius8,
+                  side: BorderSide(color: AppColors.error),
+                ),
+              ),
+            ),
+            onPressed:
+                () => materiaPrimaCtrl.onDelete(context, widget.materiaPrima!),
+            label: const Text('Excluir'),
+            icon: const Icon(Icons.delete_outline),
+          ),
       ],
     );
   }

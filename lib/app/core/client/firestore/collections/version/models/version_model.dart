@@ -2,28 +2,18 @@ import 'dart:convert';
 
 class VersionModel {
   final double number;
-  VersionModel({
-    required this.number,
-  });
+  VersionModel({required this.number});
 
-  VersionModel copyWith({
-    double? number,
-  }) {
-    return VersionModel(
-      number: number ?? this.number,
-    );
+  VersionModel copyWith({double? number}) {
+    return VersionModel(number: number ?? this.number);
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'number': number,
-    };
+    return {'number': number};
   }
 
   factory VersionModel.fromMap(Map<String, dynamic> map) {
-    return VersionModel(
-      number: map['number']?.toDouble() ?? 0.0,
-    );
+    return VersionModel(number: map['number']?.toDouble() ?? 0.0);
   }
 
   String toJson() => json.encode(toMap());

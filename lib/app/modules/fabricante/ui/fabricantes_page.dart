@@ -36,13 +36,12 @@ class _FabricantesPageState extends State<FabricantesPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-          icon: Icon(
-            Icons.menu,
-            color: AppColors.white,
-          ),
+          icon: Icon(Icons.menu, color: AppColors.white),
         ),
-        title: Text('Fabricantes',
-            style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Fabricantes',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           IconButton(
               onPressed: () => push(context, const FabricanteCreatePage()),
@@ -55,41 +54,46 @@ class _FabricantesPageState extends State<FabricantesPage> {
       ),
       body: StreamOut<List<FabricanteModel>>(
         stream: FirestoreClient.fabricantes.dataStream.listen,
-        builder: (_, __) => StreamOut<FabricanteUtils>(
-          stream: fabricanteCtrl.utilsStream.listen,
-          builder: (_, utils) {
-            final fabricantes = fabricanteCtrl
-                .getFabricanteesFiltered(utils.search.text, __)
-                .toList();
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppField(
-                    hint: 'Pesquisar',
-                    controller: utils.search,
-                    suffixIcon: Icons.search,
-                    onChanged: (_) => fabricanteCtrl.utilsStream.update(),
-                  ),
-                ),
-                Expanded(
-                  child: fabricantes.isEmpty
-                      ? const EmptyData()
-                      : RefreshIndicator(
-                          onRefresh: () async =>
-                              FirestoreClient.fabricantes.fetch(),
-                          child: ListView.separated(
-                            itemCount: fabricantes.length,
-                            separatorBuilder: (_, i) => const Divisor(),
-                            itemBuilder: (_, i) =>
-                                _itemFabricanteWidget(fabricantes[i]),
-                          ),
-                        ),
-                ),
-              ],
-            );
-          },
-        ),
+        builder:
+            (_, __) => StreamOut<FabricanteUtils>(
+              stream: fabricanteCtrl.utilsStream.listen,
+              builder: (_, utils) {
+                final fabricantes =
+                    fabricanteCtrl
+                        .getFabricanteesFiltered(utils.search.text, __)
+                        .toList();
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppField(
+                        hint: 'Pesquisar',
+                        controller: utils.search,
+                        suffixIcon: Icons.search,
+                        onChanged: (_) => fabricanteCtrl.utilsStream.update(),
+                      ),
+                    ),
+                    Expanded(
+                      child:
+                          fabricantes.isEmpty
+                              ? const EmptyData()
+                              : RefreshIndicator(
+                                onRefresh:
+                                    () async =>
+                                        FirestoreClient.fabricantes.fetch(),
+                                child: ListView.separated(
+                                  itemCount: fabricantes.length,
+                                  separatorBuilder: (_, i) => const Divisor(),
+                                  itemBuilder:
+                                      (_, i) =>
+                                          _itemFabricanteWidget(fabricantes[i]),
+                                ),
+                              ),
+                    ),
+                  ],
+                );
+              },
+            ),
       ),
     );
   }
@@ -98,10 +102,7 @@ class _FabricantesPageState extends State<FabricantesPage> {
     return ListTile(
       onTap: () => push(FabricanteCreatePage(fabricante: usuario)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      title: Text(
-        usuario.nome,
-        style: AppCss.mediumBold,
-      ),
+      title: Text(usuario.nome, style: AppCss.mediumBold),
       // subtitle: Column(
       //   crossAxisAlignment: CrossAxisAlignment.start,
       //   children: [

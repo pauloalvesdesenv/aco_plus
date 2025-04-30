@@ -36,17 +36,24 @@ class _KanbanCalendarBuilderWidgetState
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         border: Border.all(
-            color: const Color.fromARGB(255, 209, 210, 214).withOpacity(0.8),
-            width: 0.25),
+          color: const Color.fromARGB(
+            255,
+            209,
+            210,
+            214,
+          ).withValues(alpha: 0.8),
+          width: 0.25,
+        ),
       ),
       width: double.maxFinite,
       child: Scrollbar(
         controller: _scrollController,
         child: ListView(
           controller: _scrollController,
-          physics: widget.pedidos.isEmpty
-              ? const NeverScrollableScrollPhysics()
-              : null,
+          physics:
+              widget.pedidos.isEmpty
+                  ? const NeverScrollableScrollPhysics()
+                  : null,
           children: [
             Stack(
               children: [
@@ -55,10 +62,11 @@ class _KanbanCalendarBuilderWidgetState
                   child: Text(
                     DateFormat('d').format(widget.day),
                     style: AppCss.minimumRegular.copyWith(
-                        color: Colors.grey[900],
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
-                        height: 1),
+                      color: Colors.grey[900],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                      height: 1,
+                    ),
                   ),
                 ),
                 if (widget.pedidos.isNotEmpty)
@@ -79,11 +87,17 @@ class _KanbanCalendarBuilderWidgetState
             const H(8),
             if (widget.pedidos.isNotEmpty)
               SeparatedColumn(
-                  separatorBuilder: (_, __) => const H(8),
-                  children: widget.pedidos
-                      .map((e) =>
-                          KanbanCardCalendarWidget(e, widget.calendarFormat))
-                      .toList()),
+                separatorBuilder: (_, __) => const H(8),
+                children:
+                    widget.pedidos
+                        .map(
+                          (e) => KanbanCardCalendarWidget(
+                            e,
+                            widget.calendarFormat,
+                          ),
+                        )
+                        .toList(),
+              ),
           ],
         ),
       ),

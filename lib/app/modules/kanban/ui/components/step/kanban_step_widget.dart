@@ -10,12 +10,7 @@ class KanbanStepWidget extends StatelessWidget {
   final KanbanUtils utils;
   final StepModel step;
   final List<PedidoModel> pedidos;
-  const KanbanStepWidget(
-    this.utils,
-    this.step,
-    this.pedidos, {
-    super.key,
-  });
+  const KanbanStepWidget(this.utils, this.step, this.pedidos, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +26,7 @@ class KanbanStepWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             KanbanStepTitleWidget(utils, step, pedidos),
-            Expanded(
-              child: KanbanStepBodyWidget(utils, step, pedidos),
-            )
+            Expanded(child: KanbanStepBodyWidget(utils, step, pedidos)),
           ],
         ),
       ),

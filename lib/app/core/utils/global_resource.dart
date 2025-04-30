@@ -24,8 +24,10 @@ dynamic push([a, b]) async {
   } else {
     context = b;
   }
-  var result = await Navigator.push(context ?? contextGlobal,
-      MaterialPageRoute(builder: (_) => widget ?? Container()));
+  var result = await Navigator.push(
+    context ?? contextGlobal,
+    MaterialPageRoute(builder: (_) => widget ?? Container()),
+  );
   return result;
 }
 
@@ -44,11 +46,12 @@ void showDialogAndPush(context, Widget dialog, Widget page) async {
 
 bool kIsLayoutMobile = true;
 
-Future<bool> onDeleteProcess(
-    {required String deleteTitle,
-    required String deleteMessage,
-    required String infoMessage,
-    required bool conditional}) async {
+Future<bool> onDeleteProcess({
+  required String deleteTitle,
+  required String deleteMessage,
+  required String infoMessage,
+  required bool conditional,
+}) async {
   if (conditional) {
     await showInfoDialog(infoMessage);
     return false;

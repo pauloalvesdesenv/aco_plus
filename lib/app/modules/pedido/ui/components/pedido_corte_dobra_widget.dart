@@ -7,10 +7,7 @@ import 'package:flutter/material.dart';
 
 class PedidoCorteDobraWidget extends StatelessWidget {
   final PedidoModel pedido;
-  const PedidoCorteDobraWidget(
-    this.pedido, {
-    super.key,
-  });
+  const PedidoCorteDobraWidget(this.pedido, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +23,24 @@ class PedidoCorteDobraWidget extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                      child: Text('Aguardando Produção',
-                          style: AppCss.mediumRegular)),
+                    child: Text(
+                      'Aguardando Produção',
+                      style: AppCss.mediumRegular,
+                    ),
+                  ),
                   Text(
                     '${pedido.getQtdeAguardandoProducao().toKg()} (${(pedido.getPrcntgAguardandoProducao() * 100).percent}%)',
-                  )
+                  ),
                 ],
               ),
               const H(8),
               LinearProgressIndicator(
                 value: pedido.getPrcntgAguardandoProducao(),
                 backgroundColor: PedidoProdutoStatus.aguardandoProducao.color
-                    .withOpacity(0.3),
+                    .withValues(alpha: 0.3),
                 valueColor: AlwaysStoppedAnimation(
-                    PedidoProdutoStatus.aguardandoProducao.color),
+                  PedidoProdutoStatus.aguardandoProducao.color,
+                ),
               ),
             ],
           ),
@@ -49,19 +50,21 @@ class PedidoCorteDobraWidget extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                      child: Text('Produzindo', style: AppCss.mediumRegular)),
+                    child: Text('Produzindo', style: AppCss.mediumRegular),
+                  ),
                   Text(
                     '${pedido.getQtdeProduzindo().toKg()} (${(pedido.getPrcntgProduzindo() * 100).percent}%)',
-                  )
+                  ),
                 ],
               ),
               const H(8),
               LinearProgressIndicator(
                 value: pedido.getPrcntgProduzindo(),
-                backgroundColor:
-                    PedidoProdutoStatus.produzindo.color.withOpacity(0.3),
+                backgroundColor: PedidoProdutoStatus.produzindo.color
+                    .withValues(alpha: 0.3),
                 valueColor: AlwaysStoppedAnimation(
-                    PedidoProdutoStatus.produzindo.color),
+                  PedidoProdutoStatus.produzindo.color,
+                ),
               ),
             ],
           ),
@@ -73,16 +76,18 @@ class PedidoCorteDobraWidget extends StatelessWidget {
                   Expanded(child: Text('Pronto', style: AppCss.mediumRegular)),
                   Text(
                     '${pedido.getQtdePronto().toKg()} (${(pedido.getPrcntgPronto() * 100).percent}%)',
-                  )
+                  ),
                 ],
               ),
               const H(8),
               LinearProgressIndicator(
                 value: pedido.getPrcntgPronto(),
-                backgroundColor:
-                    PedidoProdutoStatus.pronto.color.withOpacity(0.3),
-                valueColor:
-                    AlwaysStoppedAnimation(PedidoProdutoStatus.pronto.color),
+                backgroundColor: PedidoProdutoStatus.pronto.color.withValues(
+                  alpha: 0.3,
+                ),
+                valueColor: AlwaysStoppedAnimation(
+                  PedidoProdutoStatus.pronto.color,
+                ),
               ),
             ],
           ),

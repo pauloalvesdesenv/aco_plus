@@ -2,28 +2,18 @@ import 'dart:convert';
 
 class StepShippingModel {
   final String description;
-  StepShippingModel({
-    required this.description,
-  });
+  StepShippingModel({required this.description});
 
-  StepShippingModel copyWith({
-    String? description,
-  }) {
-    return StepShippingModel(
-      description: description ?? this.description,
-    );
+  StepShippingModel copyWith({String? description}) {
+    return StepShippingModel(description: description ?? this.description);
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'description': description,
-    };
+    return {'description': description};
   }
 
   factory StepShippingModel.fromMap(Map<String, dynamic> map) {
-    return StepShippingModel(
-      description: map['description'] ?? '',
-    );
+    return StepShippingModel(description: map['description'] ?? '');
   }
 
   String toJson() => json.encode(toMap());

@@ -13,15 +13,18 @@ class _ArchiveVideoWidgetState extends State<ArchiveVideoWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 150,
-        height: 180,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: (widget.archive.bytes != null
-                ? MemoryImage(widget.archive.bytes!)
-                : NetworkImage(widget.archive.url!)) as ImageProvider,
-            fit: BoxFit.cover,
-          ),
-        ));
+      width: 150,
+      height: 180,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image:
+              (widget.archive.bytes != null
+                      ? MemoryImage(widget.archive.bytes!)
+                      : NetworkImage(widget.archive.url!))
+                  as ImageProvider,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
   }
 }

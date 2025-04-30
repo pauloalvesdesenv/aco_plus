@@ -9,11 +9,7 @@ class RowItensLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: itens
-          .map((e) => Expanded(
-                child: e,
-              ))
-          .toList(),
+      children: itens.map((e) => Expanded(child: e)).toList(),
     );
   }
 }

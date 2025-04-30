@@ -27,10 +27,10 @@ class ObraController {
     }
   }
 
-  Future<void> onConfirm(_) async {
+  Future<void> onConfirm(value) async {
     try {
       onValid();
-      Navigator.pop(_, formStream.value.toObraModel());
+      Navigator.pop(value, formStream.value.toObraModel());
       NotificationService.showPositive(
           'Obra ${form.isEdit ? 'Editada' : 'Adicionada'}',
           'Operação realizada com sucesso',

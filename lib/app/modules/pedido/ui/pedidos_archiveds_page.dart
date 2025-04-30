@@ -41,120 +41,129 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: AppBar(
-        title: Text('Pedidos Arquivados',
-            style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Pedidos Arquivados',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           IconButton(
-              onPressed: () {
-                setState(() {
-                  pedidoCtrl.utilsArquiveds.showFilter =
-                      !pedidoCtrl.utilsArquiveds.showFilter;
-                  pedidoCtrl.utilsArquivedsStream.update();
-                });
-              },
-              icon: Icon(
-                Icons.sort,
-                color: AppColors.white,
-              )),
+            onPressed: () {
+              setState(() {
+                pedidoCtrl.utilsArquiveds.showFilter =
+                    !pedidoCtrl.utilsArquiveds.showFilter;
+                pedidoCtrl.utilsArquivedsStream.update();
+              });
+            },
+            icon: Icon(Icons.sort, color: AppColors.white),
+          ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<PedidoModel>>(
         stream: FirestoreClient.pedidos.pedidosArchivedsStream.listen,
-        builder: (_, pedidos) => StreamOut<PedidoArquivedUtils>(
-          stream: pedidoCtrl.utilsArquivedsStream.listen,
-          builder: (_, utils) {
-            pedidos = pedidoCtrl
-                .getPedidosArchivedsFiltered(
-                    utils.search.text,
-                    FirestoreClient.pedidos.pedidosArchiveds
-                        .map((e) => e.copyWith())
-                        .toList())
-                .toList();
-            return Column(
-              children: [
-                if (utils.showFilter)
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        AppField(
-                          hint: 'Pesquisar',
-                          controller: utils.search,
-                          suffixIcon: Icons.search,
-                          onChanged: (_) =>
-                              pedidoCtrl.utilsArquivedsStream.update(),
-                        ),
-                        const H(16),
-                        AppDropDownList<StepModel>(
-                          label: 'Etapas',
-                          itemColor: (e) => e.color,
-                          itens: FirestoreClient.steps.data,
-                          addeds: utils.steps,
-                          itemLabel: (e) => e.name,
-                          onChanged: () {
-                            pedidoCtrl.utilsArquivedsStream.update();
-                          },
-                        ),
-                        const H(16),
-                        Row(
+        builder:
+            (_, pedidos) => StreamOut<PedidoArquivedUtils>(
+              stream: pedidoCtrl.utilsArquivedsStream.listen,
+              builder: (_, utils) {
+                pedidos =
+                    pedidoCtrl
+                        .getPedidosArchivedsFiltered(
+                          utils.search.text,
+                          FirestoreClient.pedidos.pedidosArchiveds
+                              .map((e) => e.copyWith())
+                              .toList(),
+                        )
+                        .toList();
+                return Column(
+                  children: [
+                    if (utils.showFilter)
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: AppDropDown<SortType>(
-                                label: 'Ordernar por',
-                                hasFilter: false,
-                                item: utils.sortType,
-                                itens: const [
-                                  SortType.createdAt,
-                                  SortType.deliveryAt,
-                                  SortType.localizator,
-                                  SortType.client
-                                ],
-                                itemLabel: (e) => e.name,
-                                onSelect: (e) {
-                                  utils.sortType = e ?? SortType.localizator;
-                                  pedidoCtrl.utilsArquivedsStream.update();
-                                },
-                              ),
+                            AppField(
+                              hint: 'Pesquisar',
+                              controller: utils.search,
+                              suffixIcon: Icons.search,
+                              onChanged:
+                                  (_) =>
+                                      pedidoCtrl.utilsArquivedsStream.update(),
                             ),
-                            const W(16),
-                            Expanded(
-                              child: AppDropDown<SortOrder>(
-                                hasFilter: false,
-                                label: 'Ordernar',
-                                item: utils.sortOrder,
-                                itens: SortOrder.values,
-                                itemLabel: (e) => e.name,
-                                onSelect: (e) {
-                                  utils.sortOrder = e ?? SortOrder.asc;
-                                  pedidoCtrl.utilsArquivedsStream.update();
-                                },
-                              ),
+                            const H(16),
+                            AppDropDownList<StepModel>(
+                              label: 'Etapas',
+                              itemColor: (e) => e.color,
+                              itens: FirestoreClient.steps.data,
+                              addeds: utils.steps,
+                              itemLabel: (e) => e.name,
+                              onChanged: () {
+                                pedidoCtrl.utilsArquivedsStream.update();
+                              },
+                            ),
+                            const H(16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: AppDropDown<SortType>(
+                                    label: 'Ordernar por',
+                                    hasFilter: false,
+                                    item: utils.sortType,
+                                    itens: const [
+                                      SortType.createdAt,
+                                      SortType.deliveryAt,
+                                      SortType.localizator,
+                                      SortType.client,
+                                    ],
+                                    itemLabel: (e) => e.name,
+                                    onSelect: (e) {
+                                      utils.sortType =
+                                          e ?? SortType.localizator;
+                                      pedidoCtrl.utilsArquivedsStream.update();
+                                    },
+                                  ),
+                                ),
+                                const W(16),
+                                Expanded(
+                                  child: AppDropDown<SortOrder>(
+                                    hasFilter: false,
+                                    label: 'Ordernar',
+                                    item: utils.sortOrder,
+                                    itens: SortOrder.values,
+                                    itemLabel: (e) => e.name,
+                                    onSelect: (e) {
+                                      utils.sortOrder = e ?? SortOrder.asc;
+                                      pedidoCtrl.utilsArquivedsStream.update();
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
-                        )
-                      ],
-                    ),
-                  ),
-                Expanded(
-                  child: pedidos.isEmpty
-                      ? const SizedBox(
-                          width: double.maxFinite, child: EmptyData())
-                      : RefreshIndicator(
-                          onRefresh: () async =>
-                              await FirestoreClient.pedidos.fetch(),
-                          child: ListView.separated(
-                            itemCount: pedidos.length,
-                            separatorBuilder: (_, i) => const Divisor(),
-                            itemBuilder: (_, i) =>
-                                _itemPedidoWidget(pedidos[i]),
-                          ),
                         ),
-                ),
-              ],
-            );
-          },
-        ),
+                      ),
+                    Expanded(
+                      child:
+                          pedidos.isEmpty
+                              ? const SizedBox(
+                                width: double.maxFinite,
+                                child: EmptyData(),
+                              )
+                              : RefreshIndicator(
+                                onRefresh:
+                                    () async =>
+                                        await FirestoreClient.pedidos.fetch(),
+                                child: ListView.separated(
+                                  itemCount: pedidos.length,
+                                  separatorBuilder: (_, i) => const Divisor(),
+                                  itemBuilder:
+                                      (_, i) => _itemPedidoWidget(pedidos[i]),
+                                ),
+                              ),
+                    ),
+                  ],
+                );
+              },
+            ),
       ),
     );
   }
@@ -172,9 +181,7 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 border: Border(
-                  bottom: BorderSide(
-                    color: AppColors.neutralLight,
-                  ),
+                  bottom: BorderSide(color: AppColors.neutralLight),
                 ),
               ),
               child: Row(
@@ -183,17 +190,16 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          pedido.localizador,
-                          style: AppCss.mediumBold,
-                        ),
+                        Text(pedido.localizador, style: AppCss.mediumBold),
                         Text(
                           '${pedido.cliente.nome} - ${pedido.obra.descricao}',
                         ),
                         Text(
                           pedido.produtos
-                              .map((e) =>
-                                  '${'${e.produto.descricao} - ${e.qtde}'}Kg')
+                              .map(
+                                (e) =>
+                                    '${'${e.produto.descricao} - ${e.qtde}'}Kg',
+                              )
                               .join(', '),
                           style: AppCss.minimumRegular
                               .setSize(11)
@@ -223,7 +229,14 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
                       pedido.getPrcntgProduzindo()),
                   const W(16),
                   _progressChartWidget(
-                      PedidoProdutoStatus.pronto, pedido.getPrcntgPronto()),
+                    PedidoProdutoStatus.produzindo,
+                    pedido.getPrcntgProduzindo(),
+                  ),
+                  const W(16),
+                  _progressChartWidget(
+                    PedidoProdutoStatus.pronto,
+                    pedido.getPrcntgPronto(),
+                  ),
                   const W(16),
                   Icon(
                     Icons.arrow_forward_ios,
@@ -239,10 +252,12 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
                 right: 0,
                 child: Container(
                   margin: const EdgeInsets.all(0.5),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
-                    color: pedido.step.color.withOpacity(0.15),
+                    color: pedido.step.color.withValues(alpha: 0.15),
                   ),
                   child: Text(
                     pedido.steps.last.step.name,
@@ -264,14 +279,14 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
       children: [
         CircularProgressIndicator(
           value: porcentagem,
-          backgroundColor: status.color.withOpacity(0.2),
+          backgroundColor: status.color.withValues(alpha: 0.2),
           strokeWidth: 2,
           valueColor: AlwaysStoppedAnimation(status.color),
         ),
         Text(
           '${(porcentagem * 100).percent}%',
           style: AppCss.minimumBold.setSize(10),
-        )
+        ),
       ],
     );
   }

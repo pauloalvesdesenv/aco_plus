@@ -31,12 +31,10 @@ class PedidoTagsWidget extends StatelessWidget {
               margin: const EdgeInsets.only(right: 8),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(4)),
-              child: const Icon(
-                Icons.add,
-                size: 20,
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(4),
               ),
+              child: const Icon(Icons.add, size: 20),
             ),
           ),
           for (final tag in pedido.tags)
@@ -45,18 +43,27 @@ class PedidoTagsWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 margin: const EdgeInsets.only(right: 8),
                 decoration: BoxDecoration(
-                    color: tag.color.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(4)),
+                  color: tag.color.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
                 child: Row(
                   children: [
-                    Text(tag.nome,
-                        style: AppCss.mediumRegular.setSize(13).copyWith(
-                            fontWeight: FontWeight.w500, color: tag.color)),
+                    Text(
+                      tag.nome,
+                      style: AppCss.mediumRegular
+                          .setSize(13)
+                          .copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: tag.color,
+                          ),
+                    ),
                     const W(8),
                     InkWell(
                       onTap: () async {
-                        if (await showConfirmDialog('Deseja remover etiqueta?',
-                            'Etiqueta não fará mais parte deste pedido')) {
+                        if (await showConfirmDialog(
+                          'Deseja remover etiqueta?',
+                          'Etiqueta não fará mais parte deste pedido',
+                        )) {
                           pedido.tags.remove(tag);
                           pedidoCtrl.updatePedidoFirestore();
                         }
@@ -65,19 +72,20 @@ class PedidoTagsWidget extends StatelessWidget {
                         width: 14,
                         height: 14,
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.7)),
+                          shape: BoxShape.circle,
+                          color: Colors.white.withValues(alpha: 0.7),
+                        ),
                         child: const Icon(
                           Icons.close,
                           color: Colors.red,
                           size: 10,
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
-            )
+            ),
         ],
       ),
     );

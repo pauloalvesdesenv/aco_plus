@@ -10,16 +10,9 @@ class EmptyData extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(
-          Icons.drafts,
-          color: Colors.black,
-          size: 48,
-        ),
+        const Icon(Icons.drafts, color: Colors.black, size: 48),
         const H(16),
-        Text(
-          'Nenhum dado encontrado',
-          style: AppCss.mediumRegular,
-        ),
+        Text('Nenhum dado encontrado', style: AppCss.mediumRegular),
       ],
     );
   }

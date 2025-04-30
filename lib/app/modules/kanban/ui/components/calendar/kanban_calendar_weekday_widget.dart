@@ -4,10 +4,7 @@ import 'package:intl/intl.dart';
 
 class KanbanCalendarWeekdayWidget extends StatelessWidget {
   final DateTime day;
-  const KanbanCalendarWeekdayWidget(
-    this.day, {
-    super.key,
-  });
+  const KanbanCalendarWeekdayWidget(this.day, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +19,11 @@ class KanbanCalendarWeekdayWidget extends StatelessWidget {
         child: Text(
           DateFormat('E').format(day).toUpperCase(),
           style: AppCss.minimumRegular.copyWith(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.bold,
-              fontSize: 11,
-              height: 1),
+            color: Colors.grey[700],
+            fontWeight: FontWeight.bold,
+            fontSize: 11,
+            height: 1,
+          ),
         ),
       ),
     );

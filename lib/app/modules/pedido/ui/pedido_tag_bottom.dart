@@ -35,16 +35,18 @@ class _TagModelBottomState extends State<TagModelBottom> {
   @override
   Widget build(BuildContext context) {
     return BottomSheet(
-        onClosing: () {},
-        builder: (context) =>
-            KeyboardVisibilityBuilder(builder: (context, isVisible) {
+      onClosing: () {},
+      builder:
+          (context) => KeyboardVisibilityBuilder(
+            builder: (context, isVisible) {
               return Container(
                 height: 390,
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24)),
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
                 ),
                 child: ListView(
                   children: [
@@ -55,12 +57,16 @@ class _TagModelBottomState extends State<TagModelBottom> {
                         padding: const EdgeInsets.only(left: 8),
                         child: IconButton(
                           style: ButtonStyle(
-                              padding: const WidgetStatePropertyAll(
-                                  EdgeInsets.all(16)),
-                              backgroundColor:
-                                  WidgetStatePropertyAll(AppColors.white),
-                              foregroundColor:
-                                  WidgetStatePropertyAll(AppColors.black)),
+                            padding: const WidgetStatePropertyAll(
+                              EdgeInsets.all(16),
+                            ),
+                            backgroundColor: WidgetStatePropertyAll(
+                              AppColors.white,
+                            ),
+                            foregroundColor: WidgetStatePropertyAll(
+                              AppColors.black,
+                            ),
+                          ),
                           onPressed: () => Navigator.pop(context),
                           icon: const Icon(Icons.keyboard_backspace),
                         ),
@@ -71,42 +77,51 @@ class _TagModelBottomState extends State<TagModelBottom> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Adicionar Etiqueta',
-                            style: AppCss.largeBold,
-                          ),
+                          Text('Adicionar Etiqueta', style: AppCss.largeBold),
                           const H(16),
                           Wrap(
                             runSpacing: 8,
                             spacing: 8,
                             children: [
-                              for (var tag in FirestoreClient.tags.data
-                                  .where((e) => !pedido.tags
-                                      .map((e) => e.id)
-                                      .contains(e.id))
-                                  .toList())
+                              for (var tag
+                                  in FirestoreClient.tags.data
+                                      .where(
+                                        (e) =>
+                                            !pedido.tags
+                                                .map((e) => e.id)
+                                                .contains(e.id),
+                                      )
+                                      .toList())
                                 InkWell(
                                   onTap: () => Navigator.pop(context, tag),
                                   child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      decoration: BoxDecoration(
-                                          color: tag.color.withOpacity(0.2),
-                                          borderRadius:
-                                              BorderRadius.circular(4)),
-                                      child: Text(tag.nome,
-                                          style: AppCss.mediumRegular.copyWith(
-                                              fontWeight: FontWeight.w500,
-                                              color: tag.color))),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: tag.color.withValues(alpha: 0.2),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      tag.nome,
+                                      style: AppCss.mediumRegular.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: tag.color,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
               );
-            }));
+            },
+          ),
+    );
   }
 }

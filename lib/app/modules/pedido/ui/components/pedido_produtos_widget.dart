@@ -34,36 +34,49 @@ class PedidoProdutosWidget extends StatelessWidget {
               const W(16),
               if (produto.status.status.index >=
                   PedidoProdutoStatus.aguardandoProducao.index) ...[
-                Builder(builder: (context) {
-                  final ordem = pedidoCtrl.getOrdemByProduto(produto);
-                  return Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                    decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(4)),
-                    child: Text(ordem?.localizator ?? 'N/A',
+                Builder(
+                  builder: (context) {
+                    final ordem = pedidoCtrl.getOrdemByProduto(produto);
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        ordem?.localizator ?? 'N/A',
                         style: AppCss.mediumRegular.copyWith(
-                            fontSize: 12,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold)),
-                  );
-                }),
+                          fontSize: 12,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 const W(4),
               ],
               if (!pedido.isAguardandoEntradaProducao())
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
-                      color: produto.statusess.last
-                          .getStatusView()
-                          .color
-                          .withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(4)),
-                  child: Text(produto.statusess.last.getStatusView().label,
-                      style: AppCss.mediumRegular.setSize(12)),
-                )
+                    color: produto.statusess.last
+                        .getStatusView()
+                        .color
+                        .withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    produto.statusess.last.getStatusView().label,
+                    style: AppCss.mediumRegular.setSize(12),
+                  ),
+                ),
             ],
           ),
           trailing:
@@ -72,57 +85,69 @@ class PedidoProdutosWidget extends StatelessWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '${produto.qtde}Kg',
-                style: AppCss.minimumRegular,
-              ),
-              Builder(builder: (context) {
-                final ordem = pedidoCtrl.getOrdemByProduto(produto);
+              Text('${produto.qtde}Kg', style: AppCss.minimumRegular),
+              Builder(
+                builder: (context) {
+                  final ordem = pedidoCtrl.getOrdemByProduto(produto);
 
-                return ordem?.materiaPrima != null
-                    ? Padding(
+                  return ordem?.materiaPrima != null
+                      ? Padding(
                         padding: const EdgeInsets.only(top: 2),
                         child: Text(
                           '${ordem?.materiaPrima?.fabricanteModel.nome} - ${ordem?.materiaPrima?.corridaLote}',
                           style: AppCss.minimumBold,
                         ),
                       )
-                    : const SizedBox();
-              })
+                      : const SizedBox();
+                },
+              ),
             ],
           ),
           children: [
             for (final status
                 in produto.statusess.map((e) => e.copyWith()).toList())
-              Builder(builder: (context) {
-                final isLast = status.id == produto.statusess.last.id;
+              Builder(
+                builder: (context) {
+                  final isLast = status.id == produto.statusess.last.id;
 
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: status
-                              .getStatusView()
-                              .color
-                              .withOpacity(isLast ? 0.4 : 0.2),
-                          borderRadius: BorderRadius.circular(4),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: status.getStatusView().color.withValues(
+                              alpha: isLast ? 0.4 : 0.2,
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            status.getStatusView().label,
+                            style: AppCss.mediumRegular
+                                .setSize(14)
+                                .setColor(
+                                  AppColors.black.withValues(
+                                    alpha: isLast ? 1 : 0.4,
+                                  ),
+                                ),
+                          ),
                         ),
-                        child: Text(status.getStatusView().label,
-                            style: AppCss.mediumRegular.setSize(14).setColor(
-                                AppColors.black.withOpacity(isLast ? 1 : 0.4))),
-                      ),
-                      Text(status.createdAt.textHour(),
+                        Text(
+                          status.createdAt.textHour(),
                           style: AppCss.minimumRegular.setColor(
-                              AppColors.black.withOpacity(isLast ? 1 : 0.4))),
-                    ],
-                  ),
-                );
-              })
+                            AppColors.black.withValues(alpha: isLast ? 1 : 0.4),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
           ],
         ),
         const Divisor(),

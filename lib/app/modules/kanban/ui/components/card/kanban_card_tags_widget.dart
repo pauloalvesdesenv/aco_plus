@@ -31,23 +31,24 @@ class KanbanCardTagsWidget extends StatelessWidget {
   Container _tagWidget(TagModel e) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-      decoration:
-          BoxDecoration(color: e.color, borderRadius: BorderRadius.circular(4)),
-      child: isExpanded
-          ? Text(
-              e.nome,
-              style: TextStyle(
-                color: e.color.computeLuminance() > 0.5
-                    ? Colors.black
-                    : Colors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            )
-          : SizedBox(
-              height: 2,
-              width: e.nome.length * 3.0,
-            ),
+      decoration: BoxDecoration(
+        color: e.color,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child:
+          isExpanded
+              ? Text(
+                e.nome,
+                style: TextStyle(
+                  color:
+                      e.color.computeLuminance() > 0.5
+                          ? Colors.black
+                          : Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+              : SizedBox(height: 2, width: e.nome.length * 3.0),
     );
   }
 }

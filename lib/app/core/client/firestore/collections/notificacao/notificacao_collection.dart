@@ -56,19 +56,19 @@ class NotificacaoCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-                field,
-                isEqualTo: isEqualTo,
-                isNotEqualTo: isNotEqualTo,
-                isLessThan: isLessThan,
-                isLessThanOrEqualTo: isLessThanOrEqualTo,
-                isGreaterThan: isGreaterThan,
-                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-                arrayContains: arrayContains,
-                arrayContainsAny: arrayContainsAny,
-                whereIn: whereIn,
-                whereNotIn: whereNotIn,
-                isNull: isNull,
-              )
+              field,
+              isEqualTo: isEqualTo,
+              isNotEqualTo: isNotEqualTo,
+              isLessThan: isLessThan,
+              isLessThanOrEqualTo: isLessThanOrEqualTo,
+              isGreaterThan: isGreaterThan,
+              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+              arrayContains: arrayContains,
+              arrayContainsAny: arrayContainsAny,
+              whereIn: whereIn,
+              whereNotIn: whereNotIn,
+              isNull: isNull,
+            )
             : collection)
         .snapshots()
         .listen((e) {

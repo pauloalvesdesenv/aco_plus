@@ -46,7 +46,7 @@ class TagController {
     return filtered;
   }
 
-  Future<void> onConfirm(_, TagModel? tag) async {
+  Future<void> onConfirm(value, TagModel? tag) async {
     try {
       onValid(tag);
       if (form.isEdit) {
@@ -55,25 +55,31 @@ class TagController {
       } else {
         await FirestoreClient.tags.add(form.toTagModel());
       }
-      pop(_);
+      pop(value);
 
       NotificationService.showPositive(
-          'Etiqueta ${form.isEdit ? 'Editada' : 'Adicionada'}',
-          'Operação realizada com sucesso',
-          position: NotificationPosition.bottom);
+        'Etiqueta ${form.isEdit ? 'Editada' : 'Adicionada'}',
+        'Operação realizada com sucesso',
+        position: NotificationPosition.bottom,
+      );
       await FirestoreClient.tags.fetch();
     } catch (e) {
-      NotificationService.showNegative('Erro', e.toString(),
-          position: NotificationPosition.bottom);
+      NotificationService.showNegative(
+        'Erro',
+        e.toString(),
+        position: NotificationPosition.bottom,
+      );
     }
   }
 
-  Future<void> onDelete(_, TagModel tag) async {
+  Future<void> onDelete(value, TagModel tag) async {
     await FirestoreClient.tags.delete(tag);
-    pop(_);
+    pop(value);
     NotificationService.showPositive(
-        'Etiqueta Excluida', 'Operação realizada com sucesso',
-        position: NotificationPosition.bottom);
+      'Etiqueta Excluida',
+      'Operação realizada com sucesso',
+      position: NotificationPosition.bottom,
+    );
     await FirestoreClient.tags.fetch();
   }
 

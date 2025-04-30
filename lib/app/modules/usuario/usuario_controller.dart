@@ -19,12 +19,14 @@ class UsuarioController {
 
   factory UsuarioController() => _instance;
 
-  final AppStream<UsuarioModel?> usuarioStream =
-      AppStream<UsuarioModel?>.seed(null);
+  final AppStream<UsuarioModel?> usuarioStream = AppStream<UsuarioModel?>.seed(
+    null,
+  );
   UsuarioModel? get usuario => usuarioStream.value;
 
-  final AppStream<UsuarioUtils> utilsStream =
-      AppStream<UsuarioUtils>.seed(UsuarioUtils());
+  final AppStream<UsuarioUtils> utilsStream = AppStream<UsuarioUtils>.seed(
+    UsuarioUtils(),
+  );
   UsuarioUtils get utils => utilsStream.value;
 
   final AppStream<UsuarioCreateModel> formStream =
@@ -32,13 +34,15 @@ class UsuarioController {
   UsuarioCreateModel get form => formStream.value;
 
   void init(UsuarioModel? usuario) {
-    formStream.add(usuario != null
-        ? UsuarioCreateModel.edit(usuario)
-        : UsuarioCreateModel());
+    formStream.add(
+      usuario != null ? UsuarioCreateModel.edit(usuario) : UsuarioCreateModel(),
+    );
   }
 
   List<UsuarioModel> getUsuariosFiltered(
-      String search, List<UsuarioModel> usuarios) {
+    String search,
+    List<UsuarioModel> usuarios,
+  ) {
     if (search.length < 3) return usuarios;
     List<UsuarioModel> filtered = [];
     for (final usuario in usuarios) {
@@ -49,7 +53,7 @@ class UsuarioController {
     return filtered;
   }
 
-  Future<void> onConfirm(_, UsuarioModel? usuario) async {
+  Future<void> onConfirm(value, UsuarioModel? usuario) async {
     try {
       onValid();
       if (form.isEdit) {
@@ -58,25 +62,30 @@ class UsuarioController {
       } else {
         await FirestoreClient.usuarios.add(form.toUsuarioModel());
       }
-      pop(_);
+      pop(value);
       NotificationService.showPositive(
-          'Usuário ${form.isEdit ? 'Editado' : 'Adicionado'}',
-          'Operação realizada com sucesso',
-          position: NotificationPosition.bottom);
+        'Usuário ${form.isEdit ? 'Editado' : 'Adicionado'}',
+        'Operação realizada com sucesso',
+        position: NotificationPosition.bottom,
+      );
       await FirestoreClient.usuarios.fetch();
     } catch (e) {
       NotificationService.showNegative(
-          'Erro ao realizar operação', e.toString(),
-          position: NotificationPosition.bottom);
+        'Erro ao realizar operação',
+        e.toString(),
+        position: NotificationPosition.bottom,
+      );
     }
   }
 
-  Future<void> onDelete(_, UsuarioModel usuario) async {
+  Future<void> onDelete(value, UsuarioModel usuario) async {
     await FirestoreClient.usuarios.delete(usuario);
-    pop(_);
+    pop(value);
     NotificationService.showPositive(
-        'Usuario Excluida', 'Operação realizada com sucesso',
-        position: NotificationPosition.bottom);
+      'Usuario Excluida',
+      'Operação realizada com sucesso',
+      position: NotificationPosition.bottom,
+    );
   }
 
   void onValid() {

@@ -29,8 +29,9 @@ class _ArchivePDFWidgetState extends State<ArchivePDFWidget> {
     if (widget.archive.bytes == null) {
       await widget.archive.fetchBytes();
     }
-    controller =
-        PdfController(document: PdfDocument.openData(widget.archive.bytes!));
+    controller = PdfController(
+      document: PdfDocument.openData(widget.archive.bytes!),
+    );
   }
 
   @override
@@ -43,11 +44,10 @@ class _ArchivePDFWidgetState extends State<ArchivePDFWidget> {
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(4),
       ),
-      child: controller != null
-          ? PdfView(
-              controller: controller!,
-            )
-          : const SizedBox(width: 20, height: 20, child: Loading()),
+      child:
+          controller != null
+              ? PdfView(controller: controller!)
+              : const SizedBox(width: 20, height: 20, child: Loading()),
     );
   }
 }

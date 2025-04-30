@@ -34,26 +34,28 @@ class _UsuarioCreatePageState extends State<UsuarioCreatePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () => pop(context),
-              icon: Icon(
-                Icons.arrow_back,
-                color: AppColors.white,
-              )),
-          title: Text(
-              '${usuarioCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Usuario',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          actions: [
-            IconLoadingButton(() async =>
-                await usuarioCtrl.onConfirm(context, widget.usuario))
-          ],
-          backgroundColor: AppColors.primaryMain,
+      resizeAvoid: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => pop(context),
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        body: StreamOut(
-            stream: usuarioCtrl.formStream.listen,
-            builder: (_, form) => body(form)));
+        title: Text(
+          '${usuarioCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Usuario',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        actions: [
+          IconLoadingButton(
+            () async => await usuarioCtrl.onConfirm(context, widget.usuario),
+          ),
+        ],
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: StreamOut(
+        stream: usuarioCtrl.formStream.listen,
+        builder: (_, form) => body(form),
+      ),
+    );
   }
 
   Widget body(UsuarioCreateModel form) {
@@ -92,7 +94,7 @@ class _UsuarioCreatePageState extends State<UsuarioCreatePage> {
                 form.permission.pedido = [];
                 form.permission.ordem = [
                   UserPermissionType.read,
-                  UserPermissionType.update
+                  UserPermissionType.update,
                 ];
               } else {
                 form.permission.cliente = UserPermissionType.values;
@@ -145,40 +147,38 @@ class _UsuarioCreatePageState extends State<UsuarioCreatePage> {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.info_outline,
-                    color: Colors.amber[800],
-                  ),
+                  Icon(Icons.info_outline, color: Colors.amber[800]),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Operadores podem visualizar apenas ordens pendentes',
-                      style: TextStyle(
-                        color: Colors.amber[900],
-                      ),
+                      style: TextStyle(color: Colors.amber[900]),
                     ),
                   ),
                 ],
               ),
-            )
+            ),
           ],
           const H(24),
           if (form.isEdit)
             TextButton.icon(
-                style: ButtonStyle(
-                  fixedSize: const WidgetStatePropertyAll(
-                      Size.fromWidth(double.maxFinite)),
-                  foregroundColor: WidgetStatePropertyAll(AppColors.error),
-                  backgroundColor: WidgetStatePropertyAll(AppColors.white),
-                  shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                      borderRadius: AppCss.radius8,
-                      side: BorderSide(color: AppColors.error))),
+              style: ButtonStyle(
+                fixedSize: const WidgetStatePropertyAll(
+                  Size.fromWidth(double.maxFinite),
                 ),
-                onPressed: () => usuarioCtrl.onDelete(context, widget.usuario!),
-                label: const Text('Excluir'),
-                icon: const Icon(
-                  Icons.delete_outline,
-                )),
+                foregroundColor: WidgetStatePropertyAll(AppColors.error),
+                backgroundColor: WidgetStatePropertyAll(AppColors.white),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: AppCss.radius8,
+                    side: BorderSide(color: AppColors.error),
+                  ),
+                ),
+              ),
+              onPressed: () => usuarioCtrl.onDelete(context, widget.usuario!),
+              label: const Text('Excluir'),
+              icon: const Icon(Icons.delete_outline),
+            ),
         ],
       ),
     );

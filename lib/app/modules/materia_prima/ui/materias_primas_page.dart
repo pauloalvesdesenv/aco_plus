@@ -36,60 +36,63 @@ class _MateriasPrimasPageState extends State<MateriasPrimasPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-          icon: Icon(
-            Icons.menu,
-            color: AppColors.white,
-          ),
+          icon: Icon(Icons.menu, color: AppColors.white),
         ),
-        title: Text('Materias Primas',
-            style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Materias Primas',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           IconButton(
-              onPressed: () => push(context, const MateriaPrimaCreatePage()),
-              icon: Icon(
-                Icons.add,
-                color: AppColors.white,
-              ))
+            onPressed: () => push(context, const MateriaPrimaCreatePage()),
+            icon: Icon(Icons.add, color: AppColors.white),
+          ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<MateriaPrimaModel>>(
         stream: FirestoreClient.materiaPrimas.dataStream.listen,
-        builder: (_, __) => StreamOut<MateriaPrimaUtils>(
-          stream: materiaPrimaCtrl.utilsStream.listen,
-          builder: (_, utils) {
-            final materiaPrimas = materiaPrimaCtrl
-                .getMateriaPrimaesFiltered(utils.search.text, __)
-                .toList();
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppField(
-                    hint: 'Pesquisar',
-                    controller: utils.search,
-                    suffixIcon: Icons.search,
-                    onChanged: (_) => materiaPrimaCtrl.utilsStream.update(),
-                  ),
-                ),
-                Expanded(
-                  child: materiaPrimas.isEmpty
-                      ? const EmptyData()
-                      : RefreshIndicator(
-                          onRefresh: () async =>
-                              FirestoreClient.materiaPrimas.fetch(),
-                          child: ListView.separated(
-                            itemCount: materiaPrimas.length,
-                            separatorBuilder: (_, i) => const Divisor(),
-                            itemBuilder: (_, i) =>
-                                _itemMateriaPrimaWidget(materiaPrimas[i]),
-                          ),
-                        ),
-                ),
-              ],
-            );
-          },
-        ),
+        builder:
+            (_, __) => StreamOut<MateriaPrimaUtils>(
+              stream: materiaPrimaCtrl.utilsStream.listen,
+              builder: (_, utils) {
+                final materiaPrimas =
+                    materiaPrimaCtrl
+                        .getMateriaPrimaesFiltered(utils.search.text, __)
+                        .toList();
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppField(
+                        hint: 'Pesquisar',
+                        controller: utils.search,
+                        suffixIcon: Icons.search,
+                        onChanged: (_) => materiaPrimaCtrl.utilsStream.update(),
+                      ),
+                    ),
+                    Expanded(
+                      child:
+                          materiaPrimas.isEmpty
+                              ? const EmptyData()
+                              : RefreshIndicator(
+                                onRefresh:
+                                    () async =>
+                                        FirestoreClient.materiaPrimas.fetch(),
+                                child: ListView.separated(
+                                  itemCount: materiaPrimas.length,
+                                  separatorBuilder: (_, i) => const Divisor(),
+                                  itemBuilder:
+                                      (_, i) => _itemMateriaPrimaWidget(
+                                        materiaPrimas[i],
+                                      ),
+                                ),
+                              ),
+                    ),
+                  ],
+                );
+              },
+            ),
       ),
     );
   }
@@ -98,10 +101,7 @@ class _MateriasPrimasPageState extends State<MateriasPrimasPage> {
     return ListTile(
       onTap: () => push(MateriaPrimaCreatePage(materiaPrima: materiaPrima)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      title: Text(
-        materiaPrima.corridaLote,
-        style: AppCss.mediumBold,
-      ),
+      title: Text(materiaPrima.corridaLote, style: AppCss.mediumBold),
       subtitle: Text(
         '${materiaPrima.fabricanteModel.nome} - ${materiaPrima.produto.labelMinified.replaceAll(' - ', ' ')}',
         style: AppCss.mediumRegular,

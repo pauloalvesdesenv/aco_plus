@@ -32,22 +32,23 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return Portal(
       child: OverlaySupport(
-          child: MaterialApp.router(
-        color: AppColors.primaryMain,
-        theme: AppTheme.theme,
-        debugShowCheckedModeBanner: false,
-        title: 'AÇO+',
-        routeInformationParser: RouteConfig.config.routeInformationParser,
-        routeInformationProvider: RouteConfig.config.routeInformationProvider,
-        routerDelegate: RouteConfig.config.routerDelegate,
-        // navigatorKey: _appController.key,
-        // home: StreamOutNull<UsuarioModel?>(
-        //   stream: usuarioCtrl.usuarioStream.listen,
-        //   child: (_, data) => data == null
-        //       ? const SignUpPage()
-        //       : const Portal(child: BasePage()),
-        // ),
-      )),
+        child: MaterialApp.router(
+          color: AppColors.primaryMain,
+          theme: AppTheme.theme,
+          debugShowCheckedModeBanner: false,
+          title: 'AÇO+',
+          routeInformationParser: RouteConfig.config.routeInformationParser,
+          routeInformationProvider: RouteConfig.config.routeInformationProvider,
+          routerDelegate: RouteConfig.config.routerDelegate,
+          // navigatorKey: _appController.key,
+          // home: StreamOutNull<UsuarioModel?>(
+          //   stream: usuarioCtrl.usuarioStream.listen,
+          //   child: (_, data) => data == null
+          //       ? const SignUpPage()
+          //       : const Portal(child: BasePage()),
+          // ),
+        ),
+      ),
     );
   }
 }
@@ -59,8 +60,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamOutNull<UsuarioModel?>(
       stream: usuarioCtrl.usuarioStream.listen,
-      child: (_, data) =>
-          data == null ? const SignUpPage() : const Portal(child: BasePage()),
+      child:
+          (_, data) =>
+              data == null
+                  ? const SignUpPage()
+                  : const Portal(child: BasePage()),
     );
   }
 }

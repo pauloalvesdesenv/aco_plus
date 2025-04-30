@@ -28,46 +28,56 @@ class ItemLabel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!isEditable)
-          Text(label,
-              style: AppCss.minimumBold
-                  .copyWith(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                      color: AppColors.black.withOpacity(0.8))
-                  .copyWith(
-                    decoration: isDisable ? TextDecoration.lineThrough : null,
-                    color: isDisable ? AppColors.black.withOpacity(0.3) : null,
-                  )),
+          Text(
+            label,
+            style: AppCss.minimumBold
+                .copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: AppColors.black.withValues(alpha: 0.8),
+                )
+                .copyWith(
+                  decoration: isDisable ? TextDecoration.lineThrough : null,
+                  color:
+                      isDisable ? AppColors.black.withValues(alpha: 0.3) : null,
+                ),
+          ),
         if (isEditable)
           GestureDetector(
             onTap: () => onEdit?.call(),
             child: Row(
               children: [
-                Text(label,
-                    style: AppCss.minimumBold
-                        .copyWith(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13,
-                            color: AppColors.black.withOpacity(0.8))
-                        .copyWith(
-                          decoration:
-                              isDisable ? TextDecoration.lineThrough : null,
-                          color: isDisable
-                              ? AppColors.black.withOpacity(0.3)
-                              : null,
-                        )),
+                Text(
+                  label,
+                  style: AppCss.minimumBold
+                      .copyWith(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        color: AppColors.black.withValues(alpha: 0.8),
+                      )
+                      .copyWith(
+                        decoration:
+                            isDisable ? TextDecoration.lineThrough : null,
+                        color:
+                            isDisable
+                                ? AppColors.black.withValues(alpha: 0.3)
+                                : null,
+                      ),
+                ),
                 const W(5),
-                Icon(Icons.edit, size: 14, color: Colors.grey[700]!)
+                Icon(Icons.edit, size: 14, color: Colors.grey[700]!),
               ],
             ),
           ),
         Text(
           value,
-          style:
-              AppCss.mediumRegular.setColor(color ?? AppColors.black).copyWith(
-                    decoration: isDisable ? TextDecoration.lineThrough : null,
-                    color: isDisable ? AppColors.black.withOpacity(0.3) : null,
-                  ),
+          style: AppCss.mediumRegular
+              .setColor(color ?? AppColors.black)
+              .copyWith(
+                decoration: isDisable ? TextDecoration.lineThrough : null,
+                color:
+                    isDisable ? AppColors.black.withValues(alpha: 0.3) : null,
+              ),
         ),
       ],
     );

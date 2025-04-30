@@ -1,9 +1,4 @@
-enum UserPermissionType {
-  create,
-  read,
-  update,
-  delete,
-}
+enum UserPermissionType { create, read, update, delete }
 
 extension UserPermissionTypeExtension on UserPermissionType {
   String get label {

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
@@ -10,12 +8,15 @@ import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/dialogs/loading_dialog.dart';
 import 'package:aco_plus/app/core/enums/sort_type.dart';
+import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:aco_plus/app/core/services/hash_service.dart';
 import 'package:aco_plus/app/core/services/notification_service.dart';
+import 'package:aco_plus/app/core/services/pdf_download_service/pdf_download_service_mobile.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/automatizacao/automatizacao_controller.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem_etiquetas_pdf_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_produto_status_bottom.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_produtos_status_bottom.dart';
 import 'package:aco_plus/app/modules/ordem/view_models/ordem_view_model.dart';
@@ -23,7 +24,9 @@ import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 final ordemCtrl = OrdemController();
 
@@ -34,8 +37,9 @@ class OrdemController {
 
   factory OrdemController() => _instance;
 
-  final AppStream<OrdemUtils> utilsStream =
-      AppStream<OrdemUtils>.seed(OrdemUtils());
+  final AppStream<OrdemUtils> utilsStream = AppStream<OrdemUtils>.seed(
+    OrdemUtils(),
+  );
   OrdemUtils get utils => utilsStream.value;
 
   final AppStream<OrdemConcluidasUtils> utilsConcluidasStream =
@@ -62,12 +66,15 @@ class OrdemController {
   OrdemCreateModel get form => formStream.value;
 
   void onInitCreatePage(OrdemModel? ordem) {
-    formStream
-        .add(ordem != null ? OrdemCreateModel.edit(ordem) : OrdemCreateModel());
+    formStream.add(
+      ordem != null ? OrdemCreateModel.edit(ordem) : OrdemCreateModel(),
+    );
   }
 
-  List<PedidoProdutoModel> getPedidosPorProduto(ProdutoModel produto,
-      {OrdemModel? ordem}) {
+  List<PedidoProdutoModel> getPedidosPorProduto(
+    ProdutoModel produto, {
+    OrdemModel? ordem,
+  }) {
     List<PedidoProdutoModel> pedidos = [
       ..._getPedidosProdutosAtual(ordem: ordem),
       ..._getPedidosProdutosSeparados(produto),
@@ -79,8 +86,12 @@ class OrdemController {
   List<PedidoProdutoModel> _getPedidosProdutosAtual({OrdemModel? ordem}) =>
       ordem != null
           ? ordem.produtos
-              .map((e) => e.copyWith(
-                  isSelected: true, isAvailable: e.isAvailableToChanges))
+              .map(
+                (e) => e.copyWith(
+                  isSelected: true,
+                  isAvailable: e.isAvailableToChanges,
+                ),
+              )
               .toList()
           : [];
 
@@ -96,9 +107,11 @@ class OrdemController {
               e.produto.id == produto.id)
           .toList();
       for (final pedidoProduto in pedidoProdutos) {
-        final isFiltered = form.localizador.text.isEmpty ||
-            pedidoProduto.pedido.localizador.toCompare
-                .contains(form.localizador.text.toCompare);
+        final isFiltered =
+            form.localizador.text.isEmpty ||
+            pedidoProduto.pedido.localizador.toCompare.contains(
+              form.localizador.text.toCompare,
+            );
         if (isFiltered) {
           pedidos.add(pedidoProduto);
         }
@@ -108,30 +121,38 @@ class OrdemController {
   }
 
   List<PedidoProdutoModel> getPedidosPorProdutoEdit(OrdemModel ordem) {
-    final pedidos = ordem.produtos
-        .where((e) =>
-            form.localizador.text.isEmpty ||
-            e.cliente.nome.toCompare.contains(form.localizador.text.toCompare))
-        .toList();
+    final pedidos =
+        ordem.produtos
+            .where(
+              (e) =>
+                  form.localizador.text.isEmpty ||
+                  e.cliente.nome.toCompare.contains(
+                    form.localizador.text.toCompare,
+                  ),
+            )
+            .toList();
     onSortPedidos(pedidos);
 
     return pedidos;
   }
 
-  Future<void> onConfirm(_, OrdemModel? ordem) async {
+  Future<void> onConfirm(value, OrdemModel? ordem) async {
     try {
       if (form.isEdit) {
-        await onEdit(_, ordem!);
+        await onEdit(value, ordem!);
       } else {
-        await onCreate(_);
+        await onCreate(value);
       }
-    } catch (_) {
-      NotificationService.showNegative('Erro', _.toString(),
-          position: NotificationPosition.bottom);
+    } catch (value) {
+      NotificationService.showNegative(
+        'Erro',
+        value.toString(),
+        position: NotificationPosition.bottom,
+      );
     }
   }
 
-  Future<void> onCreate(_) async {
+  Future<void> onCreate(value) async {
     form.id =
         'OP${form.produto!.descricao.replaceAll('m', '').replaceAll('.', '')}${form.id}';
 
@@ -139,26 +160,34 @@ class OrdemController {
     onValid(ordemCriada);
     if (ordemCriada.produtos.isEmpty) {
       if (!await showConfirmDialog(
-          'Você está criando uma ordem vazia.', 'Deseja Continuar?')) {
+        'Você está criando uma ordem vazia.',
+        'Deseja Continuar?',
+      )) {
         return;
       }
     }
     for (PedidoProdutoModel produto in ordemCriada.produtos) {
-      await FirestoreClient.pedidos
-          .updateProdutoStatus(produto, produto.statusess.last.status);
+      await FirestoreClient.pedidos.updateProdutoStatus(
+        produto,
+        produto.statusess.last.status,
+      );
     }
     await FirestoreClient.ordens.add(ordemCriada);
     await FirestoreClient.pedidos.fetch();
-    await automatizacaoCtrl.onSetStepByPedidoStatus(ordemCriada.pedidos
-        .map((e) => FirestoreClient.pedidos.getById(e.id))
-        .toList());
-    Navigator.pop(_);
+    await automatizacaoCtrl.onSetStepByPedidoStatus(
+      ordemCriada.pedidos
+          .map((e) => FirestoreClient.pedidos.getById(e.id))
+          .toList(),
+    );
+    Navigator.pop(value);
     NotificationService.showPositive(
-        'Ordem Adicionada', 'Operação realizada com sucesso',
-        position: NotificationPosition.bottom);
+      'Ordem Adicionada',
+      'Operação realizada com sucesso',
+      position: NotificationPosition.bottom,
+    );
   }
 
-  Future<void> onEdit(_, OrdemModel ordem) async {
+  Future<void> onEdit(value, OrdemModel ordem) async {
     await FirestoreClient.pedidos.fetch();
     final ordemEditada = form.toOrdemModel();
     onValid(ordemEditada);
@@ -170,24 +199,30 @@ class OrdemController {
     for (PedidoProdutoModel produto in ordem.produtos) {
       if (!ordemEditada.produtos.contains(produto)) {
         await FirestoreClient.pedidos.updateProdutoStatus(
-            produto, PedidoProdutoStatus.separado,
-            clear: true);
+          produto,
+          PedidoProdutoStatus.separado,
+          clear: true,
+        );
       }
     }
     for (PedidoProdutoModel produto in ordemEditada.produtos) {
-      await FirestoreClient.pedidos
-          .updateProdutoStatus(produto, produto.statusess.last.status);
+      await FirestoreClient.pedidos.updateProdutoStatus(
+        produto,
+        produto.statusess.last.status,
+      );
     }
     //TODO
     ordemEditada.produtos.removeWhere((e) => e.status.status.index == 0);
     await FirestoreClient.ordens.update(ordemEditada);
     await FirestoreClient.pedidos.fetch();
     await automatizacaoCtrl.onSetStepByPedidoStatus(ordemEditada.pedidos);
-    Navigator.pop(_);
-    Navigator.pop(_);
+    Navigator.pop(value);
+    Navigator.pop(value);
     NotificationService.showPositive(
-        'Ordem Editada', 'Operação realizada com sucesso',
-        position: NotificationPosition.bottom);
+      'Ordem Editada',
+      'Operação realizada com sucesso',
+      position: NotificationPosition.bottom,
+    );
   }
 
   void onValid(OrdemModel ordem) {
@@ -196,30 +231,41 @@ class OrdemController {
     }
   }
 
-  Future<void> onDelete(_, OrdemModel ordem) async {
+  Future<void> onDelete(value, OrdemModel ordem) async {
     if (await _isDeleteUnavailable(ordem)) return;
-    for (var pedidoProduto in ordem.produtos
-        .map((e) =>
-            FirestoreClient.pedidos.getProdutoByPedidoId(e.pedidoId, e.id))
-        .toList()) {
+    for (var pedidoProduto
+        in ordem.produtos
+            .map(
+              (e) => FirestoreClient.pedidos.getProdutoByPedidoId(
+                e.pedidoId,
+                e.id,
+              ),
+            )
+            .toList()) {
       pedidoProduto.statusess.clear();
-      pedidoProduto.statusess.add(PedidoProdutoStatusModel(
+      pedidoProduto.statusess.add(
+        PedidoProdutoStatusModel(
           id: HashService.get,
           status: PedidoProdutoStatus.separado,
-          createdAt: DateTime.now()));
-      await FirestoreClient.pedidos
-          .update(FirestoreClient.pedidos.getById(pedidoProduto.pedidoId));
+          createdAt: DateTime.now(),
+        ),
+      );
+      await FirestoreClient.pedidos.update(
+        FirestoreClient.pedidos.getById(pedidoProduto.pedidoId),
+      );
     }
     ordem.produtos.clear();
     await FirestoreClient.ordens.delete(ordem);
     await automatizacaoCtrl.onSetStepByPedidoStatus(ordem.pedidos);
-    pop(_);
+    pop(value);
 
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
 
     NotificationService.showPositive(
-        'Ordem Excluida', 'Operação realizada com sucesso',
-        position: NotificationPosition.bottom);
+      'Ordem Excluida',
+      'Operação realizada com sucesso',
+      position: NotificationPosition.bottom,
+    );
   }
 
   Future<bool> _isDeleteUnavailable(OrdemModel ordem) async =>
@@ -228,30 +274,44 @@ class OrdemController {
         deleteMessage: 'Todos seus dados da ordem apagados do sistema',
         infoMessage:
             'Para excluir a ordem todos os produtos devem estar em "Aguardando Produção".',
-        conditional: !ordem.produtos.every((e) =>
-            e.status.status == PedidoProdutoStatus.aguardandoProducao ||
-            e.status.status == PedidoProdutoStatus.separado),
+        conditional:
+            !ordem.produtos.every(
+              (e) =>
+                  e.status.status == PedidoProdutoStatus.aguardandoProducao ||
+                  e.status.status == PedidoProdutoStatus.separado,
+            ),
       );
 
   void onSortPedidos(List<PedidoProdutoModel> pedidos) {
     bool isAsc = form.sortOrder == SortOrder.asc;
     switch (form.sortType) {
       case SortType.localizator:
-        pedidos.sort((a, b) => isAsc
-            ? a.pedido.localizador.compareTo(b.pedido.localizador)
-            : b.pedido.localizador.compareTo(a.pedido.localizador));
+        pedidos.sort(
+          (a, b) =>
+              isAsc
+                  ? a.pedido.localizador.compareTo(b.pedido.localizador)
+                  : b.pedido.localizador.compareTo(a.pedido.localizador),
+        );
         break;
       case SortType.alfabetic:
-        pedidos.sort((a, b) => isAsc
-            ? a.pedido.localizador.compareTo(b.pedido.localizador)
-            : b.pedido.localizador.compareTo(a.pedido.localizador));
+        pedidos.sort(
+          (a, b) =>
+              isAsc
+                  ? a.pedido.localizador.compareTo(b.pedido.localizador)
+                  : b.pedido.localizador.compareTo(a.pedido.localizador),
+        );
         break;
       case SortType.createdAt:
-        pedidos.sort((a, b) => isAsc
-            ? (a.pedido.deliveryAt ?? DateTime.now())
-                .compareTo((b.pedido.deliveryAt ?? DateTime.now()))
-            : (b.pedido.deliveryAt ?? DateTime.now())
-                .compareTo((a.pedido.deliveryAt ?? DateTime.now())));
+        pedidos.sort(
+          (a, b) =>
+              isAsc
+                  ? (a.pedido.deliveryAt ?? DateTime.now()).compareTo(
+                    (b.pedido.deliveryAt ?? DateTime.now()),
+                  )
+                  : (b.pedido.deliveryAt ?? DateTime.now()).compareTo(
+                    (a.pedido.deliveryAt ?? DateTime.now()),
+                  ),
+        );
         break;
       default:
     }
@@ -277,8 +337,10 @@ class OrdemController {
   void showBottomChangeProdutosStatus(List<PedidoProdutoModel> produtos) async {
     final status = await showOrdemProdutosStatusBottom();
     if (status == null) return;
-    if (!await showConfirmDialog('Mover alterar status de todos os produtos?',
-        'Todos os produtos serão alterados para ${status.label}.\nEsta ação pode demorar um pouco.')) {
+    if (!await showConfirmDialog(
+      'Mover alterar status de todos os produtos?',
+      'Todos os produtos serão alterados para ${status.label}.\nEsta ação pode demorar um pouco.',
+    )) {
       return;
     }
     showLoadingDialog();
@@ -305,7 +367,9 @@ class OrdemController {
   }
 
   Future<void> onChangeProdutoStatus(
-      PedidoProdutoModel produto, PedidoProdutoStatus status) async {
+    PedidoProdutoModel produto,
+    PedidoProdutoStatus status,
+  ) async {
     await FirestoreClient.pedidos.updateProdutoStatus(produto, status);
     final pedido = await FirestoreClient.pedidos.updatePedidoStatus(produto);
     if (pedido != null) await updateFeaturesByPedidoStatus(pedido);
@@ -316,13 +380,14 @@ class OrdemController {
   Future<void> updateFeaturesByPedidoStatus(PedidoModel pedido) async {
     await automatizacaoCtrl.onSetStepByPedidoStatus([pedido]);
     pedidoCtrl.onAddHistory(
-        pedido: pedido,
-        data: pedido.statusess.last,
-        action: PedidoHistoryAction.update,
-        type: PedidoHistoryType.status);
+      pedido: pedido,
+      data: pedido.statusess.last,
+      action: PedidoHistoryAction.update,
+      type: PedidoHistoryType.status,
+    );
   }
 
-  Future<void> onFreezed(_, OrdemModel ordem) async {
+  Future<void> onFreezed(value, OrdemModel ordem) async {
     if (ordem.freezed.isFreezed) {
       if (!await showConfirmDialog('Deseja descongelar a ordem?',
           'A ordem voltará na ultima posição da esteira de produção.')) {
@@ -339,27 +404,29 @@ class OrdemController {
     }
     await FirestoreClient.ordens.update(ordem);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
-    Navigator.pop(_);
+    Navigator.pop(value);
     if (ordem.freezed.isFreezed) {
-      NotificationService.showPositive('Ordem ${ordem.localizator} congelada!',
-          'Ordem foi removida da esteira de produção');
+      NotificationService.showPositive(
+        'Ordem ${ordem.localizator} congelada!',
+        'Ordem foi removida da esteira de produção',
+      );
     } else {
       NotificationService.showPositive(
-          'Ordem ${ordem.localizator} descongelada!',
-          'Ordem foi adicionada na ultima posição esteira de produção');
+        'Ordem ${ordem.localizator} descongelada!',
+        'Ordem foi adicionada na ultima posição esteira de produção',
+      );
     }
   }
 
   void onReorder(List<OrdemModel> ordensNaoConcluidas) {
     for (var i = 0; i < ordensNaoConcluidas.length; i++) {
       ordensNaoConcluidas[i].beltIndex = i;
-      log('inreorder');
       FirestoreClient.ordens.dataStream.update();
       FirestoreClient.ordens.update(ordensNaoConcluidas[i]);
     }
   }
 
-  Future<void> onGeneratePDF(OrdemModel ordem) async {
+  Future<void> onGenerateRelatorioPDF(OrdemModel ordem) async {
     final RelatorioOrdemViewModel relatorio = RelatorioOrdemViewModel();
     relatorio.ordem = ordem;
     relatorio.type = RelatorioOrdemType.ORDEM;
@@ -367,8 +434,37 @@ class OrdemController {
 
     relatorioCtrl.ordemViewModelStream.add(relatorio);
 
-    await relatorioCtrl
-        .onExportRelatorioOrdemUniquePDF(RelatorioOrdemModel.ordem(ordem));
+    await relatorioCtrl.onExportRelatorioOrdemUniquePDF(
+      RelatorioOrdemModel.ordem(ordem),
+    );
+  }
+
+  Future<void> onGenerateEtiquetasPDF(OrdemModel ordem) async {
+    List<OrdemEtiquetaModel> model = [];
+    for (var produto in ordem.produtos) {
+      model.add(
+        OrdemEtiquetaModel(
+          cliente: produto.pedido.cliente,
+          obra: produto.pedido.obra,
+          pedido: produto.pedido,
+          ordem: ordem.copyWith(produtos: [produto.copyWith()]),
+          createdAt: DateTime.now(),
+          produto: produto,
+        ),
+      );
+    }
+
+    final pdf = pw.Document();
+
+    final img = await rootBundle.load('assets/images/logo.png');
+    final imageBytes = img.buffer.asUint8List();
+
+    pdf.addPage(OrdemEtiquetasPdfPage(model).build(imageBytes));
+
+    final name =
+        "m2_etiquetas_ordem_${ordem.localizator.toLowerCase()}_${DateTime.now().toFileName()}.pdf";
+
+    await downloadPDF(name, '/ordem/etiquetas/', await pdf.save());
   }
 
   Future<void> setArquivadas() async {

@@ -14,13 +14,13 @@ import 'package:aco_plus/app/modules/ordem/ordem_controller.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showOrderCreatePedidosSelecionadosBottom(
-        OrdemModel? ordem) async =>
-    showModalBottomSheet(
-      backgroundColor: AppColors.white,
-      context: contextGlobal,
-      isScrollControlled: true,
-      builder: (_) => OrderCreatePedidosSelecionadosBottom(ordem),
-    );
+  OrdemModel? ordem,
+) async => showModalBottomSheet(
+  backgroundColor: AppColors.white,
+  context: contextGlobal,
+  isScrollControlled: true,
+  builder: (_) => OrderCreatePedidosSelecionadosBottom(ordem),
+);
 
 class OrderCreatePedidosSelecionadosBottom extends StatefulWidget {
   final OrdemModel? ordem;
@@ -38,12 +38,17 @@ class _OrderCreatePedidosSelecionadosBottomState
     return StreamOut(
       stream: ordemCtrl.formStream.listen,
       builder: (_, form) {
-        List<PedidoProdutoModel> produtos =
-            ordemCtrl.getPedidosPorProduto(form.produto!, ordem: widget.ordem);
-        produtos = produtos
-            .where((produto) =>
-                form.produtos.map((e) => e.id).contains(produto.id))
-            .toList();
+        List<PedidoProdutoModel> produtos = ordemCtrl.getPedidosPorProduto(
+          form.produto!,
+          ordem: widget.ordem,
+        );
+        produtos =
+            produtos
+                .where(
+                  (produto) =>
+                      form.produtos.map((e) => e.id).contains(produto.id),
+                )
+                .toList();
 
         return AppBottom(
           title: 'Pedidos Selecionados',
@@ -59,8 +64,9 @@ class _OrderCreatePedidosSelecionadosBottomState
                       onTap: () {
                         for (var produto in produtos) {
                           form.produtos.map((e) => e.id).contains(produto.id)
-                              ? form.produtos
-                                  .removeWhere((e) => e.id == produto.id)
+                              ? form.produtos.removeWhere(
+                                (e) => e.id == produto.id,
+                              )
                               : form.produtos.add(produto);
                           ordemCtrl.formStream.update();
                         }
@@ -96,13 +102,14 @@ class _OrderCreatePedidosSelecionadosBottomState
     );
   }
 
-  Widget _itemProduto(
-      {required PedidoProdutoModel produto,
-      required bool check,
-      required void Function() onTap,
-      required bool isEnable}) {
+  Widget _itemProduto({
+    required PedidoProdutoModel produto,
+    required bool check,
+    required void Function() onTap,
+    required bool isEnable,
+  }) {
     return Container(
-      color: !isEnable ? AppColors.black.withOpacity(0.04) : null,
+      color: !isEnable ? AppColors.black.withValues(alpha: 0.04) : null,
       child: IgnorePointer(
         ignoring: !isEnable,
         child: InkWell(
@@ -111,7 +118,9 @@ class _OrderCreatePedidosSelecionadosBottomState
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: AppColors.black.withOpacity(0.04), width: 1),
+                  color: AppColors.black.withValues(alpha: 0.04),
+                  width: 1,
+                ),
                 borderRadius: BorderRadius.circular(4),
               ),
               padding: const EdgeInsets.all(16),
@@ -139,16 +148,22 @@ class _OrderCreatePedidosSelecionadosBottomState
                             const W(8),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
-                                  color: produto.pedido.tipo.backgroundColor,
-                                  borderRadius: BorderRadius.circular(4)),
-                              child: Text(produto.pedido.tipo.label,
-                                  style: AppCss.minimumBold
-                                      .setColor(
-                                          produto.pedido.tipo.foregroundColor)
-                                      .setSize(11)),
-                            )
+                                color: produto.pedido.tipo.backgroundColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                produto.pedido.tipo.label,
+                                style: AppCss.minimumBold
+                                    .setColor(
+                                      produto.pedido.tipo.foregroundColor,
+                                    )
+                                    .setSize(11),
+                              ),
+                            ),
                           ],
                         ),
                         Text(
@@ -164,7 +179,7 @@ class _OrderCreatePedidosSelecionadosBottomState
                     onPressed: () {},
                     icon: const Icon(Icons.remove),
                     label: const Text('Remover'),
-                  )
+                  ),
                 ],
               ),
             ),

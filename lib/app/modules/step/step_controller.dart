@@ -20,8 +20,9 @@ class StepController {
   final AppStream<StepModel?> stepStream = AppStream<StepModel?>.seed(null);
   StepModel? get step => stepStream.value;
 
-  final AppStream<StepUtils> utilsStream =
-      AppStream<StepUtils>.seed(StepUtils());
+  final AppStream<StepUtils> utilsStream = AppStream<StepUtils>.seed(
+    StepUtils(),
+  );
   StepUtils get utils => utilsStream.value;
 
   void onInit() {
@@ -33,8 +34,9 @@ class StepController {
   StepCreateModel get form => formStream.value;
 
   void init(StepModel? step) {
-    formStream
-        .add(step != null ? StepCreateModel.edit(step) : StepCreateModel());
+    formStream.add(
+      step != null ? StepCreateModel.edit(step) : StepCreateModel(),
+    );
   }
 
   List<StepModel> getStepesFiltered(String search, List<StepModel> steps) {
@@ -48,7 +50,7 @@ class StepController {
     return filtered;
   }
 
-  Future<void> onConfirm(_, StepModel? step) async {
+  Future<void> onConfirm(value, StepModel? step) async {
     try {
       onValid();
       final newStep = form.toStepModel(step);
@@ -60,25 +62,31 @@ class StepController {
       if (newStep.isDefault) {
         await FirestoreClient.steps.setDefault(newStep.id);
       }
-      pop(_);
+      pop(value);
       NotificationService.showPositive(
-          'Step ${form.isEdit ? 'Editado' : 'Adicionado'}',
-          'Operação realizada com sucesso',
-          position: NotificationPosition.bottom);
+        'Step ${form.isEdit ? 'Editado' : 'Adicionado'}',
+        'Operação realizada com sucesso',
+        position: NotificationPosition.bottom,
+      );
       await FirestoreClient.steps.fetch();
     } catch (e) {
-      NotificationService.showNegative('Erro', e.toString(),
-          position: NotificationPosition.bottom);
+      NotificationService.showNegative(
+        'Erro',
+        e.toString(),
+        position: NotificationPosition.bottom,
+      );
     }
   }
 
-  Future<void> onDelete(_, StepModel step) async {
+  Future<void> onDelete(value, StepModel step) async {
     if (await _isDeleteUnavailable(step)) return;
     await FirestoreClient.steps.delete(step);
-    pop(_);
+    pop(value);
     NotificationService.showPositive(
-        'Step Excluido', 'Operação realizada com sucesso',
-        position: NotificationPosition.bottom);
+      'Step Excluido',
+      'Operação realizada com sucesso',
+      position: NotificationPosition.bottom,
+    );
     await FirestoreClient.steps.fetch();
   }
 

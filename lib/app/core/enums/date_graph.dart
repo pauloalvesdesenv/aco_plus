@@ -1,10 +1,4 @@
-enum DateGraph {
-  day,
-  week,
-  month,
-  year,
-  all,
-}
+enum DateGraph { day, week, month, year, all }
 
 extension DateGraphExtension on DateGraph {
   String get name {

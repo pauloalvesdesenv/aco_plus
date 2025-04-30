@@ -8,12 +8,13 @@ class DatePickerField extends StatelessWidget {
   final Function(DateTime?) onChanged;
   final bool required;
 
-  const DatePickerField(
-      {required this.label,
-      required this.item,
-      required this.onChanged,
-      required this.required,
-      super.key});
+  const DatePickerField({
+    required this.label,
+    required this.item,
+    required this.onChanged,
+    required this.required,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,10 @@ class DatePickerField extends StatelessWidget {
           final lats = now.add(const Duration(days: 365));
           FocusManager.instance.primaryFocus?.unfocus();
           final result = await showDatePicker(
-              context: context, firstDate: first, lastDate: lats);
+            context: context,
+            firstDate: first,
+            lastDate: lats,
+          );
           if (result == null) return;
           onChanged.call(result);
         }

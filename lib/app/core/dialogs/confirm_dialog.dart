@@ -19,10 +19,7 @@ class ConfirmDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: AppColors.white,
-      title: Text(
-        title,
-        style: AppCss.largeBold,
-      ),
+      title: Text(title, style: AppCss.largeBold),
       content: Text(message),
       actions: [
         TextButton(

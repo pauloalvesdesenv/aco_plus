@@ -63,15 +63,16 @@ class StepController {
 
   Map<String, List<PedidoModel>> _mountCalendar() {
     final calendar = <String, List<PedidoModel>>{};
-    final keys = FirestoreClient.pedidos.pepidosUnarchiveds
-        .where((e) => e.deliveryAt != null)
-        .map((e) => e.deliveryAt!)
-        .toSet();
+    final keys =
+        FirestoreClient.pedidos.pepidosUnarchiveds
+            .where((e) => e.deliveryAt != null)
+            .map((e) => e.deliveryAt!)
+            .toSet();
     for (DateTime key in keys) {
-      calendar[DateFormat('dd/MM/yyyy').format(key)] = FirestoreClient
-          .pedidos.pepidosUnarchiveds
-          .where((e) => e.deliveryAt == key)
-          .toList();
+      calendar[DateFormat('dd/MM/yyyy').format(key)] =
+          FirestoreClient.pedidos.pepidosUnarchiveds
+              .where((e) => e.deliveryAt == key)
+              .toList();
     }
     return calendar;
   }
@@ -91,8 +92,12 @@ class StepController {
     utilsStream.update();
   }
 
-  void onAccept(StepModel step, PedidoModel pedido, int index,
-      {bool auto = false}) async {
+  void onAccept(
+    StepModel step,
+    PedidoModel pedido,
+    int index, {
+    bool auto = false,
+  }) async {
     if (!onWillAccept(pedido, step, auto: auto)) return;
     _onMovePedido(pedido, step, index);
     _onAddStep(pedido, step);
@@ -101,20 +106,26 @@ class StepController {
 
   bool onWillAccept(PedidoModel pedido, StepModel step, {bool auto = false}) {
     if (pedido.step.id != step.id) {
-      final isStepAvailable =
-          step.fromSteps.map((e) => e.id).contains(pedido.step.id);
+      final isStepAvailable = step.fromSteps
+          .map((e) => e.id)
+          .contains(pedido.step.id);
       if (!isStepAvailable) {
         NotificationService.showNegative(
-            'Operação não permitida', 'Etapa não aceita esta operação');
+          'Operação não permitida',
+          'Etapa não aceita esta operação',
+        );
         return false;
       }
     }
     if (!auto) {
-      final isUserAvailable = step.moveRoles.contains(usuario.role) &&
+      final isUserAvailable =
+          step.moveRoles.contains(usuario.role) &&
           pedido.step.moveRoles.contains(usuario.role);
       if (!isUserAvailable) {
-        NotificationService.showNegative('Operação não permitida',
-            'Usuário não tem permissão para alterar essa etapa');
+        NotificationService.showNegative(
+          'Operação não permitida',
+          'Usuário não tem permissão para alterar essa etapa',
+        );
         return false;
       }
     }
@@ -134,8 +145,11 @@ class StepController {
   }
 
   void _onMovePedido(PedidoModel pedido, StepModel step, int index) {
-    _onAddPedidoFromStep(step.id, index,
-        pedido: _onRemovePedidoFromStep(pedido.step.id, pedido.id));
+    _onAddPedidoFromStep(
+      step.id,
+      index,
+      pedido: _onRemovePedidoFromStep(pedido.step.id, pedido.id),
+    );
     _onUpdatePedidosIndex(step.id, index);
   }
 
@@ -146,8 +160,11 @@ class StepController {
     return pedido;
   }
 
-  void _onAddPedidoFromStep(String stepId, int index,
-      {required PedidoModel pedido}) {
+  void _onAddPedidoFromStep(
+    String stepId,
+    int index, {
+    required PedidoModel pedido,
+  }) {
     final key = utils.kanban.keys.firstWhere((e) => e.id == stepId);
     utils.kanban[key]!.insert(index, pedido);
     pedido.addStep(key);
@@ -188,17 +205,24 @@ class StepController {
 
   void _setTimerByAlign(Alignment align) {
     if (align == Alignment.centerRight) {
-      utils.timer = Timer.periodic(const Duration(milliseconds: 300),
-          (timer) => _updateScrollSteps(utils.scroll.offset + 100));
+      utils.timer = Timer.periodic(
+        const Duration(milliseconds: 300),
+        (timer) => _updateScrollSteps(utils.scroll.offset + 100),
+      );
     } else {
-      utils.timer = Timer.periodic(const Duration(milliseconds: 300),
-          (timer) => _updateScrollSteps(utils.scroll.offset - 100));
+      utils.timer = Timer.periodic(
+        const Duration(milliseconds: 300),
+        (timer) => _updateScrollSteps(utils.scroll.offset - 100),
+      );
     }
   }
 
   void _updateScrollSteps(double offset) {
-    utils.scroll.animateTo(offset,
-        curve: Curves.ease, duration: const Duration(milliseconds: 300));
+    utils.scroll.animateTo(
+      offset,
+      curve: Curves.ease,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
   void onUndoStep(PedidoModel pedido) async {

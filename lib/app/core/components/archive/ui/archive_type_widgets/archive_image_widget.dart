@@ -24,11 +24,13 @@ class _ArchiveImageWidgetState extends State<ArchiveImageWidget> {
           borderRadius: BorderRadius.circular(4),
           border: Border.all(color: Colors.grey[400]!),
         ),
-        child: Image.memory(widget.archive.bytes!,
-            width: 150,
-            height: 180,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => ArchiveErrorWidget(widget.archive)),
+        child: Image.memory(
+          widget.archive.bytes!,
+          width: 150,
+          height: 180,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => ArchiveErrorWidget(widget.archive),
+        ),
       );
     }
     return Container(
@@ -42,13 +44,12 @@ class _ArchiveImageWidgetState extends State<ArchiveImageWidget> {
         width: 150,
         height: 180,
         imageUrl: widget.archive.url!,
-        placeholder: (_, __) => const SizedBox(
-          width: 150,
-          height: 180,
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
+        placeholder:
+            (_, __) => const SizedBox(
+              width: 150,
+              height: 180,
+              child: Center(child: CircularProgressIndicator()),
+            ),
         errorWidget: (_, __, ___) => ArchiveErrorWidget(widget.archive),
       ),
     );

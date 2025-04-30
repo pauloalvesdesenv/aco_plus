@@ -38,73 +38,77 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
     return AppScaffold(
       resizeAvoid: true,
       appBar: AppBar(
-        title: Text('Relatórios de Ordem',
-            style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Relatórios de Ordem',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         backgroundColor: AppColors.primaryMain,
         actions: [
           StreamOut(
             stream: relatorioCtrl.ordemViewModelStream.listen,
-            builder: (_, model) => IconButton(
-              onPressed: model.relatorio != null
-                  ? () => relatorioCtrl.onExportRelatorioOrdemPDF()
-                  : null,
-              icon: Icon(
-                Icons.picture_as_pdf_outlined,
-                color: model.relatorio != null ? null : Colors.grey[500],
-              ),
-            ),
+            builder:
+                (_, model) => IconButton(
+                  onPressed:
+                      model.relatorio != null
+                          ? () => relatorioCtrl.onExportRelatorioOrdemPDF()
+                          : null,
+                  icon: Icon(
+                    Icons.picture_as_pdf_outlined,
+                    color: model.relatorio != null ? null : Colors.grey[500],
+                  ),
+                ),
           ),
         ],
       ),
       body: StreamOut(
         stream: relatorioCtrl.ordemViewModelStream.listen,
-        builder: (_, model) => ListView(
-          children: [
-            _filterWidget(model),
-            Divisor(color: Colors.grey[700]!, height: 1.5),
-            if (model.type == RelatorioOrdemType.STATUS &&
-                model.relatorio != null) ...[
-              itemInfo('Total Geral', relatorioCtrl.getOrdemTotal().toKg(),
-                  labelStyle: AppCss.mediumBold,
-                  valueStyle: AppCss.mediumBold,
-                  padding: const EdgeInsets.all(16)),
-              Divisor(
-                color: Colors.grey[700]!,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  'Totais por Bitola',
-                  style: AppCss.mediumBold,
-                ),
-              ),
-              const Divisor(),
-              for (final produto in relatorioCtrl.getOrdemTotalProduto())
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: itemInfo(
-                          produto.produto.descricao, produto.qtde.toKg()),
+        builder:
+            (_, model) => ListView(
+              children: [
+                _filterWidget(model),
+                Divisor(color: Colors.grey[700]!, height: 1.5),
+                if (model.type == RelatorioOrdemType.STATUS &&
+                    model.relatorio != null) ...[
+                  itemInfo(
+                    'Total Geral',
+                    relatorioCtrl.getOrdemTotal().toKg(),
+                    labelStyle: AppCss.mediumBold,
+                    valueStyle: AppCss.mediumBold,
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  Divisor(color: Colors.grey[700]!),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text('Totais por Bitola', style: AppCss.mediumBold),
+                  ),
+                  const Divisor(),
+                  for (final produto in relatorioCtrl.getOrdemTotalProduto())
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: itemInfo(
+                            produto.produto.descricao,
+                            produto.qtde.toKg(),
+                          ),
+                        ),
+                        const Divisor(),
+                      ],
                     ),
-                    const Divisor(),
-                  ],
-                ),
-            ],
-            Divisor(
-              color: Colors.grey[700]!,
+                ],
+                Divisor(color: Colors.grey[700]!),
+                if (model.relatorio != null)
+                  Column(
+                    children:
+                        [
+                          if (model.type == RelatorioOrdemType.ORDEM)
+                            model.relatorio!.ordem,
+                          if (model.type == RelatorioOrdemType.STATUS)
+                            ...model.relatorio!.ordens,
+                        ].map((e) => itemRelatorio(e)).toList(),
+                  ),
+              ],
             ),
-            if (model.relatorio != null)
-              Column(
-                children: [
-                  if (model.type == RelatorioOrdemType.ORDEM)
-                    model.relatorio!.ordem,
-                  if (model.type == RelatorioOrdemType.STATUS)
-                    ...model.relatorio!.ordens
-                ].map((e) => itemRelatorio(e)).toList(),
-              ),
-          ],
-        ),
       ),
     );
   }
@@ -151,23 +155,24 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
                       onPressed: () => relatorioCtrl.onSearchRelatorio(),
                     ),
                   ),
-                )
+                ),
               ],
             ),
             const H(16),
           },
           if (model.type == RelatorioOrdemType.STATUS) ...{
             AppDropDownList<RelatorioOrdemStatus?>(
-                label: 'Status',
-                addeds: model.status,
-                itens: RelatorioOrdemStatus.values,
-                itemLabel: (e) => e?.label ?? 'SELECIONE O STATUS',
-                itemColor: (e) =>
-                    e?.color.withOpacity(0.4) ?? Colors.transparent,
-                onChanged: () {
-                  relatorioCtrl.ordemViewModelStream.add(model);
-                  relatorioCtrl.onCreateRelatorio();
-                }),
+              label: 'Status',
+              addeds: model.status,
+              itens: RelatorioOrdemStatus.values,
+              itemLabel: (e) => e?.label ?? 'SELECIONE O STATUS',
+              itemColor:
+                  (e) => e?.color.withValues(alpha: 0.4) ?? Colors.transparent,
+              onChanged: () {
+                relatorioCtrl.ordemViewModelStream.add(model);
+                relatorioCtrl.onCreateRelatorio();
+              },
+            ),
             const H(16),
             InkWell(
               onTap: () async {
@@ -190,11 +195,15 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
                       required: false,
                       label: 'Datas: (Opcional)',
                       controller: TextController(
-                          text: model.dates != null
-                              ? ([model.dates!.start, model.dates!.end]
-                                  .map((e) => DateFormat('dd/MM/yyy').format(e))
-                                  .join(' até '))
-                              : 'Selecione'),
+                        text:
+                            model.dates != null
+                                ? ([model.dates!.start, model.dates!.end]
+                                    .map(
+                                      (e) => DateFormat('dd/MM/yyy').format(e),
+                                    )
+                                    .join(' até '))
+                                : 'Selecione',
+                      ),
                     ),
                   ),
                   if (model.dates != null)
@@ -206,19 +215,22 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
                           onPressed: () {
                             model.dates = null;
                             relatorioCtrl.onExportRelatorioPedidoPDF(
-                                relatorioCtrl.pedidoViewModel);
+                              relatorioCtrl.pedidoViewModel,
+                            );
                             relatorioCtrl.ordemViewModelStream.update();
                           },
                           style: ButtonStyle(
-                            backgroundColor:
-                                WidgetStateProperty.all(Colors.transparent),
-                            foregroundColor:
-                                WidgetStateProperty.all(Colors.black),
+                            backgroundColor: WidgetStateProperty.all(
+                              Colors.transparent,
+                            ),
+                            foregroundColor: WidgetStateProperty.all(
+                              Colors.black,
+                            ),
                           ),
                           icon: Icon(Icons.close, color: Colors.grey[500]),
                         ),
                       ),
-                    )
+                    ),
                 ],
               ),
             ),
@@ -233,9 +245,7 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.white,
-        border: Border(
-          bottom: BorderSide(color: Colors.grey[700]!, width: 1),
-        ),
+        border: Border(bottom: BorderSide(color: Colors.grey[700]!, width: 1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,35 +263,40 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
                           '${ordem.materiaPrima!.fabricanteModel.nome} - ${ordem.materiaPrima!.corridaLote}',
-                          style: AppCss.minimumRegular),
-                    ),
-                ],
-              )),
+                          style: AppCss.minimumRegular,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
               Text(
-                  DateFormat("'Criado 'dd/MM/yyyy' às 'HH:mm")
-                      .format(ordem.createdAt),
-                  style: AppCss.minimumRegular.setSize(11)),
+                DateFormat(
+                  "'Criado 'dd/MM/yyyy' às 'HH:mm",
+                ).format(ordem.createdAt),
+                style: AppCss.minimumRegular.setSize(11),
+              ),
             ],
           ),
           itemInfo(
             'Bitola ${ordem.produto.descricaoReplaced}mm',
             ordem.produtos.map((e) => e.qtde).fold(0.0, (a, b) => a + b).toKg(),
-            labelStyle:
-                AppCss.minimumRegular.copyWith(fontWeight: FontWeight.w600),
-            valueStyle:
-                AppCss.minimumRegular.copyWith(fontWeight: FontWeight.w600),
+            labelStyle: AppCss.minimumRegular.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+            valueStyle: AppCss.minimumRegular.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const Divisor(),
           for (final produto in ordem.produtos)
             Column(
               children: [
                 itemInfo(
-                    '${produto.pedido.localizador} - ${produto.cliente.nome}${produto.obra.descricao == 'Indefinido' ? ' - ${produto.obra.descricao}' : ''}',
-                    produto.qtde.toKg(),
-                    color: produto.status.status.color.withOpacity(0.06)),
-                Divisor(
-                  color: Colors.grey[200],
+                  '${produto.pedido.localizador} - ${produto.cliente.nome}${produto.obra.descricao == 'Indefinido' ? ' - ${produto.obra.descricao}' : ''}',
+                  produto.qtde.toKg(),
+                  color: produto.status.status.color.withValues(alpha: 0.06),
                 ),
+                Divisor(color: Colors.grey[200]),
               ],
             ),
         ],
@@ -289,11 +304,14 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
     );
   }
 
-  Widget itemInfo(String label, String value,
-      {Color? color,
-      TextStyle? labelStyle,
-      EdgeInsets? padding,
-      TextStyle? valueStyle}) {
+  Widget itemInfo(
+    String label,
+    String value, {
+    Color? color,
+    TextStyle? labelStyle,
+    EdgeInsets? padding,
+    TextStyle? valueStyle,
+  }) {
     return Container(
       color: color,
       child: Padding(
@@ -302,18 +320,21 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Text(label,
-                  style: labelStyle ??
-                      AppCss.minimumRegular
-                          .copyWith(fontWeight: FontWeight.w500)),
+              child: Text(
+                label,
+                style:
+                    labelStyle ??
+                    AppCss.minimumRegular.copyWith(fontWeight: FontWeight.w500),
+              ),
             ),
             Expanded(
-                flex: 2,
-                child: Text(
-                  value,
-                  style: valueStyle ?? AppCss.minimumRegular.copyWith(),
-                  textAlign: TextAlign.end,
-                ))
+              flex: 2,
+              child: Text(
+                value,
+                style: valueStyle ?? AppCss.minimumRegular.copyWith(),
+                textAlign: TextAlign.end,
+              ),
+            ),
           ],
         ),
       ),

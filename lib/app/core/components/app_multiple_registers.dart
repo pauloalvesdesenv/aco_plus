@@ -56,10 +56,7 @@ class AppMultipleRegisters<T> extends StatelessWidget {
                 (itens.indexOf(item) + 1).toString(),
                 style: AppCss.minimumRegular,
               ),
-              trailing: const Icon(
-                Icons.edit_outlined,
-                size: 20,
-              ),
+              trailing: const Icon(Icons.edit_outlined, size: 20),
             ),
           ),
       ],

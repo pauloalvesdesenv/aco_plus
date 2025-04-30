@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showVersionDialog(VersionModel version) async => await showDialog(
-      context: contextGlobal,
-      barrierDismissible: false,
-      builder: (_) => VersionDialog(version),
-    );
+  context: contextGlobal,
+  barrierDismissible: false,
+  builder: (_) => VersionDialog(version),
+);
 
 class VersionDialog extends StatefulWidget {
   final VersionModel version;

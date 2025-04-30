@@ -3,15 +3,9 @@ import 'dart:convert';
 class PedidoCreateByModel {
   final String name;
   final DateTime date;
-  PedidoCreateByModel({
-    required this.name,
-    required this.date,
-  });
+  PedidoCreateByModel({required this.name, required this.date});
 
-  PedidoCreateByModel copyWith({
-    String? name,
-    DateTime? date,
-  }) {
+  PedidoCreateByModel copyWith({String? name, DateTime? date}) {
     return PedidoCreateByModel(
       name: name ?? this.name,
       date: date ?? this.date,
@@ -19,10 +13,7 @@ class PedidoCreateByModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'date': date.millisecondsSinceEpoch,
-    };
+    return {'name': name, 'date': date.millisecondsSinceEpoch};
   }
 
   factory PedidoCreateByModel.fromMap(Map<String, dynamic> map) {

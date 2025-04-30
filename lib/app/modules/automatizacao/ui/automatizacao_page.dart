@@ -26,87 +26,107 @@ class _AutomatizacaoPageState extends State<AutomatizacaoPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(
-                Icons.arrow_back,
-                color: AppColors.white,
-              )),
-          title: Text('Automatização de Etapas',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          backgroundColor: AppColors.primaryMain,
+      resizeAvoid: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        body: StreamOut(
-            stream: FirestoreClient.automatizacao.dataStream.listen,
-            builder: (_, automatizacao) => body(automatizacao)));
+        title: Text(
+          'Automatização de Etapas',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: StreamOut(
+        stream: FirestoreClient.automatizacao.dataStream.listen,
+        builder: (_, automatizacao) => body(automatizacao),
+      ),
+    );
   }
 
   Widget body(AutomatizacaoModel automatizacao) {
     return ListView(
       padding: EdgeInsets.zero,
-      children: automatizacao.itens
-          .map((e) => Container(
-                decoration: BoxDecoration(
+      children:
+          automatizacao.itens
+              .map(
+                (e) => Container(
+                  decoration: BoxDecoration(
                     border: Border(
-                  bottom: BorderSide(
-                    color: Colors.grey[400]!,
-                    width: 0.5,
+                      bottom: BorderSide(color: Colors.grey[400]!, width: 0.5),
+                    ),
                   ),
-                )),
-                child: ListTile(
-                  title: Row(
-                    children: [
-                      Expanded(
+                  child: ListTile(
+                    title: Row(
+                      children: [
+                        Expanded(
                           child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            e.type.label,
-                            style: AppCss.mediumBold.copyWith(
-                                fontWeight: FontWeight.w500, fontSize: 17),
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                e.type.label,
+                                style: AppCss.mediumBold.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17,
+                                ),
+                              ),
+                              Text(
+                                e.type.desc,
+                                style: AppCss.minimumRegular.copyWith(
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(e.type.desc,
-                              style: AppCss.minimumRegular
-                                  .copyWith(color: Colors.grey[700])),
-                        ],
-                      )),
-                      InkWell(
-                        onTap: () async {
-                          final step =
-                              await showAutomatizacaoStepBottom(e.type, e.step);
-                          if (step == null) return;
-                          setState(() {
-                            e.step = step;
-                            FirestoreClient.automatizacao.update(automatizacao);
-                          });
-                        },
-                        child: Container(
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            final step = await showAutomatizacaoStepBottom(
+                              e.type,
+                              e.step,
+                            );
+                            if (step == null) return;
+                            setState(() {
+                              e.step = step;
+                              FirestoreClient.automatizacao.update(
+                                automatizacao,
+                              );
+                            });
+                          },
+                          child: Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              color: e.step.color.withOpacity(0.1),
+                              color: e.step.color.withValues(alpha: 0.1),
                             ),
                             child: Row(
                               children: [
                                 Text(
                                   e.step.name,
-                                  style: AppCss.minimumRegular
-                                      .copyWith(color: Colors.black87),
+                                  style: AppCss.minimumRegular.copyWith(
+                                    color: Colors.black87,
+                                  ),
                                 ),
                                 const W(8),
-                                const Icon(Icons.edit,
-                                    size: 17, color: Colors.black)
+                                const Icon(
+                                  Icons.edit,
+                                  size: 17,
+                                  color: Colors.black,
+                                ),
                               ],
-                            )),
-                      ),
-                    ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ))
-          .toList(),
+              )
+              .toList(),
     );
   }
 }

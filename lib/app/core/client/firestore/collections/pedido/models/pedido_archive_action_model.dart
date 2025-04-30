@@ -2,28 +2,18 @@ import 'dart:convert';
 
 class PedidoArchiveActionModel {
   final bool isArchived;
-  PedidoArchiveActionModel({
-    required this.isArchived,
-  });
+  PedidoArchiveActionModel({required this.isArchived});
 
-  PedidoArchiveActionModel copyWith({
-    bool? isArchived,
-  }) {
-    return PedidoArchiveActionModel(
-      isArchived: isArchived ?? this.isArchived,
-    );
+  PedidoArchiveActionModel copyWith({bool? isArchived}) {
+    return PedidoArchiveActionModel(isArchived: isArchived ?? this.isArchived);
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'isArchived': isArchived,
-    };
+    return {'isArchived': isArchived};
   }
 
   factory PedidoArchiveActionModel.fromMap(Map<String, dynamic> map) {
-    return PedidoArchiveActionModel(
-      isArchived: map['isArchived'] ?? false,
-    );
+    return PedidoArchiveActionModel(isArchived: map['isArchived'] ?? false);
   }
 
   String toJson() => json.encode(toMap());

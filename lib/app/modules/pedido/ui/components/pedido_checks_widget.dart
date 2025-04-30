@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 
 class PedidoChecksWidget extends StatelessWidget {
   final PedidoModel pedido;
-  const PedidoChecksWidget(
-    this.pedido, {
-    super.key,
-  });
+  const PedidoChecksWidget(this.pedido, {super.key});
 
   @override
   Widget build(BuildContext context) {

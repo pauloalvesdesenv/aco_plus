@@ -39,34 +39,38 @@ class _CheckListWidgetState extends State<CheckListWidget> {
         Row(
           children: [
             Expanded(
-                child: Row(
-              children: [
-                Text('Check List', style: AppCss.largeBold),
-                if (isDone)
-                  Container(
-                    margin: const EdgeInsets.only(left: 8),
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                        color: AppColors.primaryMain, shape: BoxShape.circle),
-                    child: const Icon(
-                      Icons.done,
-                      color: Colors.white,
-                      size: 16,
+              child: Row(
+                children: [
+                  Text('Check List', style: AppCss.largeBold),
+                  if (isDone)
+                    Container(
+                      margin: const EdgeInsets.only(left: 8),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryMain,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.done,
+                        color: Colors.white,
+                        size: 16,
+                      ),
                     ),
-                  )
-              ],
-            )),
+                ],
+              ),
+            ),
             if (widget.items.isNotEmpty) ...[
               Text(
-                  '${widget.items.where((e) => e.isCheck).length} de ${widget.items.length}',
-                  style:
-                      AppCss.mediumRegular.copyWith(color: Colors.grey[700])),
+                '${widget.items.where((e) => e.isCheck).length} de ${widget.items.length}',
+                style: AppCss.mediumRegular.copyWith(color: Colors.grey[700]),
+              ),
               const W(8),
               Text(
-                  '(${((widget.items.where((e) => e.isCheck).toList().length / widget.items.length) * 100).toStringAsFixed(0)}%)',
-                  style: AppCss.mediumRegular.copyWith(color: Colors.grey[700]))
-            ]
+                '(${((widget.items.where((e) => e.isCheck).toList().length / widget.items.length) * 100).toStringAsFixed(0)}%)',
+                style: AppCss.mediumRegular.copyWith(color: Colors.grey[700]),
+              ),
+            ],
           ],
         ),
         const H(16),
@@ -97,23 +101,29 @@ class _CheckListWidgetState extends State<CheckListWidget> {
                 color: item.isCheck ? AppColors.primaryMain : Colors.white,
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                    color: item.isCheck ? AppColors.primaryMain : Colors.grey),
+                  color: item.isCheck ? AppColors.primaryMain : Colors.grey,
+                ),
               ),
-              child: item.isCheck
-                  ? const Icon(Icons.check, size: 16, color: Colors.white)
-                  : null,
+              child:
+                  item.isCheck
+                      ? const Icon(Icons.check, size: 16, color: Colors.white)
+                      : null,
             ),
             const W(12),
             Expanded(
-              child: Text(item.title,
-                  style: AppCss.mediumRegular.copyWith(
-                    color: item.isCheck
-                        ? Colors.black.withOpacity(0.5)
-                        : Colors.black,
-                    decoration: item.isCheck
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                  )),
+              child: Text(
+                item.title,
+                style: AppCss.mediumRegular.copyWith(
+                  color:
+                      item.isCheck
+                          ? Colors.black.withValues(alpha: 0.5)
+                          : Colors.black,
+                  decoration:
+                      item.isCheck
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -134,7 +144,7 @@ class _CheckListWidgetState extends State<CheckListWidget> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

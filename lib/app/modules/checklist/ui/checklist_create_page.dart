@@ -31,34 +31,38 @@ class _ChecklistCreatePageState extends State<ChecklistCreatePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () async {
-                if (await showConfirmDialog(
-                    'Deseja realmente sair?',
-                    widget.checklist != null
-                        ? 'A edição que realizou será perdida'
-                        : 'Os dados do Checklist serão perdidos.')) {
-                  pop(context);
-                }
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: AppColors.white,
-              )),
-          title: Text(
-              '${checklistCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Etiqueta',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          actions: [
-            IconLoadingButton(() async =>
-                await checklistCtrl.onConfirm(context, widget.checklist))
-          ],
-          backgroundColor: AppColors.primaryMain,
+      resizeAvoid: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async {
+            if (await showConfirmDialog(
+              'Deseja realmente sair?',
+              widget.checklist != null
+                  ? 'A edição que realizou será perdida'
+                  : 'Os dados do Checklist serão perdidos.',
+            )) {
+              pop(context);
+            }
+          },
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        body: StreamOut(
-            stream: checklistCtrl.formStream.listen,
-            builder: (_, form) => body(form)));
+        title: Text(
+          '${checklistCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Etiqueta',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        actions: [
+          IconLoadingButton(
+            () async =>
+                await checklistCtrl.onConfirm(context, widget.checklist),
+          ),
+        ],
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: StreamOut(
+        stream: checklistCtrl.formStream.listen,
+        builder: (_, form) => body(form),
+      ),
+    );
   }
 
   Widget body(ChecklistCreateModel form) {
@@ -86,21 +90,23 @@ class _ChecklistCreatePageState extends State<ChecklistCreatePage> {
         const H(24),
         if (form.isEdit)
           TextButton.icon(
-              style: ButtonStyle(
-                fixedSize: const WidgetStatePropertyAll(
-                    Size.fromWidth(double.maxFinite)),
-                foregroundColor: WidgetStatePropertyAll(AppColors.error),
-                backgroundColor: WidgetStatePropertyAll(AppColors.white),
-                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: AppCss.radius8,
-                    side: BorderSide(color: AppColors.error))),
+            style: ButtonStyle(
+              fixedSize: const WidgetStatePropertyAll(
+                Size.fromWidth(double.maxFinite),
               ),
-              onPressed: () =>
-                  checklistCtrl.onDelete(context, widget.checklist!),
-              label: const Text('Excluir'),
-              icon: const Icon(
-                Icons.delete_outline,
-              )),
+              foregroundColor: WidgetStatePropertyAll(AppColors.error),
+              backgroundColor: WidgetStatePropertyAll(AppColors.white),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: AppCss.radius8,
+                  side: BorderSide(color: AppColors.error),
+                ),
+              ),
+            ),
+            onPressed: () => checklistCtrl.onDelete(context, widget.checklist!),
+            label: const Text('Excluir'),
+            icon: const Icon(Icons.delete_outline),
+          ),
       ],
     );
   }

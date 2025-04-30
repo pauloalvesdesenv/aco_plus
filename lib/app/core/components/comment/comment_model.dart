@@ -44,9 +44,11 @@ class CommentModel {
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt']),
       reaction: map['reaction'] ?? '',
       respostas: List<CommentModel>.from(
-          map['respostas']?.map((x) => CommentModel.fromMap(x))),
+        map['respostas']?.map((x) => CommentModel.fromMap(x)),
+      ),
       mentioneds: List<UsuarioModel>.from(
-          map['mentioneds']?.map((x) => UsuarioModel.fromMap(x))),
+        map['mentioneds']?.map((x) => UsuarioModel.fromMap(x)),
+      ),
     );
   }
 

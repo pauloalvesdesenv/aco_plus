@@ -14,17 +14,18 @@ class CommentWidget extends StatelessWidget {
   final CommentModel comment;
   final void Function(CommentModel comment) onRemove;
 
-  const CommentWidget(
-      {required this.comment, required this.onRemove, super.key});
+  const CommentWidget({
+    required this.comment,
+    required this.onRemove,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppAvatar(
-          name: comment.user.nome,
-        ),
+        AppAvatar(name: comment.user.nome),
         const W(16),
         Expanded(
           child: Column(
@@ -34,9 +35,13 @@ class CommentWidget extends StatelessWidget {
                 children: [
                   Text(comment.user.nome, style: AppCss.mediumBold),
                   const W(12),
-                  Text(comment.updatedAt.timeAgo(),
-                      style: AppCss.mediumRegular
-                          .copyWith(color: Colors.grey[800]!, fontSize: 15)),
+                  Text(
+                    comment.updatedAt.timeAgo(),
+                    style: AppCss.mediumRegular.copyWith(
+                      color: Colors.grey[800]!,
+                      fontSize: 15,
+                    ),
+                  ),
                   const Spacer(),
                 ],
               ),
@@ -48,28 +53,29 @@ class CommentWidget extends StatelessWidget {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: SelectableText(comment.delta,
-                    style: AppCss.mediumRegular.copyWith(fontSize: 16)),
+                child: SelectableText(
+                  comment.delta,
+                  style: AppCss.mediumRegular.copyWith(fontSize: 16),
+                ),
               ),
               const H(8),
               Row(
                 children: [
                   const Spacer(),
                   InkWell(
-                    onTap: () async => Clipboard.setData(
-                        ClipboardData(text: comment.delta.toString())),
-                    child: Icon(
-                      Icons.copy,
-                      color: Colors.grey[800],
-                      size: 22,
-                    ),
+                    onTap:
+                        () async => Clipboard.setData(
+                          ClipboardData(text: comment.delta.toString()),
+                        ),
+                    child: Icon(Icons.copy, color: Colors.grey[800], size: 22),
                   ),
                   const W(8),
                   InkWell(
                     onTap: () async {
                       if (await showConfirmDialog(
-                          'Deseja excluir o comentário?',
-                          'Não será possível desfazer essa ação.')) {
+                        'Deseja excluir o comentário?',
+                        'Não será possível desfazer essa ação.',
+                      )) {
                         onRemove.call(comment);
                         pedidoCtrl.onAddHistory(
                           pedido: pedidoCtrl.pedido,
@@ -79,13 +85,10 @@ class CommentWidget extends StatelessWidget {
                         );
                       }
                     },
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.grey[800],
-                    ),
+                    child: Icon(Icons.delete, color: Colors.grey[800]),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

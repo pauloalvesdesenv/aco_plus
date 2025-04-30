@@ -12,17 +12,12 @@ class BackupModel {
   final DateTime createdAt;
   late String url;
 
-  BackupModel({
-    required this.nome,
-    required this.createdAt,
-  });
+  BackupModel({required this.nome, required this.createdAt});
 
   factory BackupModel.fromRef(Reference ref) {
-    final createdAt = DateFormat('dd_MM_yyyy_hh_mm_ss')
-        .parse(ref.name.split('.').first.split('backup_').last);
-    return BackupModel(
-      nome: ref.name,
-      createdAt: createdAt,
-    );
+    final createdAt = DateFormat(
+      'dd_MM_yyyy_hh_mm_ss',
+    ).parse(ref.name.split('.').first.split('backup_').last);
+    return BackupModel(nome: ref.name, createdAt: createdAt);
   }
 }

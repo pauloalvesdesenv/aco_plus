@@ -28,8 +28,12 @@ class LoadingStreamOut extends StatelessWidget {
   final Color? color;
   final double width;
 
-  const LoadingStreamOut(
-      {this.size = 24, this.width = 4, this.color, super.key});
+  const LoadingStreamOut({
+    this.size = 24,
+    this.width = 4,
+    this.color,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +46,9 @@ class LoadingStreamOut extends StatelessWidget {
           height: size,
           child: CircularProgressIndicator(
             strokeWidth: width,
-            valueColor:
-                AlwaysStoppedAnimation<Color>(color ?? AppColors.primaryMain),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              color ?? AppColors.primaryMain,
+            ),
           ),
         ),
       ),

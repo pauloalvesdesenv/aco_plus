@@ -67,27 +67,30 @@ class PedidoCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-                field,
-                isEqualTo: isEqualTo,
-                isNotEqualTo: isNotEqualTo,
-                isLessThan: isLessThan,
-                isLessThanOrEqualTo: isLessThanOrEqualTo,
-                isGreaterThan: isGreaterThan,
-                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-                arrayContains: arrayContains,
-                arrayContainsAny: arrayContainsAny,
-                whereIn: whereIn,
-                whereNotIn: whereNotIn,
-                isNull: isNull,
-              )
+              field,
+              isEqualTo: isEqualTo,
+              isNotEqualTo: isNotEqualTo,
+              isLessThan: isLessThan,
+              isLessThanOrEqualTo: isLessThanOrEqualTo,
+              isGreaterThan: isGreaterThan,
+              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+              arrayContains: arrayContains,
+              arrayContainsAny: arrayContainsAny,
+              whereIn: whereIn,
+              whereNotIn: whereNotIn,
+              isNull: isNull,
+            )
             : collection)
         .snapshots()
         .listen((e) {
-      final data = e.docs.map((e) => PedidoModel.fromMap(e.data())).toList();
-      dataStream.add(data);
-      pedidosUnarchivedsStream.add(data.where((e) => !e.isArchived).toList());
-      pedidosArchivedsStream.add(data.where((e) => e.isArchived).toList());
-    });
+          final data =
+              e.docs.map((e) => PedidoModel.fromMap(e.data())).toList();
+          dataStream.add(data);
+          pedidosUnarchivedsStream.add(
+            data.where((e) => !e.isArchived).toList(),
+          );
+          pedidosArchivedsStream.add(data.where((e) => e.isArchived).toList());
+        });
   }
 
   PedidoModel getById(String id) =>
@@ -121,12 +124,15 @@ class PedidoCollection {
   }
 
   Future<void> updateProdutoStatus(
-      PedidoProdutoModel produto, PedidoProdutoStatus status,
-      {bool clear = false}) async {
+    PedidoProdutoModel produto,
+    PedidoProdutoStatus status, {
+    bool clear = false,
+  }) async {
     final pedido = getById(produto.pedidoId);
 
-    final pedidoProduto =
-        pedido.produtos.firstWhere((element) => element.id == produto.id);
+    final pedidoProduto = pedido.produtos.firstWhere(
+      (element) => element.id == produto.id,
+    );
 
     if (clear) {
       pedidoProduto.statusess.clear();
@@ -150,15 +156,17 @@ class PedidoCollection {
   }
 
   PedidoStatus getPedidoStatusByProduto(PedidoModel pedido) {
-    bool isAllDone = pedido.produtos
-        .every((e) => e.status.status == PedidoProdutoStatus.pronto);
+    bool isAllDone = pedido.produtos.every(
+      (e) => e.status.status == PedidoProdutoStatus.pronto,
+    );
     if (isAllDone) {
       return pedido.tipo == PedidoTipo.cd
           ? PedidoStatus.pronto
           : PedidoStatus.aguardandoProducaoCDA;
     } else {
       bool isAllAguardandoProducao = pedido.produtos.every(
-          (e) => e.status.status == PedidoProdutoStatus.aguardandoProducao);
+        (e) => e.status.status == PedidoProdutoStatus.aguardandoProducao,
+      );
 
       return isAllAguardandoProducao
           ? PedidoStatus.aguardandoProducaoCD

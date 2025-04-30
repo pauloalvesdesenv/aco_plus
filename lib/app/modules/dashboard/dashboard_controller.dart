@@ -13,20 +13,24 @@ class DashboardController {
 
   factory DashboardController() => _instance;
 
-  final AppStream<DashboardUtils> utilsStream =
-      AppStream<DashboardUtils>.seed(DashboardUtils());
+  final AppStream<DashboardUtils> utilsStream = AppStream<DashboardUtils>.seed(
+    DashboardUtils(),
+  );
   DashboardUtils get utils => utilsStream.value;
 
   List<RankingModel<ClienteModel>> getRankingClientes() {
     List<RankingModel<ClienteModel>> rankings = [];
     for (ClienteModel transportadora in FirestoreClient.clientes.data) {
-      final map =
-          FirestoreClient.clientes.data.map((e) => getClienteValueByType(e));
+      final map = FirestoreClient.clientes.data.map(
+        (e) => getClienteValueByType(e),
+      );
       final num = (map.isNotEmpty ? map.reduce((a, b) => a + b) : 0).toDouble();
-      rankings.add(RankingModel<ClienteModel>(
-        model: transportadora,
-        value: getTransportadoraFormatter(num),
-      ));
+      rankings.add(
+        RankingModel<ClienteModel>(
+          model: transportadora,
+          value: getTransportadoraFormatter(num),
+        ),
+      );
     }
     rankings.sort((a, b) => b.value.compareTo(a.value));
     return rankings.length > 10 ? rankings.sublist(0, 9) : rankings;

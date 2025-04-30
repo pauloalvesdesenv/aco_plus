@@ -42,16 +42,18 @@ class _PedidoStatusBottomState extends State<PedidoStatusBottom> {
   @override
   Widget build(BuildContext context) {
     return BottomSheet(
-        onClosing: () {},
-        builder: (context) =>
-            KeyboardVisibilityBuilder(builder: (context, isVisible) {
+      onClosing: () {},
+      builder:
+          (context) => KeyboardVisibilityBuilder(
+            builder: (context, isVisible) {
               return Container(
                 height: 390,
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24)),
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
                 ),
                 child: ListView(
                   children: [
@@ -62,12 +64,16 @@ class _PedidoStatusBottomState extends State<PedidoStatusBottom> {
                         padding: const EdgeInsets.only(left: 8),
                         child: IconButton(
                           style: ButtonStyle(
-                              padding: const WidgetStatePropertyAll(
-                                  EdgeInsets.all(16)),
-                              backgroundColor:
-                                  WidgetStatePropertyAll(AppColors.white),
-                              foregroundColor:
-                                  WidgetStatePropertyAll(AppColors.black)),
+                            padding: const WidgetStatePropertyAll(
+                              EdgeInsets.all(16),
+                            ),
+                            backgroundColor: WidgetStatePropertyAll(
+                              AppColors.white,
+                            ),
+                            foregroundColor: WidgetStatePropertyAll(
+                              AppColors.black,
+                            ),
+                          ),
                           onPressed: () => Navigator.pop(context),
                           icon: const Icon(Icons.keyboard_backspace),
                         ),
@@ -78,24 +84,25 @@ class _PedidoStatusBottomState extends State<PedidoStatusBottom> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Selecione o Status',
-                            style: AppCss.largeBold,
-                          ),
+                          Text('Selecione o Status', style: AppCss.largeBold),
                           const H(16),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              for (var status
-                                  in getPedidosStatusByPedido(widget.pedido))
+                              for (var status in getPedidosStatusByPedido(
+                                widget.pedido,
+                              ))
                                 Container(
                                   margin: const EdgeInsets.only(bottom: 8),
                                   decoration: BoxDecoration(
-                                      color: status.color.withOpacity(0.4),
-                                      borderRadius: BorderRadius.circular(4)),
+                                    color: status.color.withValues(alpha: 0.4),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
                                   child: RadioListTile<PedidoStatus>(
-                                    title: Text(status.label,
-                                        style: AppCss.mediumRegular),
+                                    title: Text(
+                                      status.label,
+                                      style: AppCss.mediumRegular,
+                                    ),
                                     value: status,
                                     groupValue: currentStatus,
                                     onChanged: (value) {
@@ -107,17 +114,20 @@ class _PedidoStatusBottomState extends State<PedidoStatusBottom> {
                                 ),
                               const H(16),
                               AppTextButton(
-                                  label: 'Confirmar',
-                                  onPressed: () =>
-                                      Navigator.pop(context, currentStatus))
+                                label: 'Confirmar',
+                                onPressed:
+                                    () => Navigator.pop(context, currentStatus),
+                              ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
               );
-            }));
+            },
+          ),
+    );
   }
 }

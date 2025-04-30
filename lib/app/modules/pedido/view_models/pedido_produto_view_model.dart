@@ -17,34 +17,35 @@ class PedidoProdutoCreateModel {
 
   late bool isEdit;
 
-  PedidoProdutoCreateModel()
-      : id = HashService.get,
-        isEdit = false {
+  PedidoProdutoCreateModel() : id = HashService.get, isEdit = false {
     statusess = [
       PedidoProdutoStatusModel(
-          id: HashService.get,
-          status: PedidoProdutoStatus.separado,
-          createdAt: DateTime.now())
+        id: HashService.get,
+        status: PedidoProdutoStatus.separado,
+        createdAt: DateTime.now(),
+      ),
     ];
   }
 
   PedidoProdutoCreateModel.edit(PedidoProdutoModel produto)
-      : id = produto.id,
-        isEdit = true {
+    : id = produto.id,
+      isEdit = true {
     produtoModel = produto.produto;
     qtde.text = produto.qtde.toString();
     statusess = produto.statusess.toList();
   }
 
   PedidoProdutoModel toPedidoProdutoModel(
-          String pedidoId, ClienteModel cliente, ObraModel obra) =>
-      PedidoProdutoModel(
-        id: id,
-        pedidoId: pedidoId,
-        produto: produtoModel!,
-        qtde: qtde.doubleValue,
-        statusess: statusess.map((e) => e.copyWith()).toList(),
-        clienteId: cliente.id,
-        obraId: obra.id,
-      );
+    String pedidoId,
+    ClienteModel cliente,
+    ObraModel obra,
+  ) => PedidoProdutoModel(
+    id: id,
+    pedidoId: pedidoId,
+    produto: produtoModel!,
+    qtde: qtde.doubleValue,
+    statusess: statusess.map((e) => e.copyWith()).toList(),
+    clienteId: cliente.id,
+    obraId: obra.id,
+  );
 }

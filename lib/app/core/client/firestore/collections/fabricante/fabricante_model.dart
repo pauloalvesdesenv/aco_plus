@@ -2,10 +2,7 @@ class FabricanteModel {
   final String id;
   final String nome;
 
-  FabricanteModel({
-    required this.id,
-    required this.nome,
-  });
+  FabricanteModel({required this.id, required this.nome});
 
   static FabricanteModel empty() =>
       FabricanteModel(id: 'register_unavailable', nome: 'Sem Registro');
@@ -18,9 +15,6 @@ class FabricanteModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'nome': nome,
-    };
+    return {'id': id, 'nome': nome};
   }
 }

@@ -18,12 +18,14 @@ class ClienteController {
 
   factory ClienteController() => _instance;
 
-  final AppStream<ClienteModel?> clienteStream =
-      AppStream<ClienteModel?>.seed(null);
+  final AppStream<ClienteModel?> clienteStream = AppStream<ClienteModel?>.seed(
+    null,
+  );
   ClienteModel? get cliente => clienteStream.value;
 
-  final AppStream<ClienteUtils> utilsStream =
-      AppStream<ClienteUtils>.seed(ClienteUtils());
+  final AppStream<ClienteUtils> utilsStream = AppStream<ClienteUtils>.seed(
+    ClienteUtils(),
+  );
   ClienteUtils get utils => utilsStream.value;
 
   void onInit() {
@@ -36,13 +38,15 @@ class ClienteController {
   ClienteCreateModel get form => formStream.value;
 
   void init(ClienteModel? cliente) {
-    formStream.add(cliente != null
-        ? ClienteCreateModel.edit(cliente)
-        : ClienteCreateModel());
+    formStream.add(
+      cliente != null ? ClienteCreateModel.edit(cliente) : ClienteCreateModel(),
+    );
   }
 
   List<ClienteModel> getClienteesFiltered(
-      String search, List<ClienteModel> clientes) {
+    String search,
+    List<ClienteModel> clientes,
+  ) {
     if (search.length < 3) return clientes;
     List<ClienteModel> filtered = [];
     for (final cliente in clientes) {
@@ -53,7 +57,7 @@ class ClienteController {
     return filtered;
   }
 
-  Future<void> onConfirm(_, ClienteModel? cliente, bool isFromOrder) async {
+  Future<void> onConfirm(value, ClienteModel? cliente, bool isFromOrder) async {
     try {
       onValid(cliente);
       if (form.isEdit) {
@@ -63,27 +67,33 @@ class ClienteController {
         await FirestoreClient.clientes.add(form.toClienteModel());
       }
       if (isFromOrder) {
-        Navigator.pop(_, form.isEdit ? cliente : null);
+        Navigator.pop(value, form.isEdit ? cliente : null);
       } else {
-        pop(_);
+        pop(value);
       }
       NotificationService.showPositive(
-          'Cliente ${form.isEdit ? 'Editado' : 'Adicionado'}',
-          'Operação realizada com sucesso',
-          position: NotificationPosition.bottom);
+        'Cliente ${form.isEdit ? 'Editado' : 'Adicionado'}',
+        'Operação realizada com sucesso',
+        position: NotificationPosition.bottom,
+      );
     } catch (e) {
-      NotificationService.showNegative('Erro', e.toString(),
-          position: NotificationPosition.bottom);
+      NotificationService.showNegative(
+        'Erro',
+        e.toString(),
+        position: NotificationPosition.bottom,
+      );
     }
   }
 
-  Future<void> onDelete(_, ClienteModel cliente) async {
+  Future<void> onDelete(value, ClienteModel cliente) async {
     if (await _isDeleteUnavailable(cliente)) return;
     await FirestoreClient.clientes.delete(cliente);
-    pop(_);
+    pop(value);
     NotificationService.showPositive(
-        'Cliente Excluido', 'Operação realizada com sucesso',
-        position: NotificationPosition.bottom);
+      'Cliente Excluido',
+      'Operação realizada com sucesso',
+      position: NotificationPosition.bottom,
+    );
   }
 
   Future<bool> _isDeleteUnavailable(ClienteModel cliente) async =>
@@ -99,8 +109,9 @@ class ClienteController {
   void onValid(ClienteModel? cliente) {
     if (form.isEdit) {
       if (cliente!.nome != form.nome.text) {
-        if (FirestoreClient.clientes.data
-            .any((e) => e.nome == form.nome.text)) {
+        if (FirestoreClient.clientes.data.any(
+          (e) => e.nome == form.nome.text,
+        )) {
           throw Exception('Já existe um cliente com esse nome');
         }
       }

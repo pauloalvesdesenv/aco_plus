@@ -26,14 +26,17 @@ class PedidoArmacaoWidget extends StatelessWidget {
             childrenPadding: EdgeInsets.zero,
             tilePadding: EdgeInsets.zero,
             title: _itemWidget(status, status),
-            children: statusess
-                .getRange(1, statusess.length)
-                .map((e) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: _itemWidget(e, status),
-                    ))
-                .toList(),
-          )
+            children:
+                statusess
+                    .getRange(1, statusess.length)
+                    .map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: _itemWidget(e, status),
+                      ),
+                    )
+                    .toList(),
+          ),
         ],
       ),
     );
@@ -46,16 +49,28 @@ class PedidoArmacaoWidget extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: e.status.color.withOpacity(e.id == status.id ? 0.4 : 0.2),
+            color: e.status.color.withValues(
+              alpha: e.id == status.id ? 0.4 : 0.2,
+            ),
             borderRadius: BorderRadius.circular(4),
           ),
-          child: Text(e.status.label,
-              style: AppCss.mediumRegular.setSize(14).setColor(
-                  AppColors.black.withOpacity(e.id == status.id ? 1 : 0.4))),
+          child: Text(
+            e.status.label,
+            style: AppCss.mediumRegular
+                .setSize(14)
+                .setColor(
+                  AppColors.black.withValues(
+                    alpha: e.id == status.id ? 1 : 0.4,
+                  ),
+                ),
+          ),
         ),
-        Text(e.createdAt.textHour(),
-            style: AppCss.minimumRegular.setColor(
-                AppColors.black.withOpacity(e.id == status.id ? 1 : 0.4))),
+        Text(
+          e.createdAt.textHour(),
+          style: AppCss.minimumRegular.setColor(
+            AppColors.black.withValues(alpha: e.id == status.id ? 1 : 0.4),
+          ),
+        ),
       ],
     );
   }

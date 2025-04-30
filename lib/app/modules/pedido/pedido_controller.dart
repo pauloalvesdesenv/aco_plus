@@ -2,6 +2,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/orde
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/step/models/step_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/models/usuario_model.dart';
@@ -34,8 +35,9 @@ class PedidoController {
 
   factory PedidoController() => _instance;
 
-  final AppStream<PedidoUtils> utilsStream =
-      AppStream<PedidoUtils>.seed(PedidoUtils());
+  final AppStream<PedidoUtils> utilsStream = AppStream<PedidoUtils>.seed(
+    PedidoUtils(),
+  );
   PedidoUtils get utils => utilsStream.value;
 
   final AppStream<PedidoArquivedUtils> utilsArquivedsStream =
@@ -53,14 +55,18 @@ class PedidoController {
 
   void onInitCreatePage(PedidoModel? pedido) {
     formStream.add(
-        pedido != null ? PedidoCreateModel.edit(pedido) : PedidoCreateModel());
+      pedido != null ? PedidoCreateModel.edit(pedido) : PedidoCreateModel(),
+    );
   }
 
   List<PedidoModel> getPedidosFiltered(
-      String search, List<PedidoModel> pedidos) {
-    pedidos = utils.steps.isEmpty
-        ? pedidos
-        : pedidos.where((e) => e.step.id == utils.steps.last.id).toList();
+    String search,
+    List<PedidoModel> pedidos,
+  ) {
+    pedidos =
+        utils.steps.isEmpty
+            ? pedidos
+            : pedidos.where((e) => e.step.id == utils.steps.last.id).toList();
     if (search.length < 3) return pedidos;
     List<PedidoModel> filtered = [];
     for (final pedido in pedidos) {
@@ -72,13 +78,18 @@ class PedidoController {
   }
 
   List<PedidoModel> getPedidosArchivedsFiltered(
-      String search, List<PedidoModel> pedidos) {
-    pedidos = utilsArquiveds.steps.isEmpty
-        ? pedidos
-        : pedidos
-            .where((e) =>
-                utilsArquiveds.steps.map((e) => e.id).contains(e.step.id))
-            .toList();
+    String search,
+    List<PedidoModel> pedidos,
+  ) {
+    pedidos =
+        utilsArquiveds.steps.isEmpty
+            ? pedidos
+            : pedidos
+                .where(
+                  (e) =>
+                      utilsArquiveds.steps.map((e) => e.id).contains(e.step.id),
+                )
+                .toList();
     if (search.length < 3) return pedidos;
     List<PedidoModel> filtered = [];
     for (final pedido in pedidos) {
@@ -89,13 +100,15 @@ class PedidoController {
     return filtered;
   }
 
-  Future<void> onConfirm(_, PedidoModel? pedido, bool isFromOrder) async {
+  Future<void> onConfirm(value, PedidoModel? pedido, bool isFromOrder) async {
     try {
       onValid();
       if (form.produto.produtoModel != null &&
           form.produto.qtde.text.isNotEmpty) {
-        if (!await showConfirmDialog('Produto não confirmado',
-            'Você adicionou a quantidade mas não confirmou o produto. Deseja continuar?')) {
+        if (!await showConfirmDialog(
+          'Produto não confirmado',
+          'Você adicionou a quantidade mas não confirmou o produto. Deseja continuar?',
+        )) {
           return;
         }
       }
@@ -112,29 +125,39 @@ class PedidoController {
         await FirestoreClient.pedidos.fetch();
       }
       if (isFromOrder) {
-        Navigator.pop(_, form.isEdit ? pedido : null);
+        Navigator.pop(value, form.isEdit ? pedido : null);
       } else {
-        pop(_);
+        pop(value);
       }
       NotificationService.showPositive(
-          'Pedido ${form.isEdit ? 'Editado' : 'Adicionado'}',
-          'Operação realizada com sucesso',
-          position: NotificationPosition.bottom);
+        'Pedido ${form.isEdit ? 'Editado' : 'Adicionado'}',
+        'Operação realizada com sucesso',
+        position: NotificationPosition.bottom,
+      );
     } catch (e) {
-      NotificationService.showNegative('Erro', e.toString(),
-          position: NotificationPosition.bottom);
+      NotificationService.showNegative(
+        'Erro',
+        e.toString(),
+        position: NotificationPosition.bottom,
+      );
     }
   }
 
-  Future<bool> onDelete(_, PedidoModel pedido, {bool isPedido = true}) async {
+  Future<bool> onDelete(
+    value,
+    PedidoModel pedido, {
+    bool isPedido = true,
+  }) async {
     if (await _isDeleteUnavailable(pedido)) return false;
     await FirestoreClient.pedidos.delete(pedido);
     if (isPedido) {
-      pop(_);
+      pop(value);
     }
     NotificationService.showPositive(
-        'Pedido Excluida', 'Operação realizada com sucesso',
-        position: NotificationPosition.bottom);
+      'Pedido Excluida',
+      'Operação realizada com sucesso',
+      position: NotificationPosition.bottom,
+    );
     return true;
   }
 
@@ -211,26 +234,40 @@ class PedidoController {
     bool isAsc = utils.sortOrder == SortOrder.asc;
     switch (utils.sortType) {
       case SortType.localizator:
-        pedidos.sort((a, b) => isAsc
-            ? a.localizador.compareTo(b.localizador)
-            : b.localizador.compareTo(a.localizador));
+        pedidos.sort(
+          (a, b) =>
+              isAsc
+                  ? a.localizador.compareTo(b.localizador)
+                  : b.localizador.compareTo(a.localizador),
+        );
         break;
       case SortType.alfabetic:
-        pedidos.sort((a, b) => isAsc
-            ? a.localizador.compareTo(b.localizador)
-            : b.localizador.compareTo(a.localizador));
+        pedidos.sort(
+          (a, b) =>
+              isAsc
+                  ? a.localizador.compareTo(b.localizador)
+                  : b.localizador.compareTo(a.localizador),
+        );
         break;
       case SortType.deliveryAt:
-        pedidos.sort((a, b) => isAsc
-            ? (a.deliveryAt ?? DateTime.now())
-                .compareTo((b.deliveryAt ?? DateTime.now()))
-            : (b.deliveryAt ?? DateTime.now())
-                .compareTo((a.deliveryAt ?? DateTime.now())));
+        pedidos.sort(
+          (a, b) =>
+              isAsc
+                  ? (a.deliveryAt ?? DateTime.now()).compareTo(
+                    (b.deliveryAt ?? DateTime.now()),
+                  )
+                  : (b.deliveryAt ?? DateTime.now()).compareTo(
+                    (a.deliveryAt ?? DateTime.now()),
+                  ),
+        );
         break;
       case SortType.createdAt:
-        pedidos.sort((a, b) => isAsc
-            ? a.createdAt.compareTo(b.createdAt)
-            : b.createdAt.compareTo(a.createdAt));
+        pedidos.sort(
+          (a, b) =>
+              isAsc
+                  ? a.createdAt.compareTo(b.createdAt)
+                  : b.createdAt.compareTo(a.createdAt),
+        );
         break;
       default:
     }
@@ -250,10 +287,11 @@ class PedidoController {
   }) {
     pedido.histories.add(
       PedidoHistoryModel.create(
-          data: data,
-          action: action,
-          type: type,
-          isFromAutomatizacao: isFromAutomatizacao),
+        data: data,
+        action: action,
+        type: type,
+        isFromAutomatizacao: isFromAutomatizacao,
+      ),
     );
     FirestoreClient.pedidos.update(pedido);
   }
@@ -265,9 +303,24 @@ class PedidoController {
     FirestoreClient.pedidos.update(pedido);
   }
 
-  Future<bool> onArchive(_, PedidoModel pedido, {bool isPedido = true}) async {
-    if (!await showConfirmDialog('Deseja arquivar esse pedidos?',
-        'O pedido ficará disponível na lista de arquivados')) {
+  Future<bool> onArchive(
+    value,
+    PedidoModel pedido, {
+    bool isPedido = true,
+  }) async {
+    if (pedido.produtos.any(
+      (e) => e.status.status != PedidoProdutoStatus.pronto,
+    )) {
+      NotificationService.showNegative(
+        'Pedido não pode ser arquivado',
+        'O pedido possui ordens não concluídas',
+      );
+      return false;
+    }
+    if (!await showConfirmDialog(
+      'Deseja arquivar esse pedidos?',
+      'O pedido ficará disponível na lista de arquivados',
+    )) {
       return false;
     }
     showLoadingDialog();
@@ -275,36 +328,44 @@ class PedidoController {
     await FirestoreClient.pedidos.update(pedido);
     await FirestoreClient.pedidos.fetch();
     Navigator.pop(contextGlobal);
-    if (isPedido) Navigator.pop(_);
-    NotificationService.showPositive('Pedido Arquivado!',
-        'Acesse a lista de arquivados para visualizar o pedido',
-        position: NotificationPosition.bottom);
+    if (isPedido) Navigator.pop(value);
+    NotificationService.showPositive(
+      'Pedido Arquivado!',
+      'Acesse a lista de arquivados para visualizar o pedido',
+      position: NotificationPosition.bottom,
+    );
     return true;
   }
 
-  Future<void> onUnArchivePedido(_, PedidoModel pedido) async {
-    if (await showConfirmDialog('Deseja desarquivar o pedido?',
-        'O pedido voltará para a lista de pedidos')) {
+  Future<void> onUnArchivePedido(value, PedidoModel pedido) async {
+    if (await showConfirmDialog(
+      'Deseja desarquivar o pedido?',
+      'O pedido voltará para a lista de pedidos',
+    )) {
       pedido.isArchived = false;
       showLoadingDialog();
       await FirestoreClient.pedidos.update(pedido);
       await FirestoreClient.pedidos.fetch();
       Navigator.pop(contextGlobal);
-      Navigator.pop(_);
-      NotificationService.showPositive('Pedido Desarquivado!',
-          'Acesse a lista de pedidos para visualizar o pedido');
+      Navigator.pop(value);
+      NotificationService.showPositive(
+        'Pedido Desarquivado!',
+        'Acesse a lista de pedidos para visualizar o pedido',
+      );
     }
   }
 
   List<PedidoHistoryModel> getHistoricoAcompanhamento(PedidoModel pedido) {
-    List<PedidoHistoryModel> histories = pedido.histories.reversed
-        .where((e) => e.type == PedidoHistoryType.step)
-        .toList();
+    List<PedidoHistoryModel> histories =
+        pedido.histories.reversed
+            .where((e) => e.type == PedidoHistoryType.step)
+            .toList();
 
-    histories = histories.where((e) {
-      final data = e.data as StepModel?;
-      return data?.isShipping ?? false;
-    }).toList();
+    histories =
+        histories.where((e) {
+          final data = e.data as StepModel?;
+          return data?.isShipping ?? false;
+        }).toList();
 
     return histories;
   }
@@ -320,11 +381,12 @@ class PedidoController {
     relatorio.cliente = FirestoreClient.clientes.getById(pedido.cliente.id);
     relatorio.produtos =
         pedido.produtos.map((e) => e.copyWith()).map((e) => e.produto).toList();
-    relatorio.status = pedido.produtos
-        .map((e) => e.copyWith())
-        .map((e) => e.status.status)
-        .toSet()
-        .toList();
+    relatorio.status =
+        pedido.produtos
+            .map((e) => e.copyWith())
+            .map((e) => e.status.status)
+            .toSet()
+            .toList();
 
     relatorio.tipo = RelatorioPedidoTipo.pedidos;
 
@@ -342,7 +404,9 @@ class PedidoController {
 
     // relatorioCtrl.onCreateRelatorio();
 
-    await relatorioCtrl.onExportRelatorioPedidoPDF(relatorio,
-        name: pedido.localizador);
+    await relatorioCtrl.onExportRelatorioPedidoPDF(
+      relatorio,
+      name: pedido.localizador,
+    );
   }
 }

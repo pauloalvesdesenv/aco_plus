@@ -8,10 +8,7 @@ import 'package:flutter/material.dart';
 
 class PedidoStatusWidget extends StatelessWidget {
   final PedidoModel pedido;
-  const PedidoStatusWidget(
-    this.pedido, {
-    super.key,
-  });
+  const PedidoStatusWidget(this.pedido, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,35 +18,41 @@ class PedidoStatusWidget extends StatelessWidget {
         children: [
           Expanded(child: Text('Status de Produção', style: AppCss.largeBold)),
           InkWell(
-            onTap: pedido.isChangeStatusAvailable
-                ? () => pedidoCtrl.onChangePedidoStatus(pedido)
-                : null,
+            onTap:
+                pedido.isChangeStatusAvailable
+                    ? () => pedidoCtrl.onChangePedidoStatus(pedido)
+                    : null,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
               decoration: BoxDecoration(
-                  color: (pedido.isAguardandoEntradaProducao()
-                          ? Colors.grey
-                          : pedido.status.color)
-                      .withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(4)),
+                color: (pedido.isAguardandoEntradaProducao()
+                        ? Colors.grey
+                        : pedido.status.color)
+                    .withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(4),
+              ),
               child: IntrinsicWidth(
                 child: Row(
                   children: [
                     Text(
-                        pedido.isAguardandoEntradaProducao()
-                            ? 'AGUARDANDO ENTRADA'
-                            : pedido.status.label,
-                        style: AppCss.mediumRegular.setSize(12)),
+                      pedido.isAguardandoEntradaProducao()
+                          ? 'AGUARDANDO ENTRADA'
+                          : pedido.status.label,
+                      style: AppCss.mediumRegular.setSize(12),
+                    ),
                     if (pedido.isChangeStatusAvailable) ...{
                       const W(2),
-                      Icon(Icons.keyboard_arrow_down,
-                          size: 16, color: AppColors.black.withOpacity(0.6))
-                    }
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 16,
+                        color: AppColors.black.withValues(alpha: 0.6),
+                      ),
+                    },
                   ],
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -4,10 +4,7 @@ import 'package:aco_plus/app/core/models/text_controller.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
-enum RelatorioOrdemType {
-  STATUS,
-  ORDEM,
-}
+enum RelatorioOrdemType { STATUS, ORDEM }
 
 extension RelatorioOrdemTypeExt on RelatorioOrdemType {
   String get label {
@@ -20,11 +17,7 @@ extension RelatorioOrdemTypeExt on RelatorioOrdemType {
   }
 }
 
-enum RelatorioOrdemStatus {
-  AGUARDANDO_PRODUCAO,
-  EM_PRODUCAO,
-  PRODUZIDAS,
-}
+enum RelatorioOrdemStatus { AGUARDANDO_PRODUCAO, EM_PRODUCAO, PRODUZIDAS }
 
 extension RelatorioOrdemStatusExt on RelatorioOrdemStatus {
   String get label {
@@ -55,7 +48,6 @@ class RelatorioOrdemViewModel {
   List<RelatorioOrdemStatus> status = [
     RelatorioOrdemStatus.AGUARDANDO_PRODUCAO,
     RelatorioOrdemStatus.EM_PRODUCAO,
-    RelatorioOrdemStatus.PRODUZIDAS
   ];
   DateTimeRange? dates;
   RelatorioOrdemModel? relatorio;

@@ -25,51 +25,54 @@ class _ClienteSelectPageState extends State<ClienteSelectPage> {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: AppBar(
-        title: Text('Clientees',
-            style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Clientees',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           IconButton(
-              onPressed: () => push(context, const ClienteCreatePage()),
-              icon: Icon(
-                Icons.add,
-                color: AppColors.white,
-              ))
+            onPressed: () => push(context, const ClienteCreatePage()),
+            icon: Icon(Icons.add, color: AppColors.white),
+          ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<ClienteModel>>(
         stream: FirestoreClient.clientes.dataStream.listen,
-        builder: (_, __) => StreamOut<ClienteUtils>(
-          stream: clienteCtrl.utilsStream.listen,
-          builder: (_, utils) {
-            final clientes = clienteCtrl
-                .getClienteesFiltered(utils.search.text, __)
-                .toList();
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppField(
-                    hint: 'Pesquisar',
-                    controller: utils.search,
-                    suffixIcon: Icons.search,
-                    onChanged: (_) => clienteCtrl.utilsStream.update(),
-                  ),
-                ),
-                Expanded(
-                  child: clientes.isEmpty
-                      ? const EmptyData()
-                      : ListView.separated(
-                          itemCount: clientes.length,
-                          separatorBuilder: (_, i) => const Divisor(),
-                          itemBuilder: (_, i) =>
-                              _itemClienteWidget(clientes[i]),
-                        ),
-                ),
-              ],
-            );
-          },
-        ),
+        builder:
+            (_, __) => StreamOut<ClienteUtils>(
+              stream: clienteCtrl.utilsStream.listen,
+              builder: (_, utils) {
+                final clientes =
+                    clienteCtrl
+                        .getClienteesFiltered(utils.search.text, __)
+                        .toList();
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppField(
+                        hint: 'Pesquisar',
+                        controller: utils.search,
+                        suffixIcon: Icons.search,
+                        onChanged: (_) => clienteCtrl.utilsStream.update(),
+                      ),
+                    ),
+                    Expanded(
+                      child:
+                          clientes.isEmpty
+                              ? const EmptyData()
+                              : ListView.separated(
+                                itemCount: clientes.length,
+                                separatorBuilder: (_, i) => const Divisor(),
+                                itemBuilder:
+                                    (_, i) => _itemClienteWidget(clientes[i]),
+                              ),
+                    ),
+                  ],
+                );
+              },
+            ),
       ),
     );
   }
@@ -78,10 +81,7 @@ class _ClienteSelectPageState extends State<ClienteSelectPage> {
     return ListTile(
       onTap: () => Navigator.pop(context, cliente),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      title: Text(
-        cliente.nome,
-        style: AppCss.mediumBold,
-      ),
+      title: Text(cliente.nome, style: AppCss.mediumBold),
       subtitle: Text(
         'Tel: ${cliente.telefone} - Endereço: ${cliente.endereco} - Qtd. Obras: ${cliente.obras.length}',
       ),

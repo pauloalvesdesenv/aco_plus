@@ -24,8 +24,10 @@ class ArchiveModel {
   });
 
   Future<Uint8List> fetchBytes() async {
-    final response = await Dio()
-        .get(url!, options: Options(responseType: ResponseType.bytes));
+    final response = await Dio().get(
+      url!,
+      options: Options(responseType: ResponseType.bytes),
+    );
     return Uint8List.fromList(response.data);
   }
 
@@ -58,12 +60,14 @@ class ArchiveModel {
       name: map['name'],
       description: map['description'],
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
-      thumbnail: map['thumbnail'] != null
-          ? ArchiveModel.fromMap(map['thumbnail'])
-          : null,
-      type: map['type'] != null
-          ? ArchiveType.values[map['type']]
-          : ArchiveType.undefined,
+      thumbnail:
+          map['thumbnail'] != null
+              ? ArchiveModel.fromMap(map['thumbnail'])
+              : null,
+      type:
+          map['type'] != null
+              ? ArchiveType.values[map['type']]
+              : ArchiveType.undefined,
       mime: map['mime'] ?? '',
     );
   }

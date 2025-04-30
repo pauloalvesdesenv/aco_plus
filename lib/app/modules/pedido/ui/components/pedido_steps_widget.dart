@@ -7,10 +7,7 @@ import 'package:flutter/material.dart';
 
 class PedidoStepsWidget extends StatelessWidget {
   final PedidoModel pedido;
-  const PedidoStepsWidget(
-    this.pedido, {
-    super.key,
-  });
+  const PedidoStepsWidget(this.pedido, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +27,15 @@ class PedidoStepsWidget extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
               decoration: BoxDecoration(
-                  color: pedido.step.color.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(4)),
-              child: Text(pedido.step.name,
-                  style: AppCss.mediumRegular.setSize(12)),
+                color: pedido.step.color.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                pedido.step.name,
+                style: AppCss.mediumRegular.setSize(12),
+              ),
             ),
-          )
+          ),
         ],
       ),
     );

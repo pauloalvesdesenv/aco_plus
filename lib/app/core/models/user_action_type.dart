@@ -1,9 +1,4 @@
-enum UserActionType {
-  create,
-  read,
-  update,
-  delete,
-}
+enum UserActionType { create, read, update, delete }
 
 extension UserActionTypeExtension on UserActionType {
   String get label {

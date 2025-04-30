@@ -40,40 +40,49 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () async {
-                if (await showConfirmDialog(
-                    'Deseja realmente sair?',
-                    widget.cliente != null
-                        ? 'A edição que realizou será perdida'
-                        : 'Os dados do cliente serão perdidos.')) {
-                  pop(context);
-                }
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: AppColors.white,
-              )),
-          title: Text(
-              '${clienteCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Cliente',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          actions: [
-            if ((widget.cliente != null &&
-                    usuario.permission.cliente
-                        .contains(UserPermissionType.update)) ||
-                (widget.cliente == null &&
-                    usuario.permission.cliente
-                        .contains(UserPermissionType.create)))
-              IconLoadingButton(() async => await clienteCtrl.onConfirm(
-                  context, widget.cliente, widget.isFromOrder))
-          ],
-          backgroundColor: AppColors.primaryMain,
+      resizeAvoid: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async {
+            if (await showConfirmDialog(
+              'Deseja realmente sair?',
+              widget.cliente != null
+                  ? 'A edição que realizou será perdida'
+                  : 'Os dados do cliente serão perdidos.',
+            )) {
+              pop(context);
+            }
+          },
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        body: StreamOut(
-            stream: clienteCtrl.formStream.listen,
-            builder: (_, form) => body(form)));
+        title: Text(
+          '${clienteCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Cliente',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        actions: [
+          if ((widget.cliente != null &&
+                  usuario.permission.cliente.contains(
+                    UserPermissionType.update,
+                  )) ||
+              (widget.cliente == null &&
+                  usuario.permission.cliente.contains(
+                    UserPermissionType.create,
+                  )))
+            IconLoadingButton(
+              () async => await clienteCtrl.onConfirm(
+                context,
+                widget.cliente,
+                widget.isFromOrder,
+              ),
+            ),
+        ],
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: StreamOut(
+        stream: clienteCtrl.formStream.listen,
+        builder: (_, form) => body(form),
+      ),
+    );
   }
 
   Widget body(ClienteCreateModel form) {
@@ -97,10 +106,11 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
           label: 'CPF/CNPJ',
           required: false,
           controller: form.cpf,
-          onChanged: (_) {
-            if (_.length == 11 && CPFValidator.isValid(form.cpf.text)) {
+          onChanged: (value) {
+            if (value.length == 11 && CPFValidator.isValid(form.cpf.text)) {
               form.cpf.updateMask('000.000.000-00');
-            } else if (_.length == 14 && CNPJValidator.isValid(form.cpf.text)) {
+            } else if (value.length == 14 &&
+                CNPJValidator.isValid(form.cpf.text)) {
               form.cpf.updateMask('00.000.000/0000-00');
             } else {
               form.cpf.updateMask('00000000000000000');
@@ -112,7 +122,9 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
         InkWell(
           onTap: () async {
             final endereco = await push(
-                context, EnderecoCreatePage(endereco: form.endereco));
+              context,
+              EnderecoCreatePage(endereco: form.endereco),
+            );
             if (endereco != null) {
               form.endereco = endereco;
               clienteCtrl.formStream.update();
@@ -124,8 +136,9 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
               required: false,
               suffixIconSize: 12,
               suffixIcon: Icons.arrow_forward_ios,
-              controller:
-                  TextController(text: form.endereco?.name.toString() ?? ''),
+              controller: TextController(
+                text: form.endereco?.name.toString() ?? '',
+              ),
               onChanged: (_) => clienteCtrl.formStream.update(),
               hint: 'Clique para adicionar',
             ),
@@ -137,11 +150,15 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
           title: 'Obras ',
           createPage: ObraCreatePage(endereco: form.endereco),
           onEdit: (obraForm) async {
-            ObraModel? obra =
-                await push(context, ObraCreatePage(obra: obraForm));
+            ObraModel? obra = await push(
+              context,
+              ObraCreatePage(obra: obraForm),
+            );
             if (obra != null) {
-              final i =
-                  form.obras.map((e) => e.id).toList().indexOf(obraForm.id);
+              final i = form.obras
+                  .map((e) => e.id)
+                  .toList()
+                  .indexOf(obraForm.id);
               if (obra.id != 'delete') {
                 form.obras[i] = obra;
               } else {
@@ -155,44 +172,49 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
             clienteCtrl.formStream.update();
           },
           itens: form.obras,
-          titleBuilder: (e) => Row(
-            children: [
-              Text(
-                e.descricao,
-                style: AppCss.minimumRegular,
+          titleBuilder:
+              (e) => Row(
+                children: [
+                  Text(e.descricao, style: AppCss.minimumRegular),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: e.status.color.withValues(alpha: 0.5),
+                      borderRadius: AppCss.radius4,
+                    ),
+                    child: Text(
+                      e.status.label,
+                      style: AppCss.minimumBold.setSize(11),
+                    ),
+                  ),
+                ],
               ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                    color: e.status.color.withOpacity(0.5),
-                    borderRadius: AppCss.radius4),
-                child: Text(
-                  e.status.label,
-                  style: AppCss.minimumBold.setSize(11),
-                ),
-              )
-            ],
-          ),
         ),
         const H(24),
         if (usuario.permission.cliente.contains(UserPermissionType.delete))
           if (form.isEdit)
             TextButton.icon(
-                style: ButtonStyle(
-                  fixedSize: const WidgetStatePropertyAll(
-                      Size.fromWidth(double.maxFinite)),
-                  foregroundColor: WidgetStatePropertyAll(AppColors.error),
-                  backgroundColor: WidgetStatePropertyAll(AppColors.white),
-                  shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                      borderRadius: AppCss.radius8,
-                      side: BorderSide(color: AppColors.error))),
+              style: ButtonStyle(
+                fixedSize: const WidgetStatePropertyAll(
+                  Size.fromWidth(double.maxFinite),
                 ),
-                onPressed: () => clienteCtrl.onDelete(context, widget.cliente!),
-                label: const Text('Excluir'),
-                icon: const Icon(
-                  Icons.delete_outline,
-                )),
+                foregroundColor: WidgetStatePropertyAll(AppColors.error),
+                backgroundColor: WidgetStatePropertyAll(AppColors.white),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: AppCss.radius8,
+                    side: BorderSide(color: AppColors.error),
+                  ),
+                ),
+              ),
+              onPressed: () => clienteCtrl.onDelete(context, widget.cliente!),
+              label: const Text('Excluir'),
+              icon: const Icon(Icons.delete_outline),
+            ),
       ],
     );
   }

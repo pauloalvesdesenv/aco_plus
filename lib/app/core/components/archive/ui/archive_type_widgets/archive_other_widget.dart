@@ -13,14 +13,13 @@ class _ArchiveOtherWidgetState extends State<ArchiveOtherWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 150,
-        height: 180,
-        decoration: BoxDecoration(
-          color: Colors.grey[200]!,
-          borderRadius: BorderRadius.circular(2),
-        ),
-        child: const Center(
-          child: Icon(Icons.file_present_rounded),
-        ));
+      width: 150,
+      height: 180,
+      decoration: BoxDecoration(
+        color: Colors.grey[200]!,
+        borderRadius: BorderRadius.circular(2),
+      ),
+      child: const Center(child: Icon(Icons.file_present_rounded)),
+    );
   }
 }

@@ -27,21 +27,19 @@ class _BackupsPageState extends State<BackupsPage> {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: AppBar(
-        title:
-            Text('Backups', style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Backups',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           IconButton(
-              onPressed: () => backupCtrl.onRestoreBackup(),
-              icon: Icon(
-                Icons.upload,
-                color: AppColors.white,
-              )),
+            onPressed: () => backupCtrl.onRestoreBackup(),
+            icon: Icon(Icons.upload, color: AppColors.white),
+          ),
           IconButton(
-              onPressed: () => backupCtrl.onCreateBackup(),
-              icon: Icon(
-                Icons.add,
-                color: AppColors.white,
-              )),
+            onPressed: () => backupCtrl.onCreateBackup(),
+            icon: Icon(Icons.add, color: AppColors.white),
+          ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
@@ -74,10 +72,7 @@ class _BackupsPageState extends State<BackupsPage> {
     return ListTile(
       onTap: () => DownloadFileURLService.call(backup.url),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      title: Text(
-        backup.nome,
-        style: AppCss.mediumRegular,
-      ),
+      title: Text(backup.nome, style: AppCss.mediumRegular),
       subtitle: Text(
         'Criado em ${DateFormat('dd/MM/yyyy HH:mm').format(backup.createdAt)}',
         style: AppCss.smallRegular.copyWith(color: Colors.grey[600]),

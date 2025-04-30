@@ -37,26 +37,30 @@ class EnderecoController {
     return filtered;
   }
 
-  Future<void> onConfirm(_) async {
+  Future<void> onConfirm(value) async {
     try {
       onValidEndereco();
-      Navigator.pop(_, enderecoCreateStream.value.toEndereco());
+      Navigator.pop(value, enderecoCreateStream.value.toEndereco());
       NotificationService.showPositive(
           'Endereco ${form.isEdit ? 'Editado' : 'Adicionado'}',
           'Operação realizada com sucesso',
           position: NotificationPosition.bottom);
     } catch (e) {
       NotificationService.showNegative(
-          'Erro ao ${form.isEdit ? 'editar' : 'criar'} endereco', e.toString(),
-          position: NotificationPosition.bottom);
+        'Erro ao ${form.isEdit ? 'editar' : 'criar'} endereco',
+        e.toString(),
+        position: NotificationPosition.bottom,
+      );
     }
   }
 
   void onValidEndereco() {
     try {} catch (e) {
       NotificationService.showNegative(
-          'Erro ao ${form.isEdit ? 'editar' : 'criar'} endereco', e.toString(),
-          position: NotificationPosition.bottom);
+        'Erro ao ${form.isEdit ? 'editar' : 'criar'} endereco',
+        e.toString(),
+        position: NotificationPosition.bottom,
+      );
       rethrow;
     }
   }

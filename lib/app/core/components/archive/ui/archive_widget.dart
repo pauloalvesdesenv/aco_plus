@@ -15,8 +15,12 @@ class ArchiveWidget extends StatelessWidget {
   final ArchiveModel archive;
   final Function(ArchiveModel)? onDelete;
   final bool inList;
-  const ArchiveWidget(this.archive,
-      {required this.inList, this.onDelete, super.key});
+  const ArchiveWidget(
+    this.archive, {
+    required this.inList,
+    this.onDelete,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,24 +39,28 @@ class ArchiveWidget extends StatelessWidget {
             _itemWidget(),
             const W(16),
             Expanded(
-                child: ListTile(
-              title: Text(archive.description ?? '', style: AppCss.mediumBold),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const H(4),
-                  Text(
-                    archive.name ?? '',
-                    style: AppCss.mediumRegular.setSize(14),
-                  ),
-                  const H(4),
-                  Text(
-                    'Adicionado em ${archive.createdAt.textHour()}',
-                    style: AppCss.mediumRegular.setSize(12),
-                  ),
-                ],
+              child: ListTile(
+                title: Text(
+                  archive.description ?? '',
+                  style: AppCss.mediumBold,
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const H(4),
+                    Text(
+                      archive.name ?? '',
+                      style: AppCss.mediumRegular.setSize(14),
+                    ),
+                    const H(4),
+                    Text(
+                      'Adicionado em ${archive.createdAt.textHour()}',
+                      style: AppCss.mediumRegular.setSize(12),
+                    ),
+                  ],
+                ),
               ),
-            ))
+            ),
           ],
         ),
         if (onDelete != null)
@@ -64,13 +72,10 @@ class ArchiveWidget extends StatelessWidget {
                 padding: WidgetStateProperty.all(const EdgeInsets.all(8)),
                 minimumSize: WidgetStateProperty.all(Size.zero),
               ),
-              icon: const Icon(
-                Icons.delete,
-                size: 14,
-              ),
+              icon: const Icon(Icons.delete, size: 14),
               onPressed: () => onDelete?.call(archive),
             ),
-          )
+          ),
       ],
     );
   }

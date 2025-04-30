@@ -43,7 +43,8 @@ class ChecklistModel {
       id: map['id'] ?? '',
       nome: map['nome'] ?? '',
       checklist: List<CheckItemModel>.from(
-          map['checklist']?.map((x) => CheckItemModel.fromMap(x))),
+        map['checklist']?.map((x) => CheckItemModel.fromMap(x)),
+      ),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
     );
   }

@@ -23,13 +23,12 @@ class _RelatoriosPageState extends State<RelatoriosPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-          icon: Icon(
-            Icons.menu,
-            color: AppColors.white,
-          ),
+          icon: Icon(Icons.menu, color: AppColors.white),
         ),
-        title: Text('Relatórios',
-            style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Relatórios',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         backgroundColor: AppColors.primaryMain,
       ),
       body: Column(
@@ -37,21 +36,23 @@ class _RelatoriosPageState extends State<RelatoriosPage> {
           ListTile(
             title: const Text('Relatório de Pedidos'),
             onTap: () => push(context, const RelatoriosPedidoPage()),
-            leading: const Icon(
-              Icons.shopping_cart_outlined,
+            leading: const Icon(Icons.shopping_cart_outlined),
+            trailing: Icon(
+              Icons.chevron_right,
+              color: Colors.grey[400],
+              size: 16,
             ),
-            trailing:
-                Icon(Icons.chevron_right, color: Colors.grey[400], size: 16),
           ),
           const Divisor(),
           ListTile(
             title: const Text('Relatório de Ordens'),
             onTap: () => push(context, const RelatoriosOrdemPage()),
-            leading: const Icon(
-              Icons.work_outline,
+            leading: const Icon(Icons.work_outline),
+            trailing: Icon(
+              Icons.chevron_right,
+              color: Colors.grey[400],
+              size: 16,
             ),
-            trailing:
-                Icon(Icons.chevron_right, color: Colors.grey[400], size: 16),
           ),
         ],
       ),

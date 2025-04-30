@@ -1,4 +1,1 @@
-enum WidgetViewMode {
-  minified,
-  normal,
-}
+enum WidgetViewMode { minified, normal }

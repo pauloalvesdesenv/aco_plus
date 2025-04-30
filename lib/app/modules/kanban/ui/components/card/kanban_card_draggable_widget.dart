@@ -8,47 +8,45 @@ import 'package:flutter/material.dart';
 
 class KanbanCardDraggableWidget extends StatelessWidget {
   final PedidoModel pedido;
-  const KanbanCardDraggableWidget(
-    this.pedido, {
-    super.key,
-  });
+  const KanbanCardDraggableWidget(this.pedido, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return LongPressDraggable<PedidoModel>(
-        onDragUpdate: (details) {
-          kanbanCtrl.onListenerSrollEnd(context, details.localPosition);
-        },
-        onDragEnd: (details) {
-          kanbanCtrl.utils.cancelTimer();
-        },
-        onDragCompleted: () {
-          kanbanCtrl.utils.cancelTimer();
-        },
+      onDragUpdate: (details) {
+        kanbanCtrl.onListenerSrollEnd(context, details.localPosition);
+      },
+      onDragEnd: (details) {
+        kanbanCtrl.utils.cancelTimer();
+      },
+      onDragCompleted: () {
+        kanbanCtrl.utils.cancelTimer();
+      },
 
-        // onDragUpdate: (details) {
-        // final screenWidth = MediaQuery.of(context).size.width;
-        // final xPos = details.globalPosition.dx;
-        // if (xPos > screenWidth - 300) {
-        //   kanbanCtrl.utils.scroll.animateTo(
-        //       kanbanCtrl.utils.scroll.offset + 50,
-        //       duration: const Duration(milliseconds: 180),
-        //       curve: Curves.ease);
-        // } else if (xPos < 300) {
-        //   kanbanCtrl.utils.scroll.animateTo(
-        //       kanbanCtrl.utils.scroll.offset - 50,
-        //       duration: const Duration(milliseconds: 180),
-        //       curve: Curves.ease);
-        // }
-        // },
-        delay: const Duration(milliseconds: 180),
-        data: pedido,
-        childWhenDragging: SizedBox(
-          width: 290,
-          child: Opacity(opacity: 0.2, child: KanbanCardPedidoWidget(pedido)),
-        ),
-        feedback: _feedbackPedidoWidget(pedido),
-        child: KanbanCardPedidoWidget(pedido));
+      // onDragUpdate: (details) {
+      // final screenWidth = MediaQuery.of(context).size.width;
+      // final xPos = details.globalPosition.dx;
+      // if (xPos > screenWidth - 300) {
+      //   kanbanCtrl.utils.scroll.animateTo(
+      //       kanbanCtrl.utils.scroll.offset + 50,
+      //       duration: const Duration(milliseconds: 180),
+      //       curve: Curves.ease);
+      // } else if (xPos < 300) {
+      //   kanbanCtrl.utils.scroll.animateTo(
+      //       kanbanCtrl.utils.scroll.offset - 50,
+      //       duration: const Duration(milliseconds: 180),
+      //       curve: Curves.ease);
+      // }
+      // },
+      delay: const Duration(milliseconds: 180),
+      data: pedido,
+      childWhenDragging: SizedBox(
+        width: 290,
+        child: Opacity(opacity: 0.2, child: KanbanCardPedidoWidget(pedido)),
+      ),
+      feedback: _feedbackPedidoWidget(pedido),
+      child: KanbanCardPedidoWidget(pedido),
+    );
   }
 
   Widget _feedbackPedidoWidget(PedidoModel pedido) {
@@ -57,8 +55,8 @@ class KanbanCardDraggableWidget extends StatelessWidget {
       child: Opacity(
         opacity: 0.8,
         child: Material(
-            child: IntrinsicHeight(
-          child: SizedBox(
+          child: IntrinsicHeight(
+            child: SizedBox(
               width: 290,
               child: SingleChildScrollView(
                 physics: const NeverScrollableScrollPhysics(),
@@ -66,8 +64,10 @@ class KanbanCardDraggableWidget extends StatelessWidget {
                   pedido,
                   viewMode: WidgetViewMode.minified,
                 ),
-              )),
-        )),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

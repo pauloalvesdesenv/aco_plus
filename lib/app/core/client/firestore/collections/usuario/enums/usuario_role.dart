@@ -4,7 +4,7 @@ enum UsuarioRole {
   planilhador,
   vendedor,
   cliente,
-  operador
+  operador,
 }
 
 extension UsuarioRoleExtension on UsuarioRole {

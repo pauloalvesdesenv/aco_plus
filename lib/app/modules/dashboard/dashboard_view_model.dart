@@ -1,7 +1,4 @@
-enum DashboardClienteRankingType {
-  pedidos,
-  kilos,
-}
+enum DashboardClienteRankingType { pedidos, kilos }
 
 extension DashboardClienteRankingTypeExt on DashboardClienteRankingType {
   String get label {
@@ -23,8 +20,5 @@ class RankingModel<T> {
   T model;
   String value;
 
-  RankingModel({
-    required this.model,
-    required this.value,
-  });
+  RankingModel({required this.model, required this.value});
 }

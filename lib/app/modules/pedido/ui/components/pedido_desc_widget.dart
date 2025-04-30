@@ -9,10 +9,7 @@ import 'package:flutter/material.dart';
 
 class PedidoDescWidget extends StatelessWidget {
   final PedidoModel pedido;
-  const PedidoDescWidget(
-    this.pedido, {
-    super.key,
-  });
+  const PedidoDescWidget(this.pedido, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +24,10 @@ class PedidoDescWidget extends StatelessWidget {
           ]),
           const H(16),
           RowItensLabel([
-            ItemLabel('Descrição',
-                pedido.descricao.isEmpty ? 'Sem descrição' : pedido.descricao),
+            ItemLabel(
+              'Descrição',
+              pedido.descricao.isEmpty ? 'Sem descrição' : pedido.descricao,
+            ),
             if (pedido.deliveryAt != null)
               ItemLabel(
                 'Previsão de Entrega',
@@ -36,16 +35,18 @@ class PedidoDescWidget extends StatelessWidget {
                 isEditable: true,
                 onEdit: () async {
                   final date = await showDatePicker(
-                      context: context,
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                      initialDate: pedido.deliveryAt!);
+                    context: context,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                    initialDate: pedido.deliveryAt!,
+                  );
                   if (date != null) {
                     pedido.deliveryAt = date;
                     pedidoCtrl.updatePedidoFirestore();
                     NotificationService.showPositive(
-                        'Previsão de Entrega Alterada',
-                        'A previsão de entrega foi alterada com sucesso');
+                      'Previsão de Entrega Alterada',
+                      'A previsão de entrega foi alterada com sucesso',
+                    );
                   }
                 },
               ),
@@ -53,7 +54,7 @@ class PedidoDescWidget extends StatelessWidget {
           if (pedido.planilhamento.isNotEmpty) ...[
             const H(16),
             ItemLabel('Planilhamento', pedido.planilhamento),
-          ]
+          ],
         ],
       ),
     );

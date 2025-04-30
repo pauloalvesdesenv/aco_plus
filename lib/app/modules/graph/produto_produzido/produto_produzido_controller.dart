@@ -19,21 +19,22 @@ class ProdutoProduzidoController {
   factory ProdutoProduzidoController() => _instance;
 
   List<BarSeries<ProdutoProduzidoModel, DateTime>> getSource() =>
-      getDates(ProdutoProduzido.day)
-          .reversed
+      getDates(ProdutoProduzido.day).reversed
           .toList()
           .map(
             (e) => BarSeries<ProdutoProduzidoModel, DateTime>(
               dataSource: getKilosProduzidos(e),
               name: e.ddMMyyyy(),
-              color: e.isSameDay(dayNow())
-                  ? AppColors.primaryMain
-                  : Colors.grey[400],
+              color:
+                  e.isSameDay(dayNow())
+                      ? AppColors.primaryMain
+                      : Colors.grey[400],
               yValueMapper: (ProdutoProduzidoModel data, _) => data.qtde as num,
               xValueMapper: (ProdutoProduzidoModel data, _) => data.date,
               dataLabelSettings: const DataLabelSettings(
-                  isVisible: true,
-                  labelPosition: ChartDataLabelPosition.outside),
+                isVisible: true,
+                labelPosition: ChartDataLabelPosition.outside,
+              ),
             ),
           )
           .toList();
@@ -64,13 +65,17 @@ class ProdutoProduzidoController {
         if (produto.status.status == PedidoProdutoStatus.pronto &&
             date.isSameDay(produto.status.createdAt)) {
           if (produzidos.map((e) => e.date).contains(date)) {
-            final index =
-                produzidos.indexWhere((element) => element.date == date);
+            final index = produzidos.indexWhere(
+              (element) => element.date == date,
+            );
             produzidos[index].qtde += produto.qtde;
           } else {
-            produzidos.add(ProdutoProduzidoModel(
+            produzidos.add(
+              ProdutoProduzidoModel(
                 date: DateTime(date.year, date.month, date.day),
-                qtde: produto.qtde));
+                qtde: produto.qtde,
+              ),
+            );
           }
         }
       }

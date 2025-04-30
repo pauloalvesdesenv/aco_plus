@@ -55,33 +55,40 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
       resizeAvoid: true,
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () async {
-              if (await showConfirmDialog('Deseja realmente sair?',
-                  'Os dados do pedido serão perdidos.')) {
-                pop(context);
-              }
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              color: AppColors.white,
-            )),
-        title: Text('${pedidoCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Pedido',
-            style: AppCss.largeBold.setColor(AppColors.white)),
+          onPressed: () async {
+            if (await showConfirmDialog(
+              'Deseja realmente sair?',
+              'Os dados do pedido serão perdidos.',
+            )) {
+              pop(context);
+            }
+          },
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
+        ),
+        title: Text(
+          '${pedidoCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Pedido',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           if ((widget.pedido != null &&
-                  usuario.permission.pedido
-                      .contains(UserPermissionType.update)) ||
+                  usuario.permission.pedido.contains(
+                    UserPermissionType.update,
+                  )) ||
               (widget.pedido == null &&
-                  usuario.permission.pedido
-                      .contains(UserPermissionType.create)))
-            IconLoadingButton(() async =>
-                await pedidoCtrl.onConfirm(context, widget.pedido, false))
+                  usuario.permission.pedido.contains(
+                    UserPermissionType.create,
+                  )))
+            IconLoadingButton(
+              () async =>
+                  await pedidoCtrl.onConfirm(context, widget.pedido, false),
+            ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut(
-          stream: pedidoCtrl.formStream.listen,
-          builder: (_, form) => body(form)),
+        stream: pedidoCtrl.formStream.listen,
+        builder: (_, form) => body(form),
+      ),
     );
   }
 
@@ -92,117 +99,127 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
         const Divisor(),
         _produtoAddWidget(form),
         for (PedidoProdutoCreateModel produto in form.produtos)
-          _produtoItemWidget(form, produto)
+          _produtoItemWidget(form, produto),
       ],
     );
   }
 
   Builder _produtoItemWidget(
-      PedidoCreateModel form, PedidoProdutoCreateModel produto) {
-    return Builder(builder: (context) {
-      bool isDisabled = form.isEdit &&
-          FirestoreClient.ordens.data
-              .expand((e) => e.produtos.map((e) => e.id))
-              .any((e) => e == produto.id);
-      return ColorFiltered(
-        colorFilter: isDisabled
-            ? ColorFilter.mode(
-                Colors.grey.withOpacity(0.4), BlendMode.softLight)
-            : const ColorFilter.mode(Colors.transparent, BlendMode.color),
-        child: IgnorePointer(
-          ignoring: isDisabled,
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            decoration: BoxDecoration(
-              color: isDisabled ? Colors.grey[200] : Colors.transparent,
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.grey[300]!,
-                  width: 1,
+    PedidoCreateModel form,
+    PedidoProdutoCreateModel produto,
+  ) {
+    return Builder(
+      builder: (context) {
+        bool isDisabled =
+            form.isEdit &&
+            FirestoreClient.ordens.data
+                .expand((e) => e.produtos.map((e) => e.id))
+                .any((e) => e == produto.id);
+        return ColorFiltered(
+          colorFilter:
+              isDisabled
+                  ? ColorFilter.mode(
+                    Colors.grey.withValues(alpha: 0.4),
+                    BlendMode.softLight,
+                  )
+                  : const ColorFilter.mode(Colors.transparent, BlendMode.color),
+          child: IgnorePointer(
+            ignoring: isDisabled,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: isDisabled ? Colors.grey[200] : Colors.transparent,
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey[300]!, width: 1),
                 ),
               ),
-            ),
-            child: Row(
-              children: [
-                const W(24),
-                Text((form.produtos.indexOf(produto) + 1).toString(),
-                    style: AppCss.mediumBold),
-                const W(18),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(produto.produtoModel?.descricao ?? '',
-                                style: AppCss.mediumBold
-                                    .copyWith(fontWeight: FontWeight.w400)),
-                          ),
-                          if (isDisabled)
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  const W(24),
+                  Text(
+                    (form.produtos.indexOf(produto) + 1).toString(),
+                    style: AppCss.mediumBold,
+                  ),
+                  const W(18),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
                               child: Text(
+                                produto.produtoModel?.descricao ?? '',
+                                style: AppCss.mediumBold.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                            if (isDisabled)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                child: Text(
                                   'Produto já foi adicionado há uma ordem',
                                   style: AppCss.mediumRegular.copyWith(
-                                      color: Colors.red[500]!,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold)),
-                            )
-                        ],
-                      ),
-                      Text('Quantidade: ${produto.qtde.text} Kg')
-                    ],
-                  ),
-                ),
-                if (!isDisabled) ...[
-                  IconButton(
-                    onPressed: () async {
-                      final qtde = await showPedidoOrderEditBottom(produto);
-                      if (qtde != null) {
-                        produto.qtde.text = qtde.toString();
-                        pedidoCtrl.formStream.update();
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor:
-                          WidgetStateProperty.all(Colors.transparent),
-                    ),
-                    icon: const Icon(
-                      Icons.edit,
-                      color: Colors.red,
+                                    color: Colors.red[500]!,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        Text('Quantidade: ${produto.qtde.text} Kg'),
+                      ],
                     ),
                   ),
-                  const W(8),
-                  IconButton(
-                    onPressed: () {
-                      showConfirmDialog('Deseja remover bitola?',
-                              'A bitola será removida do pedido')
-                          .then((value) {
-                        if (value) {
-                          form.produtos.remove(produto);
+                  if (!isDisabled) ...[
+                    IconButton(
+                      onPressed: () async {
+                        final qtde = await showPedidoOrderEditBottom(produto);
+                        if (qtde != null) {
+                          produto.qtde.text = qtde.toString();
                           pedidoCtrl.formStream.update();
                         }
-                      });
-                    },
-                    style: ButtonStyle(
-                      backgroundColor:
-                          WidgetStateProperty.all(Colors.transparent),
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(
+                          Colors.transparent,
+                        ),
+                      ),
+                      icon: const Icon(Icons.edit, color: Colors.red),
                     ),
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
+                    const W(8),
+                    IconButton(
+                      onPressed: () {
+                        showConfirmDialog(
+                          'Deseja remover bitola?',
+                          'A bitola será removida do pedido',
+                        ).then((value) {
+                          if (value) {
+                            form.produtos.remove(produto);
+                            pedidoCtrl.formStream.update();
+                          }
+                        });
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(
+                          Colors.transparent,
+                        ),
+                      ),
+                      icon: const Icon(Icons.delete, color: Colors.red),
                     ),
-                  ),
-                  const W(16),
+                    const W(16),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Padding _produtoAddWidget(PedidoCreateModel form) {
@@ -219,11 +236,15 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
                   controller: form.produto.produtoEC,
                   nextFocus: form.produto.qtde.focus,
                   item: form.produto.produtoModel,
-                  itens: FirestoreClient.produtos.data
-                      .where((e) => !form.produtos
-                          .map((e) => e.produtoModel?.id)
-                          .contains(e.id))
-                      .toList(),
+                  itens:
+                      FirestoreClient.produtos.data
+                          .where(
+                            (e) =>
+                                !form.produtos
+                                    .map((e) => e.produtoModel?.id)
+                                    .contains(e.id),
+                          )
+                          .toList(),
                   itemLabel: (e) => e?.descricao ?? 'Selecione',
                   onSelect: (e) {
                     //TODO
@@ -237,7 +258,9 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
                 AppField(
                   label: 'Quantidade',
                   type: const TextInputType.numberWithOptions(
-                      decimal: true, signed: false),
+                    decimal: true,
+                    signed: false,
+                  ),
                   controller: form.produto.qtde,
                   action: TextInputAction.done,
                   suffixText: 'Kg',
@@ -260,24 +283,24 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
           Padding(
             padding: const EdgeInsets.only(top: 28),
             child: IconButton(
-              onPressed: !form.produto.isEnable
-                  ? null
-                  : () {
-                      form.produtos.add(form.produto);
-                      form.produto = PedidoProdutoCreateModel();
-                      form.produto.produtoEC.controller.clear();
-                      form.produto.produtoEC.focus.requestFocus();
-                      pedidoCtrl.formStream.update();
-                    },
+              onPressed:
+                  !form.produto.isEnable
+                      ? null
+                      : () {
+                        form.produtos.add(form.produto);
+                        form.produto = PedidoProdutoCreateModel();
+                        form.produto.produtoEC.controller.clear();
+                        form.produto.produtoEC.focus.requestFocus();
+                        pedidoCtrl.formStream.update();
+                      },
               style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(form.produto.isEnable
-                    ? AppColors.primaryMain
-                    : AppColors.black.withOpacity(0.3)),
+                backgroundColor: WidgetStateProperty.all(
+                  form.produto.isEnable
+                      ? AppColors.primaryMain
+                      : AppColors.black.withValues(alpha: 0.3),
+                ),
               ),
-              icon: Icon(
-                Icons.add,
-                color: AppColors.white,
-              ),
+              icon: Icon(Icons.add, color: AppColors.white),
             ),
           ),
         ],
@@ -306,9 +329,11 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
           onChanged: (_) => pedidoCtrl.formStream.update(),
           onEditingComplete: () {
             if (form.localizador.text.isEmpty) {
-              NotificationService.showNegative('Localizador não pode ser vazio',
-                  'Não será possível salvar o pedido sem um localizador',
-                  position: NotificationPosition.bottom);
+              NotificationService.showNegative(
+                'Localizador não pode ser vazio',
+                'Não será possível salvar o pedido sem um localizador',
+                position: NotificationPosition.bottom,
+              );
             } else {
               FocusScope.of(context).unfocus();
             }
@@ -363,7 +388,8 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
           label: 'Obra',
           item: form.obra,
           disable: form.cliente == null,
-          itens: form.cliente?.obras
+          itens:
+              form.cliente?.obras
                   .where((e) => e.status == ObraStatus.emAndamento)
                   .toList() ??
               [],
@@ -404,8 +430,8 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
           required: false,
           label: 'Previsão de Entrega',
           item: form.deliveryAt,
-          onChanged: (_) {
-            form.deliveryAt = _;
+          onChanged: (value) {
+            form.deliveryAt = value;
             pedidoCtrl.formStream.update();
           },
         ),

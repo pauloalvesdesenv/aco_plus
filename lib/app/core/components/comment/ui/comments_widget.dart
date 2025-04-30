@@ -74,7 +74,7 @@ class CommentsWidget extends StatelessWidget {
               ),
             ),
           ],
-        )
+        ),
       ],
     );
   }

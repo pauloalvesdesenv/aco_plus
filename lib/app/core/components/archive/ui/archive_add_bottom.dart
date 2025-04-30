@@ -55,9 +55,11 @@ class _ArchiveAddBottomState extends State<ArchiveAddBottom> {
   @override
   Widget build(BuildContext context) {
     return BottomSheet(
-        onClosing: () {},
-        builder: (context) => KeyboardVisibilityBuilder(
-            builder: (context, isVisible) => KeyboardListener(
+      onClosing: () {},
+      builder:
+          (context) => KeyboardVisibilityBuilder(
+            builder:
+                (context, isVisible) => KeyboardListener(
                   focusNode: _focusNode,
                   onKeyEvent: (e) {
                     if (e is KeyDownEvent &&
@@ -72,8 +74,9 @@ class _ArchiveAddBottomState extends State<ArchiveAddBottom> {
                     decoration: BoxDecoration(
                       color: AppColors.white,
                       borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          topRight: Radius.circular(24)),
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
                     ),
                     child: ListView(
                       children: [
@@ -84,12 +87,16 @@ class _ArchiveAddBottomState extends State<ArchiveAddBottom> {
                             padding: const EdgeInsets.only(left: 8),
                             child: IconButton(
                               style: ButtonStyle(
-                                  padding: const WidgetStatePropertyAll(
-                                      EdgeInsets.all(16)),
-                                  backgroundColor:
-                                      WidgetStatePropertyAll(AppColors.white),
-                                  foregroundColor:
-                                      WidgetStatePropertyAll(AppColors.black)),
+                                padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.all(16),
+                                ),
+                                backgroundColor: WidgetStatePropertyAll(
+                                  AppColors.white,
+                                ),
+                                foregroundColor: WidgetStatePropertyAll(
+                                  AppColors.black,
+                                ),
+                              ),
                               onPressed: () => Navigator.pop(context),
                               icon: const Icon(Icons.keyboard_backspace),
                             ),
@@ -139,48 +146,45 @@ class _ArchiveAddBottomState extends State<ArchiveAddBottom> {
                               ),
                               const H(16),
                               AppTextButton(
-                                  isEnable: archive != null,
-                                  label: 'Confirmar',
-                                  onPressed: () => onConfirm()),
+                                isEnable: archive != null,
+                                label: 'Confirmar',
+                                onPressed: () => onConfirm(),
+                              ),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                )));
+                ),
+          ),
+    );
   }
 
   Stack _addedWidget() {
     return Stack(
       alignment: Alignment.topRight,
       children: [
-        ArchiveWidget(
-          archive!,
-          inList: false,
-        ),
+        ArchiveWidget(archive!, inList: false),
         Align(
           alignment: Alignment.topRight,
           child: InkWell(
-              onTap: () {
-                archive = null;
-                _nameEC.text = '';
-                setState(() {});
-              },
-              child: Container(
-                margin: const EdgeInsets.all(4),
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryMain,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(
-                  Icons.close,
-                  size: 16,
-                  color: Colors.white,
-                ),
-              )),
-        )
+            onTap: () {
+              archive = null;
+              _nameEC.text = '';
+              setState(() {});
+            },
+            child: Container(
+              margin: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: AppColors.primaryMain,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.close, size: 16, color: Colors.white),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -210,9 +214,7 @@ class _ArchiveAddBottomState extends State<ArchiveAddBottom> {
   }
 
   Future<void> onAdd() async {
-    result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-    );
+    result = await FilePicker.platform.pickFiles(allowMultiple: false);
     if (result?.xFiles.isNotEmpty ?? false) {
       final xFile = result!.xFiles.first;
       final mime = lookupMimeType(kIsWeb ? xFile.name : xFile.path)!;

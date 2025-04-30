@@ -48,18 +48,14 @@ class KanbanCardDetailsWidget extends StatelessWidget {
     return IntrinsicWidth(
       child: Row(
         children: [
-          Icon(
-            icon,
-            color: const Color(0xFF787C86),
-            size: 14,
-          ),
+          Icon(icon, color: const Color(0xFF787C86), size: 14),
           if (value != null) ...[
             const W(4),
             Text(
               value,
               style: const TextStyle(color: Color(0xFF787C86), fontSize: 12),
             ),
-          ]
+          ],
         ],
       ),
     );

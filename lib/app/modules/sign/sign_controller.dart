@@ -18,14 +18,16 @@ class SignController {
 
   void onClickLogin(String email, String senha) {
     try {
-      final user = FirestoreClient.usuarios.data.firstWhereOrNull((e) =>
-          e.email.toCompare == email.toCompare &&
-          e.senha.toCompare == senha.toCompare);
+      final user = FirestoreClient.usuarios.data.firstWhereOrNull(
+        (e) =>
+            e.email.toCompare == email.toCompare &&
+            e.senha.toCompare == senha.toCompare,
+      );
       if (user == null) throw Exception('Usuário não encontrado');
 
       usuarioCtrl.setCurrentUser(user);
-    } catch (_) {
-      NotificationService.showNegative('Erro', _.toString());
+    } catch (value) {
+      NotificationService.showNegative('Erro', value.toString());
     }
   }
 }

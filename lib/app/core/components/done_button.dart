@@ -16,21 +16,16 @@ class _IconLoadingButtonState extends State<IconLoadingButton> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? const Padding(
-            padding: EdgeInsets.all(16),
-            child: Loading(size: 16),
-          )
+        ? const Padding(padding: EdgeInsets.all(16), child: Loading(size: 16))
         : IconButton(
-            onPressed: () async {
-              setState(() => isLoading = true);
-              try {
-                await widget.onPressed.call();
-              } catch (_) {}
-              setState(() => isLoading = false);
-            },
-            icon: Icon(
-              widget.icon,
-              color: AppColors.white,
-            ));
+          onPressed: () async {
+            setState(() => isLoading = true);
+            try {
+              await widget.onPressed.call();
+            } catch (_) {}
+            setState(() => isLoading = false);
+          },
+          icon: Icon(widget.icon, color: AppColors.white),
+        );
   }
 }

@@ -18,10 +18,7 @@ class InfoDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: AppColors.white,
-      title: Text(
-        'Aviso',
-        style: AppCss.largeBold,
-      ),
+      title: Text('Aviso', style: AppCss.largeBold),
       content: Text(message),
       actions: [
         TextButton(

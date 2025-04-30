@@ -36,10 +36,7 @@ class _TypeSelectorWidgetState<T> extends State<TypeSelectorWidget<T>> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.label.isNotEmpty)
-          Text(
-            widget.label,
-            style: AppCss.smallBold,
-          ),
+          Text(widget.label, style: AppCss.smallBold),
         if (widget.label.isNotEmpty) const H(8),
         Scrollbar(
           controller: controller,
@@ -50,13 +47,14 @@ class _TypeSelectorWidgetState<T> extends State<TypeSelectorWidget<T>> {
               width: double.maxFinite,
               height: 35,
               child: ListView.separated(
-                  controller: controller,
-                  padding: EdgeInsets.zero,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: widget.values.length,
-                  separatorBuilder: (_, __) => const W(8),
-                  itemBuilder: (_, i) =>
-                      _goalFilterType(widget.value, widget.values[i])),
+                controller: controller,
+                padding: EdgeInsets.zero,
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.values.length,
+                separatorBuilder: (_, __) => const W(8),
+                itemBuilder:
+                    (_, i) => _goalFilterType(widget.value, widget.values[i]),
+              ),
             ),
           ),
         ),
@@ -71,9 +69,10 @@ class _TypeSelectorWidgetState<T> extends State<TypeSelectorWidget<T>> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         decoration: BoxDecoration(
-          color: isSelected
-              ? (widget.itemColor?.call(value) ?? AppColors.primaryLight)
-              : Colors.grey.withOpacity(0.05),
+          color:
+              isSelected
+                  ? (widget.itemColor?.call(value) ?? AppColors.primaryLight)
+                  : Colors.grey.withValues(alpha: 0.05),
           borderRadius: AppCss.radius16,
         ),
         child: Center(
@@ -86,5 +85,5 @@ class _TypeSelectorWidgetState<T> extends State<TypeSelectorWidget<T>> {
     );
   }
 
-  String label(_) => _ != null ? (_.label as String) : 'all';
+  String label(value) => value != null ? (value.label as String) : 'all';
 }

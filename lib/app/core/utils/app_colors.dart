@@ -45,37 +45,28 @@ class AppColorsSystem {
 
   factory AppColorsSystem.lightFactory() {
     return AppColorsSystem(
-      primary: const MaterialColor(
-        0xFFDA251C,
-        <int, Color>{
-          50: Color(0xFFE09B97),
-          100: Color(0xFFE48E86),
-          200: Color(0xFFE68175),
-          300: Color(0xFFE97464),
-          500: Color(0xFFDA251C),
-          700: Color(0xFFC62219),
-          900: Color(0xFFAF1F16),
-        },
-      ),
-      secondary: const MaterialColor(
-        0xFFf98209,
-        <int, Color>{
-          200: Color(0xFFffc367),
-          500: Color(0xFFf98209),
-          900: Color(0xFFb74b01),
-        },
-      ),
-      neutral: const MaterialColor(
-        0xFF8a99a8,
-        <int, Color>{
-          100: Color(0xFFF8FCFC),
-          300: Color(0xFFEEF0F2),
-          400: Color(0xFFc4ccd3),
-          500: Color(0xFF8a99a8),
-          700: Color(0xFF3d4c5c),
-          900: Color(0xFF020d17),
-        },
-      ),
+      primary: const MaterialColor(0xFFDA251C, <int, Color>{
+        50: Color(0xFFE09B97),
+        100: Color(0xFFE48E86),
+        200: Color(0xFFE68175),
+        300: Color(0xFFE97464),
+        500: Color(0xFFDA251C),
+        700: Color(0xFFC62219),
+        900: Color(0xFFAF1F16),
+      }),
+      secondary: const MaterialColor(0xFFf98209, <int, Color>{
+        200: Color(0xFFffc367),
+        500: Color(0xFFf98209),
+        900: Color(0xFFb74b01),
+      }),
+      neutral: const MaterialColor(0xFF8a99a8, <int, Color>{
+        100: Color(0xFFF8FCFC),
+        300: Color(0xFFEEF0F2),
+        400: Color(0xFFc4ccd3),
+        500: Color(0xFF8a99a8),
+        700: Color(0xFF3d4c5c),
+        900: Color(0xFF020d17),
+      }),
       error: const Color(0xFFdb2a36),
       success: const Color(0xFF31ac47),
       pending: Colors.orange,
@@ -93,25 +84,19 @@ class AppColorsSystem {
         700: Color(0xFFC62219),
         900: Color(0xFFAF1F16),
       }),
-      secondary: const MaterialColor(
-        0xFFf98209,
-        <int, Color>{
-          200: Color(0xFFffc367),
-          500: Color(0xFFf98209),
-          900: Color(0xFFb74b01),
-        },
-      ),
-      neutral: const MaterialColor(
-        0xFF8a99a8,
-        <int, Color>{
-          100: Color(0xFF020d17),
-          300: Color(0xFFEEF0F2),
-          400: Color(0xFFc4ccd3),
-          500: Color(0xFF8a99a8),
-          700: Color(0xFF3d4c5c),
-          900: Color(0xFFF8FCFC),
-        },
-      ),
+      secondary: const MaterialColor(0xFFf98209, <int, Color>{
+        200: Color(0xFFffc367),
+        500: Color(0xFFf98209),
+        900: Color(0xFFb74b01),
+      }),
+      neutral: const MaterialColor(0xFF8a99a8, <int, Color>{
+        100: Color(0xFF020d17),
+        300: Color(0xFFEEF0F2),
+        400: Color(0xFFc4ccd3),
+        500: Color(0xFF8a99a8),
+        700: Color(0xFF3d4c5c),
+        900: Color(0xFFF8FCFC),
+      }),
       error: const Color(0xFFdb2a36),
       success: const Color(0xFF31ac47),
       pending: const Color(0xFFdbc114),

@@ -46,9 +46,11 @@ Future<void> initFirebaseMessaging() async {
 Future<String?> getDeviceToken() async {
   if (kIsWeb) {
     return await _menssaging.getToken(
-        vapidKey: kIsWeb
-            ? 'BMzSKaJYdozeg3ZFbdIKl7prhb03HQEU-VR9SbAqvAJNUDzQjRM6Tm463QGv5WkKdYea9gkVZS-WhEP4_U7Z8TY'
-            : null);
+      vapidKey:
+          kIsWeb
+              ? 'BMzSKaJYdozeg3ZFbdIKl7prhb03HQEU-VR9SbAqvAJNUDzQjRM6Tm463QGv5WkKdYea9gkVZS-WhEP4_U7Z8TY'
+              : null,
+    );
   } else if (Platform.isAndroid) {
     return await _menssaging.getToken();
   } else {
@@ -75,13 +77,15 @@ Future<void> setupFlutterNotifications() async {
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin
+      >()
       ?.createNotificationChannel(channel);
 
   flutterLocalNotificationsPlugin.initialize(
     const InitializationSettings(
-        android: AndroidInitializationSettings('ic_notification'),
-        iOS: DarwinInitializationSettings()),
+      android: AndroidInitializationSettings('ic_notification'),
+      iOS: DarwinInitializationSettings(),
+    ),
   );
 }
 
@@ -97,22 +101,24 @@ void showFlutterNotification(RemoteMessage message) {
         notification!.title,
         notification.body,
         NotificationDetails(
-          android: android == null
-              ? null
-              : AndroidNotificationDetails(
-                  channel.id,
-                  channel.name,
-                  channelDescription: channel.description,
-                  icon: 'ic_notification',
-                ),
-          iOS: ios == null
-              ? null
-              : const DarwinNotificationDetails(
-                  presentSound: true,
-                  presentAlert: true,
-                  presentBadge: true,
-                  attachments: <DarwinNotificationAttachment>[],
-                ),
+          android:
+              android == null
+                  ? null
+                  : AndroidNotificationDetails(
+                    channel.id,
+                    channel.name,
+                    channelDescription: channel.description,
+                    icon: 'ic_notification',
+                  ),
+          iOS:
+              ios == null
+                  ? null
+                  : const DarwinNotificationDetails(
+                    presentSound: true,
+                    presentAlert: true,
+                    presentBadge: true,
+                    attachments: <DarwinNotificationAttachment>[],
+                  ),
         ),
         payload: jsonEncode(message.data),
       );
@@ -129,7 +135,11 @@ Future<void> onOpenNotification() async {
 }
 
 Future selectNotificationIOS(
-    int id, String? title, String? body, String? payload) async {
+  int id,
+  String? title,
+  String? body,
+  String? payload,
+) async {
   if (payload == null) return;
 }
 

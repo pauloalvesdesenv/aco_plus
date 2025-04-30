@@ -57,11 +57,12 @@ class AutomatizacaoController {
         final stepById = FirestoreClient.steps.getById(step.id);
         pedido.steps.add(PedidoStepModel.create(stepById));
         pedidoCtrl.onAddHistory(
-            pedido: pedido,
-            data: stepById,
-            type: PedidoHistoryType.step,
-            action: PedidoHistoryAction.update,
-            isFromAutomatizacao: true);
+          pedido: pedido,
+          data: stepById,
+          type: PedidoHistoryType.step,
+          action: PedidoHistoryAction.update,
+          isFromAutomatizacao: true,
+        );
         await FirestoreClient.pedidos.update(pedido);
       }
     }

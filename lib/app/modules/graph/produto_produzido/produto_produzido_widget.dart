@@ -27,12 +27,12 @@ class _GrapOrdemhTotalWidgetState extends State<ProdutoProduzidoWidget> {
   @override
   void initState() {
     data = produtoProduzidoCtrl.getSource();
-    pedidoStream =
-        FirestoreClient.pedidos.pedidosUnarchivedsStream.listen.listen((e) {
-      setState(() {
-        data = produtoProduzidoCtrl.getSource();
-      });
-    });
+    pedidoStream = FirestoreClient.pedidos.pedidosUnarchivedsStream.listen
+        .listen((e) {
+          setState(() {
+            data = produtoProduzidoCtrl.getSource();
+          });
+        });
     super.initState();
   }
 
@@ -48,40 +48,44 @@ class _GrapOrdemhTotalWidgetState extends State<ProdutoProduzidoWidget> {
       children: [
         const H(16),
         Expanded(
-            child: SfCartesianChart(
-                zoomPanBehavior: ZoomPanBehavior(
-                  enablePanning: true,
-                  enablePinching: true,
-                  enableSelectionZooming: true,
-                  enableDoubleTapZooming: true,
-                  enableMouseWheelZooming: true,
-                  zoomMode: ZoomMode.xy,
-                ),
-                tooltipBehavior: TooltipBehavior(
-                  enable: true,
-                  format: 'point.x : point.y Kg',
-                ),
-                enableMultiSelection: true,
-                onDataLabelRender: (dataLabelArgs) {
-                  dataLabelArgs.textStyle = AppCss.smallRegular
-                      .copyWith(color: dataLabelArgs.color, fontSize: 12);
-                  double qtde = double.parse(dataLabelArgs.text ?? '0');
-                  dataLabelArgs.text = qtde == 0 ? empty : qtde.toKg();
-                },
-                primaryXAxis: DateTimeCategoryAxis(
-                  dateFormat: DateFormat('dd/MM'),
-                  intervalType: DateTimeIntervalType.days,
-                  interval: 1,
-                ),
-                primaryYAxis: NumericAxis(
-                  axisLabelFormatter: (axisLabelRenderArgs) {
-                    return ChartAxisLabel(
-                      axisLabelRenderArgs.value.toDouble().toKg(),
-                      AppCss.smallRegular.copyWith(fontSize: 12),
-                    );
-                  },
-                ),
-                series: data))
+          child: SfCartesianChart(
+            zoomPanBehavior: ZoomPanBehavior(
+              enablePanning: true,
+              enablePinching: true,
+              enableSelectionZooming: true,
+              enableDoubleTapZooming: true,
+              enableMouseWheelZooming: true,
+              zoomMode: ZoomMode.xy,
+            ),
+            tooltipBehavior: TooltipBehavior(
+              enable: true,
+              format: 'point.x : point.y Kg',
+            ),
+            enableMultiSelection: true,
+            onDataLabelRender: (dataLabelArgs) {
+              dataLabelArgs.textStyle = AppCss.smallRegular.copyWith(
+                color: dataLabelArgs.color,
+                fontSize: 12,
+              );
+              double qtde = double.parse(dataLabelArgs.text ?? '0');
+              dataLabelArgs.text = qtde == 0 ? empty : qtde.toKg();
+            },
+            primaryXAxis: DateTimeCategoryAxis(
+              dateFormat: DateFormat('dd/MM'),
+              intervalType: DateTimeIntervalType.days,
+              interval: 1,
+            ),
+            primaryYAxis: NumericAxis(
+              axisLabelFormatter: (axisLabelRenderArgs) {
+                return ChartAxisLabel(
+                  axisLabelRenderArgs.value.toDouble().toKg(),
+                  AppCss.smallRegular.copyWith(fontSize: 12),
+                );
+              },
+            ),
+            series: data,
+          ),
+        ),
       ],
     );
   }

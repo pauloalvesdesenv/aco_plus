@@ -10,19 +10,17 @@ class KanbanStepBodyWidget extends StatelessWidget {
   final KanbanUtils utils;
   final StepModel step;
   final List<PedidoModel> pedidos;
-  const KanbanStepBodyWidget(
-    this.utils,
-    this.step,
-    this.pedidos, {
-    super.key,
-  });
+  const KanbanStepBodyWidget(this.utils, this.step, this.pedidos, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.maxFinite,
       decoration: BoxDecoration(
-        color: step.isEnable ? Colors.grey[50] : Colors.red.withOpacity(0.05),
+        color:
+            step.isEnable
+                ? Colors.grey[50]
+                : Colors.red.withValues(alpha: 0.05),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(8),
           bottomRight: Radius.circular(8),
@@ -30,7 +28,7 @@ class KanbanStepBodyWidget extends StatelessWidget {
       ),
       child: RawScrollbar(
         trackColor: const Color(0xFFFAFAFA),
-        thumbColor: Colors.grey.withOpacity(0.7),
+        thumbColor: Colors.grey.withValues(alpha: 0.7),
         crossAxisMargin: 2,
         interactive: true,
         radius: const Radius.circular(4),
@@ -41,29 +39,40 @@ class KanbanStepBodyWidget extends StatelessWidget {
         thumbVisibility: true,
         child: ListView(
           padding: const EdgeInsets.only(right: 2),
-          physics: pedidos.isEmpty
-              ? const NeverScrollableScrollPhysics()
-              : const AlwaysScrollableScrollPhysics(),
+          physics:
+              pedidos.isEmpty
+                  ? const NeverScrollableScrollPhysics()
+                  : const AlwaysScrollableScrollPhysics(),
           controller: step.scrollController,
           cacheExtent: 200,
           children: [
             _dragTargetWidget(step, pedidos, 0),
-            Builder(builder: (context) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: SeparatedColumn(
-                  separatorBuilder: (_, i) =>
-                      utils.isPedidoVisibleFiltered(pedidos[i])
-                          ? _dragTargetWidget(step, pedidos, i + 1)
-                          : const SizedBox(),
-                  children: pedidos
-                      .map((e) => utils.isPedidoVisibleFiltered(e)
-                          ? KanbanCardDraggableWidget(e)
-                          : const SizedBox())
-                      .toList(),
-                ),
-              );
-            }),
+            Builder(
+              builder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 8,
+                  ),
+                  child: SeparatedColumn(
+                    separatorBuilder:
+                        (_, i) =>
+                            utils.isPedidoVisibleFiltered(pedidos[i])
+                                ? _dragTargetWidget(step, pedidos, i + 1)
+                                : const SizedBox(),
+                    children:
+                        pedidos
+                            .map(
+                              (e) =>
+                                  utils.isPedidoVisibleFiltered(e)
+                                      ? KanbanCardDraggableWidget(e)
+                                      : const SizedBox(),
+                            )
+                            .toList(),
+                  ),
+                );
+              },
+            ),
             _dragTargetWidget(step, pedidos, pedidos.length, isLast: true),
           ],
         ),
@@ -71,30 +80,36 @@ class KanbanStepBodyWidget extends StatelessWidget {
     );
   }
 
-  Widget _dragTargetWidget(StepModel step, List<PedidoModel> pedidos, int index,
-          {bool isLast = false}) =>
-      DragTarget<PedidoModel>(
-        onAcceptWithDetails: (details) =>
-            kanbanCtrl.onAccept(step, details.data, index),
-        builder: (context, candidateData, rejectedData) {
-          bool isHover = candidateData.isNotEmpty;
-          bool isEnable = step.isEnable;
-          return AnimatedOpacity(
-            opacity: isEnable && isHover ? 1 : 0,
-            duration: const Duration(milliseconds: 100),
-            child: Container(
-              width: double.maxFinite,
-              margin: isHover
+  Widget _dragTargetWidget(
+    StepModel step,
+    List<PedidoModel> pedidos,
+    int index, {
+    bool isLast = false,
+  }) => DragTarget<PedidoModel>(
+    onAcceptWithDetails:
+        (details) => kanbanCtrl.onAccept(step, details.data, index),
+    builder: (context, candidateData, rejectedData) {
+      bool isHover = candidateData.isNotEmpty;
+      bool isEnable = step.isEnable;
+      return AnimatedOpacity(
+        opacity: isEnable && isHover ? 1 : 0,
+        duration: const Duration(milliseconds: 100),
+        child: Container(
+          width: double.maxFinite,
+          margin:
+              isHover
                   ? EdgeInsets.symmetric(
-                      vertical: 8, horizontal: isLast ? 8 : 0)
+                    vertical: 8,
+                    horizontal: isLast ? 8 : 0,
+                  )
                   : null,
-              height: isHover || isLast ? 70 : 16,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          );
-        },
+          height: isHover || isLast ? 70 : 16,
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
       );
+    },
+  );
 }

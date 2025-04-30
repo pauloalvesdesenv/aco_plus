@@ -29,25 +29,26 @@ class _EnderecoCreatePageState extends State<EnderecoCreatePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () => pop(context),
-              icon: Icon(
-                Icons.arrow_back,
-                color: AppColors.white,
-              )),
-          title: Text(
-              '${enderecoCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Endereco',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          actions: [
-            IconLoadingButton(() async => await enderecoCtrl.onConfirm(context))
-          ],
-          backgroundColor: AppColors.primaryMain,
+      resizeAvoid: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => pop(context),
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        body: StreamOut(
-            stream: enderecoCtrl.enderecoCreateStream.listen,
-            builder: (_, form) => body(form)));
+        title: Text(
+          '${enderecoCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Endereco',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        actions: [
+          IconLoadingButton(() async => await enderecoCtrl.onConfirm(context)),
+        ],
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: StreamOut(
+        stream: enderecoCtrl.enderecoCreateStream.listen,
+        builder: (_, form) => body(form),
+      ),
+    );
   }
 
   Widget body(EnderecoCreateModel form) {
@@ -59,9 +60,9 @@ class _EnderecoCreatePageState extends State<EnderecoCreatePage> {
           type: TextInputType.number,
           controller: form.cep,
           hint: form.cep.mask!,
-          onChanged: (_) {
-            if (_.length == 9) {
-              enderecoCtrl.onSearchCEP(_);
+          onChanged: (value) {
+            if (value.length == 9) {
+              enderecoCtrl.onSearchCEP(value);
             }
             enderecoCtrl.enderecoCreateStream.update();
           },

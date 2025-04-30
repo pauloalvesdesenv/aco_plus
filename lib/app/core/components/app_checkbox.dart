@@ -21,21 +21,17 @@ class AppCheckbox extends StatelessWidget {
       onTap: () {
         onChanged.call(!value);
       },
-      child: label != null
-          ? Row(
-              children: [
-                _appCheckbox(),
-                const W(12),
-                if (label != null)
-                  Expanded(
-                    child: Text(
-                      label!,
-                      style: AppCss.mediumRegular,
-                    ),
-                  )
-              ],
-            )
-          : _appCheckbox(),
+      child:
+          label != null
+              ? Row(
+                children: [
+                  _appCheckbox(),
+                  const W(12),
+                  if (label != null)
+                    Expanded(child: Text(label!, style: AppCss.mediumRegular)),
+                ],
+              )
+              : _appCheckbox(),
     );
   }
 
@@ -44,12 +40,13 @@ class AppCheckbox extends StatelessWidget {
       width: 19,
       height: 19,
       decoration: BoxDecoration(
-          color: value ? AppColors.primaryMain : Colors.white,
-          border: Border.all(
-            color: value ? AppColors.primaryMain : AppColors.black,
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(2)),
+        color: value ? AppColors.primaryMain : Colors.white,
+        border: Border.all(
+          color: value ? AppColors.primaryMain : AppColors.black,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(2),
+      ),
       child: Icon(
         Icons.done,
         size: 14,

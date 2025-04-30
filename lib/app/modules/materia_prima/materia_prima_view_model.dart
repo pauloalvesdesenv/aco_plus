@@ -21,9 +21,7 @@ class MateriaPrimaCreateModel {
 
   late bool isEdit;
 
-  MateriaPrimaCreateModel()
-      : id = HashService.get,
-        isEdit = false;
+  MateriaPrimaCreateModel() : id = HashService.get, isEdit = false;
 
   MateriaPrimaCreateModel.edit(MateriaPrimaModel materiaPrima)
       : id = materiaPrima.id,

@@ -16,19 +16,21 @@ class RelatorioOrdemPdfStatusPage {
   RelatorioOrdemPdfStatusPage(this.model);
 
   pw.Page build(Uint8List bytes) => pw.MultiPage(
-        crossAxisAlignment: pw.CrossAxisAlignment.center,
-        pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context) => [
+    crossAxisAlignment: pw.CrossAxisAlignment.center,
+    pageFormat: PdfPageFormat.a4,
+    build:
+        (pw.Context context) => [
           pw.Image(pw.MemoryImage(bytes), width: 60, height: 60),
           pw.SizedBox(height: 24),
           pw.Text(
-              'RELATÓRIO DE BITOLA POR STATUS${model.dates != null ? ' E PERÍODO' : empty}'),
+            'RELATÓRIO DE BITOLA POR STATUS${model.dates != null ? ' E PERÍODO' : empty}',
+          ),
           pw.SizedBox(height: 16),
           _itemHeader(model),
           pw.SizedBox(height: 24),
           for (final pedido in model.ordens) _itemRelatorio(pedido),
         ],
-      );
+  );
 
   pw.Widget _itemRelatorio(OrdemModel ordem) {
     return pw.Container(
@@ -36,7 +38,9 @@ class RelatorioOrdemPdfStatusPage {
       decoration: pw.BoxDecoration(
         color: PdfColor.fromInt(Colors.white.value),
         border: pw.Border.all(
-            color: PdfColor.fromInt(Colors.grey[700]!.value), width: 1),
+          color: PdfColor.fromInt(Colors.grey[700]!.value),
+          width: 1,
+        ),
       ),
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -45,36 +49,44 @@ class RelatorioOrdemPdfStatusPage {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Expanded(
-                  child: pw.Text(ordem.localizator,
-                      style: pw.TextStyle(
-                          fontSize: 14,
-                          fontWeight: pw.FontWeight.bold,
-                          color: PdfColor.fromInt(AppColors.black.value)))),
-              pw.Text(
-                  DateFormat("'Criado 'dd/MM/yyyy' às 'HH:mm")
-                      .format(ordem.createdAt),
+                child: pw.Text(
+                  ordem.localizator,
                   style: pw.TextStyle(
-                      fontSize: 11,
-                      fontWeight: pw.FontWeight.normal,
-                      color: PdfColor.fromInt(AppColors.black.value))),
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColor.fromInt(AppColors.black.value),
+                  ),
+                ),
+              ),
+              pw.Text(
+                DateFormat(
+                  "'Criado 'dd/MM/yyyy' às 'HH:mm",
+                ).format(ordem.createdAt),
+                style: pw.TextStyle(
+                  fontSize: 11,
+                  fontWeight: pw.FontWeight.normal,
+                  color: PdfColor.fromInt(AppColors.black.value),
+                ),
+              ),
             ],
           ),
           _itemInfo('Bitola', '${ordem.produto.descricaoReplaced}mm'),
           PdfDivisor.build(),
           if (ordem.materiaPrima != null) ...[
-            _itemInfo('Materia Prima',
-                '${ordem.materiaPrima!.fabricanteModel.nome} - ${ordem.materiaPrima!.corridaLote}'),
+            _itemInfo(
+              'Materia Prima',
+              '${ordem.materiaPrima!.fabricanteModel.nome} - ${ordem.materiaPrima!.corridaLote}',
+            ),
             PdfDivisor.build(),
           ],
           for (final produto in ordem.produtos)
             pw.Column(
               children: [
                 _itemInfo(
-                    '${produto.pedido.localizador} - ${produto.cliente.nome} - ${produto.obra.descricao}',
-                    '${produto.qtde} kg'),
-                PdfDivisor.build(
-                  color: Colors.grey[200],
+                  '${produto.pedido.localizador} - ${produto.cliente.nome} - ${produto.obra.descricao}',
+                  '${produto.qtde} kg',
                 ),
+                PdfDivisor.build(color: Colors.grey[200]),
               ],
             ),
         ],
@@ -88,44 +100,49 @@ class RelatorioOrdemPdfStatusPage {
       decoration: pw.BoxDecoration(
         color: PdfColor.fromInt(Colors.white.value),
         border: pw.Border.all(
-            color: PdfColor.fromInt(Colors.grey[700]!.value), width: 1),
+          color: PdfColor.fromInt(Colors.grey[700]!.value),
+          width: 1,
+        ),
       ),
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
-          pw.Text(relatorio.status.map((e) => e.label).join(', '),
-              style: pw.TextStyle(
-                  fontSize: 11,
-                  fontWeight: pw.FontWeight.normal,
-                  color: PdfColor.fromInt(AppColors.black.value))),
+          pw.Text(
+            relatorio.status.map((e) => e.label).join(', '),
+            style: pw.TextStyle(
+              fontSize: 11,
+              fontWeight: pw.FontWeight.normal,
+              color: PdfColor.fromInt(AppColors.black.value),
+            ),
+          ),
           pw.SizedBox(height: 8),
           _itemInfo(
-              'Data Criação Relatório',
-              DateFormat("dd/MM/yyyy' ás 'HH:mm")
-                  .format(relatorio.createdAt)
-                  .toString()),
-          PdfDivisor.build(
-            color: Colors.grey[200],
+            'Data Criação Relatório',
+            DateFormat(
+              "dd/MM/yyyy' ás 'HH:mm",
+            ).format(relatorio.createdAt).toString(),
           ),
+          PdfDivisor.build(color: Colors.grey[200]),
           if (relatorio.dates != null)
-            _itemInfo('Período',
-                '${DateFormat("dd/MM/yyyy").format(relatorio.dates!.start)} - ${DateFormat("dd/MM/yyyy").format(relatorio.dates!.end)}'),
-          PdfDivisor.build(
-            color: Colors.grey[200],
-          ),
+            _itemInfo(
+              'Período',
+              '${DateFormat("dd/MM/yyyy").format(relatorio.dates!.start)} - ${DateFormat("dd/MM/yyyy").format(relatorio.dates!.end)}',
+            ),
+          PdfDivisor.build(color: Colors.grey[200]),
           for (final produto in relatorioCtrl.getOrdemTotalProduto())
             pw.Column(
               children: [
                 _itemInfo(
-                    'Quantidade Total Bitola ${produto.produto.descricao}',
-                    '${produto.qtde} Kg'),
-                PdfDivisor.build(
-                  color: Colors.grey[200],
+                  'Quantidade Total Bitola ${produto.produto.descricao}',
+                  '${produto.qtde} Kg',
                 ),
+                PdfDivisor.build(color: Colors.grey[200]),
               ],
             ),
-          _itemInfo('Quantidade Total Bitolas',
-              '${relatorioCtrl.getOrdemTotal()} Kg'),
+          _itemInfo(
+            'Quantidade Total Bitolas',
+            '${relatorioCtrl.getOrdemTotal()} Kg',
+          ),
         ],
       ),
     );
@@ -138,22 +155,27 @@ class RelatorioOrdemPdfStatusPage {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Expanded(
-            child: pw.Text(label,
-                style: pw.TextStyle(
-                    fontSize: 12,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColor.fromInt(Colors.grey[800]!.value))),
+            child: pw.Text(
+              label,
+              style: pw.TextStyle(
+                fontSize: 12,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColor.fromInt(Colors.grey[800]!.value),
+              ),
+            ),
           ),
           pw.Expanded(
-              flex: 2,
-              child: pw.Text(
-                value,
-                style: pw.TextStyle(
-                    fontSize: 12,
-                    fontWeight: pw.FontWeight.normal,
-                    color: PdfColor.fromInt(Colors.grey[800]!.value)),
-                textAlign: pw.TextAlign.end,
-              ))
+            flex: 2,
+            child: pw.Text(
+              value,
+              style: pw.TextStyle(
+                fontSize: 12,
+                fontWeight: pw.FontWeight.normal,
+                color: PdfColor.fromInt(Colors.grey[800]!.value),
+              ),
+              textAlign: pw.TextAlign.end,
+            ),
+          ),
         ],
       ),
     );

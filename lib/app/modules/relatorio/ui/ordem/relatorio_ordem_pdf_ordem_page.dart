@@ -14,16 +14,17 @@ class RelatorioOrdemPdfOrdemPage {
   RelatorioOrdemPdfOrdemPage(this.model);
 
   pw.Page build(Uint8List bytes) => pw.MultiPage(
-        pageFormat: PdfPageFormat.a4,
-        crossAxisAlignment: pw.CrossAxisAlignment.center,
-        build: (pw.Context context) => [
+    pageFormat: PdfPageFormat.a4,
+    crossAxisAlignment: pw.CrossAxisAlignment.center,
+    build:
+        (pw.Context context) => [
           pw.Image(pw.MemoryImage(bytes), width: 60, height: 60),
           pw.SizedBox(height: 24),
           pw.Text('RELATÓRIO DE ORDEM DE PRODUÇÃO ${model.ordem.localizator}'),
           pw.SizedBox(height: 16),
           _itemRelatorio(model.ordem),
         ],
-      );
+  );
 
   pw.Widget _itemRelatorio(OrdemModel ordem) {
     return pw.Container(
@@ -31,7 +32,9 @@ class RelatorioOrdemPdfOrdemPage {
       decoration: pw.BoxDecoration(
         color: PdfColor.fromInt(Colors.white.value),
         border: pw.Border.all(
-            color: PdfColor.fromInt(Colors.grey[700]!.value), width: 1),
+          color: PdfColor.fromInt(Colors.grey[700]!.value),
+          width: 1,
+        ),
       ),
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -40,18 +43,25 @@ class RelatorioOrdemPdfOrdemPage {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Expanded(
-                  child: pw.Text(ordem.localizator,
-                      style: pw.TextStyle(
-                          fontSize: 14,
-                          fontWeight: pw.FontWeight.bold,
-                          color: PdfColor.fromInt(AppColors.black.value)))),
-              pw.Text(
-                  DateFormat("'Criado 'dd/MM/yyyy' às 'HH:mm")
-                      .format(ordem.createdAt),
+                child: pw.Text(
+                  ordem.localizator,
                   style: pw.TextStyle(
-                      fontSize: 11,
-                      fontWeight: pw.FontWeight.normal,
-                      color: PdfColor.fromInt(AppColors.black.value))),
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColor.fromInt(AppColors.black.value),
+                  ),
+                ),
+              ),
+              pw.Text(
+                DateFormat(
+                  "'Criado 'dd/MM/yyyy' às 'HH:mm",
+                ).format(ordem.createdAt),
+                style: pw.TextStyle(
+                  fontSize: 11,
+                  fontWeight: pw.FontWeight.normal,
+                  color: PdfColor.fromInt(AppColors.black.value),
+                ),
+              ),
             ],
           ),
           _itemInfo('Bitola', '${ordem.produto.descricaoReplaced}mm'),
@@ -60,16 +70,17 @@ class RelatorioOrdemPdfOrdemPage {
             pw.Column(
               children: [
                 _itemInfo(
-                    '${produto.pedido.localizador} - ${produto.cliente.nome} - ${produto.obra.descricao}',
-                    '${produto.qtde} kg'),
-                PdfDivisor.build(
-                  color: Colors.grey[200],
+                  '${produto.pedido.localizador} - ${produto.cliente.nome} - ${produto.obra.descricao}',
+                  '${produto.qtde} kg',
                 ),
+                PdfDivisor.build(color: Colors.grey[200]),
               ],
             ),
           PdfDivisor.build(),
-          _itemInfo('Total',
-              '${ordem.produtos.map((e) => e.qtde).toList().fold(.0, (previousValue, element) => previousValue + element)}Kg')
+          _itemInfo(
+            'Total',
+            '${ordem.produtos.map((e) => e.qtde).toList().fold(.0, (previousValue, element) => previousValue + element)}Kg',
+          ),
         ],
       ),
     );
@@ -82,22 +93,27 @@ class RelatorioOrdemPdfOrdemPage {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Expanded(
-            child: pw.Text(label,
-                style: pw.TextStyle(
-                    fontSize: 12,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColor.fromInt(Colors.grey[800]!.value))),
+            child: pw.Text(
+              label,
+              style: pw.TextStyle(
+                fontSize: 12,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColor.fromInt(Colors.grey[800]!.value),
+              ),
+            ),
           ),
           pw.Expanded(
-              flex: 2,
-              child: pw.Text(
-                value,
-                style: pw.TextStyle(
-                    fontSize: 12,
-                    fontWeight: pw.FontWeight.normal,
-                    color: PdfColor.fromInt(Colors.grey[800]!.value)),
-                textAlign: pw.TextAlign.end,
-              ))
+            flex: 2,
+            child: pw.Text(
+              value,
+              style: pw.TextStyle(
+                fontSize: 12,
+                fontWeight: pw.FontWeight.normal,
+                color: PdfColor.fromInt(Colors.grey[800]!.value),
+              ),
+              textAlign: pw.TextAlign.end,
+            ),
+          ),
         ],
       ),
     );

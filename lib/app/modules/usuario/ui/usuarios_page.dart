@@ -26,51 +26,55 @@ class _UsuariosPageState extends State<UsuariosPage> {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: AppBar(
-        title:
-            Text('Usuarios', style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Usuarios',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           IconButton(
-              onPressed: () => push(context, const UsuarioCreatePage()),
-              icon: Icon(
-                Icons.add,
-                color: AppColors.white,
-              ))
+            onPressed: () => push(context, const UsuarioCreatePage()),
+            icon: Icon(Icons.add, color: AppColors.white),
+          ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<UsuarioModel>>(
         stream: FirestoreClient.usuarios.dataStream.listen,
-        builder: (_, __) => StreamOut<UsuarioUtils>(
-          stream: usuarioCtrl.utilsStream.listen,
-          builder: (_, utils) {
-            final usuarios =
-                usuarioCtrl.getUsuariosFiltered(utils.search.text, __);
+        builder:
+            (_, __) => StreamOut<UsuarioUtils>(
+              stream: usuarioCtrl.utilsStream.listen,
+              builder: (_, utils) {
+                final usuarios = usuarioCtrl.getUsuariosFiltered(
+                  utils.search.text,
+                  __,
+                );
 
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppField(
-                    hint: 'Pesquisar',
-                    controller: utils.search,
-                    suffixIcon: Icons.search,
-                    onChanged: (_) => usuarioCtrl.utilsStream.update(),
-                  ),
-                ),
-                Expanded(
-                  child: usuarios.isEmpty
-                      ? const EmptyData()
-                      : ListView.separated(
-                          itemCount: usuarios.length,
-                          separatorBuilder: (_, i) => const Divisor(),
-                          itemBuilder: (_, i) =>
-                              _itemUsuarioWidget(usuarios[i]),
-                        ),
-                ),
-              ],
-            );
-          },
-        ),
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppField(
+                        hint: 'Pesquisar',
+                        controller: utils.search,
+                        suffixIcon: Icons.search,
+                        onChanged: (_) => usuarioCtrl.utilsStream.update(),
+                      ),
+                    ),
+                    Expanded(
+                      child:
+                          usuarios.isEmpty
+                              ? const EmptyData()
+                              : ListView.separated(
+                                itemCount: usuarios.length,
+                                separatorBuilder: (_, i) => const Divisor(),
+                                itemBuilder:
+                                    (_, i) => _itemUsuarioWidget(usuarios[i]),
+                              ),
+                    ),
+                  ],
+                );
+              },
+            ),
       ),
     );
   }
@@ -79,13 +83,8 @@ class _UsuariosPageState extends State<UsuariosPage> {
     return ListTile(
       onTap: () => push(UsuarioCreatePage(usuario: usuario)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      title: Text(
-        usuario.nome,
-        style: AppCss.mediumBold,
-      ),
-      subtitle: Text(
-        usuario.role.label ?? '',
-      ),
+      title: Text(usuario.nome, style: AppCss.mediumBold),
+      subtitle: Text(usuario.role.label ?? ''),
       trailing: Icon(
         Icons.arrow_forward_ios,
         size: 14,

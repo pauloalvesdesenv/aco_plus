@@ -19,9 +19,11 @@ class BaseController {
   final AppStream<AppModule> moduleStream = AppStream<AppModule>();
 
   Future<void> onInit() async {
-    moduleStream.add(usuario.role == UsuarioRole.operador
-        ? AppModule.ordens
-        : AppModule.values.first);
+    moduleStream.add(
+      usuario.role == UsuarioRole.operador
+          ? AppModule.ordens
+          : AppModule.values.first,
+    );
     FCMProvider.putToken();
   }
 }

@@ -28,13 +28,14 @@ class _GrapOrdemhTotalWidgetState extends State<GraphOrdemTotalWidget> {
   void initState() {
     graphOrdemTotalCtrl.filterStream.add(GraphOrdemTotalModel());
     data = graphOrdemTotalCtrl.getCirucularChart(graphOrdemTotalCtrl.filter);
-    pedidoStream =
-        FirestoreClient.pedidos.pedidosUnarchivedsStream.listen.listen((e) {
-      setState(() {
-        data =
-            graphOrdemTotalCtrl.getCirucularChart(graphOrdemTotalCtrl.filter);
-      });
-    });
+    pedidoStream = FirestoreClient.pedidos.pedidosUnarchivedsStream.listen
+        .listen((e) {
+          setState(() {
+            data = graphOrdemTotalCtrl.getCirucularChart(
+              graphOrdemTotalCtrl.filter,
+            );
+          });
+        });
     super.initState();
   }
 
@@ -48,7 +49,7 @@ class _GrapOrdemhTotalWidgetState extends State<GraphOrdemTotalWidget> {
   Widget build(BuildContext context) {
     return StreamOut<GraphOrdemTotalModel>(
       stream: graphOrdemTotalCtrl.filterStream.listen,
-      builder: (_, filter) => body(_, filter),
+      builder: (value, filter) => body(value, filter),
     );
   }
 
@@ -57,37 +58,39 @@ class _GrapOrdemhTotalWidgetState extends State<GraphOrdemTotalWidget> {
       children: [
         const H(16),
         Expanded(
-            child: SfCircularChart(
-          tooltipBehavior: TooltipBehavior(
-            enable: true,
-            format: 'point.x : point.y Pedido(s)',
-          ),
-          enableMultiSelection: true,
-          onDataLabelRender: (dataLabelArgs) {
-            dataLabelArgs.textStyle =
-                AppCss.smallBold.setColor(dataLabelArgs.color);
-          },
-          legend: const Legend(
-            isVisible: true,
-            overflowMode: LegendItemOverflowMode.wrap,
-            position: LegendPosition.bottom,
-          ),
-          series: <CircularSeries<GraphModel, String>>[
-            PieSeries<GraphModel, String>(
-              dataSource: data,
-              name: 'Ordens',
-              dataLabelMapper: (GraphModel data, _) => data.vol.toKg(),
-              pointColorMapper: (GraphModel data, _) => data.color,
-              xValueMapper: (GraphModel data, _) => data.label,
-              yValueMapper: (GraphModel data, _) => data.length,
-              dataLabelSettings: const DataLabelSettings(
-                isVisible: true,
-                labelPosition: ChartDataLabelPosition.outside,
-              ),
-              initialSelectedDataIndexes: const [1],
+          child: SfCircularChart(
+            tooltipBehavior: TooltipBehavior(
+              enable: true,
+              format: 'point.x : point.y Pedido(s)',
             ),
-          ],
-        ))
+            enableMultiSelection: true,
+            onDataLabelRender: (dataLabelArgs) {
+              dataLabelArgs.textStyle = AppCss.smallBold.setColor(
+                dataLabelArgs.color,
+              );
+            },
+            legend: const Legend(
+              isVisible: true,
+              overflowMode: LegendItemOverflowMode.wrap,
+              position: LegendPosition.bottom,
+            ),
+            series: <CircularSeries<GraphModel, String>>[
+              PieSeries<GraphModel, String>(
+                dataSource: data,
+                name: 'Ordens',
+                dataLabelMapper: (GraphModel data, _) => data.vol.toKg(),
+                pointColorMapper: (GraphModel data, _) => data.color,
+                xValueMapper: (GraphModel data, _) => data.label,
+                yValueMapper: (GraphModel data, _) => data.length,
+                dataLabelSettings: const DataLabelSettings(
+                  isVisible: true,
+                  labelPosition: ChartDataLabelPosition.outside,
+                ),
+                initialSelectedDataIndexes: const [1],
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

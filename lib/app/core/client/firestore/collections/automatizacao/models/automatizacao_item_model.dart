@@ -7,10 +7,7 @@ import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 class AutomatizacaoItemModel {
   final AutomatizacaoItemType type;
   StepModel step;
-  AutomatizacaoItemModel({
-    required this.type,
-    required this.step,
-  });
+  AutomatizacaoItemModel({required this.type, required this.step});
 
   AutomatizacaoItemModel copyWith({
     AutomatizacaoItemType? type,
@@ -24,10 +21,7 @@ class AutomatizacaoItemModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'type': type.index,
-      'stepId': step.id,
-    };
+    return {'type': type.index, 'stepId': step.id};
   }
 
   factory AutomatizacaoItemModel.fromMap(Map<String, dynamic> map) {

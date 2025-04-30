@@ -26,12 +26,12 @@ class _GrapOrdemhTotalWidgetState extends State<ProdutoStatusWidget> {
   @override
   void initState() {
     data = produtoStatusCtrl.getSource();
-    pedidoStream =
-        FirestoreClient.pedidos.pedidosUnarchivedsStream.listen.listen((e) {
-      setState(() {
-        data = produtoStatusCtrl.getSource();
-      });
-    });
+    pedidoStream = FirestoreClient.pedidos.pedidosUnarchivedsStream.listen
+        .listen((e) {
+          setState(() {
+            data = produtoStatusCtrl.getSource();
+          });
+        });
     super.initState();
   }
 
@@ -47,43 +47,46 @@ class _GrapOrdemhTotalWidgetState extends State<ProdutoStatusWidget> {
       children: [
         const H(16),
         Expanded(
-            child: SfCartesianChart(
-          zoomPanBehavior: ZoomPanBehavior(
-            enablePanning: true,
-            enablePinching: true,
-            enableSelectionZooming: true,
-            enableDoubleTapZooming: true,
-            enableMouseWheelZooming: true,
-            zoomMode: ZoomMode.xy,
-          ),
-          tooltipBehavior: TooltipBehavior(
-            enable: true,
-            format: 'point.x : point.y Kg',
-          ),
-          enableMultiSelection: true,
-          onDataLabelRender: (dataLabelArgs) {
-            dataLabelArgs.textStyle = AppCss.smallRegular
-                .copyWith(color: dataLabelArgs.color, fontSize: 12);
-            double qtde = double.parse(dataLabelArgs.text ?? '0');
-            dataLabelArgs.text =
-                qtde == 0 ? empty : qtde.toKg().replaceAll('Kg', '');
-          },
-          legend: const Legend(
-            isVisible: true,
-            overflowMode: LegendItemOverflowMode.wrap,
-            position: LegendPosition.bottom,
-          ),
-          primaryXAxis: const CategoryAxis(),
-          primaryYAxis: NumericAxis(
-            axisLabelFormatter: (axisLabelRenderArgs) {
-              return ChartAxisLabel(
-                axisLabelRenderArgs.value.toDouble().toKg(),
-                AppCss.smallRegular.copyWith(fontSize: 12),
+          child: SfCartesianChart(
+            zoomPanBehavior: ZoomPanBehavior(
+              enablePanning: true,
+              enablePinching: true,
+              enableSelectionZooming: true,
+              enableDoubleTapZooming: true,
+              enableMouseWheelZooming: true,
+              zoomMode: ZoomMode.xy,
+            ),
+            tooltipBehavior: TooltipBehavior(
+              enable: true,
+              format: 'point.x : point.y Kg',
+            ),
+            enableMultiSelection: true,
+            onDataLabelRender: (dataLabelArgs) {
+              dataLabelArgs.textStyle = AppCss.smallRegular.copyWith(
+                color: dataLabelArgs.color,
+                fontSize: 12,
               );
+              double qtde = double.parse(dataLabelArgs.text ?? '0');
+              dataLabelArgs.text =
+                  qtde == 0 ? empty : qtde.toKg().replaceAll('Kg', '');
             },
+            legend: const Legend(
+              isVisible: true,
+              overflowMode: LegendItemOverflowMode.wrap,
+              position: LegendPosition.bottom,
+            ),
+            primaryXAxis: const CategoryAxis(),
+            primaryYAxis: NumericAxis(
+              axisLabelFormatter: (axisLabelRenderArgs) {
+                return ChartAxisLabel(
+                  axisLabelRenderArgs.value.toDouble().toKg(),
+                  AppCss.smallRegular.copyWith(fontSize: 12),
+                );
+              },
+            ),
+            series: data,
           ),
-          series: data,
-        ))
+        ),
       ],
     );
   }

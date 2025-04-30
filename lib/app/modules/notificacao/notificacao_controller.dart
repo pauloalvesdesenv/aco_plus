@@ -42,10 +42,10 @@ class NotificacaoController {
     return filtered;
   }
 
-  Future<void> onDelete(_, NotificacaoModel notificacao) async {
+  Future<void> onDelete(value, NotificacaoModel notificacao) async {
     if (await _isDeleteUnavailable(notificacao)) return;
     await FirestoreClient.notificacoes.delete(notificacao);
-    pop(_);
+    pop(value);
     NotificationService.showPositive(
         'Notificacao Excluido', 'Operação realizada com sucesso',
         position: NotificationPosition.bottom);

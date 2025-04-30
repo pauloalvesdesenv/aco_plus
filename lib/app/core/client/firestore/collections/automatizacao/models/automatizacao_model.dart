@@ -12,14 +12,14 @@ class AutomatizacaoModel {
   final AutomatizacaoItemModel prontoArmacaoPedido;
 
   List<AutomatizacaoItemModel> get itens => [
-        criacaoPedido,
-        produtoPedidoSeparado,
-        produzindoCDPedido,
-        prontoCDPedido,
-        aguardandoArmacaoPedido,
-        produzindoArmacaoPedido,
-        prontoArmacaoPedido,
-      ];
+    criacaoPedido,
+    produtoPedidoSeparado,
+    produzindoCDPedido,
+    prontoCDPedido,
+    aguardandoArmacaoPedido,
+    produzindoArmacaoPedido,
+    prontoArmacaoPedido,
+  ];
 
   AutomatizacaoModel({
     required this.criacaoPedido,
@@ -69,17 +69,22 @@ class AutomatizacaoModel {
   factory AutomatizacaoModel.fromMap(Map<String, dynamic> map) {
     return AutomatizacaoModel(
       criacaoPedido: AutomatizacaoItemModel.fromMap(map['criacaoPedido']),
-      produtoPedidoSeparado:
-          AutomatizacaoItemModel.fromMap(map['produtoPedidoSeparado']),
-      produzindoCDPedido:
-          AutomatizacaoItemModel.fromMap(map['produzindoCDPedido']),
+      produtoPedidoSeparado: AutomatizacaoItemModel.fromMap(
+        map['produtoPedidoSeparado'],
+      ),
+      produzindoCDPedido: AutomatizacaoItemModel.fromMap(
+        map['produzindoCDPedido'],
+      ),
       prontoCDPedido: AutomatizacaoItemModel.fromMap(map['prontoCDPedido']),
-      aguardandoArmacaoPedido:
-          AutomatizacaoItemModel.fromMap(map['aguardandoArmacaoPedido']),
-      produzindoArmacaoPedido:
-          AutomatizacaoItemModel.fromMap(map['produzindoArmacaoPedido']),
-      prontoArmacaoPedido:
-          AutomatizacaoItemModel.fromMap(map['prontoArmacaoPedido']),
+      aguardandoArmacaoPedido: AutomatizacaoItemModel.fromMap(
+        map['aguardandoArmacaoPedido'],
+      ),
+      produzindoArmacaoPedido: AutomatizacaoItemModel.fromMap(
+        map['produzindoArmacaoPedido'],
+      ),
+      prontoArmacaoPedido: AutomatizacaoItemModel.fromMap(
+        map['prontoArmacaoPedido'],
+      ),
     );
   }
 

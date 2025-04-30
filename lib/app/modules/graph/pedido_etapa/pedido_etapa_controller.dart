@@ -38,11 +38,14 @@ class PedidoEtapaController {
         lengthFinal++;
       }
       if (volFinal > 0) {
-        source.add(GraphModel(
+        source.add(
+          GraphModel(
             vol: volFinal,
             label: step.name,
             length: lengthFinal,
-            color: step.color));
+            color: step.color,
+          ),
+        );
       }
     }
 

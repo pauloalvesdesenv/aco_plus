@@ -36,11 +36,14 @@ class UserPermissionModel {
   factory UserPermissionModel.fromMap(Map<String, dynamic> map) {
     return UserPermissionModel(
       cliente: List<UserPermissionType>.from(
-          map['cliente']?.map((x) => UserPermissionType.values[x])),
+        map['cliente']?.map((x) => UserPermissionType.values[x]),
+      ),
       pedido: List<UserPermissionType>.from(
-          map['pedido']?.map((x) => UserPermissionType.values[x])),
+        map['pedido']?.map((x) => UserPermissionType.values[x]),
+      ),
       ordem: List<UserPermissionType>.from(
-          map['ordem']?.map((x) => UserPermissionType.values[x])),
+        map['ordem']?.map((x) => UserPermissionType.values[x]),
+      ),
     );
   }
 

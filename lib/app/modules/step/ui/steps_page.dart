@@ -39,66 +39,69 @@ class _StepsPageState extends State<StepsPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-          icon: Icon(
-            Icons.menu,
-            color: AppColors.white,
-          ),
+          icon: Icon(Icons.menu, color: AppColors.white),
         ),
-        title:
-            Text('Etapas', style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Etapas',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           IconButton(
-              onPressed: () => push(context, const StepCreatePage()),
-              icon: Icon(
-                Icons.add,
-                color: AppColors.white,
-              ))
+            onPressed: () => push(context, const StepCreatePage()),
+            icon: Icon(Icons.add, color: AppColors.white),
+          ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<StepModel>>(
         stream: FirestoreClient.steps.dataStream.listen,
-        builder: (_, __) => StreamOut<StepUtils>(
-          stream: stepCtrl.utilsStream.listen,
-          builder: (_, utils) {
-            final steps =
-                stepCtrl.getStepesFiltered(utils.search.text, __).toList();
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppField(
-                    hint: 'Pesquisar',
-                    controller: utils.search,
-                    suffixIcon: Icons.search,
-                    onChanged: (_) => stepCtrl.utilsStream.update(),
-                  ),
-                ),
-                Expanded(
-                  child: steps.isEmpty
-                      ? const EmptyData()
-                      : RefreshIndicator(
-                          onRefresh: () async => FirestoreClient.steps.fetch(),
-                          child: ReorderableListView(
-                            onReorder: (oldIndex, newIndex) {
-                              if (newIndex > oldIndex) newIndex = newIndex - 1;
-                              final step = steps.removeAt(oldIndex);
-                              steps.insert(newIndex, step);
-                              for (var i = 0; i < steps.length; i++) {
-                                steps[i].index = i;
-                                FirestoreClient.steps.dataStream.update();
-                                FirestoreClient.steps.update(steps[i]);
-                              }
-                            },
-                            children:
-                                steps.map((e) => _itemStepWidget(e)).toList(),
-                          ),
-                        ),
-                ),
-              ],
-            );
-          },
-        ),
+        builder:
+            (_, __) => StreamOut<StepUtils>(
+              stream: stepCtrl.utilsStream.listen,
+              builder: (_, utils) {
+                final steps =
+                    stepCtrl.getStepesFiltered(utils.search.text, __).toList();
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppField(
+                        hint: 'Pesquisar',
+                        controller: utils.search,
+                        suffixIcon: Icons.search,
+                        onChanged: (_) => stepCtrl.utilsStream.update(),
+                      ),
+                    ),
+                    Expanded(
+                      child:
+                          steps.isEmpty
+                              ? const EmptyData()
+                              : RefreshIndicator(
+                                onRefresh:
+                                    () async => FirestoreClient.steps.fetch(),
+                                child: ReorderableListView(
+                                  onReorder: (oldIndex, newIndex) {
+                                    if (newIndex > oldIndex)
+                                      newIndex = newIndex - 1;
+                                    final step = steps.removeAt(oldIndex);
+                                    steps.insert(newIndex, step);
+                                    for (var i = 0; i < steps.length; i++) {
+                                      steps[i].index = i;
+                                      FirestoreClient.steps.dataStream.update();
+                                      FirestoreClient.steps.update(steps[i]);
+                                    }
+                                  },
+                                  children:
+                                      steps
+                                          .map((e) => _itemStepWidget(e))
+                                          .toList(),
+                                ),
+                              ),
+                    ),
+                  ],
+                );
+              },
+            ),
       ),
     );
   }
@@ -109,9 +112,7 @@ class _StepsPageState extends State<StepsPage> {
       key: ValueKey(step),
       child: Container(
         decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: AppColors.neutralLight),
-          ),
+          border: Border(bottom: BorderSide(color: AppColors.neutralLight)),
         ),
         child: InkWell(
           onTap: () => push(StepCreatePage(step: step)),
@@ -135,16 +136,15 @@ class _StepsPageState extends State<StepsPage> {
                     children: [
                       Row(
                         children: [
-                          Text(
-                            step.name,
-                            style: AppCss.mediumBold,
-                          ),
+                          Text(step.name, style: AppCss.mediumBold),
                           const W(4),
                           if (step.isDefault)
                             Container(
                               margin: const EdgeInsets.only(left: 3),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 4, vertical: 2),
+                                horizontal: 4,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.primaryMain,
                                 borderRadius: BorderRadius.circular(5),
@@ -173,7 +173,7 @@ class _StepsPageState extends State<StepsPage> {
                   ),
                 ),
                 const W(8),
-                const W(25)
+                const W(25),
               ],
             ),
           ),

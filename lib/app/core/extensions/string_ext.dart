@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 extension StringExt on String {
-  String get toCompare => replaceAll(' ', '')
-      .toLowerCase()
-      .removeSpecialCharacters()
-      .toNonDiacritics();
+  String get toCompare =>
+      replaceAll(
+        ' ',
+        '',
+      ).toLowerCase().removeSpecialCharacters().toNonDiacritics();
 
   String getInitials() {
     List<String> nameParts = split(' ');
@@ -23,10 +24,10 @@ extension StringExt on String {
     return initials.toUpperCase();
   }
 
-  String get phone => replaceAll(' ', '')
-      .replaceAll('-', '')
-      .replaceAll('(', '')
-      .replaceAll(')', '');
+  String get phone => replaceAll(
+    ' ',
+    '',
+  ).replaceAll('-', '').replaceAll('(', '').replaceAll(')', '');
 
   String toFileName({String id = '', String type = ''}) =>
       (id.isNotEmpty ? '${id}_' : '') +
@@ -40,9 +41,11 @@ extension StringExt on String {
         'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
     return splitMapJoin(
       '',
-      onNonMatch: (char) => char.isNotEmpty && diacritics.contains(char)
-          ? nonDiacritics[diacritics.indexOf(char)]
-          : char,
+      onNonMatch:
+          (char) =>
+              char.isNotEmpty && diacritics.contains(char)
+                  ? nonDiacritics[diacritics.indexOf(char)]
+                  : char,
     );
   }
 

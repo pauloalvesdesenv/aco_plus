@@ -14,8 +14,10 @@ class ConfigPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: AppBar(
-        title:
-            const Text('Configurações', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Configurações',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Column(
         children: [

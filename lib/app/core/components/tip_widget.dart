@@ -22,17 +22,19 @@ class TipWidget extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           decoration: BoxDecoration(
-              color: isSelected ? AppColors.primaryDark : null,
-              borderRadius: AppCss.radius16,
-              border: Border.all(
-                  color: isSelected
-                      ? AppColors.primaryDark
-                      : AppColors.neutralMedium)),
+            color: isSelected ? AppColors.primaryDark : null,
+            borderRadius: AppCss.radius16,
+            border: Border.all(
+              color:
+                  isSelected ? AppColors.primaryDark : AppColors.neutralMedium,
+            ),
+          ),
           child: Center(
             child: Text(
               label,
-              style: AppCss.smallRegular
-                  .setColor(isSelected ? AppColors.white : AppColors.black),
+              style: AppCss.smallRegular.setColor(
+                isSelected ? AppColors.white : AppColors.black,
+              ),
             ),
           ),
         ),

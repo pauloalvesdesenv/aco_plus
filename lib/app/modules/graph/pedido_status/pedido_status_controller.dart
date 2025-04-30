@@ -41,11 +41,14 @@ class PedidoStatusController {
         lengthFinal++;
       }
       if (volFinal > 0) {
-        source.add(GraphModel(
+        source.add(
+          GraphModel(
             vol: volFinal,
             label: status.label,
             length: lengthFinal,
-            color: status.color));
+            color: status.color,
+          ),
+        );
       }
     }
     return source;

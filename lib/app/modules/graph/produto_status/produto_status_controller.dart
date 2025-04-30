@@ -16,23 +16,25 @@ class ProdutoStatusController {
 
   List<ColumnSeries<ProdutoStatusGraphModel, String>> getSource() {
     return [
-      PedidoProdutoStatus.aguardandoProducao,
-      PedidoProdutoStatus.produzindo,
-    ]
-        .map((status) => ColumnSeries<ProdutoStatusGraphModel, String>(
-              dataSource: getSourceByStatus(status),
-              name: status.label,
-              xValueMapper: (ProdutoStatusGraphModel data, _) =>
-                  data.produto.descricao,
-              yValueMapper: (ProdutoStatusGraphModel data, _) => data.qtde,
-              color: status.color,
-              pointColorMapper: (ProdutoStatusGraphModel data, _) =>
-                  data.status.color,
-              dataLabelSettings: const DataLabelSettings(
-                isVisible: true,
-                labelPosition: ChartDataLabelPosition.outside,
-              ),
-            ))
+          PedidoProdutoStatus.aguardandoProducao,
+          PedidoProdutoStatus.produzindo,
+        ]
+        .map(
+          (status) => ColumnSeries<ProdutoStatusGraphModel, String>(
+            dataSource: getSourceByStatus(status),
+            name: status.label,
+            xValueMapper:
+                (ProdutoStatusGraphModel data, _) => data.produto.descricao,
+            yValueMapper: (ProdutoStatusGraphModel data, _) => data.qtde,
+            color: status.color,
+            pointColorMapper:
+                (ProdutoStatusGraphModel data, _) => data.status.color,
+            dataLabelSettings: const DataLabelSettings(
+              isVisible: true,
+              labelPosition: ChartDataLabelPosition.outside,
+            ),
+          ),
+        )
         .toList();
   }
 
@@ -50,31 +52,34 @@ class ProdutoStatusController {
     }
 
     List<ProdutoStatusGraphModel> graph = [];
-    for (ProdutoModel produto
-        in FirestoreClient.produtos.data.map((e) => e.copyWith())) {
-      for (PedidoProdutoModel pedido
-          in pedidosProdutos.where((e) => e.produto.id == produto.id)) {
+    for (ProdutoModel produto in FirestoreClient.produtos.data.map(
+      (e) => e.copyWith(),
+    )) {
+      for (PedidoProdutoModel pedido in pedidosProdutos.where(
+        (e) => e.produto.id == produto.id,
+      )) {
         if (graph.any((e) => e.produto.id == produto.id)) {
           graph.firstWhere((e) => e.produto.id == produto.id).qtde +=
               pedido.qtde;
         } else {
-          graph.add(ProdutoStatusGraphModel(
-            status: pedido.status.getStatusMinified(),
-            produto: produto,
-            qtde: pedido.qtde,
-          ));
+          graph.add(
+            ProdutoStatusGraphModel(
+              status: pedido.status.getStatusMinified(),
+              produto: produto,
+              qtde: pedido.qtde,
+            ),
+          );
         }
       }
     }
 
-    for (var produto
-        in FirestoreClient.produtos.data.map((e) => e.copyWith())) {
+    for (var produto in FirestoreClient.produtos.data.map(
+      (e) => e.copyWith(),
+    )) {
       if (!graph.map((e) => e.produto.id).contains(produto.id)) {
-        graph.add(ProdutoStatusGraphModel(
-          status: status,
-          produto: produto,
-          qtde: 0,
-        ));
+        graph.add(
+          ProdutoStatusGraphModel(status: status, produto: produto, qtde: 0),
+        );
       }
     }
 

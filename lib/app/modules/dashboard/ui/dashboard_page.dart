@@ -33,20 +33,20 @@ class DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        drawer: const AppDrawer(),
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-            icon: Icon(
-              Icons.menu,
-              color: AppColors.white,
-            ),
-          ),
-          title: Text('Dashboard',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          backgroundColor: AppColors.primaryMain,
+      drawer: const AppDrawer(),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => baseCtrl.key.currentState!.openDrawer(),
+          icon: Icon(Icons.menu, color: AppColors.white),
         ),
-        body: body());
+        title: Text(
+          'Dashboard',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: body(),
+    );
   }
 
   Widget body() {
@@ -56,50 +56,52 @@ class DashboardPageState extends State<DashboardPage> {
         stream: FirestoreClient.ordens.dataStream.listen,
         builder: (_, __) => StreamOut(
           stream: dashCtrl.utilsStream.listen,
-          builder: (_, utils) => LayoutBuilder(builder: (context, constraints) {
-            if (constraints.maxWidth < 1000) {
-              return ListView(
-                children: [
-                  Column(
-                    children: [
-                      _graficoOrdemStatus(),
-                      const Divisor(),
-                      _graficoPedidoStatus(),
-                      const Divisor(),
-                      _graficoPedidoEtapa(),
-                      const Divisor(),
-                      _graficoProdutosStatus(),
-                      const Divisor(),
-                      _graficoProdutoProduzido(),
-                      const Divisor(),
-                    ],
-                  ),
-                ],
-              );
-            } else {
-              return ListView(
-                children: [
-                  _ordemProducaoWidget(),
-                  const Divisor(),
-                  Row(
-                    children: [
-                      Expanded(child: _graficoOrdemStatus()),
-                      Expanded(child: _graficoPedidoStatus()),
-                      Expanded(child: _graficoPedidoEtapa()),
-                    ],
-                  ),
-                  const Divisor(),
-                  Row(
-                    children: [
-                      Expanded(child: _graficoProdutosStatus()),
-                      Expanded(child: _graficoProdutoProduzido()),
-                    ],
-                  ),
-                  const Divisor(),
-                ],
-              );
-            }
-          }),
+          builder: (_, utils) => LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 1000) {
+                return ListView(
+                  children: [
+                    Column(
+                      children: [
+                        _graficoOrdemStatus(),
+                        const Divisor(),
+                        _graficoPedidoStatus(),
+                        const Divisor(),
+                        _graficoPedidoEtapa(),
+                        const Divisor(),
+                        _graficoProdutosStatus(),
+                        const Divisor(),
+                        _graficoProdutoProduzido(),
+                        const Divisor(),
+                      ],
+                    ),
+                  ],
+                );
+              } else {
+                return ListView(
+                  children: [
+                    _ordemProducaoWidget(),
+                    const Divisor(),
+                    Row(
+                      children: [
+                        Expanded(child: _graficoOrdemStatus()),
+                        Expanded(child: _graficoPedidoStatus()),
+                        Expanded(child: _graficoPedidoEtapa()),
+                      ],
+                    ),
+                    const Divisor(),
+                    Row(
+                      children: [
+                        Expanded(child: _graficoProdutosStatus()),
+                        Expanded(child: _graficoProdutoProduzido()),
+                      ],
+                    ),
+                    const Divisor(),
+                  ],
+                );
+              }
+            },
+          ),
         ),
       ),
     );
@@ -120,10 +122,7 @@ class DashboardPageState extends State<DashboardPage> {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.pie_chart,
-                size: 32,
-              ),
+              const Icon(Icons.pie_chart, size: 32),
               const W(8),
               Expanded(
                 child: Column(
@@ -140,11 +139,11 @@ class DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
-              const W(24)
+              const W(24),
             ],
           ),
           const H(8),
-          const Expanded(child: PedidoEtapaWidget())
+          const Expanded(child: PedidoEtapaWidget()),
         ],
       ),
     );
@@ -165,10 +164,7 @@ class DashboardPageState extends State<DashboardPage> {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.pie_chart,
-                size: 32,
-              ),
+              const Icon(Icons.pie_chart, size: 32),
               const W(8),
               Expanded(
                 child: Column(
@@ -185,11 +181,11 @@ class DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
-              const W(24)
+              const W(24),
             ],
           ),
           const H(8),
-          const Expanded(child: PedidoStatusWidget())
+          const Expanded(child: PedidoStatusWidget()),
         ],
       ),
     );
@@ -210,10 +206,7 @@ class DashboardPageState extends State<DashboardPage> {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.pie_chart,
-                size: 32,
-              ),
+              const Icon(Icons.pie_chart, size: 32),
               const W(8),
               Expanded(
                 child: Column(
@@ -230,11 +223,11 @@ class DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
-              const W(24)
+              const W(24),
             ],
           ),
           const H(8),
-          const Expanded(child: GraphOrdemTotalWidget())
+          const Expanded(child: GraphOrdemTotalWidget()),
         ],
       ),
     );
@@ -255,10 +248,7 @@ class DashboardPageState extends State<DashboardPage> {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.bar_chart,
-                size: 32,
-              ),
+              const Icon(Icons.bar_chart, size: 32),
               const W(8),
               Expanded(
                 child: Column(
@@ -275,11 +265,11 @@ class DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
-              const W(24)
+              const W(24),
             ],
           ),
           const H(8),
-          const Expanded(child: ProdutoStatusWidget())
+          const Expanded(child: ProdutoStatusWidget()),
         ],
       ),
     );
@@ -300,10 +290,7 @@ class DashboardPageState extends State<DashboardPage> {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.line_axis,
-                size: 32,
-              ),
+              const Icon(Icons.line_axis, size: 32),
               const W(8),
               Expanded(
                 child: Column(
@@ -320,11 +307,11 @@ class DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
-              const W(24)
+              const W(24),
             ],
           ),
           const H(8),
-          const Expanded(child: ProdutoProduzidoWidget())
+          const Expanded(child: ProdutoProduzidoWidget()),
         ],
       ),
     );
@@ -449,22 +436,26 @@ class DashboardPageState extends State<DashboardPage> {
       );
 
   Widget _progressChartWidget(
-      PedidoProdutoStatus status, double porcentagem, bool isFreezed) {
+    PedidoProdutoStatus status,
+    double porcentagem,
+    bool isFreezed,
+  ) {
     return Stack(
       alignment: Alignment.center,
       children: [
         CircularProgressIndicator(
           value: porcentagem,
-          backgroundColor:
-              (isFreezed ? Colors.grey[600]! : status.color).withOpacity(0.2),
+          backgroundColor: (isFreezed ? Colors.grey[600]! : status.color)
+              .withValues(alpha: 0.2),
           strokeWidth: 2,
           valueColor: AlwaysStoppedAnimation(
-              isFreezed ? Colors.grey[600]! : status.color),
+            isFreezed ? Colors.grey[600]! : status.color,
+          ),
         ),
         Text(
           '${(porcentagem * 100).percent}%',
           style: AppCss.minimumBold.setSize(10),
-        )
+        ),
       ],
     );
   }

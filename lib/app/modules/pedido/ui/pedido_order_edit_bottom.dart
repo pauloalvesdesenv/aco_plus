@@ -13,13 +13,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 Future<double?> showPedidoOrderEditBottom(
-        PedidoProdutoCreateModel produto) async =>
-    showModalBottomSheet(
-      backgroundColor: AppColors.white,
-      context: contextGlobal,
-      isScrollControlled: true,
-      builder: (_) => PedidoOrderEditBottom(produto),
-    );
+  PedidoProdutoCreateModel produto,
+) async => showModalBottomSheet(
+  backgroundColor: AppColors.white,
+  context: contextGlobal,
+  isScrollControlled: true,
+  builder: (_) => PedidoOrderEditBottom(produto),
+);
 
 class PedidoOrderEditBottom extends StatefulWidget {
   final PedidoProdutoCreateModel produto;
@@ -47,15 +47,18 @@ class _PedidoOrderEditBottomState extends State<PedidoOrderEditBottom> {
   @override
   Widget build(BuildContext context) {
     return BottomSheet(
-        onClosing: () {},
-        builder: (context) => KeyboardVisibilityBuilder(
-            builder: (context, isVisible) => Container(
+      onClosing: () {},
+      builder:
+          (context) => KeyboardVisibilityBuilder(
+            builder:
+                (context, isVisible) => Container(
                   height: 390,
                   decoration: BoxDecoration(
                     color: AppColors.white,
                     borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(24),
-                        topRight: Radius.circular(24)),
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
                   ),
                   child: ListView(
                     children: [
@@ -66,12 +69,16 @@ class _PedidoOrderEditBottomState extends State<PedidoOrderEditBottom> {
                           padding: const EdgeInsets.only(left: 8),
                           child: IconButton(
                             style: ButtonStyle(
-                                padding: const WidgetStatePropertyAll(
-                                    EdgeInsets.all(16)),
-                                backgroundColor:
-                                    WidgetStatePropertyAll(AppColors.white),
-                                foregroundColor:
-                                    WidgetStatePropertyAll(AppColors.black)),
+                              padding: const WidgetStatePropertyAll(
+                                EdgeInsets.all(16),
+                              ),
+                              backgroundColor: WidgetStatePropertyAll(
+                                AppColors.white,
+                              ),
+                              foregroundColor: WidgetStatePropertyAll(
+                                AppColors.black,
+                              ),
+                            ),
                             onPressed: () => Navigator.pop(context),
                             icon: const Icon(Icons.keyboard_backspace),
                           ),
@@ -82,10 +89,7 @@ class _PedidoOrderEditBottomState extends State<PedidoOrderEditBottom> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Editar Produto',
-                              style: AppCss.largeBold,
-                            ),
+                            Text('Editar Produto', style: AppCss.largeBold),
                             const H(16),
                             AppDropDown<ProdutoModel>(
                               label: 'Produto',
@@ -101,7 +105,9 @@ class _PedidoOrderEditBottomState extends State<PedidoOrderEditBottom> {
                             AppField(
                               label: 'Quantidade',
                               type: const TextInputType.numberWithOptions(
-                                  decimal: true, signed: false),
+                                decimal: true,
+                                signed: false,
+                              ),
                               controller: qtdeEC,
                               action: TextInputAction.done,
                               suffixText: 'Kg',
@@ -115,15 +121,21 @@ class _PedidoOrderEditBottomState extends State<PedidoOrderEditBottom> {
                             ),
                             const H(16),
                             AppTextButton(
-                                isEnable: widget.produto.qtde.doubleValue > 0,
-                                label: 'Confirmar',
-                                onPressed: () =>
-                                    Navigator.pop(context, qtdeEC.doubleValue)),
+                              isEnable: widget.produto.qtde.doubleValue > 0,
+                              label: 'Confirmar',
+                              onPressed:
+                                  () => Navigator.pop(
+                                    context,
+                                    qtdeEC.doubleValue,
+                                  ),
+                            ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                )));
+                ),
+          ),
+    );
   }
 }
