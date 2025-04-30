@@ -1,5 +1,7 @@
+import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
@@ -7,6 +9,29 @@ import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/enums/sort_type.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
 import 'package:aco_plus/app/core/services/hash_service.dart';
+import 'package:flutter/material.dart';
+
+enum OrdemExportarPdfTipo { relatorio, etiquetas }
+
+extension OrdemExportarPdfTipoExtension on OrdemExportarPdfTipo {
+  String get label {
+    switch (this) {
+      case OrdemExportarPdfTipo.relatorio:
+        return 'Relatório';
+      case OrdemExportarPdfTipo.etiquetas:
+        return 'Etiquetas';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case OrdemExportarPdfTipo.relatorio:
+        return Icons.file_present;
+      case OrdemExportarPdfTipo.etiquetas:
+        return Icons.label_outline;
+    }
+  }
+}
 
 class OrdemUtils {
   bool showFilter = false;
@@ -127,4 +152,22 @@ class OrdemFreezedCreateModel {
       updatedAt: updatedAt,
     );
   }
+}
+
+class OrdemEtiquetaModel {
+  final ClienteModel cliente;
+  final ObraModel obra;
+  final PedidoModel pedido;
+  final OrdemModel ordem;
+  final DateTime createdAt;
+  final PedidoProdutoModel produto;
+
+  OrdemEtiquetaModel({
+    required this.cliente,
+    required this.obra,
+    required this.pedido,
+    required this.ordem,
+    required this.createdAt,
+    required this.produto,
+  });
 }

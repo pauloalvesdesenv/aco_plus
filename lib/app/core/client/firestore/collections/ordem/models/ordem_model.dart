@@ -212,6 +212,7 @@ class OrdemModel {
     ValueGetter<DateTime?>? endAt,
     List<PedidoProdutoModel>? produtos,
     OrdemFreezedModel? freezed,
+    MateriaPrimaModel? materiaPrima,
   }) {
     return OrdemModel(
       id: id ?? this.id,
@@ -220,6 +221,7 @@ class OrdemModel {
       endAt: endAt != null ? endAt() : this.endAt,
       produtos: produtos ?? this.produtos,
       freezed: freezed ?? this.freezed,
+      materiaPrima: materiaPrima ?? this.materiaPrima,
     );
   }
 }

@@ -48,7 +48,6 @@ class RelatorioOrdemViewModel {
   List<RelatorioOrdemStatus> status = [
     RelatorioOrdemStatus.AGUARDANDO_PRODUCAO,
     RelatorioOrdemStatus.EM_PRODUCAO,
-    RelatorioOrdemStatus.PRODUZIDAS,
   ];
   DateTimeRange? dates;
   RelatorioOrdemModel? relatorio;

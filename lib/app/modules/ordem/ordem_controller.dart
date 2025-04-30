@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
@@ -10,12 +8,15 @@ import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/dialogs/loading_dialog.dart';
 import 'package:aco_plus/app/core/enums/sort_type.dart';
+import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:aco_plus/app/core/services/hash_service.dart';
 import 'package:aco_plus/app/core/services/notification_service.dart';
+import 'package:aco_plus/app/core/services/pdf_download_service/pdf_download_service_mobile.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/automatizacao/automatizacao_controller.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem_etiquetas_pdf_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_produto_status_bottom.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_produtos_status_bottom.dart';
 import 'package:aco_plus/app/modules/ordem/view_models/ordem_view_model.dart';
@@ -23,7 +24,9 @@ import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 final ordemCtrl = OrdemController();
 
@@ -429,13 +432,12 @@ class OrdemController {
   void onReorder(List<OrdemModel> ordensNaoConcluidas) {
     for (var i = 0; i < ordensNaoConcluidas.length; i++) {
       ordensNaoConcluidas[i].beltIndex = i;
-      log('inreorder');
       FirestoreClient.ordens.dataStream.update();
       FirestoreClient.ordens.update(ordensNaoConcluidas[i]);
     }
   }
 
-  Future<void> onGeneratePDF(OrdemModel ordem) async {
+  Future<void> onGenerateRelatorioPDF(OrdemModel ordem) async {
     final RelatorioOrdemViewModel relatorio = RelatorioOrdemViewModel();
     relatorio.ordem = ordem;
     relatorio.type = RelatorioOrdemType.ORDEM;
@@ -446,5 +448,33 @@ class OrdemController {
     await relatorioCtrl.onExportRelatorioOrdemUniquePDF(
       RelatorioOrdemModel.ordem(ordem),
     );
+  }
+
+  Future<void> onGenerateEtiquetasPDF(OrdemModel ordem) async {
+    List<OrdemEtiquetaModel> model = [];
+    for (var produto in ordem.produtos) {
+      model.add(
+        OrdemEtiquetaModel(
+          cliente: produto.pedido.cliente,
+          obra: produto.pedido.obra,
+          pedido: produto.pedido,
+          ordem: ordem.copyWith(produtos: [produto.copyWith()]),
+          createdAt: DateTime.now(),
+          produto: produto,
+        ),
+      );
+    }
+
+    final pdf = pw.Document();
+
+    final img = await rootBundle.load('assets/images/logo.png');
+    final imageBytes = img.buffer.asUint8List();
+
+    pdf.addPage(OrdemEtiquetasPdfPage(model).build(imageBytes));
+
+    final name =
+        "m2_etiquetas_ordem_${ordem.localizator.toLowerCase()}_${DateTime.now().toFileName()}.pdf";
+
+    await downloadPDF(name, '/ordem/etiquetas/', await pdf.save());
   }
 }

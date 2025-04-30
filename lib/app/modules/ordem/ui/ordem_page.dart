@@ -18,6 +18,8 @@ import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/ordem/ordem_controller.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_create_page.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem_exportar_pdf_tipo_bottom.dart';
+import 'package:aco_plus/app/modules/ordem/view_models/ordem_view_model.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -50,7 +52,14 @@ class _OrdemPageState extends State<OrdemPage> {
                       ? []
                       : [
                         IconButton(
-                          onPressed: () async => ordemCtrl.onGeneratePDF(ordem),
+                          onPressed: () async {
+                            final tipo = await showOrdemExportarPdfTipoBottom();
+                            if (tipo == OrdemExportarPdfTipo.relatorio) {
+                              await ordemCtrl.onGenerateRelatorioPDF(ordem);
+                            } else {
+                              await ordemCtrl.onGenerateEtiquetasPDF(ordem);
+                            }
+                          },
                           icon: Icon(
                             Icons.picture_as_pdf,
                             color: AppColors.white,
@@ -136,10 +145,6 @@ class _OrdemPageState extends State<OrdemPage> {
               ordem.materiaPrima != null
                   ? '${ordem.materiaPrima?.fabricanteModel.nome} - ${ordem.materiaPrima?.produto.labelMinified.replaceAll(' - ', ' ')}'
                   : 'Não especificado',
-            ),
-            ItemLabel(
-              'Fabricante',
-              ordem.materiaPrima?.fabricanteModel.nome ?? 'Não especificado',
             ),
           ]),
         ],

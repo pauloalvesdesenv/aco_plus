@@ -43,7 +43,6 @@ class FirestoreClient {
     await automatizacao.start();
     await notificacoes.start();
 
-    if (!kDebugMode) {
       await version.listen();
       await usuarios.listen();
       await steps.listen();
@@ -57,6 +56,5 @@ class FirestoreClient {
       await ordens.listen();
       await automatizacao.listen();
       await notificacoes.listen();
-    }
   }
 }

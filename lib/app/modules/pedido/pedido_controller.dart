@@ -2,6 +2,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/orde
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/step/models/step_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/models/usuario_model.dart';
@@ -307,6 +308,15 @@ class PedidoController {
     PedidoModel pedido, {
     bool isPedido = true,
   }) async {
+    if (pedido.produtos.any(
+      (e) => e.status.status != PedidoProdutoStatus.pronto,
+    )) {
+      NotificationService.showNegative(
+        'Pedido não pode ser arquivado',
+        'O pedido possui ordens não concluídas',
+      );
+      return false;
+    }
     if (!await showConfirmDialog(
       'Deseja arquivar esse pedidos?',
       'O pedido ficará disponível na lista de arquivados',
