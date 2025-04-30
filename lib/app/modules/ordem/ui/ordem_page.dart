@@ -51,13 +51,29 @@ class _OrdemPageState extends State<OrdemPage> {
                   usuario.isOperador
                       ? []
                       : [
+                        if(!ordem.isArchived) IconButton(
+                          onPressed: () async => ordemCtrl.onArchive(context, ordem),
+                          icon: Icon(
+                            Icons.archive,
+                            color: AppColors.white,
+                          ),
+                        ),
+                        if(ordem.isArchived) IconButton(
+                          onPressed: () async => ordemCtrl.onUnarchive(context, ordem, 2),
+                          icon: Icon(
+                            Icons.unarchive,
+                            color: AppColors.white,
+                          ),
+                        ),
                         IconButton(
                           onPressed: () async {
                             final tipo = await showOrdemExportarPdfTipoBottom();
-                            if (tipo == OrdemExportarPdfTipo.relatorio) {
+                            if(tipo != null) {
+                             if (tipo == OrdemExportarPdfTipo.relatorio) {
                               await ordemCtrl.onGenerateRelatorioPDF(ordem);
                             } else {
                               await ordemCtrl.onGenerateEtiquetasPDF(ordem);
+                            }
                             }
                           },
                           icon: Icon(

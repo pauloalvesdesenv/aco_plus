@@ -42,9 +42,9 @@ class OrdemController {
   );
   OrdemUtils get utils => utilsStream.value;
 
-  final AppStream<OrdemConcluidasUtils> utilsConcluidasStream =
-      AppStream<OrdemConcluidasUtils>.seed(OrdemConcluidasUtils());
-  OrdemConcluidasUtils get utilsConcluidas => utilsConcluidasStream.value;
+  final AppStream<OrdemArquivadasUtils> utilsArquivadasStream =
+      AppStream<OrdemArquivadasUtils>.seed(OrdemArquivadasUtils());
+  OrdemArquivadasUtils get utilsArquivadas => utilsArquivadasStream.value;
 
   void onInit() {
     utilsStream.add(OrdemUtils());
@@ -97,15 +97,20 @@ class OrdemController {
 
   List<PedidoProdutoModel> _getPedidosProdutosSeparados(ProdutoModel produto) {
     List<PedidoProdutoModel> pedidos = [];
-    for (final pedido in FirestoreClient.pedidos.data
-        .where(
-            (e) => FirestoreClient.steps.getById(e.step.id).isPermiteProducao)
-        .toList()) {
-      final pedidoProdutos = pedido.produtos
-          .where((e) =>
-              e.status.status == PedidoProdutoStatus.separado &&
-              e.produto.id == produto.id)
-          .toList();
+    for (final pedido
+        in FirestoreClient.pedidos.data
+            .where(
+              (e) => FirestoreClient.steps.getById(e.step.id).isPermiteProducao,
+            )
+            .toList()) {
+      final pedidoProdutos =
+          pedido.produtos
+              .where(
+                (e) =>
+                    e.status.status == PedidoProdutoStatus.separado &&
+                    e.produto.id == produto.id,
+              )
+              .toList();
       for (final pedidoProduto in pedidoProdutos) {
         final isFiltered =
             form.localizador.text.isEmpty ||
@@ -361,7 +366,9 @@ class OrdemController {
   }
 
   Future<void> onSelectProdutoStatus(
-      PedidoProdutoModel produto, PedidoProdutoStatus status) async {
+    PedidoProdutoModel produto,
+    PedidoProdutoStatus status,
+  ) async {
     await onChangeProdutoStatus(produto, status);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
   }
@@ -389,15 +396,19 @@ class OrdemController {
 
   Future<void> onFreezed(value, OrdemModel ordem) async {
     if (ordem.freezed.isFreezed) {
-      if (!await showConfirmDialog('Deseja descongelar a ordem?',
-          'A ordem voltará na ultima posição da esteira de produção.')) {
+      if (!await showConfirmDialog(
+        'Deseja descongelar a ordem?',
+        'A ordem voltará na ultima posição da esteira de produção.',
+      )) {
         return;
       }
       ordem.freezed.isFreezed = false;
       ordem.freezed.reason.controller.clear();
     } else {
-      if (!await showConfirmDialog('Deseja congelar a ordem?',
-          'A ordem irá sair da esteira de produção.')) {
+      if (!await showConfirmDialog(
+        'Deseja congelar a ordem?',
+        'A ordem irá sair da esteira de produção.',
+      )) {
         return;
       }
       ordem.freezed.isFreezed = true;
@@ -467,13 +478,31 @@ class OrdemController {
     await downloadPDF(name, '/ordem/etiquetas/', await pdf.save());
   }
 
-  Future<void> setArquivadas() async {
-    // for (OrdemModel ordem in FirestoreClient.ordens.data
-    //     .where((e) => e.status == PedidoProdutoStatus.pronto)
-    //     .toList()) {
-    //   ordem.isArchived = true;
-    //   await FirestoreClient.ordens.update(ordem);
-    // }
-    // log('terminou');
+  Future<void> onArchive(BuildContext context, OrdemModel ordem) async {
+    ordem.isArchived = true;
+    showLoadingDialog();
+    await FirestoreClient.ordens.update(ordem);
+    await FirestoreClient.ordens.fetch();
+    Navigator.pop(contextGlobal);
+    Navigator.pop(context);
+    NotificationService.showPositive(
+      'Ordem Arquivada!',
+      'Acesse a lista de ordens arquivadas para visualizar a ordem',
+    );
+  }
+
+  Future<void> onUnarchive(BuildContext context, OrdemModel ordem, int pop) async {
+    ordem.isArchived = false;
+    showLoadingDialog();
+    await FirestoreClient.ordens.update(ordem);
+    await FirestoreClient.ordens.fetch();
+    Navigator.pop(contextGlobal);
+    for (var i = 0; i < pop; i++) {
+      Navigator.pop(context);
+    }
+    NotificationService.showPositive(
+      'Ordem Desarquivada!',
+      'Acesse a lista de ordens para visualizar a ordem',
+    );
   }
 }

@@ -43,7 +43,7 @@ class OrdemUtils {
   ProdutoModel? produto;
 }
 
-class OrdemConcluidasUtils {
+class OrdemArquivadasUtils {
   bool showFilter = false;
   final TextController search = TextController();
   List<PedidoProdutoStatus> status = [
@@ -69,11 +69,10 @@ class OrdemCreateModel {
   late bool isEdit;
 
   OrdemCreateModel()
-      : id = '${[
-              ...FirestoreClient.ordens.dataStream.value,
-            ].length + 1}_${HashService.get}',
-        isEdit = false,
-        isCreate = true;
+    : id =
+          '${[...FirestoreClient.ordens.dataStream.value].length + 1}_${HashService.get}',
+      isEdit = false,
+      isCreate = true;
 
   OrdemCreateModel.edit(OrdemModel ordem) : id = ordem.id, isEdit = true {
     isCreate = false;

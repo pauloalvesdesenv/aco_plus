@@ -337,7 +337,11 @@ class PedidoController {
     return true;
   }
 
-  Future<void> onUnArchivePedido(value, PedidoModel pedido) async {
+  Future<void> onUnArchivePedido(
+    value,
+    PedidoModel pedido,
+    int pops,
+  ) async {
     if (await showConfirmDialog(
       'Deseja desarquivar o pedido?',
       'O pedido voltará para a lista de pedidos',
@@ -347,7 +351,9 @@ class PedidoController {
       await FirestoreClient.pedidos.update(pedido);
       await FirestoreClient.pedidos.fetch();
       Navigator.pop(contextGlobal);
-      Navigator.pop(value);
+      for (var i = 0; i < pops; i++) {
+        Navigator.pop(value);
+      }
       NotificationService.showPositive(
         'Pedido Desarquivado!',
         'Acesse a lista de pedidos para visualizar o pedido',

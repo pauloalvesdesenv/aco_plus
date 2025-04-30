@@ -55,9 +55,9 @@ class _KanbanTopbarConcreteWidgetState
             Text('Kanban', style: AppCss.largeBold.setColor(AppColors.white)),
         actions: [
           InfoPopupWidget(
-            onControllerCreated: (_) {
-              controller = _;
-              utils.controller = _;
+            onControllerCreated: (value) {
+              controller = value;
+              utils.controller = value;
               kanbanCtrl.utilsStream.update();
             },
             onAreaPressed: (e) {},

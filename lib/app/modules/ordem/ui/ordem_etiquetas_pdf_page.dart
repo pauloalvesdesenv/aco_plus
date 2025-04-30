@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:aco_plus/app/core/components/pdf_divisor.dart';
+import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/modules/ordem/view_models/ordem_view_model.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,8 @@ class OrdemEtiquetasPdfPage {
               ),
             ],
           ),
+          _itemInfo('QUANTIDADE', etiqueta.ordem.produtos.first.qtde.toKg()),
+          PdfDivisor.build(),
           _itemInfo('PEDIDO', etiqueta.pedido.localizador),
           PdfDivisor.build(),
           _itemInfo(

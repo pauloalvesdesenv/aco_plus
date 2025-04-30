@@ -101,57 +101,49 @@ class _PedidoPageState extends State<PedidoPage>
             const W(12),
           ],
         ),
-        ColorFiltered(
-          colorFilter: ColorFilter.mode(
-            widget.pedido.isArchived
-                ? Colors.grey.withOpacity(0.1)
-                : Colors.transparent,
-            BlendMode.srcIn,
-          ),
-          child: Column(
-            children: [
-              PedidoDescWidget(pedido),
+        Column(
+          children: [
+            PedidoDescWidget(pedido),
+            const Divisor(),
+            PedidoStepsWidget(pedido),
+            const Divisor(),
+            PedidoStatusWidget(pedido),
+            const Divisor(),
+            if (pedido.isAguardandoEntradaProducao()) ...[
+              PedidoProdutosWidget(pedido),
               const Divisor(),
-              PedidoStepsWidget(pedido),
-              const Divisor(),
-              PedidoStatusWidget(pedido),
-              const Divisor(),
-              if (pedido.isAguardandoEntradaProducao()) ...[
-                PedidoProdutosWidget(pedido),
-                const Divisor(),
-              ],
-              if (!pedido.isAguardandoEntradaProducao())
-                Column(
-                  children: [
-                    PedidoCorteDobraWidget(pedido),
-                    const Divisor(),
-                    PedidoProdutosWidget(pedido),
-                    const Divisor(),
-                    if (pedido.tipo == PedidoTipo.cda) ...[
-                      PedidoArmacaoWidget(pedido),
-                      const Divisor()
-                    ],
-                  ],
-                ),
-              if (pedido.instrucoesEntrega.isNotEmpty) ...[
-                PedidoEntregaWidget(pedido),
-                const Divisor(),
-              ],
-              if (pedido.instrucoesEntrega.isNotEmpty ||
-                  pedido.instrucoesFinanceiras.isNotEmpty) ...[
-                PedidoFinancWidget(pedido),
-                const Divisor(),
-              ],
-              PedidoAnexosWidget(pedido),
-              const Divisor(),
-              PedidoChecksWidget(pedido),
-              const Divisor(),
-              PedidoCommentsWidget(pedido),
-              const Divisor(),
-              if (pedido.histories.isNotEmpty)
-                PedidoTimelineWidget(pedido: pedido),
             ],
-          ),
+            if (!pedido.isAguardandoEntradaProducao())
+              Column(
+                children: [
+                  PedidoCorteDobraWidget(pedido),
+                  const Divisor(),
+                  PedidoProdutosWidget(pedido),
+                  const Divisor(),
+                  if (pedido.tipo == PedidoTipo.cda) ...[
+                    PedidoArmacaoWidget(pedido),
+                    const Divisor()
+                  ],
+                ],
+              ),
+            if (pedido.instrucoesEntrega.isNotEmpty) ...[
+              PedidoEntregaWidget(pedido),
+              const Divisor(),
+            ],
+            if (pedido.instrucoesEntrega.isNotEmpty ||
+                pedido.instrucoesFinanceiras.isNotEmpty) ...[
+              PedidoFinancWidget(pedido),
+              const Divisor(),
+            ],
+            PedidoAnexosWidget(pedido),
+            const Divisor(),
+            PedidoChecksWidget(pedido),
+            const Divisor(),
+            PedidoCommentsWidget(pedido),
+            const Divisor(),
+            if (pedido.histories.isNotEmpty)
+              PedidoTimelineWidget(pedido: pedido),
+          ],
         )
       ],
     );

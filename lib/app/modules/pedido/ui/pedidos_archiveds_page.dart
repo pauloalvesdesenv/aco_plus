@@ -186,6 +186,11 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
               ),
               child: Row(
                 children: [
+                  IconLoadingButton(
+                      () async =>
+                          await pedidoCtrl.onUnArchivePedido(context, pedido, 1),
+                      icon: Icons.unarchive),
+                  const W(16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,11 +222,6 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
                     ),
                   ),
                   const W(8),
-                  IconLoadingButton(
-                      () async =>
-                          await pedidoCtrl.onUnArchivePedido(context, pedido),
-                      icon: Icons.unarchive_outlined),
-                  const W(16),
                   _progressChartWidget(PedidoProdutoStatus.aguardandoProducao,
                       pedido.getPrcntgAguardandoProducao()),
                   const W(16),
