@@ -24,7 +24,7 @@ class OrdemEtiquetasPdfPage {
 
   pw.Widget _etiquetaItem(OrdemEtiquetaModel etiqueta, Uint8List bytes) {
     return pw.Container(
-      padding: const pw.EdgeInsets.all(8),
+      padding: const pw.EdgeInsets.all(16),
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [

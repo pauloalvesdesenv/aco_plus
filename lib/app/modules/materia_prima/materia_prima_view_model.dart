@@ -9,6 +9,7 @@ import 'package:aco_plus/app/core/services/hash_service.dart';
 
 class MateriaPrimaUtils {
   final TextController search = TextController();
+  final List<MateriaPrimaStatus> status = [MateriaPrimaStatus.disponivel];
 }
 
 class MateriaPrimaCreateModel {
@@ -21,15 +22,14 @@ class MateriaPrimaCreateModel {
 
   late bool isEdit;
 
-  MateriaPrimaCreateModel()
-      : id = HashService.get,
-        isEdit = false;
+  MateriaPrimaCreateModel() : id = HashService.get, isEdit = false;
 
   MateriaPrimaCreateModel.edit(MateriaPrimaModel materiaPrima)
-      : id = materiaPrima.id,
-        isEdit = true {
-    fabricanteModel =
-        FirestoreClient.fabricantes.getById(materiaPrima.fabricanteModel.id);
+    : id = materiaPrima.id,
+      isEdit = true {
+    fabricanteModel = FirestoreClient.fabricantes.getById(
+      materiaPrima.fabricanteModel.id,
+    );
     produtoModel = FirestoreClient.produtos.getById(materiaPrima.produto.id);
     corridaLote.text = materiaPrima.corridaLote;
     anexos = materiaPrima.anexos;
@@ -37,11 +37,11 @@ class MateriaPrimaCreateModel {
   }
 
   MateriaPrimaModel toMateriaPrimaModel() => MateriaPrimaModel(
-        id: id,
-        fabricanteModel: fabricanteModel!,
-        produto: produtoModel!,
-        corridaLote: corridaLote.text,
-        anexos: anexos,
-        status: status,
-      );
+    id: id,
+    fabricanteModel: fabricanteModel!,
+    produto: produtoModel!,
+    corridaLote: corridaLote.text,
+    anexos: anexos,
+    status: status,
+  );
 }

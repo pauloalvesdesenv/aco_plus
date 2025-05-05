@@ -97,20 +97,23 @@ class OrdemController {
 
   List<PedidoProdutoModel> _getPedidosProdutosSeparados(ProdutoModel produto) {
     List<PedidoProdutoModel> pedidos = [];
-    for (final pedido in FirestoreClient.pedidos.data
-        .where(
-          (e) => FirestoreClient.steps.getById(e.step.id).isPermiteProducao,
-        )
-        .toList()) {
-      final pedidoProdutos = pedido.produtos
-          .where(
-            (e) =>
-                e.status.status == PedidoProdutoStatus.separado &&
-                e.produto.id == produto.id,
-          )
-          .toList();
+    for (final pedido
+        in FirestoreClient.pedidos.data
+            .where(
+              (e) => FirestoreClient.steps.getById(e.step.id).isPermiteProducao,
+            )
+            .toList()) {
+      final pedidoProdutos =
+          pedido.produtos
+              .where(
+                (e) =>
+                    e.status.status == PedidoProdutoStatus.separado &&
+                    e.produto.id == produto.id,
+              )
+              .toList();
       for (final pedidoProduto in pedidoProdutos) {
-        final isFiltered = form.localizador.text.isEmpty ||
+        final isFiltered =
+            form.localizador.text.isEmpty ||
             pedidoProduto.pedido.localizador.toCompare.contains(
               form.localizador.text.toCompare,
             );
@@ -123,15 +126,16 @@ class OrdemController {
   }
 
   List<PedidoProdutoModel> getPedidosPorProdutoEdit(OrdemModel ordem) {
-    final pedidos = ordem.produtos
-        .where(
-          (e) =>
-              form.localizador.text.isEmpty ||
-              e.cliente.nome.toCompare.contains(
-                form.localizador.text.toCompare,
-              ),
-        )
-        .toList();
+    final pedidos =
+        ordem.produtos
+            .where(
+              (e) =>
+                  form.localizador.text.isEmpty ||
+                  e.cliente.nome.toCompare.contains(
+                    form.localizador.text.toCompare,
+                  ),
+            )
+            .toList();
     onSortPedidos(pedidos);
 
     return pedidos;
@@ -234,14 +238,15 @@ class OrdemController {
 
   Future<void> onDelete(value, OrdemModel ordem) async {
     if (await _isDeleteUnavailable(ordem)) return;
-    for (var pedidoProduto in ordem.produtos
-        .map(
-          (e) => FirestoreClient.pedidos.getProdutoByPedidoId(
-            e.pedidoId,
-            e.id,
-          ),
-        )
-        .toList()) {
+    for (var pedidoProduto
+        in ordem.produtos
+            .map(
+              (e) => FirestoreClient.pedidos.getProdutoByPedidoId(
+                e.pedidoId,
+                e.id,
+              ),
+            )
+            .toList()) {
       pedidoProduto.statusess.clear();
       pedidoProduto.statusess.add(
         PedidoProdutoStatusModel(
@@ -273,12 +278,8 @@ class OrdemController {
         deleteTitle: 'Deseja excluir a ordem?',
         deleteMessage: 'Todos seus dados da ordem apagados do sistema',
         infoMessage:
-            'Para excluir a ordem todos os produtos devem estar em "Aguardando Produção".',
-        conditional: !ordem.produtos.every(
-          (e) =>
-              e.status.status == PedidoProdutoStatus.aguardandoProducao ||
-              e.status.status == PedidoProdutoStatus.separado,
-        ),
+            'Remova os produtos da ordem para poder excluir-la.',
+        conditional: ordem.produtos.isNotEmpty,
       );
 
   void onSortPedidos(List<PedidoProdutoModel> pedidos) {
@@ -286,27 +287,30 @@ class OrdemController {
     switch (form.sortType) {
       case SortType.localizator:
         pedidos.sort(
-          (a, b) => isAsc
-              ? a.pedido.localizador.compareTo(b.pedido.localizador)
-              : b.pedido.localizador.compareTo(a.pedido.localizador),
+          (a, b) =>
+              isAsc
+                  ? a.pedido.localizador.compareTo(b.pedido.localizador)
+                  : b.pedido.localizador.compareTo(a.pedido.localizador),
         );
         break;
       case SortType.alfabetic:
         pedidos.sort(
-          (a, b) => isAsc
-              ? a.pedido.localizador.compareTo(b.pedido.localizador)
-              : b.pedido.localizador.compareTo(a.pedido.localizador),
+          (a, b) =>
+              isAsc
+                  ? a.pedido.localizador.compareTo(b.pedido.localizador)
+                  : b.pedido.localizador.compareTo(a.pedido.localizador),
         );
         break;
       case SortType.createdAt:
         pedidos.sort(
-          (a, b) => isAsc
-              ? (a.pedido.deliveryAt ?? DateTime.now()).compareTo(
-                  (b.pedido.deliveryAt ?? DateTime.now()),
-                )
-              : (b.pedido.deliveryAt ?? DateTime.now()).compareTo(
-                  (a.pedido.deliveryAt ?? DateTime.now()),
-                ),
+          (a, b) =>
+              isAsc
+                  ? (a.pedido.deliveryAt ?? DateTime.now()).compareTo(
+                    (b.pedido.deliveryAt ?? DateTime.now()),
+                  )
+                  : (b.pedido.deliveryAt ?? DateTime.now()).compareTo(
+                    (a.pedido.deliveryAt ?? DateTime.now()),
+                  ),
         );
         break;
       default:
@@ -483,7 +487,10 @@ class OrdemController {
   }
 
   Future<void> onUnarchive(
-      BuildContext context, OrdemModel ordem, int pop) async {
+    BuildContext context,
+    OrdemModel ordem,
+    int pop,
+  ) async {
     ordem.isArchived = false;
     showLoadingDialog();
     await FirestoreClient.ordens.update(ordem);

@@ -120,11 +120,21 @@ class MateriaPrimaController {
   List<ProdutoModel> getProdutosAvailable(FabricanteModel? fabricante) {
     if (fabricante == null) return [];
     final produtos = FirestoreClient.produtos.data;
-    final materiaPrimas = FirestoreClient.materiaPrimas.data.where((e) =>
-        e.status == MateriaPrimaStatus.disponivel &&
-        e.fabricanteModel.id == fabricante.id);
+    final materiaPrimas = FirestoreClient.materiaPrimas.data.where(
+      (e) =>
+          e.status == MateriaPrimaStatus.disponivel &&
+          e.fabricanteModel.id == fabricante.id,
+    );
     return produtos
         .where((e) => !materiaPrimas.any((m) => m.produto.id == e.id))
         .toList();
+  }
+
+  bool hasChangeInMateriaPrima(MateriaPrimaModel materiaPrima) {
+    return !(materiaPrima.fabricanteModel.id == form.fabricanteModel?.id &&
+        materiaPrima.produto.id == form.produtoModel?.id &&
+        materiaPrima.corridaLote == form.corridaLote.text &&
+        materiaPrima.status == form.status &&
+        materiaPrima.anexos.length == form.anexos.length);
   }
 }

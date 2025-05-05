@@ -41,6 +41,13 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () async {
+            if (widget.materiaPrima != null &&
+                !materiaPrimaCtrl.hasChangeInMateriaPrima(
+                  widget.materiaPrima!,
+                )) {
+              pop(context);
+              return;
+            }
             if (await showConfirmDialog(
               'Deseja realmente sair?',
               widget.materiaPrima != null
@@ -86,22 +93,26 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
           },
         ),
         const H(16),
-        Builder(builder: (context) {
-          final produtos =
-              materiaPrimaCtrl.getProdutosAvailable(form.fabricanteModel);
-          return AppDropDown<ProdutoModel?>(
-            label: 'Produto',
-            item:
-                produtos.firstWhereOrNull((e) => e.id == form.produtoModel?.id),
-            disable: form.fabricanteModel == null,
-            itens: produtos,
-            itemLabel: (item) => item!.labelMinified,
-            onSelect: (item) {
-              form.produtoModel = item;
-              materiaPrimaCtrl.formStream.update();
-            },
-          );
-        }),
+        Builder(
+          builder: (context) {
+            final produtos = materiaPrimaCtrl.getProdutosAvailable(
+              form.fabricanteModel,
+            );
+            return AppDropDown<ProdutoModel?>(
+              label: 'Produto',
+              item: produtos.firstWhereOrNull(
+                (e) => e.id == form.produtoModel?.id,
+              ),
+              disable: form.fabricanteModel == null,
+              itens: produtos,
+              itemLabel: (item) => item!.labelMinified,
+              onSelect: (item) {
+                form.produtoModel = item;
+                materiaPrimaCtrl.formStream.update();
+              },
+            );
+          },
+        ),
         const H(16),
         AppField(
           label: 'Corrida/Lote',
@@ -141,8 +152,8 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
                 ),
               ),
             ),
-            onPressed: () =>
-                materiaPrimaCtrl.onDelete(context, widget.materiaPrima!),
+            onPressed:
+                () => materiaPrimaCtrl.onDelete(context, widget.materiaPrima!),
             label: const Text('Excluir'),
             icon: const Icon(Icons.delete_outline),
           ),
