@@ -132,10 +132,24 @@ class _MateriasPrimasPageState extends State<MateriasPrimasPage> {
       child: ListTile(
         onTap: () => push(MateriaPrimaCreatePage(materiaPrima: materiaPrima)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        title: Text(materiaPrima.corridaLote, style: AppCss.mediumBold),
-        subtitle: Text(
-          '${materiaPrima.produto.labelMinified.replaceAll(' - ', ' ').replaceAll('Bitola ', '')} - ${materiaPrima.fabricanteModel.nome}',
-          style: AppCss.mediumRegular,
+        title: Text(
+          materiaPrima.produto.labelMinified
+              .replaceAll(' - ', ' ')
+              .replaceAll('Bitola ', ''),
+          style: AppCss.mediumBold,
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Fabricante: ${materiaPrima.fabricanteModel.nome}',
+              style: AppCss.minimumRegular,
+            ),
+            Text(
+              'Corrida/Lote: ${materiaPrima.corridaLote}',
+              style: AppCss.minimumRegular,
+            ),
+          ],
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,

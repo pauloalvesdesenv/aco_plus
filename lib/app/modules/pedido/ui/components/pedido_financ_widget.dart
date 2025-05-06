@@ -22,7 +22,7 @@ class PedidoFinancWidget extends StatelessWidget {
           ],
           if (pedido.instrucoesFinanceiras.isNotEmpty) ...[
             const H(16),
-            ItemLabel('Instruções Financeiras', pedido.instrucoesEntrega),
+            ItemLabel('Instruções Financeiras', pedido.instrucoesFinanceiras),
           ],
         ],
       ),

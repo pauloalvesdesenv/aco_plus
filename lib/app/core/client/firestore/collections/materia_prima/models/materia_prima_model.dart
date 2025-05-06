@@ -59,6 +59,6 @@ class MateriaPrimaModel {
 
   @override
   String toString() {
-    return 'MateriaPrimaModel(id: $id, fabricanteModel: $fabricanteModel, produto: $produto, corridaLote: $corridaLote, anexos: $anexos, status: $status)';
+    return '${produto.labelMinified.replaceAll(' - ', ' ').replaceAll('Bitola ', '')} - ${fabricanteModel.nome} - $corridaLote';
   }
 }
