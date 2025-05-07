@@ -52,58 +52,61 @@ class DashboardPageState extends State<DashboardPage> {
   Widget body() {
     return StreamOut(
       stream: FirestoreClient.pedidos.pedidosUnarchivedsStream.listen,
-      builder: (_, pedidos) => StreamOut(
-        stream: FirestoreClient.ordens.dataStream.listen,
-        builder: (_, __) => StreamOut(
-          stream: dashCtrl.utilsStream.listen,
-          builder: (_, utils) => LayoutBuilder(
-            builder: (context, constraints) {
-              if (constraints.maxWidth < 1000) {
-                return ListView(
-                  children: [
-                    Column(
-                      children: [
-                        _graficoOrdemStatus(),
-                        const Divisor(),
-                        _graficoPedidoStatus(),
-                        const Divisor(),
-                        _graficoPedidoEtapa(),
-                        const Divisor(),
-                        _graficoProdutosStatus(),
-                        const Divisor(),
-                        _graficoProdutoProduzido(),
-                        const Divisor(),
-                      ],
-                    ),
-                  ],
-                );
-              } else {
-                return ListView(
-                  children: [
-                    _ordemProducaoWidget(),
-                    const Divisor(),
-                    Row(
-                      children: [
-                        Expanded(child: _graficoOrdemStatus()),
-                        Expanded(child: _graficoPedidoStatus()),
-                        Expanded(child: _graficoPedidoEtapa()),
-                      ],
-                    ),
-                    const Divisor(),
-                    Row(
-                      children: [
-                        Expanded(child: _graficoProdutosStatus()),
-                        Expanded(child: _graficoProdutoProduzido()),
-                      ],
-                    ),
-                    const Divisor(),
-                  ],
-                );
-              }
-            },
+      builder:
+          (_, pedidos) => StreamOut(
+            stream: FirestoreClient.ordens.dataStream.listen,
+            builder:
+                (_, __) => StreamOut(
+                  stream: dashCtrl.utilsStream.listen,
+                  builder:
+                      (_, utils) => LayoutBuilder(
+                        builder: (context, constraints) {
+                          if (constraints.maxWidth < 1000) {
+                            return ListView(
+                              children: [
+                                Column(
+                                  children: [
+                                    _graficoOrdemStatus(),
+                                    const Divisor(),
+                                    _graficoPedidoStatus(),
+                                    const Divisor(),
+                                    _graficoPedidoEtapa(),
+                                    const Divisor(),
+                                    _graficoProdutosStatus(),
+                                    const Divisor(),
+                                    _graficoProdutoProduzido(),
+                                    const Divisor(),
+                                  ],
+                                ),
+                              ],
+                            );
+                          } else {
+                            return ListView(
+                              children: [
+                                _ordemProducaoWidget(),
+                                const Divisor(),
+                                Row(
+                                  children: [
+                                    Expanded(child: _graficoOrdemStatus()),
+                                    Expanded(child: _graficoPedidoStatus()),
+                                    Expanded(child: _graficoPedidoEtapa()),
+                                  ],
+                                ),
+                                const Divisor(),
+                                Row(
+                                  children: [
+                                    Expanded(child: _graficoProdutosStatus()),
+                                    Expanded(child: _graficoProdutoProduzido()),
+                                  ],
+                                ),
+                                const Divisor(),
+                              ],
+                            );
+                          }
+                        },
+                      ),
+                ),
           ),
-        ),
-      ),
     );
   }
 
@@ -318,122 +321,129 @@ class DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _ordemProducaoWidget() => StreamOut<List<OrdemModel>>(
-        stream: FirestoreClient.ordens.ordensNaoArquivadasStream.listen,
-        builder: (_, ordens) {
-          ordens.removeWhere((element) => element.freezed.isFreezed);
-          return Row(
-            children: [
-              Expanded(
-                child: Center(
+    stream: FirestoreClient.ordens.ordensNaoArquivadasStream.listen,
+    builder: (_, ordens) {
+      List<OrdemModel> ordensFiltradas = ordens.toList();
+      ordensFiltradas.removeWhere((element) => element.freezed.isFreezed);
+      ordensFiltradas = ordensFiltradas.where((element) => element.status != PedidoProdutoStatus.pronto).toList();
+
+      return Row(
+        children: [
+          Expanded(
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Esteira de Produção:', style: AppCss.largeBold),
+                  Text(
+                    '${ordensFiltradas.length} Ordens (Apenas Aguardando Produção e Produzindo)',
+                    textAlign: TextAlign.center,
+                    style: AppCss.minimumRegular.setSize(12),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              width: double.maxFinite,
+              height: 250,
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(color: Colors.grey[200]!, width: 0.8),
+                ),
+              ),
+              child: ListView.builder(
+                itemCount: ordensFiltradas.length,
+                itemBuilder:
+                    (_, i) => _ordemProducaoItemWidget(context, ordensFiltradas[i]),
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+
+  Widget _ordemProducaoItemWidget(
+    BuildContext context,
+    OrdemModel ordem,
+  ) => InkWell(
+    onTap: () => push(OrdemPage(ordem.id)),
+    child: Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FCFC),
+        border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
+      ),
+      child: Stack(
+        children: [
+          Container(
+            color:
+                ordem.freezed.isFreezed
+                    ? Colors.grey[200]!
+                    : const Color(0xFFF8FCFC),
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Text(
+                  ordem.beltIndex != null ? '${ordem.beltIndex! + 1}º' : '-',
+                  style: AppCss.mediumBold,
+                ),
+                const W(16),
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Esteira de Produção:', style: AppCss.largeBold),
+                      Text(ordem.localizator, style: AppCss.mediumBold),
                       Text(
-                        '${ordens.length} Ordens (Apenas Aguardando Produção e Produzindo)',
-                        textAlign: TextAlign.center,
-                        style: AppCss.minimumRegular.setSize(12),
-                      )
+                        '${ordem.produto.nome} ${ordem.produto.descricao} - ${ordem.produtos.fold(0.0, (previousValue, element) => previousValue + element.qtde).toKg()}',
+                        style: AppCss.minimumRegular
+                            .setSize(11)
+                            .setColor(AppColors.black),
+                      ),
                     ],
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  width: double.maxFinite,
-                  height: 250,
-                  decoration: BoxDecoration(
-                      border: Border(
-                    left: BorderSide(color: Colors.grey[200]!, width: 0.8),
-                  )),
-                  child: ListView.builder(
-                    itemCount: ordens.length,
-                    itemBuilder: (_, i) =>
-                        _ordemProducaoItemWidget(context, ordens[i]),
+                const W(8),
+                if (ordem.produtos.isNotEmpty)
+                  Row(
+                    children: [
+                      _progressChartWidget(
+                        PedidoProdutoStatus.aguardandoProducao,
+                        ordem.getPrcntgAguardando(),
+                        ordem.freezed.isFreezed,
+                      ),
+                      const W(16),
+                      _progressChartWidget(
+                        PedidoProdutoStatus.produzindo,
+                        ordem.getPrcntgProduzindo(),
+                        ordem.freezed.isFreezed,
+                      ),
+                      const W(16),
+                      _progressChartWidget(
+                        PedidoProdutoStatus.pronto,
+                        ordem.getPrcntgPronto(),
+                        ordem.freezed.isFreezed,
+                      ),
+                    ],
                   ),
-                ),
-              ),
-            ],
-          );
-        },
-      );
-
-  Widget _ordemProducaoItemWidget(BuildContext context, OrdemModel ordem) =>
-      InkWell(
-        onTap: () => push(OrdemPage(ordem.id)),
-        child: Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8FCFC),
-            border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
+                if (ordem.produtos.isEmpty)
+                  const Row(
+                    children: [
+                      Text('Ordem Vazia'),
+                      W(8),
+                      Icon(Symbols.brightness_empty),
+                    ],
+                  ),
+                const W(32),
+              ],
+            ),
           ),
-          child: Stack(
-            children: [
-              Container(
-                color: ordem.freezed.isFreezed
-                    ? Colors.grey[200]!
-                    : const Color(0xFFF8FCFC),
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Text(
-                      ordem.beltIndex != null
-                          ? '${ordem.beltIndex! + 1}º'
-                          : '-',
-                      style: AppCss.mediumBold,
-                    ),
-                    const W(16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            ordem.localizator,
-                            style: AppCss.mediumBold,
-                          ),
-                          Text(
-                            '${ordem.produto.nome} ${ordem.produto.descricao} - ${ordem.produtos.fold(0.0, (previousValue, element) => previousValue + element.qtde).toKg()}',
-                            style: AppCss.minimumRegular
-                                .setSize(11)
-                                .setColor(AppColors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const W(8),
-                    if (ordem.produtos.isNotEmpty)
-                      Row(
-                        children: [
-                          _progressChartWidget(
-                              PedidoProdutoStatus.aguardandoProducao,
-                              ordem.getPrcntgAguardando(),
-                              ordem.freezed.isFreezed),
-                          const W(16),
-                          _progressChartWidget(
-                              PedidoProdutoStatus.produzindo,
-                              ordem.getPrcntgProduzindo(),
-                              ordem.freezed.isFreezed),
-                          const W(16),
-                          _progressChartWidget(PedidoProdutoStatus.pronto,
-                              ordem.getPrcntgPronto(), ordem.freezed.isFreezed),
-                        ],
-                      ),
-                    if (ordem.produtos.isEmpty)
-                      const Row(
-                        children: [
-                          Text('Ordem Vazia'),
-                          W(8),
-                          Icon(Symbols.brightness_empty),
-                        ],
-                      ),
-                    const W(32),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   Widget _progressChartWidget(
     PedidoProdutoStatus status,
