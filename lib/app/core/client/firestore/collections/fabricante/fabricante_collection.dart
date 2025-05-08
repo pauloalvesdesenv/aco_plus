@@ -54,27 +54,27 @@ class FabricanteCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-                field,
-                isEqualTo: isEqualTo,
-                isNotEqualTo: isNotEqualTo,
-                isLessThan: isLessThan,
-                isLessThanOrEqualTo: isLessThanOrEqualTo,
-                isGreaterThan: isGreaterThan,
-                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-                arrayContains: arrayContains,
-                arrayContainsAny: arrayContainsAny,
-                whereIn: whereIn,
-                whereNotIn: whereNotIn,
-                isNull: isNull,
-              )
+              field,
+              isEqualTo: isEqualTo,
+              isNotEqualTo: isNotEqualTo,
+              isLessThan: isLessThan,
+              isLessThanOrEqualTo: isLessThanOrEqualTo,
+              isGreaterThan: isGreaterThan,
+              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+              arrayContains: arrayContains,
+              arrayContainsAny: arrayContainsAny,
+              whereIn: whereIn,
+              whereNotIn: whereNotIn,
+              isNull: isNull,
+            )
             : collection)
         .snapshots()
         .listen((e) {
-      final countries =
-          e.docs.map((e) => FabricanteModel.fromMap(e.data())).toList();
-      countries.sort((a, b) => a.nome.compareTo(b.nome));
-      dataStream.add(countries);
-    });
+          final countries =
+              e.docs.map((e) => FabricanteModel.fromMap(e.data())).toList();
+          countries.sort((a, b) => a.nome.compareTo(b.nome));
+          dataStream.add(countries);
+        });
   }
 
   FabricanteModel getById(String id) =>

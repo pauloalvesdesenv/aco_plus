@@ -55,19 +55,22 @@ class ArchivesWidget extends StatelessWidget {
         if (archives.isNotEmpty)
           for (final archive in archives)
             Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: ArchiveWidget(
-                  archive,
-                  inList: true,
-                  onDelete: (e) async {
-                    if (!await showConfirmDialog('Deseja excluir anexo?',
-                        'Anexo não estará mais disponível')) {
-                      return false;
-                    }
-                    archives.remove(e);
-                    onChanged.call();
-                  },
-                )),
+              padding: const EdgeInsets.only(bottom: 8),
+              child: ArchiveWidget(
+                archive,
+                inList: true,
+                onDelete: (e) async {
+                  if (!await showConfirmDialog(
+                    'Deseja excluir anexo?',
+                    'Anexo não estará mais disponível',
+                  )) {
+                    return false;
+                  }
+                  archives.remove(e);
+                  onChanged.call();
+                },
+              ),
+            ),
       ],
     );
   }

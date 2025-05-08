@@ -17,9 +17,11 @@ class _ArchiveVideoWidgetState extends State<ArchiveVideoWidget> {
       height: 180,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: (widget.archive.bytes != null
-              ? MemoryImage(widget.archive.bytes!)
-              : NetworkImage(widget.archive.url!)) as ImageProvider,
+          image:
+              (widget.archive.bytes != null
+                      ? MemoryImage(widget.archive.bytes!)
+                      : NetworkImage(widget.archive.url!))
+                  as ImageProvider,
           fit: BoxFit.cover,
         ),
       ),

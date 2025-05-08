@@ -58,9 +58,10 @@ class ItemLabel extends StatelessWidget {
                       .copyWith(
                         decoration:
                             isDisable ? TextDecoration.lineThrough : null,
-                        color: isDisable
-                            ? AppColors.black.withValues(alpha: 0.3)
-                            : null,
+                        color:
+                            isDisable
+                                ? AppColors.black.withValues(alpha: 0.3)
+                                : null,
                       ),
                 ),
                 const W(5),

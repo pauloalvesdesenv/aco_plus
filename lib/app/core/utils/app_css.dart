@@ -3,23 +3,50 @@ import 'package:flutter/material.dart';
 
 class AppCss {
   static TextStyle display = TextStyle(
-      fontSize: 32, fontWeight: FontWeight.w700, color: AppColors.black);
+    fontSize: 32,
+    fontWeight: FontWeight.w700,
+    color: AppColors.black,
+  );
   static TextStyle largeBold = TextStyle(
-      fontSize: 24, fontWeight: FontWeight.w600, color: AppColors.black);
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
+    color: AppColors.black,
+  );
   static TextStyle largeRegular = TextStyle(
-      fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.black);
+    fontSize: 24,
+    fontWeight: FontWeight.w400,
+    color: AppColors.black,
+  );
   static TextStyle mediumBold = TextStyle(
-      fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.black);
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: AppColors.black,
+  );
   static TextStyle mediumRegular = TextStyle(
-      fontSize: 18, fontWeight: FontWeight.w400, color: AppColors.black);
+    fontSize: 18,
+    fontWeight: FontWeight.w400,
+    color: AppColors.black,
+  );
   static TextStyle smallBold = TextStyle(
-      fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.black);
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: AppColors.black,
+  );
   static TextStyle smallRegular = TextStyle(
-      fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.black);
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.black,
+  );
   static TextStyle minimumBold = TextStyle(
-      fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.black);
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: AppColors.black,
+  );
   static TextStyle minimumRegular = TextStyle(
-      fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.black);
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.black,
+  );
 
   static BorderRadius radius4 = BorderRadius.circular(4);
   static BorderRadius radius8 = BorderRadius.circular(8);

@@ -21,8 +21,9 @@ class ChecklistController {
       AppStream<ChecklistModel?>.seed(null);
   ChecklistModel? get checklist => checklistStream.value;
 
-  final AppStream<ChecklistUtils> utilsStream =
-      AppStream<ChecklistUtils>.seed(ChecklistUtils());
+  final AppStream<ChecklistUtils> utilsStream = AppStream<ChecklistUtils>.seed(
+    ChecklistUtils(),
+  );
   ChecklistUtils get utils => utilsStream.value;
 
   void onInit() {
@@ -35,13 +36,17 @@ class ChecklistController {
   ChecklistCreateModel get form => formStream.value;
 
   void init(ChecklistModel? checklist) {
-    formStream.add(checklist != null
-        ? ChecklistCreateModel.edit(checklist)
-        : ChecklistCreateModel());
+    formStream.add(
+      checklist != null
+          ? ChecklistCreateModel.edit(checklist)
+          : ChecklistCreateModel(),
+    );
   }
 
   List<ChecklistModel> getChecklistsFiltered(
-      String search, List<ChecklistModel> checklists) {
+    String search,
+    List<ChecklistModel> checklists,
+  ) {
     if (search.length < 3) return checklists;
     List<ChecklistModel> filtered = [];
     for (final checklist in checklists) {

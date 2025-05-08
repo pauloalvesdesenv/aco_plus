@@ -19,12 +19,15 @@ class FCMProvider {
     try {
       if (body['message']['token'] != null) {
         await Dio().post(
-            'https://fcm.googleapis.com/v1/projects/aco-plus-fa455/messages:send',
-            options: Options(headers: {
+          'https://fcm.googleapis.com/v1/projects/aco-plus-fa455/messages:send',
+          options: Options(
+            headers: {
               'Authorization': 'Bearer ${await _getAccessToken()}',
-              'Content-Type': 'application/json'
-            }),
-            data: body);
+              'Content-Type': 'application/json',
+            },
+          ),
+          data: body,
+        );
       }
       await FirestoreClient.notificacoes.add(
         NotificacaoModel.fromFCMMap(userId, body),
@@ -65,12 +68,12 @@ class FCMProvider {
     );
 
     // Obtain the access token
-    auth.AccessCredentials credentials =
-        await auth.obtainAccessCredentialsViaServiceAccount(
-      auth.ServiceAccountCredentials.fromJson(serviceAccountJson),
-      scopes,
-      client,
-    );
+    auth.AccessCredentials credentials = await auth
+        .obtainAccessCredentialsViaServiceAccount(
+          auth.ServiceAccountCredentials.fromJson(serviceAccountJson),
+          scopes,
+          client,
+        );
 
     // Close the HTTP client
     client.close();

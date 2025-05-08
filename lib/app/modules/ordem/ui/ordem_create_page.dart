@@ -104,12 +104,15 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
                       item: form.materiaPrima,
                       itens: [
                         MateriaPrimaModel.empty(),
-                        ...FirestoreClient.materiaPrimas.data.where((e) =>
-                            e.produto.id == form.produto?.id &&
-                            e.status == MateriaPrimaStatus.disponivel)
+                        ...FirestoreClient.materiaPrimas.data.where(
+                          (e) =>
+                              e.produto.id == form.produto?.id &&
+                              e.status == MateriaPrimaStatus.disponivel,
+                        ),
                       ],
-                      itemLabel: (e) =>
-                          '${e!.fabricanteModel.nome} - ${e.corridaLote}',
+                      itemLabel:
+                          (e) =>
+                              '${e!.fabricanteModel.nome} - ${e.corridaLote}',
                       onSelect: (e) {
                         form.materiaPrima = e;
                         ordemCtrl.formStream.update();
@@ -169,18 +172,20 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
               if (form.produto != null)
                 Builder(
                   builder: (_) {
-                    List<PedidoProdutoModel> produtos =
-                        ordemCtrl.getPedidosPorProduto(
-                      form.produto!,
-                      ordem: widget.ordem,
-                    );
-                    produtos = produtos
-                        .where(
-                          (produto) => !form.produtos
-                              .map((e) => e.id)
-                              .contains(produto.id),
-                        )
-                        .toList();
+                    List<PedidoProdutoModel> produtos = ordemCtrl
+                        .getPedidosPorProduto(
+                          form.produto!,
+                          ordem: widget.ordem,
+                        );
+                    produtos =
+                        produtos
+                            .where(
+                              (produto) =>
+                                  !form.produtos
+                                      .map((e) => e.id)
+                                      .contains(produto.id),
+                            )
+                            .toList();
 
                     return Column(
                       children: [
@@ -196,8 +201,8 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
                                       .map((e) => e.id)
                                       .contains(produto.id)
                                   ? form.produtos.removeWhere(
-                                      (e) => e.id == produto.id,
-                                    )
+                                    (e) => e.id == produto.id,
+                                  )
                                   : form.produtos.add(produto);
                               ordemCtrl.formStream.update();
                             },
@@ -215,14 +220,16 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
   }
 
   Container _bottom(OrdemCreateModel form) {
-    List<PedidoProdutoModel> produtos = form.produto != null
-        ? ordemCtrl.getPedidosPorProduto(form.produto!, ordem: widget.ordem)
-        : <PedidoProdutoModel>[];
-    produtos = produtos
-        .where(
-          (produto) => form.produtos.map((e) => e.id).contains(produto.id),
-        )
-        .toList();
+    List<PedidoProdutoModel> produtos =
+        form.produto != null
+            ? ordemCtrl.getPedidosPorProduto(form.produto!, ordem: widget.ordem)
+            : <PedidoProdutoModel>[];
+    produtos =
+        produtos
+            .where(
+              (produto) => form.produtos.map((e) => e.id).contains(produto.id),
+            )
+            .toList();
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -240,9 +247,10 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
             children: [
               Expanded(
                 child: InkWell(
-                  onTap: () => showOrderCreatePedidosSelecionadosBottom(
-                    widget.ordem,
-                  ),
+                  onTap:
+                      () => showOrderCreatePedidosSelecionadosBottom(
+                        widget.ordem,
+                      ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -63,15 +63,16 @@ class StepController {
 
   Map<String, List<PedidoModel>> _mountCalendar() {
     final calendar = <String, List<PedidoModel>>{};
-    final keys = FirestoreClient.pedidos.pepidosUnarchiveds
-        .where((e) => e.deliveryAt != null)
-        .map((e) => e.deliveryAt!)
-        .toSet();
+    final keys =
+        FirestoreClient.pedidos.pepidosUnarchiveds
+            .where((e) => e.deliveryAt != null)
+            .map((e) => e.deliveryAt!)
+            .toSet();
     for (DateTime key in keys) {
-      calendar[DateFormat('dd/MM/yyyy').format(key)] = FirestoreClient
-          .pedidos.pepidosUnarchiveds
-          .where((e) => e.deliveryAt == key)
-          .toList();
+      calendar[DateFormat('dd/MM/yyyy').format(key)] =
+          FirestoreClient.pedidos.pepidosUnarchiveds
+              .where((e) => e.deliveryAt == key)
+              .toList();
     }
     return calendar;
   }
@@ -105,8 +106,9 @@ class StepController {
 
   bool onWillAccept(PedidoModel pedido, StepModel step, {bool auto = false}) {
     if (pedido.step.id != step.id) {
-      final isStepAvailable =
-          step.fromSteps.map((e) => e.id).contains(pedido.step.id);
+      final isStepAvailable = step.fromSteps
+          .map((e) => e.id)
+          .contains(pedido.step.id);
       if (!isStepAvailable) {
         NotificationService.showNegative(
           'Operação não permitida',
@@ -116,7 +118,8 @@ class StepController {
       }
     }
     if (!auto) {
-      final isUserAvailable = step.moveRoles.contains(usuario.role) &&
+      final isUserAvailable =
+          step.moveRoles.contains(usuario.role) &&
           pedido.step.moveRoles.contains(usuario.role);
       if (!isUserAvailable) {
         NotificationService.showNegative(
@@ -224,8 +227,10 @@ class StepController {
 
   void onUndoStep(PedidoModel pedido) async {
     final step = pedido.steps[pedido.steps.length - 2].step;
-    if (!await showConfirmDialog('Deseja voltar para etapa anterior?',
-        'Seu pedido será movido para ${step.name}')) {
+    if (!await showConfirmDialog(
+      'Deseja voltar para etapa anterior?',
+      'Seu pedido será movido para ${step.name}',
+    )) {
       return;
     }
     _onMovePedido(pedido, step, 0);

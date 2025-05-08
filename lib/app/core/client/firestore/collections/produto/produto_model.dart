@@ -10,10 +10,11 @@ class ProdutoModel {
   final double massaFinal;
 
   factory ProdutoModel.empty() => ProdutoModel(
-      id: HashService.get,
-      nome: 'Produto não encontrado',
-      descricao: 'Este produto não foi encontrado no sistema',
-      massaFinal: 0.0);
+    id: HashService.get,
+    nome: 'Produto não encontrado',
+    descricao: 'Este produto não foi encontrado no sistema',
+    massaFinal: 0.0,
+  );
 
   String get descricaoReplaced =>
       descricao.replaceAll('mm', '').replaceAll('.0', '');

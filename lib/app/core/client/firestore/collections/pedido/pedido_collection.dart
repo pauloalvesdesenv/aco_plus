@@ -67,29 +67,30 @@ class PedidoCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-                field,
-                isEqualTo: isEqualTo,
-                isNotEqualTo: isNotEqualTo,
-                isLessThan: isLessThan,
-                isLessThanOrEqualTo: isLessThanOrEqualTo,
-                isGreaterThan: isGreaterThan,
-                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-                arrayContains: arrayContains,
-                arrayContainsAny: arrayContainsAny,
-                whereIn: whereIn,
-                whereNotIn: whereNotIn,
-                isNull: isNull,
-              )
+              field,
+              isEqualTo: isEqualTo,
+              isNotEqualTo: isNotEqualTo,
+              isLessThan: isLessThan,
+              isLessThanOrEqualTo: isLessThanOrEqualTo,
+              isGreaterThan: isGreaterThan,
+              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+              arrayContains: arrayContains,
+              arrayContainsAny: arrayContainsAny,
+              whereIn: whereIn,
+              whereNotIn: whereNotIn,
+              isNull: isNull,
+            )
             : collection)
         .snapshots()
         .listen((e) {
-      final data = e.docs.map((e) => PedidoModel.fromMap(e.data())).toList();
-      dataStream.add(data);
-      pedidosUnarchivedsStream.add(
-        data.where((e) => !e.isArchived).toList(),
-      );
-      pedidosArchivedsStream.add(data.where((e) => e.isArchived).toList());
-    });
+          final data =
+              e.docs.map((e) => PedidoModel.fromMap(e.data())).toList();
+          dataStream.add(data);
+          pedidosUnarchivedsStream.add(
+            data.where((e) => !e.isArchived).toList(),
+          );
+          pedidosArchivedsStream.add(data.where((e) => e.isArchived).toList());
+        });
   }
 
   PedidoModel getById(String id) =>

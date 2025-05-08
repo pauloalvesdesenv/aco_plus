@@ -325,7 +325,10 @@ class DashboardPageState extends State<DashboardPage> {
     builder: (_, ordens) {
       List<OrdemModel> ordensFiltradas = ordens.toList();
       ordensFiltradas.removeWhere((element) => element.freezed.isFreezed);
-      ordensFiltradas = ordensFiltradas.where((element) => element.status != PedidoProdutoStatus.pronto).toList();
+      ordensFiltradas =
+          ordensFiltradas
+              .where((element) => element.status != PedidoProdutoStatus.pronto)
+              .toList();
 
       return Row(
         children: [
@@ -357,7 +360,8 @@ class DashboardPageState extends State<DashboardPage> {
               child: ListView.builder(
                 itemCount: ordensFiltradas.length,
                 itemBuilder:
-                    (_, i) => _ordemProducaoItemWidget(context, ordensFiltradas[i]),
+                    (_, i) =>
+                        _ordemProducaoItemWidget(context, ordensFiltradas[i]),
               ),
             ),
           ),

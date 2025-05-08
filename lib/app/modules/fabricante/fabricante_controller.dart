@@ -97,8 +97,9 @@ class FabricanteController {
         deleteMessage: 'Todos seus dados serão apagados do sistema',
         infoMessage:
             'Não é possível exlcuir o fabricante, pois ele está vinculado a uma prdem.',
-        conditional: FirestoreClient.ordens.data
-            .any((e) => e.materiaPrima?.fabricanteModel.id == fabricante.id),
+        conditional: FirestoreClient.ordens.data.any(
+          (e) => e.materiaPrima?.fabricanteModel.id == fabricante.id,
+        ),
       );
 
   void onValid(FabricanteModel? fabricante) {

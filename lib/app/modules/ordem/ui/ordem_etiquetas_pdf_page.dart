@@ -14,16 +14,19 @@ class OrdemEtiquetasPdfPage {
   OrdemEtiquetasPdfPage(this.model);
 
   pw.Page build(Uint8List bytes) => pw.MultiPage(
-        margin: pw.EdgeInsets.zero,
-        orientation: pw.PageOrientation.portrait,
-        pageFormat: PdfPageFormat.a6,
-        build: (pw.Context context) => [
+    margin: pw.EdgeInsets.zero,
+    orientation: pw.PageOrientation.portrait,
+    pageFormat: PdfPageFormat.a6,
+    build:
+        (pw.Context context) => [
           for (var etiqueta in model) _etiquetaItem(etiqueta, bytes),
         ],
-      );
+  );
 
   pw.Widget _etiquetaItem(OrdemEtiquetaModel etiqueta, Uint8List bytes) {
     return pw.Container(
+      width: double.maxFinite,
+      height: 419,
       padding: const pw.EdgeInsets.all(16),
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -32,7 +35,7 @@ class OrdemEtiquetasPdfPage {
             child: pw.Image(pw.MemoryImage(bytes), width: 60, height: 60),
           ),
           pw.SizedBox(height: 16),
-          _itemRelatorio(etiqueta),
+          pw.Expanded(child: _itemRelatorio(etiqueta)),
         ],
       ),
     );
@@ -64,14 +67,16 @@ class OrdemEtiquetasPdfPage {
                   ),
                 ),
               ),
-              pw.Text(
-                DateFormat(
-                  "'EMITIDA EM 'dd/MM/yyyy' ÀS 'HH:mm",
-                ).format(etiqueta.createdAt),
-                style: pw.TextStyle(
-                  fontSize: 11,
-                  fontWeight: pw.FontWeight.normal,
-                  color: PdfColor.fromInt(AppColors.black.value),
+              pw.Expanded(
+                child: pw.Text(
+                  DateFormat(
+                    "'EMITIDA EM 'dd/MM/yyyy' ÀS 'HH:mm",
+                  ).format(etiqueta.createdAt),
+                  style: pw.TextStyle(
+                    fontSize: 11,
+                    fontWeight: pw.FontWeight.normal,
+                    color: PdfColor.fromInt(AppColors.black.value),
+                  ),
                 ),
               ),
             ],
@@ -106,6 +111,7 @@ class OrdemEtiquetasPdfPage {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Expanded(
+            flex: 5,
             child: pw.Text(
               label,
               style: pw.TextStyle(
@@ -116,7 +122,7 @@ class OrdemEtiquetasPdfPage {
             ),
           ),
           pw.Expanded(
-            flex: 2,
+            flex: 8,
             child: pw.Text(
               value,
               style: pw.TextStyle(

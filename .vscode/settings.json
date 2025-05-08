@@ -31,5 +31,6 @@
   "explorer.confirmPasteNative": false,
   "git.enableSmartCommit": true,
   "json.schemas": [],
-  "github.copilot.editor.enableAutoCompletions": true
+  "github.copilot.editor.enableAutoCompletions": true,
+  "cmake.sourceDirectory": "C:/Users/Paulo/Documents/workspace/freelancers/evandro/aco_plus/windows"
 }

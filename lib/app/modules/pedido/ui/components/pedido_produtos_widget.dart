@@ -92,12 +92,12 @@ class PedidoProdutosWidget extends StatelessWidget {
 
                   return ordem?.materiaPrima != null
                       ? Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            '${ordem?.materiaPrima?.fabricanteModel.nome} - ${ordem?.materiaPrima?.corridaLote}',
-                            style: AppCss.minimumBold,
-                          ),
-                        )
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          '${ordem?.materiaPrima?.fabricanteModel.nome} - ${ordem?.materiaPrima?.corridaLote}',
+                          style: AppCss.minimumBold,
+                        ),
+                      )
                       : const SizedBox();
                 },
               ),
@@ -122,13 +122,15 @@ class PedidoProdutosWidget extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             color: status.getStatusView().color.withValues(
-                                  alpha: isLast ? 0.4 : 0.2,
-                                ),
+                              alpha: isLast ? 0.4 : 0.2,
+                            ),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
                             status.getStatusView().label,
-                            style: AppCss.mediumRegular.setSize(14).setColor(
+                            style: AppCss.mediumRegular
+                                .setSize(14)
+                                .setColor(
                                   AppColors.black.withValues(
                                     alpha: isLast ? 1 : 0.4,
                                   ),

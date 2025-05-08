@@ -277,8 +277,7 @@ class OrdemController {
       !await onDeleteProcess(
         deleteTitle: 'Deseja excluir a ordem?',
         deleteMessage: 'Todos seus dados da ordem apagados do sistema',
-        infoMessage:
-            'Remova os produtos da ordem para poder excluir-la.',
+        infoMessage: 'Remova os produtos da ordem para poder excluir-la.',
         conditional: ordem.produtos.isNotEmpty,
       );
 

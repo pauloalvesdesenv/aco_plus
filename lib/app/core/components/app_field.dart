@@ -106,16 +106,17 @@ class _AppFieldState extends State<AppField> {
                   widget.isDisable ? Colors.grey[400]! : Colors.transparent,
               hintText: widget.hint,
               hintStyle: AppCss.smallRegular.setColor(AppColors.neutralDark),
-              prefixIcon: widget.icon != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 10),
-                      child: Icon(
-                        widget.icon,
-                        weight: 800,
-                        color: AppColors.primaryDark,
-                      ),
-                    )
-                  : null,
+              prefixIcon:
+                  widget.icon != null
+                      ? Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 10),
+                        child: Icon(
+                          widget.icon,
+                          weight: 800,
+                          color: AppColors.primaryDark,
+                        ),
+                      )
+                      : null,
               suffixIcon: getSuffix(),
             ),
           ),

@@ -63,9 +63,10 @@ class _AppColorPickerState extends State<AppColorPicker> {
                   child: Icon(
                     Icons.color_lens,
                     size: 18,
-                    color: widget.color.computeLuminance() > 0.5
-                        ? Colors.black
-                        : Colors.white,
+                    color:
+                        widget.color.computeLuminance() > 0.5
+                            ? Colors.black
+                            : Colors.white,
                   ),
                 ),
               ),

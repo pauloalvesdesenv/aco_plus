@@ -43,67 +43,66 @@ class _OrdemPageState extends State<OrdemPage> {
   Widget build(BuildContext context) {
     return StreamOut(
       stream: ordemCtrl.ordemStream.listen,
-      builder: (_, ordem) => AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          actions: usuario.isOperador
-              ? []
-              : [
-                  if (!ordem.isArchived)
-                    IconButton(
-                      onPressed: () async =>
-                          ordemCtrl.onArchive(context, ordem),
-                      icon: Icon(
-                        Icons.archive,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  if (ordem.isArchived)
-                    IconButton(
-                      onPressed: () async =>
-                          ordemCtrl.onUnarchive(context, ordem, 2),
-                      icon: Icon(
-                        Icons.unarchive,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  IconButton(
-                    onPressed: () async {
-                      final tipo = await showOrdemExportarPdfTipoBottom();
-                      if (tipo != null) {
-                        if (tipo == OrdemExportarPdfTipo.relatorio) {
-                          await ordemCtrl.onGenerateRelatorioPDF(ordem);
-                        } else {
-                          await ordemCtrl.onGenerateEtiquetasPDF(ordem);
-                        }
-                      }
-                    },
-                    icon: Icon(
-                      Icons.picture_as_pdf,
-                      color: AppColors.white,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () async =>
-                        push(context, OrdemCreatePage(ordem: ordem)),
-                    icon: Icon(Icons.edit, color: AppColors.white),
-                  ),
-                  IconButton(
-                    onPressed: () async => ordemCtrl.onDelete(context, ordem),
-                    icon: Icon(Icons.delete, color: AppColors.white),
-                  ),
-                ],
-          title: Text(
-            'Ordem ${ordem.localizator}',
-            style: AppCss.largeBold.setColor(AppColors.white),
+      builder:
+          (_, ordem) => AppScaffold(
+            resizeAvoid: true,
+            appBar: AppBar(
+              actions:
+                  usuario.isOperador
+                      ? []
+                      : [
+                        if (!ordem.isArchived)
+                          IconButton(
+                            onPressed:
+                                () async => ordemCtrl.onArchive(context, ordem),
+                            icon: Icon(Icons.archive, color: AppColors.white),
+                          ),
+                        if (ordem.isArchived)
+                          IconButton(
+                            onPressed:
+                                () async =>
+                                    ordemCtrl.onUnarchive(context, ordem, 2),
+                            icon: Icon(Icons.unarchive, color: AppColors.white),
+                          ),
+                        IconButton(
+                          onPressed: () async {
+                            final tipo = await showOrdemExportarPdfTipoBottom();
+                            if (tipo != null) {
+                              if (tipo == OrdemExportarPdfTipo.relatorio) {
+                                await ordemCtrl.onGenerateRelatorioPDF(ordem);
+                              } else {
+                                await ordemCtrl.onGenerateEtiquetasPDF(ordem);
+                              }
+                            }
+                          },
+                          icon: Icon(
+                            Icons.picture_as_pdf,
+                            color: AppColors.white,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed:
+                              () async =>
+                                  push(context, OrdemCreatePage(ordem: ordem)),
+                          icon: Icon(Icons.edit, color: AppColors.white),
+                        ),
+                        IconButton(
+                          onPressed:
+                              () async => ordemCtrl.onDelete(context, ordem),
+                          icon: Icon(Icons.delete, color: AppColors.white),
+                        ),
+                      ],
+              title: Text(
+                'Ordem ${ordem.localizator}',
+                style: AppCss.largeBold.setColor(AppColors.white),
+              ),
+              backgroundColor: AppColors.primaryMain,
+            ),
+            body: StreamOut(
+              stream: ordemCtrl.ordemStream.listen,
+              builder: (_, form) => body(form),
+            ),
           ),
-          backgroundColor: AppColors.primaryMain,
-        ),
-        body: StreamOut(
-          stream: ordemCtrl.ordemStream.listen,
-          builder: (_, form) => body(form),
-        ),
-      ),
     );
   }
 
@@ -118,9 +117,10 @@ class _OrdemPageState extends State<OrdemPage> {
         children: [
           if (ordem.freezed.isFreezed) unfreezedWidget(ordem),
           Container(
-            color: ordem.freezed.isFreezed
-                ? Colors.grey.withValues(alpha: 0.1)
-                : null,
+            color:
+                ordem.freezed.isFreezed
+                    ? Colors.grey.withValues(alpha: 0.1)
+                    : null,
             child: Column(
               children: [
                 _descriptionWidget(ordem),
@@ -146,18 +146,21 @@ class _OrdemPageState extends State<OrdemPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RowItensLabel([
-            ItemLabel('Produto',
-                '${ordem.produto.nome} - ${ordem.produto.descricao}'),
+            ItemLabel(
+              'Produto',
+              '${ordem.produto.nome} - ${ordem.produto.descricao}',
+            ),
             ItemLabel('Iniciada', ordem.createdAt.text()),
             if (ordem.endAt != null)
               ItemLabel('Finalizada', ordem.endAt.text()),
           ]),
           const H(16),
           ItemLabel(
-              'Matéria Prima',
-              ordem.materiaPrima != null
-                  ? '${ordem.materiaPrima?.fabricanteModel.nome} - ${ordem.materiaPrima?.produto.labelMinified.replaceAll(' - ', ' ')}'
-                  : 'Não especificado'),
+            'Matéria Prima',
+            ordem.materiaPrima != null
+                ? '${ordem.materiaPrima?.fabricanteModel.nome} - ${ordem.materiaPrima?.produto.labelMinified.replaceAll(' - ', ' ')}'
+                : 'Não especificado',
+          ),
         ],
       ),
     );
@@ -175,9 +178,10 @@ class _OrdemPageState extends State<OrdemPage> {
               if (usuario.isNotOperador)
                 if (ordem.produtos.isNotEmpty)
                   InkWell(
-                    onTap: () => ordemCtrl.showBottomChangeProdutosStatus(
-                      ordem.produtos,
-                    ),
+                    onTap:
+                        () => ordemCtrl.showBottomChangeProdutosStatus(
+                          ordem.produtos,
+                        ),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 6,
@@ -321,92 +325,105 @@ class _OrdemPageState extends State<OrdemPage> {
             ),
         ],
       ),
-      trailing: usuario.isOperador
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: (produto.status.status ==
-                          PedidoProdutoStatus.aguardandoProducao
-                      ? [PedidoProdutoStatus.aguardandoProducao]
-                      : [
-                          PedidoProdutoStatus.produzindo,
-                          PedidoProdutoStatus.pronto,
-                        ])
-                  .map(
-                    (status) => Container(
-                      child: InkWell(
-                        onTap: status == produto.status.status
-                            ? null
-                            : () => ordemCtrl.onChangeProdutoStatus(
-                                  produto,
-                                  status,
-                                ),
-                        child: Tooltip(
-                          enableFeedback: status != produto.status.status,
-                          message: status == produto.status.status
-                              ? 'Este pedido atualmente está ${status.label}'
-                              : 'Clique para alterar para ${status.label}',
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: status.color.withValues(
-                                alpha:
-                                    status == produto.status.status ? 1 : 0.1,
-                              ),
-                            ),
-                            child: Text(
-                              status.label,
-                              style: AppCss.minimumRegular.setSize(16).copyWith(
-                                    color: (status == PedidoProdutoStatus.pronto
-                                            ? Colors.white
-                                            : Colors.black)
-                                        .withValues(
-                                      alpha: status == produto.status.status
-                                          ? 1
-                                          : 0.4,
+      trailing:
+          usuario.isOperador
+              ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children:
+                    (produto.status.status ==
+                                PedidoProdutoStatus.aguardandoProducao
+                            ? [PedidoProdutoStatus.aguardandoProducao]
+                            : [
+                              PedidoProdutoStatus.produzindo,
+                              PedidoProdutoStatus.pronto,
+                            ])
+                        .map(
+                          (status) => Container(
+                            child: InkWell(
+                              onTap:
+                                  status == produto.status.status
+                                      ? null
+                                      : () => ordemCtrl.onChangeProdutoStatus(
+                                        produto,
+                                        status,
+                                      ),
+                              child: Tooltip(
+                                enableFeedback: status != produto.status.status,
+                                message:
+                                    status == produto.status.status
+                                        ? 'Este pedido atualmente está ${status.label}'
+                                        : 'Clique para alterar para ${status.label}',
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: status.color.withValues(
+                                      alpha:
+                                          status == produto.status.status
+                                              ? 1
+                                              : 0.1,
                                     ),
                                   ),
+                                  child: Text(
+                                    status.label,
+                                    style: AppCss.minimumRegular
+                                        .setSize(16)
+                                        .copyWith(
+                                          color: (status ==
+                                                      PedidoProdutoStatus.pronto
+                                                  ? Colors.white
+                                                  : Colors.black)
+                                              .withValues(
+                                                alpha:
+                                                    status ==
+                                                            produto
+                                                                .status
+                                                                .status
+                                                        ? 1
+                                                        : 0.4,
+                                              ),
+                                        ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            )
-          : InkWell(
-              onTap: () => ordemCtrl.showBottomChangeProdutoStatus(produto),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 6,
-                  vertical: 3,
-                ),
-                decoration: BoxDecoration(
-                  color: produto.statusView.status.color.withValues(
-                    alpha: 0.4,
+                        )
+                        .toList(),
+              )
+              : InkWell(
+                onTap: () => ordemCtrl.showBottomChangeProdutoStatus(produto),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
                   ),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: IntrinsicWidth(
-                  child: Row(
-                    children: [
-                      Text(
-                        produto.statusView.status.label,
-                        style: AppCss.mediumRegular.setSize(12),
-                      ),
-                      const W(2),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 16,
-                        color: AppColors.black.withValues(alpha: 0.6),
-                      ),
-                    ],
+                  decoration: BoxDecoration(
+                    color: produto.statusView.status.color.withValues(
+                      alpha: 0.4,
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: IntrinsicWidth(
+                    child: Row(
+                      children: [
+                        Text(
+                          produto.statusView.status.label,
+                          style: AppCss.mediumRegular.setSize(12),
+                        ),
+                        const W(2),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 16,
+                          color: AppColors.black.withValues(alpha: 0.6),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
     );
   }
 
@@ -446,8 +463,9 @@ class _OrdemPageState extends State<OrdemPage> {
                       padding: const EdgeInsets.only(top: 26),
                       child: AppTextButton(
                         label: 'Confirmar',
-                        onPressed: () async =>
-                            await ordemCtrl.onFreezed(context, ordem),
+                        onPressed:
+                            () async =>
+                                await ordemCtrl.onFreezed(context, ordem),
                       ),
                     ),
                   ),
@@ -493,8 +511,8 @@ class _OrdemPageState extends State<OrdemPage> {
                   Expanded(
                     child: AppTextButton(
                       label: 'Descongelar Ordem',
-                      onPressed: () async =>
-                          await ordemCtrl.onFreezed(context, ordem),
+                      onPressed:
+                          () async => await ordemCtrl.onFreezed(context, ordem),
                     ),
                   ),
                 ],

@@ -45,10 +45,13 @@ class KanbanCardPedidoWidget extends StatelessWidget {
                 children: [
                   if (pedido.tags.isNotEmpty) ...[
                     Expanded(
-                        child: KanbanCardTagsWidget(
-                            pedido: pedido, viewMode: viewMode)),
+                      child: KanbanCardTagsWidget(
+                        pedido: pedido,
+                        viewMode: viewMode,
+                      ),
+                    ),
                     const W(8),
-                    Text(pedido.getQtdeTotal().toKg())
+                    Text(pedido.getQtdeTotal().toKg()),
                   ],
                 ],
               ),

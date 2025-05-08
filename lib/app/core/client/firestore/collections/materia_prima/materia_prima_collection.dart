@@ -54,27 +54,29 @@ class MateriaPrimaCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-                field,
-                isEqualTo: isEqualTo,
-                isNotEqualTo: isNotEqualTo,
-                isLessThan: isLessThan,
-                isLessThanOrEqualTo: isLessThanOrEqualTo,
-                isGreaterThan: isGreaterThan,
-                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-                arrayContains: arrayContains,
-                arrayContainsAny: arrayContainsAny,
-                whereIn: whereIn,
-                whereNotIn: whereNotIn,
-                isNull: isNull,
-              )
+              field,
+              isEqualTo: isEqualTo,
+              isNotEqualTo: isNotEqualTo,
+              isLessThan: isLessThan,
+              isLessThanOrEqualTo: isLessThanOrEqualTo,
+              isGreaterThan: isGreaterThan,
+              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+              arrayContains: arrayContains,
+              arrayContainsAny: arrayContainsAny,
+              whereIn: whereIn,
+              whereNotIn: whereNotIn,
+              isNull: isNull,
+            )
             : collection)
         .snapshots()
         .listen((e) {
-      final countries =
-          e.docs.map((e) => MateriaPrimaModel.fromMap(e.data())).toList();
-    countries.sort((a, b) => a.produto.number.compareTo(b.produto.number));
-      dataStream.add(countries);
-    });
+          final countries =
+              e.docs.map((e) => MateriaPrimaModel.fromMap(e.data())).toList();
+          countries.sort(
+            (a, b) => a.produto.number.compareTo(b.produto.number),
+          );
+          dataStream.add(countries);
+        });
   }
 
   MateriaPrimaModel getById(String id) =>

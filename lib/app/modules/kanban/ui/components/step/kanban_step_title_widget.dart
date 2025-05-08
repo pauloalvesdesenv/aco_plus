@@ -11,12 +11,7 @@ class KanbanStepTitleWidget extends StatelessWidget {
   final KanbanUtils utils;
   final StepModel step;
   final List<PedidoModel> pedidos;
-  const KanbanStepTitleWidget(
-    this.utils,
-    this.step,
-    this.pedidos, {
-    super.key,
-  });
+  const KanbanStepTitleWidget(this.utils, this.step, this.pedidos, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,42 +29,37 @@ class KanbanStepTitleWidget extends StatelessWidget {
         surfaceTintColor: Colors.white,
         color: Colors.white,
         onSelected: (e) => kanbanCtrl.onOrderPedidos(e, pedidos),
-        itemBuilder: (context) => [
-          PopupMenuItem(
-              child: Row(
-            children: [
-              Expanded(
-                  child:
-                      Text('Ordenação', style: AppCss.minimumBold.setSize(16))),
-              const Icon(
-                Icons.close,
-                color: Colors.black,
-                size: 16,
-              )
+        itemBuilder:
+            (context) => [
+              PopupMenuItem(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Ordenação',
+                        style: AppCss.minimumBold.setSize(16),
+                      ),
+                    ),
+                    const Icon(Icons.close, color: Colors.black, size: 16),
+                  ],
+                ),
+              ),
+              ...SortStepType.values.map(
+                (e) => PopupMenuItem(value: e, child: Text(e.label)),
+              ),
             ],
-          )),
-          ...SortStepType.values.map((e) => PopupMenuItem(
-                value: e,
-                child: Text(e.label),
-              )),
-        ],
       ),
       title: Row(
         children: [
           Expanded(
             child: Row(
               children: [
-                Expanded(
-                  child: Text(
-                    step.name,
-                    style: AppCss.minimumBold,
-                  ),
-                ),
+                Expanded(child: Text(step.name, style: AppCss.minimumBold)),
                 if (!step.isEnable)
                   Container(
-                      margin: const EdgeInsets.only(left: 4),
-                      child:
-                          const Icon(Icons.lock, color: Colors.red, size: 12)),
+                    margin: const EdgeInsets.only(left: 4),
+                    child: const Icon(Icons.lock, color: Colors.red, size: 12),
+                  ),
               ],
             ),
           ),

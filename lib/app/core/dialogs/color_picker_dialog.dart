@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 Future<Color?> showColorPicker() async => await showDialog(
-      context: contextGlobal,
-      builder: (_) => const ColorPickerDialog(),
-    );
+  context: contextGlobal,
+  builder: (_) => const ColorPickerDialog(),
+);
 
 class ColorPickerDialog extends StatefulWidget {
   const ColorPickerDialog({super.key});

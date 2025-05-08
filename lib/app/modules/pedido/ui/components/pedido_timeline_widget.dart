@@ -61,57 +61,58 @@ class _PedidoTimelineWidgetState extends State<PedidoTimelineWidget> {
         const Divisor(),
         histories.isEmpty
             ? Container(
-                width: double.maxFinite,
-                padding: const EdgeInsets.all(16),
-                color: Colors.grey[50],
-                child: const Text('Sem histórico disponível'),
-              )
+              width: double.maxFinite,
+              padding: const EdgeInsets.all(16),
+              color: Colors.grey[50],
+              child: const Text('Sem histórico disponível'),
+            )
             : Theme(
-                data: Theme.of(context).copyWith(
-                  primaryColor: AppColors.primaryMain,
-                  colorScheme:
-                      ColorScheme.light(primary: AppColors.primaryMain),
-                ),
-                child: Container(
-                  color: Colors.grey[50],
-                  width: double.maxFinite,
-                  height: 300,
-                  child: Stepper(
-                    key: Key((Random().nextDouble() * 200).toStringAsFixed(2)),
-                    controller: controller,
-                    elevation: 0,
-                    controlsBuilder: (context, details) => Container(),
-                    margin: EdgeInsets.zero,
-                    stepIconBuilder: (i, state) => Icon(
-                      histories[i].icon,
-                      color: Colors.white,
-                      size: 14,
-                    ),
-                    steps: histories
-                        .map(
-                          (e) => Step(
-                            content: const SizedBox(),
-                            label: Text(e.title),
-                            isActive: histories.indexOf(e) == 0,
-                            title: Row(
-                              children: [
-                                Expanded(child: Text(e.title)),
-                                Text(
-                                  e.createdAt.textHour(),
-                                  style: AppCss.smallRegular.setSize(12),
-                                ),
-                              ],
+              data: Theme.of(context).copyWith(
+                primaryColor: AppColors.primaryMain,
+                colorScheme: ColorScheme.light(primary: AppColors.primaryMain),
+              ),
+              child: Container(
+                color: Colors.grey[50],
+                width: double.maxFinite,
+                height: 300,
+                child: Stepper(
+                  key: Key((Random().nextDouble() * 200).toStringAsFixed(2)),
+                  controller: controller,
+                  elevation: 0,
+                  controlsBuilder: (context, details) => Container(),
+                  margin: EdgeInsets.zero,
+                  stepIconBuilder:
+                      (i, state) => Icon(
+                        histories[i].icon,
+                        color: Colors.white,
+                        size: 14,
+                      ),
+                  steps:
+                      histories
+                          .map(
+                            (e) => Step(
+                              content: const SizedBox(),
+                              label: Text(e.title),
+                              isActive: histories.indexOf(e) == 0,
+                              title: Row(
+                                children: [
+                                  Expanded(child: Text(e.title)),
+                                  Text(
+                                    e.createdAt.textHour(),
+                                    style: AppCss.smallRegular.setSize(12),
+                                  ),
+                                ],
+                              ),
+                              subtitle: Text(
+                                e.description,
+                                textAlign: TextAlign.start,
+                              ),
                             ),
-                            subtitle: Text(
-                              e.description,
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
+                          )
+                          .toList(),
                 ),
               ),
+            ),
         const H(16),
       ],
     );

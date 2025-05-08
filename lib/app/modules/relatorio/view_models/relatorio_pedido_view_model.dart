@@ -22,11 +22,12 @@ extension RelatorioTipoStatusExtension on RelatorioPedidoTipo {
 
 class RelatorioPedidoViewModel {
   ClienteModel? cliente;
-  List<PedidoProdutoStatus> status = [
-    PedidoProdutoStatus.separado,
-    PedidoProdutoStatus.aguardandoProducao,
-    PedidoProdutoStatus.produzindo,
-  ].toList();
+  List<PedidoProdutoStatus> status =
+      [
+        PedidoProdutoStatus.separado,
+        PedidoProdutoStatus.aguardandoProducao,
+        PedidoProdutoStatus.produzindo,
+      ].toList();
   List<ProdutoModel> produtos = FirestoreClient.produtos.data.toList();
   RelatorioPedidoModel? relatorio;
   late SortType sortType;
@@ -53,5 +54,10 @@ class RelatorioPedidoModel {
   final RelatorioPedidoTipo tipo;
 
   RelatorioPedidoModel(
-      this.cliente, this.status, this.pedidos, this.tipo, this.produtos);
+    this.cliente,
+    this.status,
+    this.pedidos,
+    this.tipo,
+    this.produtos,
+  );
 }

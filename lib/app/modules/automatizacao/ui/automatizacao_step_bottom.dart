@@ -11,13 +11,12 @@ import 'package:flutter/material.dart';
 Future<StepModel?> showAutomatizacaoStepBottom(
   AutomatizacaoItemType type,
   StepModel step,
-) async =>
-    showModalBottomSheet(
-      backgroundColor: AppColors.white,
-      context: contextGlobal,
-      isScrollControlled: true,
-      builder: (_) => AutomatizacaoStepBottom(step, type),
-    );
+) async => showModalBottomSheet(
+  backgroundColor: AppColors.white,
+  context: contextGlobal,
+  isScrollControlled: true,
+  builder: (_) => AutomatizacaoStepBottom(step, type),
+);
 
 class AutomatizacaoStepBottom extends StatefulWidget {
   final AutomatizacaoItemType type;
@@ -48,90 +47,91 @@ class _AutomatizacaoStepBottomState extends State<AutomatizacaoStepBottom> {
   Widget build(BuildContext context) {
     return BottomSheet(
       onClosing: () {},
-      builder: (context) => Container(
-        height: 600,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-        ),
-        child: Column(
-          children: [
-            const H(16),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: IconButton(
-                  style: ButtonStyle(
-                    padding: const WidgetStatePropertyAll(
-                      EdgeInsets.all(16),
-                    ),
-                    backgroundColor: WidgetStatePropertyAll(
-                      AppColors.white,
-                    ),
-                    foregroundColor: WidgetStatePropertyAll(
-                      AppColors.black,
+      builder:
+          (context) => Container(
+            height: 600,
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
+              ),
+            ),
+            child: Column(
+              children: [
+                const H(16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: IconButton(
+                      style: ButtonStyle(
+                        padding: const WidgetStatePropertyAll(
+                          EdgeInsets.all(16),
+                        ),
+                        backgroundColor: WidgetStatePropertyAll(
+                          AppColors.white,
+                        ),
+                        foregroundColor: WidgetStatePropertyAll(
+                          AppColors.black,
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.keyboard_backspace),
                     ),
                   ),
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.keyboard_backspace),
                 ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Selecione a Etapa:', style: AppCss.largeBold),
-                    Text(
-                      '(${widget.type.desc})',
-                      style: AppCss.minimumRegular,
-                    ),
-                    const H(16),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          for (StepModel e in FirestoreClient.steps.data)
-                            Container(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              decoration: BoxDecoration(
-                                color: e.color.withValues(alpha: 0.4),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: RadioListTile<StepModel>(
-                                title: Text(
-                                  e.name,
-                                  style: AppCss.mediumRegular,
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Selecione a Etapa:', style: AppCss.largeBold),
+                        Text(
+                          '(${widget.type.desc})',
+                          style: AppCss.minimumRegular,
+                        ),
+                        const H(16),
+                        Expanded(
+                          child: ListView(
+                            children: [
+                              for (StepModel e in FirestoreClient.steps.data)
+                                Container(
+                                  margin: const EdgeInsets.only(bottom: 8),
+                                  decoration: BoxDecoration(
+                                    color: e.color.withValues(alpha: 0.4),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: RadioListTile<StepModel>(
+                                    title: Text(
+                                      e.name,
+                                      style: AppCss.mediumRegular,
+                                    ),
+                                    value: e,
+                                    groupValue: step,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        step = value!;
+                                      });
+                                    },
+                                  ),
                                 ),
-                                value: e,
-                                groupValue: step,
-                                onChanged: (value) {
-                                  setState(() {
-                                    step = value!;
-                                  });
-                                },
-                              ),
-                            ),
-                        ],
-                      ),
+                            ],
+                          ),
+                        ),
+                        const H(16),
+                        AppTextButton(
+                          label: 'Confirmar',
+                          onPressed: () => Navigator.pop(context, step),
+                        ),
+                      ],
                     ),
-                    const H(16),
-                    AppTextButton(
-                      label: 'Confirmar',
-                      onPressed: () => Navigator.pop(context, step),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 }

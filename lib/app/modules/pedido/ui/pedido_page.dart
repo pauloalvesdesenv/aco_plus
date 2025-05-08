@@ -29,8 +29,12 @@ class PedidoPage extends StatefulWidget {
   final PedidoInitReason reason;
   final Function()? onDelete;
 
-  const PedidoPage(
-      {required this.pedido, required this.reason, this.onDelete, super.key});
+  const PedidoPage({
+    required this.pedido,
+    required this.reason,
+    this.onDelete,
+    super.key,
+  });
 
   @override
   State<PedidoPage> createState() => _PedidoPageState();
@@ -60,8 +64,11 @@ class _PedidoPageState extends State<PedidoPage>
     super.build(context);
     return StreamOut(
       stream: pedidoCtrl.pedidoStream.listen,
-      builder: (_, pedido) =>
-          isKanban ? _kanbanReasonWidget(pedido) : _pedidoReasonWidget(pedido),
+      builder:
+          (_, pedido) =>
+              isKanban
+                  ? _kanbanReasonWidget(pedido)
+                  : _pedidoReasonWidget(pedido),
     );
   }
 
@@ -78,10 +85,7 @@ class _PedidoPageState extends State<PedidoPage>
   }
 
   Widget _kanbanReasonWidget(PedidoModel pedido) {
-    return Material(
-      surfaceTintColor: Colors.transparent,
-      child: body(pedido),
-    );
+    return Material(surfaceTintColor: Colors.transparent, child: body(pedido));
   }
 
   Widget body(PedidoModel pedido) {
@@ -122,7 +126,7 @@ class _PedidoPageState extends State<PedidoPage>
                   const Divisor(),
                   if (pedido.tipo == PedidoTipo.cda) ...[
                     PedidoArmacaoWidget(pedido),
-                    const Divisor()
+                    const Divisor(),
                   ],
                 ],
               ),
@@ -144,7 +148,7 @@ class _PedidoPageState extends State<PedidoPage>
             if (pedido.histories.isNotEmpty)
               PedidoTimelineWidget(pedido: pedido),
           ],
-        )
+        ),
       ],
     );
   }

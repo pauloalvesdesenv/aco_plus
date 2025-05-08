@@ -59,12 +59,13 @@ class PedidoItemWidget extends StatelessWidget {
                 ),
                 const W(8),
                 ColorFiltered(
-                  colorFilter: pedido.isAguardandoEntradaProducao()
-                      ? ColorFilter.mode(Colors.grey[200]!, BlendMode.srcIn)
-                      : const ColorFilter.mode(
-                          Colors.transparent,
-                          BlendMode.color,
-                        ),
+                  colorFilter:
+                      pedido.isAguardandoEntradaProducao()
+                          ? ColorFilter.mode(Colors.grey[200]!, BlendMode.srcIn)
+                          : const ColorFilter.mode(
+                            Colors.transparent,
+                            BlendMode.color,
+                          ),
                   child: Row(
                     children: [
                       _progressChartWidget(
@@ -105,8 +106,9 @@ class PedidoItemWidget extends StatelessWidget {
                 ),
                 child: Text(
                   pedido.steps.last.step.name,
-                  style:
-                      AppCss.minimumBold.setSize(9).setColor(Colors.grey[800]!),
+                  style: AppCss.minimumBold
+                      .setSize(9)
+                      .setColor(Colors.grey[800]!),
                 ),
               ),
             ),

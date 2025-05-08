@@ -19,16 +19,17 @@ class KanbanBodyShimmerWidget extends StatelessWidget {
               itemCount: 10,
               scrollDirection: Axis.horizontal,
               separatorBuilder: (_, i) => const W(16),
-              itemBuilder: (_, i) => AppShimmer(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
+              itemBuilder:
+                  (_, i) => AppShimmer(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      width: 300,
+                      height: double.maxFinite,
+                    ),
                   ),
-                  width: 300,
-                  height: double.maxFinite,
-                ),
-              ),
             ),
           ),
         ],

@@ -36,24 +36,26 @@ class _ObraCreatePageState extends State<ObraCreatePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () => pop(context),
-              icon: Icon(
-                Icons.arrow_back,
-                color: AppColors.white,
-              )),
-          title: Text('${obraCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Obra',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          actions: [
-            IconLoadingButton(() async => await obraCtrl.onConfirm(context))
-          ],
-          backgroundColor: AppColors.primaryMain,
+      resizeAvoid: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => pop(context),
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
-        body: StreamOut(
-            stream: obraCtrl.formStream.listen,
-            builder: (_, form) => body(form)));
+        title: Text(
+          '${obraCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Obra',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
+        actions: [
+          IconLoadingButton(() async => await obraCtrl.onConfirm(context)),
+        ],
+        backgroundColor: AppColors.primaryMain,
+      ),
+      body: StreamOut(
+        stream: obraCtrl.formStream.listen,
+        builder: (_, form) => body(form),
+      ),
+    );
   }
 
   Widget body(ObraCreateModel form) {
@@ -87,7 +89,9 @@ class _ObraCreatePageState extends State<ObraCreatePage> {
         InkWell(
           onTap: () async {
             final endereco = await push(
-                context, EnderecoCreatePage(endereco: form.endereco));
+              context,
+              EnderecoCreatePage(endereco: form.endereco),
+            );
             if (endereco != null) {
               form.endereco = endereco;
               obraCtrl.formStream.update();
@@ -99,8 +103,9 @@ class _ObraCreatePageState extends State<ObraCreatePage> {
               required: false,
               suffixIconSize: 12,
               suffixIcon: Icons.arrow_forward_ios,
-              controller:
-                  TextController(text: form.endereco?.name.toString() ?? ''),
+              controller: TextController(
+                text: form.endereco?.name.toString() ?? '',
+              ),
               onChanged: (_) => obraCtrl.formStream.update(),
             ),
           ),
@@ -108,32 +113,37 @@ class _ObraCreatePageState extends State<ObraCreatePage> {
         const H(16),
         if (form.isEdit)
           TextButton.icon(
-              style: ButtonStyle(
-                fixedSize: const WidgetStatePropertyAll(
-                    Size.fromWidth(double.maxFinite)),
-                foregroundColor: WidgetStatePropertyAll(AppColors.error),
-                backgroundColor: WidgetStatePropertyAll(AppColors.white),
-                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: AppCss.radius8,
-                    side: BorderSide(color: AppColors.error))),
+            style: ButtonStyle(
+              fixedSize: const WidgetStatePropertyAll(
+                Size.fromWidth(double.maxFinite),
               ),
-              onPressed: () async {
-                if (!await onDeleteProcess(
-                    deleteTitle: 'Excluir obra?',
-                    deleteMessage:
-                        'Todos os dados da obra serão apagados do sistema',
-                    infoMessage:
-                        'Não é possível excluir obra, pois há pedidos vinculados a ela',
-                    conditional: FirestoreClient.pedidos.data
-                        .any((e) => e.obra.id == widget.obra!.id))) {
-                  return;
-                }
-                Navigator.pop(context, obraDeleteObj);
-              },
-              label: const Text('Excluir'),
-              icon: const Icon(
-                Icons.delete_outline,
-              )),
+              foregroundColor: WidgetStatePropertyAll(AppColors.error),
+              backgroundColor: WidgetStatePropertyAll(AppColors.white),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: AppCss.radius8,
+                  side: BorderSide(color: AppColors.error),
+                ),
+              ),
+            ),
+            onPressed: () async {
+              if (!await onDeleteProcess(
+                deleteTitle: 'Excluir obra?',
+                deleteMessage:
+                    'Todos os dados da obra serão apagados do sistema',
+                infoMessage:
+                    'Não é possível excluir obra, pois há pedidos vinculados a ela',
+                conditional: FirestoreClient.pedidos.data.any(
+                  (e) => e.obra.id == widget.obra!.id,
+                ),
+              )) {
+                return;
+              }
+              Navigator.pop(context, obraDeleteObj);
+            },
+            label: const Text('Excluir'),
+            icon: const Icon(Icons.delete_outline),
+          ),
       ],
     );
   }

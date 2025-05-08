@@ -19,15 +19,15 @@ class UsuarioModel {
   bool get isNotOperador => role != UsuarioRole.operador;
 
   static UsuarioModel get system => UsuarioModel(
-        id: 'system',
-        nome: 'Sistema',
-        email: 'system@pcpm2.com',
-        senha: 'system',
-        role: UsuarioRole.administrador,
-        permission: UserPermissionModel.all(),
-        steps: FirestoreClient.steps.data.map((e) => e.copyWith()).toList(),
-        deviceTokens: [],
-      );
+    id: 'system',
+    nome: 'Sistema',
+    email: 'system@pcpm2.com',
+    senha: 'system',
+    role: UsuarioRole.administrador,
+    permission: UserPermissionModel.all(),
+    steps: FirestoreClient.steps.data.map((e) => e.copyWith()).toList(),
+    deviceTokens: [],
+  );
 
   UsuarioModel({
     required this.id,
@@ -76,11 +76,10 @@ class UsuarioModel {
   }
 
   Map<String, dynamic> toMention() => {
-        "id": id,
-        "display": nome,
-        "photo":
-            "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
-      };
+    "id": id,
+    "display": nome,
+    "photo": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+  };
 
   factory UsuarioModel.fromMap(Map<String, dynamic> map) {
     return UsuarioModel(
@@ -89,13 +88,15 @@ class UsuarioModel {
       email: map['email'] ?? '',
       senha: map['senha'] ?? '',
       role: UsuarioRole.values[map['role']],
-      permission: map['permission'] != null
-          ? UserPermissionModel.fromMap(map['permission'])
-          : UserPermissionModel.all(),
+      permission:
+          map['permission'] != null
+              ? UserPermissionModel.fromMap(map['permission'])
+              : UserPermissionModel.all(),
       steps: [],
-      deviceTokens: map['deviceTokens'] != null
-          ? List<String>.from(map['deviceTokens'])
-          : [],
+      deviceTokens:
+          map['deviceTokens'] != null
+              ? List<String>.from(map['deviceTokens'])
+              : [],
     );
   }
 

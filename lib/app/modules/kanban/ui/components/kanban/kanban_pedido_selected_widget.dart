@@ -11,11 +11,12 @@ class KanbanPedidoSelectedWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedOpacity(
-        duration: const Duration(milliseconds: 400),
-        opacity: utils.isPedidoSelected ? 1 : 0,
-        child: !utils.isPedidoSelected
-            ? const SizedBox()
-            : Container(
+      duration: const Duration(milliseconds: 400),
+      opacity: utils.isPedidoSelected ? 1 : 0,
+      child:
+          !utils.isPedidoSelected
+              ? const SizedBox()
+              : Container(
                 padding: const EdgeInsets.all(16),
                 width: 800,
                 child: ClipRRect(
@@ -26,6 +27,7 @@ class KanbanPedidoSelectedWidget extends StatelessWidget {
                     onDelete: () => kanbanCtrl.setPedido(null),
                   ),
                 ),
-              ));
+              ),
+    );
   }
 }

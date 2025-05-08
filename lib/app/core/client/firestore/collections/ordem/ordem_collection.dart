@@ -85,45 +85,47 @@ class OrdemCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-                field,
-                isEqualTo: isEqualTo,
-                isNotEqualTo: isNotEqualTo,
-                isLessThan: isLessThan,
-                isLessThanOrEqualTo: isLessThanOrEqualTo,
-                isGreaterThan: isGreaterThan,
-                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-                arrayContains: arrayContains,
-                arrayContainsAny: arrayContainsAny,
-                whereIn: whereIn,
-                whereNotIn: whereNotIn,
-                isNull: isNull,
-              )
+              field,
+              isEqualTo: isEqualTo,
+              isNotEqualTo: isNotEqualTo,
+              isLessThan: isLessThan,
+              isLessThanOrEqualTo: isLessThanOrEqualTo,
+              isGreaterThan: isGreaterThan,
+              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+              arrayContains: arrayContains,
+              arrayContainsAny: arrayContainsAny,
+              whereIn: whereIn,
+              whereNotIn: whereNotIn,
+              isNull: isNull,
+            )
             : collection)
         .snapshots()
         .listen((e) {
-      final ordens = e.docs.map((e) => OrdemModel.fromMap(e.data())).toList();
-      final ordensArquivadas = ordens.where((e) => e.isArchived).toList();
-      ordensArquivadasStream.add(ordensArquivadas);
+          final ordens =
+              e.docs.map((e) => OrdemModel.fromMap(e.data())).toList();
+          final ordensArquivadas = ordens.where((e) => e.isArchived).toList();
+          ordensArquivadasStream.add(ordensArquivadas);
 
-      final ordensNaoArquivadas = ordens.where((e) => !e.isArchived).toList();
+          final ordensNaoArquivadas =
+              ordens.where((e) => !e.isArchived).toList();
 
-      ordensNaoArquivadas.sort((a, b) {
-        if (a.freezed.isFreezed && !b.freezed.isFreezed) {
-          return 1;
-        } else if (!a.freezed.isFreezed && b.freezed.isFreezed) {
-          return -1;
-        }
+          ordensNaoArquivadas.sort((a, b) {
+            if (a.freezed.isFreezed && !b.freezed.isFreezed) {
+              return 1;
+            } else if (!a.freezed.isFreezed && b.freezed.isFreezed) {
+              return -1;
+            }
 
-        if (a.beltIndex == null || b.beltIndex == null) {
-          return 0;
-        }
-        return a.beltIndex!.compareTo(b.beltIndex!);
-      });
+            if (a.beltIndex == null || b.beltIndex == null) {
+              return 0;
+            }
+            return a.beltIndex!.compareTo(b.beltIndex!);
+          });
 
-      ordensNaoArquivadasStream.add(ordensNaoArquivadas);
+          ordensNaoArquivadasStream.add(ordensNaoArquivadas);
 
-      dataStream.add([...ordensArquivadas, ...ordensNaoArquivadas]);
-    });
+          dataStream.add([...ordensArquivadas, ...ordensNaoArquivadas]);
+        });
   }
 
   OrdemModel getById(String id) => data.firstWhere((e) => e.id == id);

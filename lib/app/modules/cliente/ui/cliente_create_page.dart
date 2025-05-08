@@ -155,8 +155,10 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
               ObraCreatePage(obra: obraForm),
             );
             if (obra != null) {
-              final i =
-                  form.obras.map((e) => e.id).toList().indexOf(obraForm.id);
+              final i = form.obras
+                  .map((e) => e.id)
+                  .toList()
+                  .indexOf(obraForm.id);
               if (obra.id != 'delete') {
                 form.obras[i] = obra;
               } else {
@@ -170,26 +172,27 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
             clienteCtrl.formStream.update();
           },
           itens: form.obras,
-          titleBuilder: (e) => Row(
-            children: [
-              Text(e.descricao, style: AppCss.minimumRegular),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 6,
-                  vertical: 2,
-                ),
-                decoration: BoxDecoration(
-                  color: e.status.color.withValues(alpha: 0.5),
-                  borderRadius: AppCss.radius4,
-                ),
-                child: Text(
-                  e.status.label,
-                  style: AppCss.minimumBold.setSize(11),
-                ),
+          titleBuilder:
+              (e) => Row(
+                children: [
+                  Text(e.descricao, style: AppCss.minimumRegular),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: e.status.color.withValues(alpha: 0.5),
+                      borderRadius: AppCss.radius4,
+                    ),
+                    child: Text(
+                      e.status.label,
+                      style: AppCss.minimumBold.setSize(11),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
         ),
         const H(24),
         if (usuario.permission.cliente.contains(UserPermissionType.delete))

@@ -31,7 +31,9 @@ class NotificacaoController {
   }
 
   List<NotificacaoModel> getNotificacaoesFiltered(
-      String search, List<NotificacaoModel> notificacoes) {
+    String search,
+    List<NotificacaoModel> notificacoes,
+  ) {
     if (search.length < 3) return notificacoes;
     List<NotificacaoModel> filtered = [];
     for (final notificacao in notificacoes) {
@@ -47,17 +49,20 @@ class NotificacaoController {
     await FirestoreClient.notificacoes.delete(notificacao);
     pop(value);
     NotificationService.showPositive(
-        'Notificacao Excluido', 'Operação realizada com sucesso',
-        position: NotificationPosition.bottom);
+      'Notificacao Excluido',
+      'Operação realizada com sucesso',
+      position: NotificationPosition.bottom,
+    );
   }
 
   Future<bool> _isDeleteUnavailable(NotificacaoModel notificacao) async =>
       !await onDeleteProcess(
-          deleteTitle: 'Deseja excluir o notificacao?',
-          deleteMessage: 'Todos seus dados serão apagados do sistema',
-          infoMessage:
-              'Não é possível excluir o notificacao, pois ele está vinculado a outras partes do sistema.',
-          conditional: true);
+        deleteTitle: 'Deseja excluir o notificacao?',
+        deleteMessage: 'Todos seus dados serão apagados do sistema',
+        infoMessage:
+            'Não é possível excluir o notificacao, pois ele está vinculado a outras partes do sistema.',
+        conditional: true,
+      );
 
   Future<void> setViewed() async {
     for (final notificacao in FirestoreClient.notificacoes.data) {

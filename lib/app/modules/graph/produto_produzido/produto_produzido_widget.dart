@@ -27,12 +27,12 @@ class _GrapOrdemhTotalWidgetState extends State<ProdutoProduzidoWidget> {
   @override
   void initState() {
     data = produtoProduzidoCtrl.getSource();
-    pedidoStream =
-        FirestoreClient.pedidos.pedidosUnarchivedsStream.listen.listen((e) {
-      setState(() {
-        data = produtoProduzidoCtrl.getSource();
-      });
-    });
+    pedidoStream = FirestoreClient.pedidos.pedidosUnarchivedsStream.listen
+        .listen((e) {
+          setState(() {
+            data = produtoProduzidoCtrl.getSource();
+          });
+        });
     super.initState();
   }
 

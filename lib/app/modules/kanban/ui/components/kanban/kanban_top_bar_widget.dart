@@ -43,130 +43,131 @@ class _KanbanTopbarConcreteWidgetState
     return StreamOut<KanbanUtils>(
       loading: const KanbanTopBarShimmerWidget(),
       stream: kanbanCtrl.utilsStream.listen,
-      builder: (_, utils) => AppBar(
-        leading: IconButton(
-          onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-          icon: Icon(
-            Icons.menu,
-            color: AppColors.white,
-          ),
-        ),
-        title:
-            Text('Kanban', style: AppCss.largeBold.setColor(AppColors.white)),
-        actions: [
-          InfoPopupWidget(
-            onControllerCreated: (value) {
-              controller = value;
-              utils.controller = value;
-              kanbanCtrl.utilsStream.update();
-            },
-            onAreaPressed: (e) {},
-            dismissTriggerBehavior: PopupDismissTriggerBehavior.manuel,
-            customContent: () => KanbanFilterWidget(utils),
-            contentOffset: const Offset(-10, 0),
-            infoPopupDismissed: () {},
-            arrowTheme: InfoPopupArrowTheme(color: AppColors.white),
-            child: Stack(
-              children: [
-                IgnorePointer(
-                  ignoring: true,
-                  child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.filter_list,
-                        color: AppColors.white,
-                      ),
-                      style: utils.hasFilter()
-                          ? ButtonStyle(
-                              backgroundColor:
-                                  WidgetStateProperty.all(Colors.redAccent),
-                            )
-                          : null),
-                ),
-                if (utils.hasFilter())
-                  Positioned(
-                    left: 0,
-                    bottom: 0,
-                    child: Container(
-                      margin: const EdgeInsets.all(2),
-                      width: 16,
-                      height: 16,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          utils.getFilterSteps().toString(),
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: AppColors.primaryMain,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ),
-                if (utils.hasFilter())
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: InkWell(
-                      onTap: () {
-                        utils.search.text = '';
-                        utils.cliente = null;
-                        controller.dismissInfoPopup();
-                        kanbanCtrl.utilsStream.update();
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(2),
-                        width: 16,
-                        height: 16,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                            child: Icon(
-                          Icons.close,
-                          size: 12,
-                          color: AppColors.primaryMain,
-                        )),
-                      ),
-                    ),
-                  )
-              ],
+      builder:
+          (_, utils) => AppBar(
+            leading: IconButton(
+              onPressed: () => baseCtrl.key.currentState!.openDrawer(),
+              icon: Icon(Icons.menu, color: AppColors.white),
             ),
-          ),
-          IconButton(
-              onPressed: () {
-                if (utils.view == KanbanViewMode.calendar) {
-                  utils.view = KanbanViewMode.kanban;
-                } else {
-                  utils.view = KanbanViewMode.calendar;
-                }
-                kanbanCtrl.utilsStream.update();
-              },
-              icon: Icon(
-                utils.view != KanbanViewMode.calendar
-                    ? Icons.calendar_month
-                    : Icons.view_kanban,
-                color: AppColors.white,
-              )),
-          if (usuario.permission.pedido.contains(UserPermissionType.create))
-            IconButton(
-                onPressed: () async {
-                  await push(context, const PedidoCreatePage());
-                  final pedidos = FirestoreClient.pedidos.data;
-                  pedidos.sort((a, b) => a.id.compareTo(b.id));
-                  kanbanCtrl.onAccept(pedidos.last.step, pedidos.last, 0);
+            title: Text(
+              'Kanban',
+              style: AppCss.largeBold.setColor(AppColors.white),
+            ),
+            actions: [
+              InfoPopupWidget(
+                onControllerCreated: (value) {
+                  controller = value;
+                  utils.controller = value;
+                  kanbanCtrl.utilsStream.update();
+                },
+                onAreaPressed: (e) {},
+                dismissTriggerBehavior: PopupDismissTriggerBehavior.manuel,
+                customContent: () => KanbanFilterWidget(utils),
+                contentOffset: const Offset(-10, 0),
+                infoPopupDismissed: () {},
+                arrowTheme: InfoPopupArrowTheme(color: AppColors.white),
+                child: Stack(
+                  children: [
+                    IgnorePointer(
+                      ignoring: true,
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.filter_list, color: AppColors.white),
+                        style:
+                            utils.hasFilter()
+                                ? ButtonStyle(
+                                  backgroundColor: WidgetStateProperty.all(
+                                    Colors.redAccent,
+                                  ),
+                                )
+                                : null,
+                      ),
+                    ),
+                    if (utils.hasFilter())
+                      Positioned(
+                        left: 0,
+                        bottom: 0,
+                        child: Container(
+                          margin: const EdgeInsets.all(2),
+                          width: 16,
+                          height: 16,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              utils.getFilterSteps().toString(),
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: AppColors.primaryMain,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (utils.hasFilter())
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: InkWell(
+                          onTap: () {
+                            utils.search.text = '';
+                            utils.cliente = null;
+                            controller.dismissInfoPopup();
+                            kanbanCtrl.utilsStream.update();
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.all(2),
+                            width: 16,
+                            height: 16,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.close,
+                                size: 12,
+                                color: AppColors.primaryMain,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  if (utils.view == KanbanViewMode.calendar) {
+                    utils.view = KanbanViewMode.kanban;
+                  } else {
+                    utils.view = KanbanViewMode.calendar;
+                  }
+                  kanbanCtrl.utilsStream.update();
                 },
                 icon: Icon(
-                  Icons.add,
+                  utils.view != KanbanViewMode.calendar
+                      ? Icons.calendar_month
+                      : Icons.view_kanban,
                   color: AppColors.white,
-                ))
-        ],
-        backgroundColor: AppColors.primaryMain,
-      ),
+                ),
+              ),
+              if (usuario.permission.pedido.contains(UserPermissionType.create))
+                IconButton(
+                  onPressed: () async {
+                    await push(context, const PedidoCreatePage());
+                    final pedidos = FirestoreClient.pedidos.data;
+                    pedidos.sort((a, b) => a.id.compareTo(b.id));
+                    kanbanCtrl.onAccept(pedidos.last.step, pedidos.last, 0);
+                  },
+                  icon: Icon(Icons.add, color: AppColors.white),
+                ),
+            ],
+            backgroundColor: AppColors.primaryMain,
+          ),
     );
   }
 }

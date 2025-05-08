@@ -56,102 +56,108 @@ class _ArchiveAddBottomState extends State<ArchiveAddBottom> {
   Widget build(BuildContext context) {
     return BottomSheet(
       onClosing: () {},
-      builder: (context) => KeyboardVisibilityBuilder(
-        builder: (context, isVisible) => KeyboardListener(
-          focusNode: _focusNode,
-          onKeyEvent: (e) {
-            if (e is KeyDownEvent && e.logicalKey == LogicalKeyboardKey.enter) {
-              if (archive != null) {
-                onConfirm();
-              }
-            }
-          },
-          child: Container(
-            height: 390,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
-              ),
-            ),
-            child: ListView(
-              children: [
-                const H(16),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: IconButton(
-                      style: ButtonStyle(
-                        padding: const WidgetStatePropertyAll(
-                          EdgeInsets.all(16),
-                        ),
-                        backgroundColor: WidgetStatePropertyAll(
-                          AppColors.white,
-                        ),
-                        foregroundColor: WidgetStatePropertyAll(
-                          AppColors.black,
-                        ),
+      builder:
+          (context) => KeyboardVisibilityBuilder(
+            builder:
+                (context, isVisible) => KeyboardListener(
+                  focusNode: _focusNode,
+                  onKeyEvent: (e) {
+                    if (e is KeyDownEvent &&
+                        e.logicalKey == LogicalKeyboardKey.enter) {
+                      if (archive != null) {
+                        onConfirm();
+                      }
+                    }
+                  },
+                  child: Container(
+                    height: 390,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
                       ),
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.keyboard_backspace),
+                    ),
+                    child: ListView(
+                      children: [
+                        const H(16),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: IconButton(
+                              style: ButtonStyle(
+                                padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.all(16),
+                                ),
+                                backgroundColor: WidgetStatePropertyAll(
+                                  AppColors.white,
+                                ),
+                                foregroundColor: WidgetStatePropertyAll(
+                                  AppColors.black,
+                                ),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              icon: const Icon(Icons.keyboard_backspace),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Adicionar Arquivo',
+                                style: AppCss.largeBold,
+                              ),
+                              const H(16),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  archive != null
+                                      ? _addedWidget()
+                                      : _addWidget(),
+                                  const W(16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        AppField(
+                                          label: 'Nome',
+                                          isDisable: true,
+                                          controller: _nameEC,
+                                        ),
+                                        const H(16),
+                                        AppField(
+                                          label: 'Descrição',
+                                          controller: _descEC,
+                                          onEditingComplete: () {
+                                            if (archive != null) {
+                                              onConfirm();
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const H(16),
+                              AppTextButton(
+                                isEnable: archive != null,
+                                label: 'Confirmar',
+                                onPressed: () => onConfirm(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Adicionar Arquivo',
-                        style: AppCss.largeBold,
-                      ),
-                      const H(16),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          archive != null ? _addedWidget() : _addWidget(),
-                          const W(16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                AppField(
-                                  label: 'Nome',
-                                  isDisable: true,
-                                  controller: _nameEC,
-                                ),
-                                const H(16),
-                                AppField(
-                                  label: 'Descrição',
-                                  controller: _descEC,
-                                  onEditingComplete: () {
-                                    if (archive != null) {
-                                      onConfirm();
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const H(16),
-                      AppTextButton(
-                        isEnable: archive != null,
-                        label: 'Confirmar',
-                        onPressed: () => onConfirm(),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
           ),
-        ),
-      ),
     );
   }
 

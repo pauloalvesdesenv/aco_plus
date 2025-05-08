@@ -43,20 +43,41 @@ class BackupController {
 
   Future<void> onCreateBackup() async {
     Map<String, dynamic> backup = {};
-    onAddCollection(backup, 'usuarios',
-        FirestoreClient.usuarios.data.map((e) => e.toMap()).toList());
-    onAddCollection(backup, 'clientes',
-        FirestoreClient.clientes.data.map((e) => e.toMap()).toList());
-    onAddCollection(backup, 'produtos',
-        FirestoreClient.produtos.data.map((e) => e.toMap()).toList());
-    onAddCollection(backup, 'steps',
-        FirestoreClient.steps.data.map((e) => e.toMap()).toList());
-    onAddCollection(backup, 'tags',
-        FirestoreClient.tags.data.map((e) => e.toMap()).toList());
-    onAddCollection(backup, 'pedidos',
-        FirestoreClient.pedidos.data.map((e) => e.toMap()).toList());
-    onAddCollection(backup, 'ordens',
-        FirestoreClient.ordens.data.map((e) => e.toMap()).toList());
+    onAddCollection(
+      backup,
+      'usuarios',
+      FirestoreClient.usuarios.data.map((e) => e.toMap()).toList(),
+    );
+    onAddCollection(
+      backup,
+      'clientes',
+      FirestoreClient.clientes.data.map((e) => e.toMap()).toList(),
+    );
+    onAddCollection(
+      backup,
+      'produtos',
+      FirestoreClient.produtos.data.map((e) => e.toMap()).toList(),
+    );
+    onAddCollection(
+      backup,
+      'steps',
+      FirestoreClient.steps.data.map((e) => e.toMap()).toList(),
+    );
+    onAddCollection(
+      backup,
+      'tags',
+      FirestoreClient.tags.data.map((e) => e.toMap()).toList(),
+    );
+    onAddCollection(
+      backup,
+      'pedidos',
+      FirestoreClient.pedidos.data.map((e) => e.toMap()).toList(),
+    );
+    onAddCollection(
+      backup,
+      'ordens',
+      FirestoreClient.ordens.data.map((e) => e.toMap()).toList(),
+    );
     onAddCollection(
       backup,
       'clientes',

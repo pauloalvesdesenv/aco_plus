@@ -40,32 +40,43 @@ class _PedidoAcompanhamentoPageState extends State<PedidoAcompanhamentoPage>
         'Acompanhe seu Pedido na M2 Ferro e Aço através do link: https://aco-plus-fa455.web.app/acompanhamento/pedidos/${pedido.id}';
     return StreamOut(
       stream: pedidoCtrl.pedidoStream.listen,
-      builder: (_, pedido) => AppScaffold(
-        appBar: AppBar(
-          title: Text('Acompanhamento de Pedido',
-              style: AppCss.largeBold.setColor(AppColors.white)),
-          backgroundColor: AppColors.primaryMain,
-          actions: [
-            IconButton(
-                onPressed: () async => Clipboard.setData(ClipboardData(
-                    text:
-                        'https://aco-plus-fa455.web.app/acompanhamento/pedidos/${pedido.id}')),
-                icon: Icon(Icons.copy, color: AppColors.white)),
-            const W(12),
-            IconButton(
-                onPressed: () async => Share.share(promoveText),
-                icon: Icon(Icons.share, color: AppColors.white)),
-            const W(12),
-            IconButton(
-                onPressed: () async =>
-                    launchUrlString("https://wa.me/?text=$promoveText"),
-                icon: Icon(Icons.phone, color: AppColors.white)),
-            const W(16),
-          ],
-        ),
-        resizeAvoid: true,
-        body: body(pedido),
-      ),
+      builder:
+          (_, pedido) => AppScaffold(
+            appBar: AppBar(
+              title: Text(
+                'Acompanhamento de Pedido',
+                style: AppCss.largeBold.setColor(AppColors.white),
+              ),
+              backgroundColor: AppColors.primaryMain,
+              actions: [
+                IconButton(
+                  onPressed:
+                      () async => Clipboard.setData(
+                        ClipboardData(
+                          text:
+                              'https://aco-plus-fa455.web.app/acompanhamento/pedidos/${pedido.id}',
+                        ),
+                      ),
+                  icon: Icon(Icons.copy, color: AppColors.white),
+                ),
+                const W(12),
+                IconButton(
+                  onPressed: () async => Share.share(promoveText),
+                  icon: Icon(Icons.share, color: AppColors.white),
+                ),
+                const W(12),
+                IconButton(
+                  onPressed:
+                      () async =>
+                          launchUrlString("https://wa.me/?text=$promoveText"),
+                  icon: Icon(Icons.phone, color: AppColors.white),
+                ),
+                const W(16),
+              ],
+            ),
+            resizeAvoid: true,
+            body: body(pedido),
+          ),
     );
   }
 

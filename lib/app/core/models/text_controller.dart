@@ -15,8 +15,10 @@ class TextController<T> {
   }
 
   TextController.number({double? value, this.object}) {
-    controller =
-        MoneyMaskedTextController(initialValue: value ?? 0, precision: 2);
+    controller = MoneyMaskedTextController(
+      initialValue: value ?? 0,
+      precision: 2,
+    );
   }
 
   TextController.ddMMyyyy({String? text, this.object}) {
@@ -39,9 +41,10 @@ class TextController<T> {
   String get text => controller.text;
   set text(String value) => controller.text = value;
 
-  String? get mask => (controller is MaskedTextController)
-      ? (controller as MaskedTextController).mask
-      : null;
+  String? get mask =>
+      (controller is MaskedTextController)
+          ? (controller as MaskedTextController).mask
+          : null;
 
   void updateMask(String mask) {
     (controller as MaskedTextController).updateMask(mask);

@@ -19,16 +19,16 @@ class ProdutoProduzidoController {
   factory ProdutoProduzidoController() => _instance;
 
   List<BarSeries<ProdutoProduzidoModel, DateTime>> getSource() =>
-      getDates(ProdutoProduzido.day)
-          .reversed
+      getDates(ProdutoProduzido.day).reversed
           .toList()
           .map(
             (e) => BarSeries<ProdutoProduzidoModel, DateTime>(
               dataSource: getKilosProduzidos(e),
               name: e.ddMMyyyy(),
-              color: e.isSameDay(dayNow())
-                  ? AppColors.primaryMain
-                  : Colors.grey[400],
+              color:
+                  e.isSameDay(dayNow())
+                      ? AppColors.primaryMain
+                      : Colors.grey[400],
               yValueMapper: (ProdutoProduzidoModel data, _) => data.qtde as num,
               xValueMapper: (ProdutoProduzidoModel data, _) => data.date,
               dataLabelSettings: const DataLabelSettings(

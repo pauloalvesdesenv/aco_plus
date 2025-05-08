@@ -48,84 +48,85 @@ class _AutomatizacaoPageState extends State<AutomatizacaoPage> {
   Widget body(AutomatizacaoModel automatizacao) {
     return ListView(
       padding: EdgeInsets.zero,
-      children: automatizacao.itens
-          .map(
-            (e) => Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey[400]!, width: 0.5),
-                ),
-              ),
-              child: ListTile(
-                title: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            e.type.label,
-                            style: AppCss.mediumBold.copyWith(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17,
-                            ),
-                          ),
-                          Text(
-                            e.type.desc,
-                            style: AppCss.minimumRegular.copyWith(
-                              color: Colors.grey[700],
-                            ),
-                          ),
-                        ],
-                      ),
+      children:
+          automatizacao.itens
+              .map(
+                (e) => Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey[400]!, width: 0.5),
                     ),
-                    InkWell(
-                      onTap: () async {
-                        final step = await showAutomatizacaoStepBottom(
-                          e.type,
-                          e.step,
-                        );
-                        if (step == null) return;
-                        setState(() {
-                          e.step = step;
-                          FirestoreClient.automatizacao.update(
-                            automatizacao,
-                          );
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: e.step.color.withValues(alpha: 0.1),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              e.step.name,
-                              style: AppCss.minimumRegular.copyWith(
-                                color: Colors.black87,
+                  ),
+                  child: ListTile(
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                e.type.label,
+                                style: AppCss.mediumBold.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                            const W(8),
-                            const Icon(
-                              Icons.edit,
-                              size: 17,
-                              color: Colors.black,
-                            ),
-                          ],
+                              Text(
+                                e.type.desc,
+                                style: AppCss.minimumRegular.copyWith(
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                        InkWell(
+                          onTap: () async {
+                            final step = await showAutomatizacaoStepBottom(
+                              e.type,
+                              e.step,
+                            );
+                            if (step == null) return;
+                            setState(() {
+                              e.step = step;
+                              FirestoreClient.automatizacao.update(
+                                automatizacao,
+                              );
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: e.step.color.withValues(alpha: 0.1),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  e.step.name,
+                                  style: AppCss.minimumRegular.copyWith(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const W(8),
+                                const Icon(
+                                  Icons.edit,
+                                  size: 17,
+                                  color: Colors.black,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          )
-          .toList(),
+              )
+              .toList(),
     );
   }
 }

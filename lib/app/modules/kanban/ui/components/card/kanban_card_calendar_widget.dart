@@ -30,12 +30,14 @@ class _KanbanCardCalendarWidgetState extends State<KanbanCardCalendarWidget> {
         return InkWell(
           onTap: () => kanbanCtrl.setPedido(widget.pedido),
           child: MouseRegion(
-            onEnter: (event) => setState(
-              () => stepViewMode = KanbanCardStepViewMode.expanded,
-            ),
-            onExit: (event) => setState(
-              () => stepViewMode = KanbanCardStepViewMode.collapsed,
-            ),
+            onEnter:
+                (event) => setState(
+                  () => stepViewMode = KanbanCardStepViewMode.expanded,
+                ),
+            onExit:
+                (event) => setState(
+                  () => stepViewMode = KanbanCardStepViewMode.collapsed,
+                ),
             child: Container(
               width: double.maxFinite,
               padding: const EdgeInsets.fromLTRB(0.03, 0.03, 0.03, 1),
@@ -76,13 +78,16 @@ class _KanbanCardCalendarWidgetState extends State<KanbanCardCalendarWidget> {
                         ),
                         if (!isSM)
                           if (widget.pedido.users.isNotEmpty)
-                            KanbanCardUsersWidget(widget.pedido,
-                                viewMode: stepViewMode ==
-                                            KanbanCardStepViewMode.expanded ||
-                                        widget.calendarFormat ==
-                                            CalendarFormat.week
-                                    ? WidgetViewMode.normal
-                                    : WidgetViewMode.minified)
+                            KanbanCardUsersWidget(
+                              widget.pedido,
+                              viewMode:
+                                  stepViewMode ==
+                                              KanbanCardStepViewMode.expanded ||
+                                          widget.calendarFormat ==
+                                              CalendarFormat.week
+                                      ? WidgetViewMode.normal
+                                      : WidgetViewMode.minified,
+                            ),
                       ],
                     ),
                     const H(4),

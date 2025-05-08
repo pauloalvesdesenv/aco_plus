@@ -14,10 +14,10 @@ class PedidoStatusModel {
   });
 
   factory PedidoStatusModel.create(PedidoStatus status) => PedidoStatusModel(
-        id: HashService.get,
-        createdAt: DateTime.now(),
-        status: status,
-      );
+    id: HashService.get,
+    createdAt: DateTime.now(),
+    status: status,
+  );
 
   Map<String, dynamic> toMap() {
     return {

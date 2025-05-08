@@ -56,27 +56,27 @@ class NotificacaoCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-                field,
-                isEqualTo: isEqualTo,
-                isNotEqualTo: isNotEqualTo,
-                isLessThan: isLessThan,
-                isLessThanOrEqualTo: isLessThanOrEqualTo,
-                isGreaterThan: isGreaterThan,
-                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-                arrayContains: arrayContains,
-                arrayContainsAny: arrayContainsAny,
-                whereIn: whereIn,
-                whereNotIn: whereNotIn,
-                isNull: isNull,
-              )
+              field,
+              isEqualTo: isEqualTo,
+              isNotEqualTo: isNotEqualTo,
+              isLessThan: isLessThan,
+              isLessThanOrEqualTo: isLessThanOrEqualTo,
+              isGreaterThan: isGreaterThan,
+              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+              arrayContains: arrayContains,
+              arrayContainsAny: arrayContainsAny,
+              whereIn: whereIn,
+              whereNotIn: whereNotIn,
+              isNull: isNull,
+            )
             : collection)
         .snapshots()
         .listen((e) {
-      final notificacoes =
-          e.docs.map((e) => NotificacaoModel.fromMap(e.data())).toList();
-      notificacoes.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-      dataStream.add(notificacoes);
-    });
+          final notificacoes =
+              e.docs.map((e) => NotificacaoModel.fromMap(e.data())).toList();
+          notificacoes.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+          dataStream.add(notificacoes);
+        });
   }
 
   NotificacaoModel getById(String id) =>

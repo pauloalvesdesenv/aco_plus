@@ -20,13 +20,17 @@ class EnderecoController {
   EnderecoCreateModel get form => enderecoCreateStream.value;
 
   void onInitEndereco(EnderecoModel? endereco) {
-    enderecoCreateStream.add(endereco != null
-        ? EnderecoCreateModel.edit(endereco)
-        : EnderecoCreateModel());
+    enderecoCreateStream.add(
+      endereco != null
+          ? EnderecoCreateModel.edit(endereco)
+          : EnderecoCreateModel(),
+    );
   }
 
   List<EnderecoModel> getOrdensFiltered(
-      String search, List<EnderecoModel> ordens) {
+    String search,
+    List<EnderecoModel> ordens,
+  ) {
     if (search.length < 3) return ordens;
     List<EnderecoModel> filtered = [];
     for (final endereco in ordens) {
@@ -42,9 +46,10 @@ class EnderecoController {
       onValidEndereco();
       Navigator.pop(value, enderecoCreateStream.value.toEndereco());
       NotificationService.showPositive(
-          'Endereco ${form.isEdit ? 'Editado' : 'Adicionado'}',
-          'Operação realizada com sucesso',
-          position: NotificationPosition.bottom);
+        'Endereco ${form.isEdit ? 'Editado' : 'Adicionado'}',
+        'Operação realizada com sucesso',
+        position: NotificationPosition.bottom,
+      );
     } catch (e) {
       NotificationService.showNegative(
         'Erro ao ${form.isEdit ? 'editar' : 'criar'} endereco',
@@ -73,7 +78,9 @@ class EnderecoController {
       enderecoCreateStream.add(endereco);
     } else {
       NotificationService.showNegative(
-          'Erro na chamada', 'Nao foi possivel buscar endereço');
+        'Erro na chamada',
+        'Nao foi possivel buscar endereço',
+      );
     }
   }
 }

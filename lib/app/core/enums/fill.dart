@@ -1,4 +1,1 @@
-enum Fill {
-  outlined,
-  filled,
-}
+enum Fill { outlined, filled }

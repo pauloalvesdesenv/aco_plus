@@ -44,51 +44,54 @@ class _FabricantesPageState extends State<FabricantesPage> {
         ),
         actions: [
           IconButton(
-              onPressed: () => push(context, const FabricanteCreatePage()),
-              icon: Icon(
-                Icons.add,
-                color: AppColors.white,
-              ))
+            onPressed: () => push(context, const FabricanteCreatePage()),
+            icon: Icon(Icons.add, color: AppColors.white),
+          ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<FabricanteModel>>(
         stream: FirestoreClient.fabricantes.dataStream.listen,
-        builder: (_, __) => StreamOut<FabricanteUtils>(
-          stream: fabricanteCtrl.utilsStream.listen,
-          builder: (_, utils) {
-            final fabricantes = fabricanteCtrl
-                .getFabricanteesFiltered(utils.search.text, __)
-                .toList();
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppField(
-                    hint: 'Pesquisar',
-                    controller: utils.search,
-                    suffixIcon: Icons.search,
-                    onChanged: (_) => fabricanteCtrl.utilsStream.update(),
-                  ),
-                ),
-                Expanded(
-                  child: fabricantes.isEmpty
-                      ? const EmptyData()
-                      : RefreshIndicator(
-                          onRefresh: () async =>
-                              FirestoreClient.fabricantes.fetch(),
-                          child: ListView.separated(
-                            itemCount: fabricantes.length,
-                            separatorBuilder: (_, i) => const Divisor(),
-                            itemBuilder: (_, i) =>
-                                _itemFabricanteWidget(fabricantes[i]),
-                          ),
-                        ),
-                ),
-              ],
-            );
-          },
-        ),
+        builder:
+            (_, __) => StreamOut<FabricanteUtils>(
+              stream: fabricanteCtrl.utilsStream.listen,
+              builder: (_, utils) {
+                final fabricantes =
+                    fabricanteCtrl
+                        .getFabricanteesFiltered(utils.search.text, __)
+                        .toList();
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: AppField(
+                        hint: 'Pesquisar',
+                        controller: utils.search,
+                        suffixIcon: Icons.search,
+                        onChanged: (_) => fabricanteCtrl.utilsStream.update(),
+                      ),
+                    ),
+                    Expanded(
+                      child:
+                          fabricantes.isEmpty
+                              ? const EmptyData()
+                              : RefreshIndicator(
+                                onRefresh:
+                                    () async =>
+                                        FirestoreClient.fabricantes.fetch(),
+                                child: ListView.separated(
+                                  itemCount: fabricantes.length,
+                                  separatorBuilder: (_, i) => const Divisor(),
+                                  itemBuilder:
+                                      (_, i) =>
+                                          _itemFabricanteWidget(fabricantes[i]),
+                                ),
+                              ),
+                    ),
+                  ],
+                );
+              },
+            ),
       ),
     );
   }

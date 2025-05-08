@@ -37,16 +37,19 @@ class _PedidoUsersWidgetState extends State<PedidoUsersWidget> {
               ),
             ),
           ],
-          ...widget.pedido.users.map((e) => InkWell(
-                onTap: () async {
-                  await showPedidoUsersBottom(widget.pedido);
-                  setState(() {});
-                },
-                child: AppAvatar(
-                    radius: 14,
-                    name: e.nome.getInitials(),
-                    backgroundColor: Colors.grey[200]),
-              )),
+          ...widget.pedido.users.map(
+            (e) => InkWell(
+              onTap: () async {
+                await showPedidoUsersBottom(widget.pedido);
+                setState(() {});
+              },
+              child: AppAvatar(
+                radius: 14,
+                name: e.nome.getInitials(),
+                backgroundColor: Colors.grey[200],
+              ),
+            ),
+          ),
         ],
       ),
     );

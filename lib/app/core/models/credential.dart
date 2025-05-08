@@ -6,10 +6,7 @@ class Credential {
   bool isEmpty = true;
   Credential({required this.cpf, required this.password}) : isEmpty = false;
 
-  Credential.empty()
-      : cpf = '',
-        password = '',
-        isEmpty = true;
+  Credential.empty() : cpf = '', password = '', isEmpty = true;
 
   Map<String, dynamic> toMap() {
     return {'cpf': cpf, 'password': password};

@@ -47,139 +47,146 @@ class _PedidosPageState extends State<PedidosPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-          icon: Icon(
-            Icons.menu,
-            color: AppColors.white,
-          ),
+          icon: Icon(Icons.menu, color: AppColors.white),
         ),
-        title:
-            Text('Pedidos', style: AppCss.largeBold.setColor(AppColors.white)),
+        title: Text(
+          'Pedidos',
+          style: AppCss.largeBold.setColor(AppColors.white),
+        ),
         actions: [
           IconButton(
-              onPressed: () => push(context, const PedidosArchivedsPage()),
-              icon: const Icon(Icons.archive_outlined)),
+            onPressed: () => push(context, const PedidosArchivedsPage()),
+            icon: const Icon(Icons.archive_outlined),
+          ),
           IconButton(
-              onPressed: () {
-                setState(() {
-                  pedidoCtrl.utils.showFilter = !pedidoCtrl.utils.showFilter;
-                  pedidoCtrl.utilsStream.update();
-                });
-              },
-              icon: Icon(
-                Icons.sort,
-                color: AppColors.white,
-              )),
+            onPressed: () {
+              setState(() {
+                pedidoCtrl.utils.showFilter = !pedidoCtrl.utils.showFilter;
+                pedidoCtrl.utilsStream.update();
+              });
+            },
+            icon: Icon(Icons.sort, color: AppColors.white),
+          ),
           if (usuario.permission.pedido.contains(UserPermissionType.create))
             IconButton(
-                onPressed: () => push(context, const PedidoCreatePage()),
-                icon: Icon(
-                  Icons.add,
-                  color: AppColors.white,
-                ))
+              onPressed: () => push(context, const PedidoCreatePage()),
+              icon: Icon(Icons.add, color: AppColors.white),
+            ),
         ],
         backgroundColor: AppColors.primaryMain,
       ),
       body: StreamOut<List<PedidoModel>>(
         stream: FirestoreClient.pedidos.pedidosUnarchivedsStream.listen,
-        builder: (_, pedidos) => StreamOut<PedidoUtils>(
-          stream: pedidoCtrl.utilsStream.listen,
-          builder: (_, utils) {
-            pedidos = pedidos.where((e) => !e.isArchived).toList();
-            pedidos = pedidoCtrl
-                .getPedidosFiltered(
-                    utils.search.text,
-                    FirestoreClient.pedidos.pepidosUnarchiveds
-                        .map((e) => e.copyWith())
-                        .toList())
-                .toList();
-            pedidoCtrl.onSortPedidos(pedidos);
-            return RefreshIndicator(
-              onRefresh: () async => await FirestoreClient.pedidos.fetch(),
-              child: ListView(
-                children: [
-                  Visibility(
-                    visible: utils.showFilter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          AppField(
-                            hint: 'Pesquisar',
-                            controller: utils.search,
-                            suffixIcon: Icons.search,
-                            onChanged: (_) => pedidoCtrl.utilsStream.update(),
-                          ),
-                          const H(16),
-                          AppDropDownList<StepModel>(
-                            label: 'Etapas',
-                            itemColor: (e) => e.color,
-                            itens: FirestoreClient.steps.data,
-                            addeds: utils.steps,
-                            itemLabel: (e) => e.name,
-                            onChanged: () {
-                              pedidoCtrl.utilsStream.update();
-                            },
-                          ),
-                          const H(16),
-                          Row(
+        builder:
+            (_, pedidos) => StreamOut<PedidoUtils>(
+              stream: pedidoCtrl.utilsStream.listen,
+              builder: (_, utils) {
+                pedidos = pedidos.where((e) => !e.isArchived).toList();
+                pedidos =
+                    pedidoCtrl
+                        .getPedidosFiltered(
+                          utils.search.text,
+                          FirestoreClient.pedidos.pepidosUnarchiveds
+                              .map((e) => e.copyWith())
+                              .toList(),
+                        )
+                        .toList();
+                pedidoCtrl.onSortPedidos(pedidos);
+                return RefreshIndicator(
+                  onRefresh: () async => await FirestoreClient.pedidos.fetch(),
+                  child: ListView(
+                    children: [
+                      Visibility(
+                        visible: utils.showFilter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
                             children: [
-                              Expanded(
-                                child: AppDropDown<SortType>(
-                                  label: 'Ordernar por',
-                                  hasFilter: false,
-                                  item: utils.sortType,
-                                  itens: const [
-                                    SortType.createdAt,
-                                    SortType.deliveryAt,
-                                    SortType.localizator,
-                                    SortType.client
-                                  ],
-                                  itemLabel: (e) => e.name,
-                                  onSelect: (e) {
-                                    utils.sortType = e ?? SortType.localizator;
-                                    pedidoCtrl.utilsStream.update();
-                                  },
-                                ),
+                              AppField(
+                                hint: 'Pesquisar',
+                                controller: utils.search,
+                                suffixIcon: Icons.search,
+                                onChanged:
+                                    (_) => pedidoCtrl.utilsStream.update(),
                               ),
-                              const W(16),
-                              Expanded(
-                                child: AppDropDown<SortOrder>(
-                                  hasFilter: false,
-                                  label: 'Ordernar',
-                                  item: utils.sortOrder,
-                                  itens: SortOrder.values,
-                                  itemLabel: (e) => e.name,
-                                  onSelect: (e) {
-                                    utils.sortOrder = e ?? SortOrder.asc;
-                                    pedidoCtrl.utilsStream.update();
-                                  },
-                                ),
+                              const H(16),
+                              AppDropDownList<StepModel>(
+                                label: 'Etapas',
+                                itemColor: (e) => e.color,
+                                itens: FirestoreClient.steps.data,
+                                addeds: utils.steps,
+                                itemLabel: (e) => e.name,
+                                onChanged: () {
+                                  pedidoCtrl.utilsStream.update();
+                                },
+                              ),
+                              const H(16),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: AppDropDown<SortType>(
+                                      label: 'Ordernar por',
+                                      hasFilter: false,
+                                      item: utils.sortType,
+                                      itens: const [
+                                        SortType.createdAt,
+                                        SortType.deliveryAt,
+                                        SortType.localizator,
+                                        SortType.client,
+                                      ],
+                                      itemLabel: (e) => e.name,
+                                      onSelect: (e) {
+                                        utils.sortType =
+                                            e ?? SortType.localizator;
+                                        pedidoCtrl.utilsStream.update();
+                                      },
+                                    ),
+                                  ),
+                                  const W(16),
+                                  Expanded(
+                                    child: AppDropDown<SortOrder>(
+                                      hasFilter: false,
+                                      label: 'Ordernar',
+                                      item: utils.sortOrder,
+                                      itens: SortOrder.values,
+                                      itemLabel: (e) => e.name,
+                                      onSelect: (e) {
+                                        utils.sortOrder = e ?? SortOrder.asc;
+                                        pedidoCtrl.utilsStream.update();
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  pedidos.isEmpty
-                      ? const EmptyData()
-                      : ListView.separated(
-                          itemCount: pedidos.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          cacheExtent: 200,
-                          separatorBuilder: (_, i) => const Divisor(),
-                          itemBuilder: (_, i) => PedidoItemWidget(
-                            pedido: pedidos[i],
-                            onTap: (pedido) => push(PedidoPage(
-                                pedido: pedido, reason: PedidoInitReason.page)),
                           ),
                         ),
-                ],
-              ),
-            );
-          },
-        ),
+                      ),
+                      pedidos.isEmpty
+                          ? const EmptyData()
+                          : ListView.separated(
+                            itemCount: pedidos.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            cacheExtent: 200,
+                            separatorBuilder: (_, i) => const Divisor(),
+                            itemBuilder:
+                                (_, i) => PedidoItemWidget(
+                                  pedido: pedidos[i],
+                                  onTap:
+                                      (pedido) => push(
+                                        PedidoPage(
+                                          pedido: pedido,
+                                          reason: PedidoInitReason.page,
+                                        ),
+                                      ),
+                                ),
+                          ),
+                    ],
+                  ),
+                );
+              },
+            ),
       ),
     );
   }

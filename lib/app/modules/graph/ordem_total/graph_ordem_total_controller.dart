@@ -20,22 +20,25 @@ class GrahpOrdemTotalController {
   GraphOrdemTotalModel get filter => filterStream.value;
 
   List<GraphModel> getCirucularChart(GraphOrdemTotalModel filter) {
-    List<OrdemModel> ordens = FirestoreClient.ordens.data
-        .map(
-          (o) => o.copyWith(
-            produto: o.produto.copyWith(),
-            produtos: o.produtos
-                .map(
-                  (p) => p.copyWith(
-                    statusess: p.statusess.map((s) => s.copyWith()).toList(),
-                  ),
-                )
-                .toList(),
-          ),
-        )
-        .toList()
-        .where((e) => e.status != PedidoProdutoStatus.pronto)
-        .toList();
+    List<OrdemModel> ordens =
+        FirestoreClient.ordens.data
+            .map(
+              (o) => o.copyWith(
+                produto: o.produto.copyWith(),
+                produtos:
+                    o.produtos
+                        .map(
+                          (p) => p.copyWith(
+                            statusess:
+                                p.statusess.map((s) => s.copyWith()).toList(),
+                          ),
+                        )
+                        .toList(),
+              ),
+            )
+            .toList()
+            .where((e) => e.status != PedidoProdutoStatus.pronto)
+            .toList();
 
     List<GraphModel> source = [];
 
