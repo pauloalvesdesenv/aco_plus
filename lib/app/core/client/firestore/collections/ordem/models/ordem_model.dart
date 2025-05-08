@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
@@ -21,6 +22,7 @@ class OrdemModel {
   final OrdemFreezedModel freezed;
   bool isArchived;
   int? beltIndex;
+
 
   String get localizator => id.contains('_') ? id.split('_').first : id;
 

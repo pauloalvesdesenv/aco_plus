@@ -40,6 +40,12 @@ class _OrdemPageState extends State<OrdemPage> {
   }
 
   @override
+  void dispose() {
+    ordemCtrl.onDisposePage();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StreamOut(
       stream: ordemCtrl.ordemStream.listen,

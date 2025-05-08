@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
@@ -320,9 +322,19 @@ class OrdemController {
   final AppStream<OrdemModel> ordemStream = AppStream<OrdemModel>();
   OrdemModel get ordem => ordemStream.value;
 
+  StreamSubscription<OrdemModel>? subscription;
   void onInitPage(String ordemId) {
     ordemStream.add(getOrdemById(ordemId));
+    subscription = FirestoreClient.ordens.listenById(ordemId).listen((ordem) {
+      ordemStream.add(getOrdemById(ordemId));
+    });
   }
+
+  void onDisposePage() {
+    subscription?.cancel();
+    subscription = null;
+  }
+
 
   OrdemModel getOrdemById(String ordemId) {
     final ordem = FirestoreClient.ordens.getById(ordemId);
@@ -515,4 +527,5 @@ class OrdemController {
     ordem.updatedAt = DateTime.now();
     await FirestoreClient.ordens.update(ordem);
   }
+
 }
