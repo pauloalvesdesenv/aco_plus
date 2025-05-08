@@ -349,22 +349,29 @@ class OrdemController {
     }
     Navigator.pop(contextGlobal);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
+    onUpdateAt(ordem);
   }
 
-  void showBottomChangeProdutoStatus(PedidoProdutoModel produto) async {
+  void showBottomChangeProdutoStatus(
+    OrdemModel ordem,
+    PedidoProdutoModel produto,
+  ) async {
     final produtoStatus = produto.statusess.last.status;
     final status = await showOrdemProdutoStatusBottom(produtoStatus);
     if (status == null || produtoStatus == status) return;
     await onChangeProdutoStatus(produto, status);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
+    onUpdateAt(ordem);
   }
 
   Future<void> onSelectProdutoStatus(
+    OrdemModel ordem,
     PedidoProdutoModel produto,
     PedidoProdutoStatus status,
   ) async {
     await onChangeProdutoStatus(produto, status);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
+    onUpdateAt(ordem);
   }
 
   Future<void> onChangeProdutoStatus(
@@ -502,5 +509,10 @@ class OrdemController {
       'Ordem Desarquivada!',
       'Acesse a lista de ordens para visualizar a ordem',
     );
+  }
+
+  Future<void> onUpdateAt(OrdemModel ordem) async {
+    ordem.updatedAt = DateTime.now();
+    await FirestoreClient.ordens.update(ordem);
   }
 }

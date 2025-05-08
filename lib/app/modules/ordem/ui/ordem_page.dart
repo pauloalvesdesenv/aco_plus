@@ -126,7 +126,8 @@ class _OrdemPageState extends State<OrdemPage> {
                 _descriptionWidget(ordem),
                 const Divisor(),
                 _statusWidget(ordem),
-                for (final produto in ordem.produtos) _produtoWidget(produto),
+                for (final produto in ordem.produtos)
+                  _produtoWidget(ordem, produto),
                 if (usuario.isNotOperador)
                   if (!ordem.freezed.isFreezed &&
                       ordem.status != PedidoProdutoStatus.pronto)
@@ -305,7 +306,7 @@ class _OrdemPageState extends State<OrdemPage> {
     );
   }
 
-  ListTile _produtoWidget(PedidoProdutoModel produto) {
+  ListTile _produtoWidget(OrdemModel ordem, PedidoProdutoModel produto) {
     return ListTile(
       title: Text(produto.pedido.localizador, style: AppCss.minimumBold),
       subtitle: Column(
@@ -338,54 +339,51 @@ class _OrdemPageState extends State<OrdemPage> {
                               PedidoProdutoStatus.pronto,
                             ])
                         .map(
-                          (status) => Container(
-                            child: InkWell(
-                              onTap:
-                                  status == produto.status.status
-                                      ? null
-                                      : () => ordemCtrl.onChangeProdutoStatus(
-                                        produto,
-                                        status,
-                                      ),
-                              child: Tooltip(
-                                enableFeedback: status != produto.status.status,
-                                message:
-                                    status == produto.status.status
-                                        ? 'Este pedido atualmente está ${status.label}'
-                                        : 'Clique para alterar para ${status.label}',
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: status.color.withValues(
-                                      alpha:
-                                          status == produto.status.status
-                                              ? 1
-                                              : 0.1,
+                          (status) => InkWell(
+                            onTap:
+                                status == produto.status.status
+                                    ? null
+                                    : () => ordemCtrl.onSelectProdutoStatus(
+                                      ordem,
+                                      produto,
+                                      status,
                                     ),
+                            child: Tooltip(
+                              enableFeedback: status != produto.status.status,
+                              message:
+                                  status == produto.status.status
+                                      ? 'Este pedido atualmente está ${status.label}'
+                                      : 'Clique para alterar para ${status.label}',
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: status.color.withValues(
+                                    alpha:
+                                        status == produto.status.status
+                                            ? 1
+                                            : 0.1,
                                   ),
-                                  child: Text(
-                                    status.label,
-                                    style: AppCss.minimumRegular
-                                        .setSize(16)
-                                        .copyWith(
-                                          color: (status ==
-                                                      PedidoProdutoStatus.pronto
-                                                  ? Colors.white
-                                                  : Colors.black)
-                                              .withValues(
-                                                alpha:
-                                                    status ==
-                                                            produto
-                                                                .status
-                                                                .status
-                                                        ? 1
-                                                        : 0.4,
-                                              ),
-                                        ),
-                                  ),
+                                ),
+                                child: Text(
+                                  status.label,
+                                  style: AppCss.minimumRegular
+                                      .setSize(16)
+                                      .copyWith(
+                                        color: (status ==
+                                                    PedidoProdutoStatus.pronto
+                                                ? Colors.white
+                                                : Colors.black)
+                                            .withValues(
+                                              alpha:
+                                                  status ==
+                                                          produto.status.status
+                                                      ? 1
+                                                      : 0.4,
+                                            ),
+                                      ),
                                 ),
                               ),
                             ),
@@ -394,7 +392,9 @@ class _OrdemPageState extends State<OrdemPage> {
                         .toList(),
               )
               : InkWell(
-                onTap: () => ordemCtrl.showBottomChangeProdutoStatus(produto),
+                onTap:
+                    () =>
+                        ordemCtrl.showBottomChangeProdutoStatus(ordem, produto),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 6,

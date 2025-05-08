@@ -127,6 +127,7 @@ class OrdemCreateModel {
               : beltIndex,
       materiaPrima:
           materiaPrima?.id == 'register_unavailable' ? null : materiaPrima,
+      updatedAt: DateTime.now(),
     );
   }
 }

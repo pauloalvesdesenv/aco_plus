@@ -13,6 +13,7 @@ class OrdemModel {
   final String id;
   final ProdutoModel produto;
   final DateTime createdAt;
+  DateTime updatedAt;
   final MateriaPrimaModel? materiaPrima;
   DateTime? endAt;
   List<PedidoProdutoModel> produtos;
@@ -151,6 +152,7 @@ class OrdemModel {
     required this.produto,
     required this.produtos,
     required this.freezed,
+    required this.updatedAt,
     this.isArchived = false,
     this.materiaPrima,
     this.beltIndex,
@@ -171,6 +173,7 @@ class OrdemModel {
       'beltIndex': beltIndex,
       'materiaPrima': materiaPrima?.toMap(),
       'isArchived': isArchived,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
     return map;
   }
@@ -202,6 +205,10 @@ class OrdemModel {
               ? MateriaPrimaModel.fromMap(map['materiaPrima'])
               : null,
       isArchived: map['isArchived'] ?? false,
+      updatedAt:
+          map['updatedAt'] != null
+              ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'])
+              : DateTime.now(),
     );
   }
 
@@ -218,6 +225,7 @@ class OrdemModel {
     List<PedidoProdutoModel>? produtos,
     OrdemFreezedModel? freezed,
     MateriaPrimaModel? materiaPrima,
+    DateTime? updatedAt,
   }) {
     return OrdemModel(
       id: id ?? this.id,
@@ -227,6 +235,7 @@ class OrdemModel {
       produtos: produtos ?? this.produtos,
       freezed: freezed ?? this.freezed,
       materiaPrima: materiaPrima ?? this.materiaPrima,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }
