@@ -491,6 +491,7 @@ class OrdemController {
   }
 
   Future<void> onArchive(BuildContext context, OrdemModel ordem) async {
+    if (await _isArchiveUnavailable(ordem)) return;
     ordem.isArchived = true;
     showLoadingDialog();
     await FirestoreClient.ordens.update(ordem);
@@ -502,6 +503,15 @@ class OrdemController {
       'Acesse a lista de ordens arquivadas para visualizar a ordem',
     );
   }
+
+  Future<bool> _isArchiveUnavailable(OrdemModel ordem) async =>
+      !await onDeleteProcess(
+        deleteTitle: 'Deseja arquivar a ordem?',
+        deleteMessage: 'A ordem será movida para a lista de ordens arquivadas.',
+        infoMessage: 'A ordem só pode ser arquivada se todos os produtos estiverem prontos.',
+        conditional: ordem.status != PedidoProdutoStatus.pronto,
+      );
+
 
   Future<void> onUnarchive(
     BuildContext context,
