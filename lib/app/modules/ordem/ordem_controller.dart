@@ -335,7 +335,6 @@ class OrdemController {
     subscription = null;
   }
 
-
   OrdemModel getOrdemById(String ordemId) {
     final ordem = FirestoreClient.ordens.getById(ordemId);
     return ordem;
@@ -527,5 +526,4 @@ class OrdemController {
     ordem.updatedAt = DateTime.now();
     await FirestoreClient.ordens.update(ordem);
   }
-
 }

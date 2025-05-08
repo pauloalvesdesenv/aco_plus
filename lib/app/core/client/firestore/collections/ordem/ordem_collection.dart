@@ -129,9 +129,10 @@ class OrdemCollection {
   }
 
   Stream<OrdemModel> listenById(String id) {
-    return collection.doc(id).snapshots().map(
-          (doc) => OrdemModel.fromMap(doc.data()!),
-        );
+    return collection
+        .doc(id)
+        .snapshots()
+        .map((doc) => OrdemModel.fromMap(doc.data()!));
   }
 
   OrdemModel getById(String id) => data.firstWhere((e) => e.id == id);
