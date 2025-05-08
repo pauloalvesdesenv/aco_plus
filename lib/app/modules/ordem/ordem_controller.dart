@@ -508,10 +508,10 @@ class OrdemController {
       !await onDeleteProcess(
         deleteTitle: 'Deseja arquivar a ordem?',
         deleteMessage: 'A ordem será movida para a lista de ordens arquivadas.',
-        infoMessage: 'A ordem só pode ser arquivada se todos os produtos estiverem prontos.',
+        infoMessage:
+            'A ordem só pode ser arquivada se todos os produtos estiverem prontos.',
         conditional: ordem.status != PedidoProdutoStatus.pronto,
       );
-
 
   Future<void> onUnarchive(
     BuildContext context,
