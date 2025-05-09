@@ -380,9 +380,11 @@ class OrdemController {
     PedidoProdutoModel produto,
     PedidoProdutoStatus status,
   ) async {
+    showLoadingDialog();
     await onChangeProdutoStatus(produto, status);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
     onUpdateAt(ordem);
+    Navigator.pop(contextGlobal);
   }
 
   Future<void> onChangeProdutoStatus(

@@ -122,6 +122,7 @@ class _OrdensPageState extends State<OrdensPage> {
                             (e) => [
                               PedidoProdutoStatus.aguardandoProducao,
                               PedidoProdutoStatus.produzindo,
+                              PedidoProdutoStatus.pronto,
                             ].contains(e.status),
                           )
                           .toList();
