@@ -5,6 +5,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_m
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_status.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_tipo.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_prioridade_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_status_model.dart';
@@ -45,6 +46,7 @@ class PedidoModel {
   final String pedidoFinanceiro;
   final String instrucoesEntrega;
   final String instrucoesFinanceiras;
+  PedidoPrioridadeModel? prioridade;
 
   factory PedidoModel.empty() => PedidoModel(
     id: HashService.get,
@@ -71,6 +73,7 @@ class PedidoModel {
     pedidoFinanceiro: '',
     instrucoesEntrega: '',
     instrucoesFinanceiras: '',
+    prioridade: null,
   );
 
   String get filtro => localizador + pedidoFinanceiro;
@@ -152,6 +155,7 @@ class PedidoModel {
     required this.pedidoFinanceiro,
     required this.instrucoesEntrega,
     required this.instrucoesFinanceiras,
+    required this.prioridade,
   });
 
   List<PedidoProdutoStatus> get getStatusess {
@@ -238,6 +242,7 @@ class PedidoModel {
       'pedidoFinanceiro': pedidoFinanceiro,
       'instrucoesEntrega': instrucoesEntrega,
       'instrucoesFinanceiras': instrucoesFinanceiras,
+      'prioridade': prioridade?.toMap(),
     };
   }
 
@@ -303,6 +308,10 @@ class PedidoModel {
       pedidoFinanceiro: map['pedidoFinanceiro'] ?? '',
       instrucoesEntrega: map['instrucoesEntrega'] ?? '',
       instrucoesFinanceiras: map['instrucoesFinanceiras'] ?? '',
+      prioridade:
+          map['prioridade'] != null
+              ? PedidoPrioridadeModel.fromMap(map['prioridade'])
+              : null,
     );
   }
 
@@ -336,6 +345,7 @@ class PedidoModel {
     String? pedidoFinanceiro,
     String? instrucoesEntrega,
     String? instrucoesFinanceiras,
+    PedidoPrioridadeModel? prioridade,
   }) {
     return PedidoModel(
       id: id ?? this.id,
@@ -363,6 +373,7 @@ class PedidoModel {
       instrucoesEntrega: instrucoesEntrega ?? this.instrucoesEntrega,
       instrucoesFinanceiras:
           instrucoesFinanceiras ?? this.instrucoesFinanceiras,
+      prioridade: prioridade ?? this.prioridade,
     );
   }
 

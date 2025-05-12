@@ -171,6 +171,7 @@ class PedidoCreateModel {
       instrucoesFinanceiras: instrucoesFinanceiras.text,
       pedidoFinanceiro: pedidoFinanceiro.text,
       planilhamento: planilhamento.text,
+      prioridade: null,
     );
   }
 }

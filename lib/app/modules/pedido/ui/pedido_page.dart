@@ -13,6 +13,7 @@ import 'package:aco_plus/app/modules/pedido/ui/components/pedido_corte_dobra_wid
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_desc_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_entrega_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_financ_widget.dart';
+import 'package:aco_plus/app/modules/pedido/ui/components/pedido_prioridade_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_produtos_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_status_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_steps_widget.dart';
@@ -42,8 +43,6 @@ class PedidoPage extends StatefulWidget {
 
 class _PedidoPageState extends State<PedidoPage>
     with AutomaticKeepAliveClientMixin {
-  final FocusNode _focusNode = FocusNode();
-
   @override
   void initState() {
     pedidoCtrl.onInitPage(widget.pedido);
@@ -100,6 +99,7 @@ class _PedidoPageState extends State<PedidoPage>
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            PedidoPrioridadeWidget(pedido),
             Expanded(child: PedidoTagsWidget(pedido)),
             PedidoUsersWidget(pedido),
             const W(12),

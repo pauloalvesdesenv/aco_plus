@@ -1,6 +1,8 @@
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_prioridade_tipo.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_prioridade_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_status_model.dart';
@@ -18,6 +20,7 @@ import 'package:aco_plus/app/modules/automatizacao/automatizacao_controller.dart
 import 'package:aco_plus/app/modules/kanban/kanban_controller.dart';
 import 'package:aco_plus/app/modules/pedido/ui/pedido_status_bottom.dart';
 import 'package:aco_plus/app/modules/pedido/ui/pedido_step_bottom.dart';
+import 'package:aco_plus/app/modules/pedido/view_models/pedido_prioridade_view_model.dart';
 import 'package:aco_plus/app/modules/pedido/view_models/pedido_view_model.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_pedido_view_model.dart';
@@ -409,6 +412,116 @@ class PedidoController {
     await relatorioCtrl.onExportRelatorioPedidoPDF(
       relatorio,
       name: pedido.localizador,
+    );
+  }
+
+  //PEDIDO PRIORIDADE
+  final AppStream<PedidoPrioridadeCreateModel> formPrioridadeStream =
+      AppStream<PedidoPrioridadeCreateModel>();
+  PedidoPrioridadeCreateModel get formPrioridade => formPrioridadeStream.value;
+
+  void onInitPrioridade(PedidoModel pedido) {
+    final pedidos = _getPedidosByPrioridadeTipo(
+      pedido,
+      pedido.prioridade?.tipo ?? PedidoPrioridadeTipo.cd,
+    );
+
+    formPrioridadeStream.add(PedidoPrioridadeCreateModel(pedidos: pedidos));
+  }
+
+  List<PedidoModel> _getPedidosByPrioridadeTipo(
+    PedidoModel pedido,
+    PedidoPrioridadeTipo tipo,
+  ) {
+    final pedidos =
+        FirestoreClient.pedidos.pedidosPrioridade
+            .where((e) => e.prioridade?.tipo == tipo)
+            .map((e) => e.copyWith())
+            .toList();
+    if (pedido.prioridade?.tipo != tipo) {
+      final copy = pedido.copyWith(
+        prioridade: PedidoPrioridadeModel(
+          index: 0,
+          tipo: tipo,
+          createdAt: DateTime.now(),
+        ),
+      );
+      pedidos.insert(0, copy);
+      for (var i = 1; i < pedidos.length; i++) {
+        final copy = pedidos[i].copyWith(
+          prioridade: pedidos[i].prioridade!.copyWith(index: i),
+        );
+        pedidos[i] = copy;
+      }
+    }
+    pedidos.sort((a, b) => a.prioridade!.index.compareTo(b.prioridade!.index));
+    return pedidos;
+  }
+
+  Future<void> onConfirmarPrioridade(context, PedidoModel pedido) async {
+    showLoadingDialog();
+    await FirestoreClient.pedidos.updateAll(formPrioridade.pedidos);
+    final pedidoInList = formPrioridade.pedidos.firstWhere(
+      (e) => e.id == pedido.id,
+    );
+    if (pedido.prioridade?.tipo != pedidoInList.prioridade?.tipo) {
+      final pedidos =
+          FirestoreClient.pedidos.pedidosPrioridade
+              .where((e) => e.prioridade?.tipo == pedido.prioridade?.tipo)
+              .toList();
+      for (var i = 0; i < pedidos.length; i++) {
+        final copy = pedidos[i].copyWith(
+          prioridade: pedidos[i].prioridade!.copyWith(index: i),
+        );
+        pedidos[i] = copy;
+      }
+      await FirestoreClient.pedidos.updateAll(pedidos);
+    }
+    Navigator.pop(contextGlobal);
+    Navigator.pop(
+      context,
+      formPrioridade.pedidos.firstWhere((e) => e.id == pedido.id),
+    );
+    NotificationService.showPositive(
+      'Pedido Prioridade',
+      'Pedido prioridade atualizado com sucesso',
+      position: NotificationPosition.bottom,
+    );
+  }
+
+  void onReorderPrioridade(List<PedidoModel> pedidos) {
+    for (var i = 0; i < pedidos.length; i++) {
+      final copy = pedidos[i].copyWith(
+        prioridade: pedidos[i].prioridade!.copyWith(index: i),
+      );
+      pedidos[i] = copy;
+    }
+    pedidos.sort((a, b) => a.prioridade!.index.compareTo(b.prioridade!.index));
+  }
+
+  void onSelectPrioridadeTipo(PedidoModel pedido, PedidoPrioridadeTipo e) {
+    final pedidos = _getPedidosByPrioridadeTipo(pedido, e);
+    formPrioridadeStream.add(PedidoPrioridadeCreateModel(pedidos: pedidos));
+  }
+
+  Future<void> onRemoverPrioridade(
+    BuildContext context,
+    PedidoModel pedido,
+  ) async {
+    pedido.prioridade = null;
+    showLoadingDialog();
+    await FirestoreClient.pedidos.update(pedido);
+    onReorderPrioridade(FirestoreClient.pedidos.pedidosPrioridade);
+    await FirestoreClient.pedidos.updateAll(
+      FirestoreClient.pedidos.pedidosPrioridade,
+    );
+    // await FirestoreClient.pedidos.fetch();
+    Navigator.pop(contextGlobal);
+    Navigator.pop(context, pedido);
+    NotificationService.showPositive(
+      'Pedido Prioridade',
+      'Pedido prioridade removida com sucesso',
+      position: NotificationPosition.bottom,
     );
   }
 }

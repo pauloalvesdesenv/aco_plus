@@ -33,7 +33,15 @@ class PedidoItemWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(pedido.localizador, style: AppCss.mediumBold),
+                      Row(
+                        children: [
+                          if (pedido.prioridade != null) _prioridadeWidget(),
+                          Text(
+                            pedido.localizador.trim(),
+                            style: AppCss.mediumBold,
+                          ),
+                        ],
+                      ),
                       Text('${pedido.cliente.nome} - ${pedido.obra.descricao}'),
                       Text(
                         pedido.produtos
@@ -112,6 +120,33 @@ class PedidoItemWidget extends StatelessWidget {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+
+  Container _prioridadeWidget() {
+    return Container(
+      margin: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      decoration: BoxDecoration(
+        color: Colors.orange,
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+        border: Border.all(color: Colors.black, width: 0.6),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.priority_high,
+            color: Colors.black,
+            size: 9,
+            weight: FontWeight.bold.value.toDouble(),
+          ),
+          const W(2),
+          Text(
+            pedido.prioridade!.getLabel(),
+            style: AppCss.minimumBold.setSize(9).setColor(Colors.black),
+          ),
         ],
       ),
     );

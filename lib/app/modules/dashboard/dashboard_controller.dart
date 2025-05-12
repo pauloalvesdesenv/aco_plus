@@ -1,7 +1,12 @@
 import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
+import 'package:aco_plus/app/core/dialogs/loading_dialog.dart';
 import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
+import 'package:aco_plus/app/core/services/notification_service.dart';
+import 'package:aco_plus/app/core/utils/global_resource.dart' as Navigator;
+import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/dashboard/dashboard_view_model.dart';
 
 DashboardController dashCtrl = DashboardController();
@@ -56,5 +61,16 @@ class DashboardController {
       case DashboardClienteRankingType.kilos:
         return value.toKg();
     }
+  }
+
+  Future<void> onReorderPrioridade(List<PedidoModel> pedidos) async {
+    showLoadingDialog();
+    await FirestoreClient.pedidos.updateAll(pedidos);
+    // FirestoreClient.pedidos.fetch();
+    Navigator.pop(contextGlobal);
+    NotificationService.showPositive(
+      'Pedidos reordenados.',
+      'Operação realizada com sucesso.',
+    );
   }
 }

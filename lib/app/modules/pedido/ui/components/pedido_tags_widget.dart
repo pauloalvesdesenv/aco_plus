@@ -13,7 +13,7 @@ class PedidoTagsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+      padding: const EdgeInsets.only(right: 16, top: 16),
       width: double.maxFinite,
       child: Wrap(
         runSpacing: 8,
@@ -34,7 +34,7 @@ class PedidoTagsWidget extends StatelessWidget {
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Icon(Icons.add, size: 20),
+              child: const Icon(Icons.add, size: 22),
             ),
           ),
           for (final tag in pedido.tags)

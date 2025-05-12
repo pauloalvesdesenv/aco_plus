@@ -27,6 +27,10 @@ class PedidoCollection {
       AppStream<List<PedidoModel>>();
   List<PedidoModel> get pedidosArchiveds => pedidosArchivedsStream.value;
 
+  AppStream<List<PedidoModel>> pedidosPrioridadeStream =
+      AppStream<List<PedidoModel>>();
+  List<PedidoModel> get pedidosPrioridade => pedidosPrioridadeStream.value;
+
   CollectionReference<Map<String, dynamic>> get collection =>
       FirebaseFirestore.instance.collection(name);
 
@@ -46,6 +50,9 @@ class PedidoCollection {
     dataStream.add(pedidos);
     pedidosUnarchivedsStream.add(pedidos.where((e) => !e.isArchived).toList());
     pedidosArchivedsStream.add(pedidos.where((e) => e.isArchived).toList());
+    pedidosPrioridadeStream.add(
+      pedidos.where((e) => e.prioridade != null).toList(),
+    );
   }
 
   bool _isListen = false;
@@ -90,6 +97,9 @@ class PedidoCollection {
             data.where((e) => !e.isArchived).toList(),
           );
           pedidosArchivedsStream.add(data.where((e) => e.isArchived).toList());
+          pedidosPrioridadeStream.add(
+            data.where((e) => e.prioridade != null).toList(),
+          );
         });
   }
 

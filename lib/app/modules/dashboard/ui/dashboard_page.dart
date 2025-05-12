@@ -1,4 +1,6 @@
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_prioridade_tipo.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/app_drawer.dart';
@@ -13,13 +15,16 @@ import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/base/base_controller.dart';
 import 'package:aco_plus/app/modules/dashboard/dashboard_controller.dart';
+import 'package:aco_plus/app/modules/dashboard/ui/dashboard_pedido_prioridade_bottom.dart';
 import 'package:aco_plus/app/modules/graph/ordem_total/graph_ordem_total_widget.dart';
 import 'package:aco_plus/app/modules/graph/pedido_etapa/pedido_etapa_widget.dart';
 import 'package:aco_plus/app/modules/graph/pedido_status/pedido_status_widget.dart';
 import 'package:aco_plus/app/modules/graph/produto_produzido/produto_produzido_widget.dart';
 import 'package:aco_plus/app/modules/graph/produto_status/produto_status_widget.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_page.dart';
+import 'package:aco_plus/app/modules/pedido/ui/pedido_page.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -83,6 +88,8 @@ class DashboardPageState extends State<DashboardPage> {
                           } else {
                             return ListView(
                               children: [
+                                _pedidoPrioridadeWidget(),
+                                const Divisor(),
                                 _ordemProducaoWidget(),
                                 const Divisor(),
                                 Row(
@@ -316,6 +323,205 @@ class DashboardPageState extends State<DashboardPage> {
           const H(8),
           const Expanded(child: ProdutoProduzidoWidget()),
         ],
+      ),
+    );
+  }
+
+  Widget _pedidoPrioridadeWidget() => StreamOut<List<PedidoModel>>(
+    stream: FirestoreClient.pedidos.pedidosPrioridadeStream.listen,
+    builder: (_, pedidos) {
+      final isPrioridadeEmpty = pedidos.isEmpty;
+      return Row(
+        children: [
+          Expanded(
+            child: SizedBox(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isPrioridadeEmpty ? null : Colors.orange,
+                      border: Border.all(
+                        color:
+                            isPrioridadeEmpty
+                                ? Colors.grey[200]!
+                                : Colors.black,
+                        width: 0.8,
+                      ),
+                    ),
+                    child:
+                        isPrioridadeEmpty
+                            ? Icon(
+                              Icons.priority_high,
+                              size: 14,
+                              color: Colors.grey[200],
+                            )
+                            : Text(
+                              pedidos.length.toString(),
+                              style: AppCss.minimumRegular.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                            ),
+                  ),
+                  Gap(8),
+                  Text('Fila de Prioridades:', style: AppCss.largeBold),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Row(
+              children:
+                  PedidoPrioridadeTipo.values.map((tipo) {
+                    final pedidosPorFiltro =
+                        pedidos
+                            .where(
+                              (element) => element.prioridade!.tipo == tipo,
+                            )
+                            .toList();
+                    return Expanded(
+                      child: Container(
+                        width: double.maxFinite,
+                        height: 250,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                              color: Colors.grey[200]!,
+                              width: 0.8,
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color:
+                                    pedidosPorFiltro.isEmpty
+                                        ? null
+                                        : Colors.orange.withValues(alpha: 0.3),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Colors.grey[200]!,
+                                    width: 0.8,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Gap(8),
+                                  Icon(tipo.getIcon(), size: 18),
+                                  W(16),
+                                  Expanded(
+                                    child: Text(
+                                      tipo.getLabel(),
+                                      style: AppCss.mediumBold,
+                                    ),
+                                  ),
+                                  W(16),
+                                  InkWell(
+                                    onTap: () async {
+                                      final result =
+                                          await showDashboardPedidoPrioridadeBottom(
+                                            tipo,
+                                            pedidosPorFiltro,
+                                          );
+                                      if (result != null) {
+                                        dashCtrl.onReorderPrioridade(result);
+                                      }
+                                    },
+                                    child: Icon(
+                                      Icons.fullscreen,
+                                      color: Colors.grey[600],
+                                      size: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                color:
+                                    pedidosPorFiltro.isEmpty
+                                        ? null
+                                        : Colors.orange.withValues(alpha: 0.1),
+                                child: Builder(
+                                  builder: (context) {
+                                    if (pedidosPorFiltro.isEmpty) {
+                                      return const SizedBox();
+                                    }
+                                    pedidosPorFiltro.sort(
+                                      (a, b) => a.prioridade!.index.compareTo(
+                                        b.prioridade!.index,
+                                      ),
+                                    );
+                                    return ListView.builder(
+                                      itemCount: pedidosPorFiltro.length,
+                                      itemBuilder:
+                                          (_, i) => _pedidoPrioridadeItemWidget(
+                                            i,
+                                            pedidosPorFiltro[i],
+                                          ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+
+  Widget _pedidoPrioridadeItemWidget(int index, PedidoModel pedido) {
+    return InkWell(
+      onTap:
+          () => push(PedidoPage(pedido: pedido, reason: PedidoInitReason.page)),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Colors.grey[200]!, width: 0.8),
+          ),
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            Gap(8),
+            Text('${index + 1}º', style: AppCss.mediumBold),
+            Gap(16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(pedido.localizador.trim(), style: AppCss.mediumBold),
+                  Text(
+                    pedido.produtos
+                        .map((e) => '${'${e.produto.descricao} - ${e.qtde}'}Kg')
+                        .join(', '),
+                    overflow: TextOverflow.fade,
+                    style: AppCss.minimumRegular
+                        .setSize(11)
+                        .setColor(AppColors.black)
+                        .copyWith(overflow: TextOverflow.fade),
+                  ),
+                ],
+              ),
+            ),
+            Gap(16),
+            Icon(Symbols.arrow_forward_ios, size: 10, color: Colors.grey),
+          ],
+        ),
       ),
     );
   }
