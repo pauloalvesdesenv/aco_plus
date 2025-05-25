@@ -49,45 +49,42 @@ class _RelatoriosPedidoPageState extends State<RelatoriosPedidoPage> {
         actions: [
           StreamOut(
             stream: relatorioCtrl.pedidoViewModelStream.listen,
-            builder:
-                (_, model) => IconButton(
-                  onPressed:
-                      model.relatorio != null
-                          ? () => relatorioCtrl.onExportRelatorioPedidoPDF(
-                            relatorioCtrl.pedidoViewModel,
-                          )
-                          : null,
-                  icon: Icon(
-                    Icons.picture_as_pdf_outlined,
-                    color: model.relatorio != null ? null : Colors.grey[500],
-                  ),
-                ),
+            builder: (_, model) => IconButton(
+              onPressed: model.relatorio != null
+                  ? () => relatorioCtrl.onExportRelatorioPedidoPDF(
+                      relatorioCtrl.pedidoViewModel,
+                    )
+                  : null,
+              icon: Icon(
+                Icons.picture_as_pdf_outlined,
+                color: model.relatorio != null ? null : Colors.grey[500],
+              ),
+            ),
           ),
         ],
       ),
       body: StreamOut(
         stream: relatorioCtrl.pedidoViewModelStream.listen,
-        builder:
-            (_, model) => ListView(
-              children: [
-                _filterWidget(model),
-                Divisor(color: Colors.grey[700]!, height: 1.5),
-                if ([
-                  RelatorioPedidoTipo.totaisPedidos,
-                  RelatorioPedidoTipo.totais,
-                ].contains(model.tipo)) ...[
-                  _totaisWidget(),
-                  Divisor(color: Colors.grey[700]!, height: 1.5),
-                ],
-                if ([
-                  RelatorioPedidoTipo.totaisPedidos,
-                  RelatorioPedidoTipo.pedidos,
-                ].contains(model.tipo)) ...[
-                  _pedidosWidget(model),
-                  Divisor(color: Colors.grey[700]!, height: 1.5),
-                ],
-              ],
-            ),
+        builder: (_, model) => ListView(
+          children: [
+            _filterWidget(model),
+            Divisor(color: Colors.grey[700]!, height: 1.5),
+            if ([
+              RelatorioPedidoTipo.totaisPedidos,
+              RelatorioPedidoTipo.totais,
+            ].contains(model.tipo)) ...[
+              _totaisWidget(),
+              Divisor(color: Colors.grey[700]!, height: 1.5),
+            ],
+            if ([
+              RelatorioPedidoTipo.totaisPedidos,
+              RelatorioPedidoTipo.pedidos,
+            ].contains(model.tipo)) ...[
+              _pedidosWidget(model),
+              Divisor(color: Colors.grey[700]!, height: 1.5),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -220,18 +217,18 @@ class _RelatoriosPedidoPageState extends State<RelatoriosPedidoPage> {
               return qtde <= 0
                   ? const SizedBox()
                   : Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: itemInfo(
-                          status.label,
-                          qtde.toKg(),
-                          color: status.color.withValues(alpha: 0.06),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: itemInfo(
+                            status.label,
+                            qtde.toKg(),
+                            color: status.color.withValues(alpha: 0.06),
+                          ),
                         ),
-                      ),
-                      const Divisor(),
-                    ],
-                  );
+                        const Divisor(),
+                      ],
+                    );
             },
           ),
         Divisor(color: Colors.grey[700]!, height: 1.5),
@@ -255,47 +252,49 @@ class _RelatoriosPedidoPageState extends State<RelatoriosPedidoPage> {
               return !hasQtde
                   ? const SizedBox()
                   : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      itemInfo(
-                        'Bitola ${produto.descricaoReplaced}mm',
-                        relatorioCtrl.getPedidosTotalPorBitola(produto).toKg(),
-                        labelStyle: AppCss.minimumBold,
-                        valueStyle: AppCss.minimumBold,
-                        padding: const EdgeInsets.all(16),
-                      ),
-                      for (final status in PedidoProdutoStatus.values)
-                        Builder(
-                          builder: (context) {
-                            double qtde = relatorioCtrl
-                                .getPedidosTotalPorBitolaStatus(
-                                  produto,
-                                  status,
-                                );
-                            return qtde <= 0
-                                ? const SizedBox()
-                                : Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                      ),
-                                      child: itemInfo(
-                                        status.label,
-                                        qtde.toKg(),
-                                        color: status.color.withValues(
-                                          alpha: 0.06,
-                                        ),
-                                      ),
-                                    ),
-                                    const Divisor(),
-                                  ],
-                                );
-                          },
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        itemInfo(
+                          'Bitola ${produto.descricaoReplaced}mm',
+                          relatorioCtrl
+                              .getPedidosTotalPorBitola(produto)
+                              .toKg(),
+                          labelStyle: AppCss.minimumBold,
+                          valueStyle: AppCss.minimumBold,
+                          padding: const EdgeInsets.all(16),
                         ),
-                      Divisor(color: Colors.grey[600]!),
-                    ],
-                  );
+                        for (final status in PedidoProdutoStatus.values)
+                          Builder(
+                            builder: (context) {
+                              double qtde = relatorioCtrl
+                                  .getPedidosTotalPorBitolaStatus(
+                                    produto,
+                                    status,
+                                  );
+                              return qtde <= 0
+                                  ? const SizedBox()
+                                  : Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                          ),
+                                          child: itemInfo(
+                                            status.label,
+                                            qtde.toKg(),
+                                            color: status.color.withValues(
+                                              alpha: 0.06,
+                                            ),
+                                          ),
+                                        ),
+                                        const Divisor(),
+                                      ],
+                                    );
+                            },
+                          ),
+                        Divisor(color: Colors.grey[600]!),
+                      ],
+                    );
             },
           ),
       ],
@@ -352,6 +351,14 @@ class _RelatoriosPedidoPageState extends State<RelatoriosPedidoPage> {
                 Divisor(color: Colors.grey[300]),
               ],
             ),
+          Divisor(color: Colors.grey[300]),
+          itemInfo(
+            'Total de Kgs',
+            pedido.getQtdeTotal().toKg(),
+            valueStyle: AppCss.mediumBold.copyWith(fontSize: 16),
+            labelStyle: AppCss.mediumBold.copyWith(fontSize: 16),
+            padding: EdgeInsets.only(top: 8),
+          ),
         ],
       ),
     );

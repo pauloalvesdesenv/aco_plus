@@ -37,6 +37,7 @@ class RelatorioPedidoViewModel {
   List<SortType> sortTypes = [
     SortType.localizator,
     SortType.deliveryAt,
+    SortType.qtde,
     SortType.client,
   ];
 

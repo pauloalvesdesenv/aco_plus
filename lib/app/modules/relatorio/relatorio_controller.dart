@@ -32,18 +32,18 @@ class PedidoController {
   RelatorioPedidoViewModel get pedidoViewModel => pedidoViewModelStream.value;
 
   void onCreateRelatorioPedido() {
-    List<PedidoModel> pedidos =
-        FirestoreClient.pedidos.data
-            .map(
-              (e) => e.copyWith(
-                produtos: e.produtos.map((e) => e.copyWith()).toList(),
-              ),
-            )
-            .toList();
+    List<PedidoModel> pedidos = FirestoreClient.pedidos.data
+        .map(
+          (e) => e.copyWith(
+            produtos: e.produtos.map((e) => e.copyWith()).toList(),
+          ),
+        )
+        .toList();
 
     for (PedidoModel pedido in pedidos) {
-      List<PedidoProdutoModel> produtos =
-          pedido.produtos.map((e) => e.copyWith()).toList();
+      List<PedidoProdutoModel> produtos = pedido.produtos
+          .map((e) => e.copyWith())
+          .toList();
       pedido.produtos.clear();
 
       for (PedidoProdutoModel produto in produtos) {
@@ -53,20 +53,20 @@ class PedidoController {
       }
     }
 
-    pedidos =
-        pedidos
-            .where(
-              (e) =>
-                  pedidoViewModel.cliente == null ||
-                  e.cliente.id == pedidoViewModel.cliente?.id,
-            )
-            .toList();
+    pedidos = pedidos
+        .where(
+          (e) =>
+              pedidoViewModel.cliente == null ||
+              e.cliente.id == pedidoViewModel.cliente?.id,
+        )
+        .toList();
 
     //remove produtos dos pedidos que nao estao na lista de produtos do filtro(view model)
     if (pedidoViewModel.produtos.isNotEmpty) {
       for (PedidoModel pedido in pedidos) {
-        List<PedidoProdutoModel> produtos =
-            pedido.produtos.map((e) => e.copyWith()).toList();
+        List<PedidoProdutoModel> produtos = pedido.produtos
+            .map((e) => e.copyWith())
+            .toList();
         pedido.produtos.clear();
 
         for (PedidoProdutoModel produto in produtos) {
@@ -98,30 +98,34 @@ class PedidoController {
     switch (pedidoViewModel.sortType) {
       case SortType.localizator:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? a.localizador.compareTo(b.localizador)
-                  : b.localizador.compareTo(a.localizador),
+          (a, b) => isAsc
+              ? a.localizador.compareTo(b.localizador)
+              : b.localizador.compareTo(a.localizador),
         );
         break;
       case SortType.client:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? a.cliente.nome.compareTo(b.cliente.nome)
-                  : b.cliente.nome.compareTo(a.cliente.nome),
+          (a, b) => isAsc
+              ? a.cliente.nome.compareTo(b.cliente.nome)
+              : b.cliente.nome.compareTo(a.cliente.nome),
         );
         break;
       case SortType.deliveryAt:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? (a.deliveryAt ?? DateTime.now()).compareTo(
-                    (b.deliveryAt ?? DateTime.now()),
-                  )
-                  : (b.deliveryAt ?? DateTime.now()).compareTo(
-                    (a.deliveryAt ?? DateTime.now()),
-                  ),
+          (a, b) => isAsc
+              ? (a.deliveryAt ?? DateTime.now()).compareTo(
+                  (b.deliveryAt ?? DateTime.now()),
+                )
+              : (b.deliveryAt ?? DateTime.now()).compareTo(
+                  (a.deliveryAt ?? DateTime.now()),
+                ),
+        );
+        break;
+      case SortType.qtde:
+        pedidos.sort(
+          (a, b) => isAsc
+              ? a.getQtdeTotal().compareTo(b.getQtdeTotal())
+              : b.getQtdeTotal().compareTo(a.getQtdeTotal()),
         );
         break;
       default:
@@ -218,44 +222,39 @@ class PedidoController {
   }
 
   void onCreateRelatorioOrdemStatus() {
-    List<OrdemModel> ordens =
-        FirestoreClient.ordens.data
-            .map(
-              (o) => o.copyWith(
-                produto: o.produto.copyWith(),
-                produtos:
-                    o.produtos
-                        .map(
-                          (p) => p.copyWith(
-                            statusess:
-                                p.statusess.map((s) => s.copyWith()).toList(),
-                          ),
-                        )
-                        .toList(),
-              ),
-            )
-            .toList();
+    List<OrdemModel> ordens = FirestoreClient.ordens.data
+        .map(
+          (o) => o.copyWith(
+            produto: o.produto.copyWith(),
+            produtos: o.produtos
+                .map(
+                  (p) => p.copyWith(
+                    statusess: p.statusess.map((s) => s.copyWith()).toList(),
+                  ),
+                )
+                .toList(),
+          ),
+        )
+        .toList();
     for (final ordem in ordens) {
-      ordem.produtos =
-          ordem.produtos
-              .where(
-                (e) =>
-                    !e.pedido.localizador.contains('NOTFOUND') &&
-                    _whereProductStatus(e, ordemViewModel.status),
-              )
-              .toList();
+      ordem.produtos = ordem.produtos
+          .where(
+            (e) =>
+                !e.pedido.localizador.contains('NOTFOUND') &&
+                _whereProductStatus(e, ordemViewModel.status),
+          )
+          .toList();
     }
 
     ordens.removeWhere((e) => e.produtos.isEmpty);
     if (ordemViewModel.dates != null) {
-      ordens =
-          ordens
-              .where(
-                (e) =>
-                    e.createdAt.isAfter(ordemViewModel.dates!.start) &&
-                    e.createdAt.isBefore(ordemViewModel.dates!.end),
-              )
-              .toList();
+      ordens = ordens
+          .where(
+            (e) =>
+                e.createdAt.isAfter(ordemViewModel.dates!.start) &&
+                e.createdAt.isBefore(ordemViewModel.dates!.end),
+          )
+          .toList();
     }
     final model = RelatorioOrdemModel.status(
       ordemViewModel.status,
@@ -359,17 +358,16 @@ class PedidoController {
     pdf.addPage(
       (isOrdemType
           ? RelatorioOrdemPdfOrdemPage(
-            ordemViewModel.relatorio!,
-          ).build(imageBytes)
+              ordemViewModel.relatorio!,
+            ).build(imageBytes)
           : RelatorioOrdemPdfStatusPage(
-            ordemViewModel.relatorio!,
-          ).build(imageBytes)),
+              ordemViewModel.relatorio!,
+            ).build(imageBytes)),
     );
 
-    final name =
-        isOrdemType
-            ? "m2_relatorio_ordem_${ordemViewModel.relatorio!.ordem.localizator.toLowerCase()}${DateTime.now().toFileName()}.pdf"
-            : "m2_relatorio_bitola_status_${ordemViewModel.status.map((e) => e.label).join('_').toLowerCase()}${DateTime.now().toFileName()}.pdf";
+    final name = isOrdemType
+        ? "m2_relatorio_ordem_${ordemViewModel.relatorio!.ordem.localizator.toLowerCase()}${DateTime.now().toFileName()}.pdf"
+        : "m2_relatorio_bitola_status_${ordemViewModel.status.map((e) => e.label).join('_').toLowerCase()}${DateTime.now().toFileName()}.pdf";
 
     await downloadPDF(name, '/relatorio/ordem/', await pdf.save());
   }

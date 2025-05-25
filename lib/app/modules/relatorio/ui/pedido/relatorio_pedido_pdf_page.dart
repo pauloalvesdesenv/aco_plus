@@ -22,33 +22,32 @@ class RelatorioPedidoPdfPage {
   pw.Page build(Uint8List bytes) => pw.MultiPage(
     pageFormat: PdfPageFormat.a4,
     crossAxisAlignment: pw.CrossAxisAlignment.center,
-    build:
-        (pw.Context context) => [
-          pw.Image(pw.MemoryImage(bytes), width: 60, height: 60),
-          pw.SizedBox(height: 24),
-          pw.Text('RELATÓRIO DE PEDIDOS POR CLIENTE E STATUS'),
-          pw.SizedBox(height: 16),
-          _itemHeader(model),
-          if ([
-            RelatorioPedidoTipo.totais,
-            RelatorioPedidoTipo.totaisPedidos,
-          ].contains(model.tipo)) ...[
-            pw.SizedBox(height: 24),
-            _itemTotalGeral(model),
-            pw.SizedBox(height: 24),
-            _itemTotalStatus(model),
-            pw.SizedBox(height: 24),
-            _itemTotalBitolasStatus(model),
-          ],
-          if ([
-            RelatorioPedidoTipo.pedidos,
-            RelatorioPedidoTipo.totaisPedidos,
-          ].contains(model.tipo)) ...[
-            pw.SizedBox(height: 24),
-            for (final pedido in model.pedidos)
-              pedido.produtos.isEmpty ? pw.SizedBox() : _itemRelatorio(pedido),
-          ],
-        ],
+    build: (pw.Context context) => [
+      pw.Image(pw.MemoryImage(bytes), width: 60, height: 60),
+      pw.SizedBox(height: 24),
+      pw.Text('RELATÓRIO DE PEDIDOS POR CLIENTE E STATUS'),
+      pw.SizedBox(height: 16),
+      _itemHeader(model),
+      if ([
+        RelatorioPedidoTipo.totais,
+        RelatorioPedidoTipo.totaisPedidos,
+      ].contains(model.tipo)) ...[
+        pw.SizedBox(height: 24),
+        _itemTotalGeral(model),
+        pw.SizedBox(height: 24),
+        _itemTotalStatus(model),
+        pw.SizedBox(height: 24),
+        _itemTotalBitolasStatus(model),
+      ],
+      if ([
+        RelatorioPedidoTipo.pedidos,
+        RelatorioPedidoTipo.totaisPedidos,
+      ].contains(model.tipo)) ...[
+        pw.SizedBox(height: 24),
+        for (final pedido in model.pedidos)
+          pedido.produtos.isEmpty ? pw.SizedBox() : _itemRelatorio(pedido),
+      ],
+    ],
   );
 
   pw.Widget _itemRelatorio(PedidoModel pedido) {
@@ -111,24 +110,26 @@ class RelatorioPedidoPdfPage {
                 return produto.qtde <= 0
                     ? pw.SizedBox()
                     : pw.Column(
-                      children: [
-                        _itemInfo(
-                          '${produto.produto.descricaoReplaced}mm',
-                          '(${produto.status.status.label}) ${produto.qtde}Kg',
-                          color: PdfColor.fromInt(
-                            produto.status.status.color
-                                .withValues(alpha: 0.06)
-                                .hashCode,
-                          ).shade(0.03),
-                        ),
-                        PdfDivisor.build(color: Colors.grey[200]),
-                        if (produto.produto.id !=
-                            pedido.produtos.last.produto.id)
+                        children: [
+                          _itemInfo(
+                            '${produto.produto.descricaoReplaced}mm',
+                            '(${produto.status.status.label}) ${produto.qtde}Kg',
+                            color: PdfColor.fromInt(
+                              produto.status.status.color
+                                  .withValues(alpha: 0.06)
+                                  .hashCode,
+                            ).shade(0.03),
+                          ),
                           PdfDivisor.build(color: Colors.grey[200]),
-                      ],
-                    );
+                          if (produto.produto.id !=
+                              pedido.produtos.last.produto.id)
+                            PdfDivisor.build(color: Colors.grey[200]),
+                        ],
+                      );
               },
             ),
+          PdfDivisor.build(color: Colors.grey[200]),
+          _itemInfo('Total de Kgs', pedido.getQtdeTotal().toKg()),
         ],
       ),
     );
@@ -219,11 +220,11 @@ class RelatorioPedidoPdfPage {
               return qtde <= 0
                   ? pw.SizedBox()
                   : pw.Column(
-                    children: [
-                      _itemHeaderInfo('Total Geral', qtde.toKg()),
-                      PdfDivisor.build(),
-                    ],
-                  );
+                      children: [
+                        _itemHeaderInfo('Total Geral', qtde.toKg()),
+                        PdfDivisor.build(),
+                      ],
+                    );
             },
           ),
         ],
@@ -261,17 +262,17 @@ class RelatorioPedidoPdfPage {
                 return qtde <= 0
                     ? pw.SizedBox()
                     : pw.Column(
-                      children: [
-                        _itemInfo(
-                          status.label,
-                          qtde.toKg(),
-                          color: PdfColor.fromInt(
-                            status.color.withValues(alpha: 0.06).hashCode,
-                          ).shade(0.03),
-                        ),
-                        PdfDivisor.build(),
-                      ],
-                    );
+                        children: [
+                          _itemInfo(
+                            status.label,
+                            qtde.toKg(),
+                            color: PdfColor.fromInt(
+                              status.color.withValues(alpha: 0.06).hashCode,
+                            ).shade(0.03),
+                          ),
+                          PdfDivisor.build(),
+                        ],
+                      );
               },
             ),
         ],
@@ -317,15 +318,29 @@ class RelatorioPedidoPdfPage {
                 return !hasQtde
                     ? pw.SizedBox()
                     : pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(16),
-                          child: pw.Row(
-                            children: [
-                              pw.Expanded(
-                                child: pw.Text(
-                                  'Bitola ${produto.descricaoReplaced}mm',
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.all(16),
+                            child: pw.Row(
+                              children: [
+                                pw.Expanded(
+                                  child: pw.Text(
+                                    'Bitola ${produto.descricaoReplaced}mm',
+                                    style: pw.TextStyle(
+                                      fontSize: 12,
+                                      font: pw.Font.times(),
+                                      fontWeight: pw.FontWeight.bold,
+                                      color: PdfColor.fromInt(
+                                        AppColors.black.value,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                pw.Text(
+                                  relatorioCtrl
+                                      .getPedidosTotalPorBitola(produto)
+                                      .toKg(),
                                   style: pw.TextStyle(
                                     fontSize: 12,
                                     font: pw.Font.times(),
@@ -335,52 +350,38 @@ class RelatorioPedidoPdfPage {
                                     ),
                                   ),
                                 ),
-                              ),
-                              pw.Text(
-                                relatorioCtrl
-                                    .getPedidosTotalPorBitola(produto)
-                                    .toKg(),
-                                style: pw.TextStyle(
-                                  fontSize: 12,
-                                  font: pw.Font.times(),
-                                  fontWeight: pw.FontWeight.bold,
-                                  color: PdfColor.fromInt(
-                                    AppColors.black.value,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        for (final status in PedidoProdutoStatus.values)
-                          pw.Builder(
-                            builder: (context) {
-                              final qtde = relatorioCtrl
-                                  .getPedidosTotalPorBitolaStatus(
-                                    produto,
-                                    status,
-                                  );
-                              return qtde <= 0
-                                  ? pw.SizedBox()
-                                  : pw.Column(
-                                    children: [
-                                      _itemInfo(
-                                        status.label,
-                                        qtde.toKg(),
-                                        color: PdfColor.fromInt(
-                                          status.color
-                                              .withValues(alpha: 0.06)
-                                              .hashCode,
-                                        ).shade(0.03),
-                                      ),
-                                      PdfDivisor.build(),
-                                    ],
-                                  );
-                            },
-                          ),
-                        PdfDivisor.build(color: Colors.grey[600]!),
-                      ],
-                    );
+                          for (final status in PedidoProdutoStatus.values)
+                            pw.Builder(
+                              builder: (context) {
+                                final qtde = relatorioCtrl
+                                    .getPedidosTotalPorBitolaStatus(
+                                      produto,
+                                      status,
+                                    );
+                                return qtde <= 0
+                                    ? pw.SizedBox()
+                                    : pw.Column(
+                                        children: [
+                                          _itemInfo(
+                                            status.label,
+                                            qtde.toKg(),
+                                            color: PdfColor.fromInt(
+                                              status.color
+                                                  .withValues(alpha: 0.06)
+                                                  .hashCode,
+                                            ).shade(0.03),
+                                          ),
+                                          PdfDivisor.build(),
+                                        ],
+                                      );
+                              },
+                            ),
+                          PdfDivisor.build(color: Colors.grey[600]!),
+                        ],
+                      );
               },
             ),
         ],

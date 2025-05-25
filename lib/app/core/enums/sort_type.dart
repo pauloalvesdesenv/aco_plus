@@ -1,4 +1,4 @@
-enum SortType { alfabetic, createdAt, deliveryAt, localizator, client }
+enum SortType { alfabetic, createdAt, deliveryAt, localizator, client, qtde }
 
 extension SortTypeExt on SortType {
   String get name {
@@ -13,6 +13,8 @@ extension SortTypeExt on SortType {
         return 'Localizador';
       case SortType.client:
         return 'Cliente';
+      case SortType.qtde:
+        return 'Quantidade';
     }
   }
 }
