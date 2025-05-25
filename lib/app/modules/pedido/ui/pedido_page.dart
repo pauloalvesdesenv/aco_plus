@@ -4,6 +4,7 @@ import 'package:aco_plus/app/core/components/app_scaffold.dart';
 import 'package:aco_plus/app/core/components/divisor.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/components/w.dart';
+import 'package:aco_plus/app/modules/notificacao/notificacao_controller.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_anexos_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_armacao_widget.dart';
@@ -45,7 +46,9 @@ class _PedidoPageState extends State<PedidoPage>
     with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
-    pedidoCtrl.onInitPage(widget.pedido);
+    pedidoCtrl.onInitPage(widget.pedido).then((_) {
+      notificacaoCtrl.onSetPedidoViewed(widget.pedido);
+    });
     super.initState();
   }
 
@@ -63,11 +66,8 @@ class _PedidoPageState extends State<PedidoPage>
     super.build(context);
     return StreamOut(
       stream: pedidoCtrl.pedidoStream.listen,
-      builder:
-          (_, pedido) =>
-              isKanban
-                  ? _kanbanReasonWidget(pedido)
-                  : _pedidoReasonWidget(pedido),
+      builder: (_, pedido) =>
+          isKanban ? _kanbanReasonWidget(pedido) : _pedidoReasonWidget(pedido),
     );
   }
 

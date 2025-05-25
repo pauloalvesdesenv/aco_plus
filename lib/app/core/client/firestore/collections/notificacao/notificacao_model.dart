@@ -68,7 +68,7 @@ class NotificacaoModel {
       id: map['id'] ?? '',
       title: map['title'] ?? '',
       description: map['description'] ?? '',
-      viewed: map['viewed'] ?? false,
+      viewed: map['viewed'] ?? true,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
       userId: map['userId'] ?? '',
       payload: map['payload'] ?? '',

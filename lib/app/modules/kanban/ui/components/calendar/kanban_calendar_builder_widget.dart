@@ -50,10 +50,9 @@ class _KanbanCalendarBuilderWidgetState
         controller: _scrollController,
         child: ListView(
           controller: _scrollController,
-          physics:
-              widget.pedidos.isEmpty
-                  ? const NeverScrollableScrollPhysics()
-                  : null,
+          physics: widget.pedidos.isEmpty
+              ? const NeverScrollableScrollPhysics()
+              : null,
           children: [
             Stack(
               children: [
@@ -73,8 +72,8 @@ class _KanbanCalendarBuilderWidgetState
                   Align(
                     alignment: Alignment.centerRight,
                     child: InkWell(
-                      onTap:
-                          () => kanbanCtrl.setDay({widget.day: widget.pedidos}),
+                      onTap: () =>
+                          kanbanCtrl.setDay({widget.day: widget.pedidos}),
                       child: Icon(
                         Icons.fullscreen,
                         size: 16,
@@ -88,15 +87,11 @@ class _KanbanCalendarBuilderWidgetState
             if (widget.pedidos.isNotEmpty)
               SeparatedColumn(
                 separatorBuilder: (_, __) => const H(8),
-                children:
-                    widget.pedidos
-                        .map(
-                          (e) => KanbanCardCalendarWidget(
-                            e,
-                            widget.calendarFormat,
-                          ),
-                        )
-                        .toList(),
+                children: widget.pedidos
+                    .map(
+                      (e) => KanbanCardCalendarWidget(e, widget.calendarFormat),
+                    )
+                    .toList(),
               ),
           ],
         ),

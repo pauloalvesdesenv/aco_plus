@@ -51,118 +51,100 @@ class _PedidoUsersBottomState extends State<PedidoUsersBottom> {
   Widget build(BuildContext context) {
     return BottomSheet(
       onClosing: () {},
-      builder:
-          (context) => Container(
-            height: 600,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
+      builder: (context) => Container(
+        height: 600,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const H(16),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: IconButton(
+                  style: ButtonStyle(
+                    padding: const WidgetStatePropertyAll(EdgeInsets.all(16)),
+                    backgroundColor: WidgetStatePropertyAll(AppColors.white),
+                    foregroundColor: WidgetStatePropertyAll(AppColors.black),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.keyboard_backspace),
+                ),
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const H(16),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: IconButton(
-                      style: ButtonStyle(
-                        padding: const WidgetStatePropertyAll(
-                          EdgeInsets.all(16),
-                        ),
-                        backgroundColor: WidgetStatePropertyAll(
-                          AppColors.white,
-                        ),
-                        foregroundColor: WidgetStatePropertyAll(
-                          AppColors.black,
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.keyboard_backspace),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                  child: Text('Adicionar Membros', style: AppCss.largeBold),
-                ),
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    children:
-                        FirestoreClient.usuarios.data.toList().map((user) {
-                          bool isCurrentUser = user.id == usuario.id;
-                          bool isEnable =
-                              isCurrentUser ||
-                              !widget.pedido.users
-                                  .map((e) => e.id)
-                                  .contains(user.id);
-                          return IgnorePointer(
-                            ignoring: !isEnable,
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              decoration: BoxDecoration(
-                                color:
-                                    isEnable
-                                        ? Colors.grey[100]
-                                        : Colors.grey[300],
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: CheckboxListTile(
-                                contentPadding: EdgeInsets.zero,
-                                dense: false,
-                                activeColor: isEnable ? null : Colors.grey[600],
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                visualDensity: VisualDensity.compact,
-                                secondary: Padding(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: AppAvatar(
-                                    backgroundColor: Colors.grey[200],
-                                    name: user.nome,
-                                    radius: 16,
-                                  ),
-                                ),
-                                title: Text(
-                                  user.nome,
-                                  style: AppCss.mediumRegular.copyWith(
-                                    color: isEnable ? null : Colors.grey[600],
-                                  ),
-                                ),
-                                value: selectedUsers
-                                    .map((e) => e.id)
-                                    .contains(user.id),
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (value!) {
-                                      selectedUsers.add(user);
-                                    } else {
-                                      selectedUsers.removeWhere(
-                                        (e) => e.id == user.id,
-                                      );
-                                    }
-                                  });
-                                },
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppTextButton(
-                    label: 'Confirmar',
-                    onPressed: () => Navigator.pop(context, selectedUsers),
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+              child: Text('Adicionar Membros', style: AppCss.largeBold),
             ),
-          ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                children: FirestoreClient.usuarios.data.toList().map((user) {
+                  bool isCurrentUser = user.id == usuario.id;
+                  bool isEnable =
+                      isCurrentUser ||
+                      !widget.pedido.users.map((e) => e.id).contains(user.id);
+                  return IgnorePointer(
+                    ignoring: !isEnable,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      decoration: BoxDecoration(
+                        color: isEnable ? Colors.grey[100] : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: CheckboxListTile(
+                        contentPadding: EdgeInsets.zero,
+                        dense: false,
+                        activeColor: isEnable ? null : Colors.grey[600],
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
+                        secondary: Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: AppAvatar(
+                            backgroundColor: Colors.grey[200],
+                            name: user.nome,
+                            radius: 16,
+                          ),
+                        ),
+                        title: Text(
+                          user.nome,
+                          style: AppCss.mediumRegular.copyWith(
+                            color: isEnable ? null : Colors.grey[600],
+                          ),
+                        ),
+                        value: selectedUsers.map((e) => e.id).contains(user.id),
+                        onChanged: (value) {
+                          setState(() {
+                            if (value!) {
+                              selectedUsers.add(user);
+                            } else {
+                              selectedUsers.removeWhere((e) => e.id == user.id);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: AppTextButton(
+                label: 'Confirmar',
+                onPressed: () => Navigator.pop(context, selectedUsers),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

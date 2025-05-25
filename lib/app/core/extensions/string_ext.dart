@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 extension StringExt on String {
-  String get toCompare =>
-      replaceAll(
-        ' ',
-        '',
-      ).toLowerCase().removeSpecialCharacters().toNonDiacritics();
+  String get toCompare => replaceAll(
+    ' ',
+    '',
+  ).toLowerCase().removeSpecialCharacters().toNonDiacritics();
 
   String getInitials() {
     List<String> nameParts = split(' ');
@@ -41,17 +40,15 @@ extension StringExt on String {
         'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
     return splitMapJoin(
       '',
-      onNonMatch:
-          (char) =>
-              char.isNotEmpty && diacritics.contains(char)
-                  ? nonDiacritics[diacritics.indexOf(char)]
-                  : char,
+      onNonMatch: (char) => char.isNotEmpty && diacritics.contains(char)
+          ? nonDiacritics[diacritics.indexOf(char)]
+          : char,
     );
   }
 
   String removeSpecialCharacters({String excludes = ''}) {
-    final specials =
-        """`~!@#\\ \$%^&*()_-+={[}}|:;"'<,>.?/""".characters.toList();
+    final specials = """`~!@#\\ \$%^&*()_-+={[}}|:;"'<,>.?/""".characters
+        .toList();
     for (var e in excludes.characters.toList()) {
       specials.remove(e);
     }

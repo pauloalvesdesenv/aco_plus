@@ -21,17 +21,16 @@ class AppCheckbox extends StatelessWidget {
       onTap: () {
         onChanged.call(!value);
       },
-      child:
-          label != null
-              ? Row(
-                children: [
-                  _appCheckbox(),
-                  const W(12),
-                  if (label != null)
-                    Expanded(child: Text(label!, style: AppCss.mediumRegular)),
-                ],
-              )
-              : _appCheckbox(),
+      child: label != null
+          ? Row(
+              children: [
+                _appCheckbox(),
+                const W(12),
+                if (label != null)
+                  Expanded(child: Text(label!, style: AppCss.mediumRegular)),
+              ],
+            )
+          : _appCheckbox(),
     );
   }
 

@@ -53,42 +53,39 @@ class _TagsPageState extends State<TagsPage> {
       ),
       body: StreamOut<List<TagModel>>(
         stream: FirestoreClient.tags.dataStream.listen,
-        builder:
-            (_, __) => StreamOut<TagUtils>(
-              stream: tagCtrl.utilsStream.listen,
-              builder: (_, utils) {
-                final tags =
-                    tagCtrl.getTagsFiltered(utils.search.text, __).toList();
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: AppField(
-                        hint: 'Pesquisar',
-                        controller: utils.search,
-                        suffixIcon: Icons.search,
-                        onChanged: (_) => tagCtrl.utilsStream.update(),
-                      ),
-                    ),
-                    Expanded(
-                      child:
-                          tags.isEmpty
-                              ? const EmptyData()
-                              : RefreshIndicator(
-                                onRefresh:
-                                    () async => FirestoreClient.tags.fetch(),
-                                child: ListView.separated(
-                                  itemCount: tags.length,
-                                  separatorBuilder: (_, i) => const Divisor(),
-                                  itemBuilder:
-                                      (_, i) => _itemTagWidget(tags[i]),
-                                ),
-                              ),
-                    ),
-                  ],
-                );
-              },
-            ),
+        builder: (_, __) => StreamOut<TagUtils>(
+          stream: tagCtrl.utilsStream.listen,
+          builder: (_, utils) {
+            final tags = tagCtrl
+                .getTagsFiltered(utils.search.text, __)
+                .toList();
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: AppField(
+                    hint: 'Pesquisar',
+                    controller: utils.search,
+                    suffixIcon: Icons.search,
+                    onChanged: (_) => tagCtrl.utilsStream.update(),
+                  ),
+                ),
+                Expanded(
+                  child: tags.isEmpty
+                      ? const EmptyData()
+                      : RefreshIndicator(
+                          onRefresh: () async => FirestoreClient.tags.fetch(),
+                          child: ListView.separated(
+                            itemCount: tags.length,
+                            separatorBuilder: (_, i) => const Divisor(),
+                            itemBuilder: (_, i) => _itemTagWidget(tags[i]),
+                          ),
+                        ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -98,10 +95,9 @@ class _TagsPageState extends State<TagsPage> {
       onTap: () => push(TagCreatePage(tag: tag)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       title: Text(tag.nome, style: AppCss.mediumBold),
-      subtitle:
-          tag.descricao.isNotEmpty
-              ? Text(tag.descricao, style: AppCss.minimumRegular)
-              : null,
+      subtitle: tag.descricao.isNotEmpty
+          ? Text(tag.descricao, style: AppCss.minimumRegular)
+          : null,
       trailing: SizedBox(
         width: 50,
         child: Row(

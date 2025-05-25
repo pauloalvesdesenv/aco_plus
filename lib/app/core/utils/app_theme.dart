@@ -23,10 +23,9 @@ class AppTheme {
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith(
-          (states) =>
-              states.contains(WidgetState.disabled)
-                  ? AppColors.neutralMedium
-                  : AppColors.primaryMain,
+          (states) => states.contains(WidgetState.disabled)
+              ? AppColors.neutralMedium
+              : AppColors.primaryMain,
         ),
         textStyle: WidgetStatePropertyAll(
           const TextStyle(

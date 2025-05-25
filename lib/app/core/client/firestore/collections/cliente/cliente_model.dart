@@ -102,10 +102,9 @@ class ObraModel {
       id: map['id'] ?? '',
       descricao: map['descricao'] ?? '',
       telefoneFixo: map['telefoneFixo'] ?? '',
-      endereco:
-          map['endereco'] != null
-              ? EnderecoModel.fromMap(map['endereco'])
-              : null,
+      endereco: map['endereco'] != null
+          ? EnderecoModel.fromMap(map['endereco'])
+          : null,
       status: ObraStatus.values[map['status']],
     );
   }

@@ -18,18 +18,17 @@ class RelatorioOrdemPdfStatusPage {
   pw.Page build(Uint8List bytes) => pw.MultiPage(
     crossAxisAlignment: pw.CrossAxisAlignment.center,
     pageFormat: PdfPageFormat.a4,
-    build:
-        (pw.Context context) => [
-          pw.Image(pw.MemoryImage(bytes), width: 60, height: 60),
-          pw.SizedBox(height: 24),
-          pw.Text(
-            'RELATÓRIO DE BITOLA POR STATUS${model.dates != null ? ' E PERÍODO' : empty}',
-          ),
-          pw.SizedBox(height: 16),
-          _itemHeader(model),
-          pw.SizedBox(height: 24),
-          for (final pedido in model.ordens) _itemRelatorio(pedido),
-        ],
+    build: (pw.Context context) => [
+      pw.Image(pw.MemoryImage(bytes), width: 60, height: 60),
+      pw.SizedBox(height: 24),
+      pw.Text(
+        'RELATÓRIO DE BITOLA POR STATUS${model.dates != null ? ' E PERÍODO' : empty}',
+      ),
+      pw.SizedBox(height: 16),
+      _itemHeader(model),
+      pw.SizedBox(height: 24),
+      for (final pedido in model.ordens) _itemRelatorio(pedido),
+    ],
   );
 
   pw.Widget _itemRelatorio(OrdemModel ordem) {

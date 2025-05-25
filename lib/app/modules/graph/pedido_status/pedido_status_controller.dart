@@ -21,16 +21,15 @@ class PedidoStatusController {
   // PEDIDOS QUE ENTRARAM QUE COMEÇARAM A PRODUÇÃO HOJE
   // PEDIDOS QUE FORAM FINALIZADOS HOJE
   List<GraphModel> getCartesianChart(PedidoStatusGraphModel filter) {
-    List<PedidoModel> pedidos =
-        FirestoreClient.pedidos.data
-            .map(
-              (e) => e.copyWith(
-                produtos: e.produtos.map((e) => e.copyWith()).toList(),
-              ),
-            )
-            .toList()
-            .where((pedido) => pedido.status != PedidoStatus.pronto)
-            .toList();
+    List<PedidoModel> pedidos = FirestoreClient.pedidos.data
+        .map(
+          (e) => e.copyWith(
+            produtos: e.produtos.map((e) => e.copyWith()).toList(),
+          ),
+        )
+        .toList()
+        .where((pedido) => pedido.status != PedidoStatus.pronto)
+        .toList();
 
     List<GraphModel> source = [];
 

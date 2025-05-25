@@ -23,12 +23,12 @@ class ProdutoStatusController {
           (status) => ColumnSeries<ProdutoStatusGraphModel, String>(
             dataSource: getSourceByStatus(status),
             name: status.label,
-            xValueMapper:
-                (ProdutoStatusGraphModel data, _) => data.produto.descricao,
+            xValueMapper: (ProdutoStatusGraphModel data, _) =>
+                data.produto.descricao,
             yValueMapper: (ProdutoStatusGraphModel data, _) => data.qtde,
             color: status.color,
-            pointColorMapper:
-                (ProdutoStatusGraphModel data, _) => data.status.color,
+            pointColorMapper: (ProdutoStatusGraphModel data, _) =>
+                data.status.color,
             dataLabelSettings: const DataLabelSettings(
               isVisible: true,
               labelPosition: ChartDataLabelPosition.outside,
@@ -39,8 +39,9 @@ class ProdutoStatusController {
   }
 
   List<ProdutoStatusGraphModel> getSourceByStatus(PedidoProdutoStatus status) {
-    final ordens =
-        FirestoreClient.ordens.data.map((e) => e.copyWith()).toList();
+    final ordens = FirestoreClient.ordens.data
+        .map((e) => e.copyWith())
+        .toList();
 
     List<PedidoProdutoModel> pedidosProdutos = [];
     for (var ordem in ordens) {

@@ -25,10 +25,9 @@ class ProdutoProduzidoController {
             (e) => BarSeries<ProdutoProduzidoModel, DateTime>(
               dataSource: getKilosProduzidos(e),
               name: e.ddMMyyyy(),
-              color:
-                  e.isSameDay(dayNow())
-                      ? AppColors.primaryMain
-                      : Colors.grey[400],
+              color: e.isSameDay(dayNow())
+                  ? AppColors.primaryMain
+                  : Colors.grey[400],
               yValueMapper: (ProdutoProduzidoModel data, _) => data.qtde as num,
               xValueMapper: (ProdutoProduzidoModel data, _) => data.date,
               dataLabelSettings: const DataLabelSettings(
@@ -58,8 +57,9 @@ class ProdutoProduzidoController {
 
   List<ProdutoProduzidoModel> getKilosProduzidos(DateTime date) {
     List<ProdutoProduzidoModel> produzidos = [];
-    final ordens =
-        FirestoreClient.ordens.data.map((e) => e.copyWith()).toList();
+    final ordens = FirestoreClient.ordens.data
+        .map((e) => e.copyWith())
+        .toList();
     for (OrdemModel ordem in ordens) {
       for (PedidoProdutoModel produto in ordem.produtos) {
         if (produto.status.status == PedidoProdutoStatus.pronto &&

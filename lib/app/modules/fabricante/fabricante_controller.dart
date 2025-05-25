@@ -91,16 +91,17 @@ class FabricanteController {
     );
   }
 
-  Future<bool> _isDeleteUnavailable(FabricanteModel fabricante) async =>
-      !await onDeleteProcess(
-        deleteTitle: 'Deseja excluir o fabricante?',
-        deleteMessage: 'Todos seus dados serão apagados do sistema',
-        infoMessage:
-            'Não é possível exlcuir o fabricante, pois ele está vinculado a uma prdem.',
-        conditional: FirestoreClient.ordens.data.any(
-          (e) => e.materiaPrima?.fabricanteModel.id == fabricante.id,
-        ),
-      );
+  Future<bool> _isDeleteUnavailable(
+    FabricanteModel fabricante,
+  ) async => !await onDeleteProcess(
+    deleteTitle: 'Deseja excluir o fabricante?',
+    deleteMessage: 'Todos seus dados serão apagados do sistema',
+    infoMessage:
+        'Não é possível exlcuir o fabricante, pois ele está vinculado a uma prdem.',
+    conditional: FirestoreClient.ordens.data.any(
+      (e) => e.materiaPrima?.fabricanteModel.id == fabricante.id,
+    ),
+  );
 
   void onValid(FabricanteModel? fabricante) {
     if (form.nome.text.length < 2) {

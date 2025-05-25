@@ -55,45 +55,41 @@ class _ClientesPageState extends State<ClientesPage> {
       ),
       body: StreamOut<List<ClienteModel>>(
         stream: FirestoreClient.clientes.dataStream.listen,
-        builder:
-            (_, __) => StreamOut<ClienteUtils>(
-              stream: clienteCtrl.utilsStream.listen,
-              builder: (_, utils) {
-                final clientes =
-                    clienteCtrl
-                        .getClienteesFiltered(utils.search.text, __)
-                        .toList();
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: AppField(
-                        hint: 'Pesquisar',
-                        controller: utils.search,
-                        suffixIcon: Icons.search,
-                        onChanged: (_) => clienteCtrl.utilsStream.update(),
-                      ),
-                    ),
-                    Expanded(
-                      child:
-                          clientes.isEmpty
-                              ? const EmptyData()
-                              : RefreshIndicator(
-                                onRefresh:
-                                    () async =>
-                                        FirestoreClient.clientes.fetch(),
-                                child: ListView.separated(
-                                  itemCount: clientes.length,
-                                  separatorBuilder: (_, i) => const Divisor(),
-                                  itemBuilder:
-                                      (_, i) => _itemClienteWidget(clientes[i]),
-                                ),
-                              ),
-                    ),
-                  ],
-                );
-              },
-            ),
+        builder: (_, __) => StreamOut<ClienteUtils>(
+          stream: clienteCtrl.utilsStream.listen,
+          builder: (_, utils) {
+            final clientes = clienteCtrl
+                .getClienteesFiltered(utils.search.text, __)
+                .toList();
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: AppField(
+                    hint: 'Pesquisar',
+                    controller: utils.search,
+                    suffixIcon: Icons.search,
+                    onChanged: (_) => clienteCtrl.utilsStream.update(),
+                  ),
+                ),
+                Expanded(
+                  child: clientes.isEmpty
+                      ? const EmptyData()
+                      : RefreshIndicator(
+                          onRefresh: () async =>
+                              FirestoreClient.clientes.fetch(),
+                          child: ListView.separated(
+                            itemCount: clientes.length,
+                            separatorBuilder: (_, i) => const Divisor(),
+                            itemBuilder: (_, i) =>
+                                _itemClienteWidget(clientes[i]),
+                          ),
+                        ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

@@ -89,8 +89,9 @@ class PedidoCreateModel {
     cliente = FirestoreClient.clientes.getById(pedido.cliente.id);
     obra = cliente?.obras.firstWhereOrNull((e) => e.id == pedido.obra.id);
     tipo = pedido.tipo;
-    produtos =
-        pedido.produtos.map((e) => PedidoProdutoCreateModel.edit(e)).toList();
+    produtos = pedido.produtos
+        .map((e) => PedidoProdutoCreateModel.edit(e))
+        .toList();
     deliveryAt = pedido.deliveryAt;
     step = FirestoreClient.steps.getById(pedido.steps.first.step.id);
     if (pedido.checklistId != null) {
@@ -106,10 +107,9 @@ class PedidoCreateModel {
         }
       }
     }
-    checklist =
-        pedido.checklistId != null
-            ? FirestoreClient.checklists.getById(pedido.checklistId!)
-            : null;
+    checklist = pedido.checklistId != null
+        ? FirestoreClient.checklists.getById(pedido.checklistId!)
+        : null;
     instrucoesEntrega.text = pedido.instrucoesEntrega;
     instrucoesFinanceiras.text = pedido.instrucoesFinanceiras;
     pedidoFinanceiro.text = pedido.pedidoFinanceiro;
@@ -136,12 +136,9 @@ class PedidoCreateModel {
       createdAt: pedido?.createdAt ?? DateTime.now(),
       cliente: cliente!,
       obra: obra!,
-      produtos:
-          produtos
-              .map(
-                (e) => e.toPedidoProdutoModel(id, cliente!, obra!).copyWith(),
-              )
-              .toList(),
+      produtos: produtos
+          .map((e) => e.toPedidoProdutoModel(id, cliente!, obra!).copyWith())
+          .toList(),
       deliveryAt: deliveryAt,
       steps: pedido?.steps ?? [pedidoStepModel],
       tags: pedido?.tags ?? [tipo!.tag],

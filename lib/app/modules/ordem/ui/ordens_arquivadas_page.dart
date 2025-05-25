@@ -62,77 +62,68 @@ class _OrdensArquivadasPageState extends State<OrdensArquivadasPage> {
       ),
       body: StreamOut<List<OrdemModel>>(
         stream: FirestoreClient.ordens.ordensArquivadasStream.listen,
-        builder:
-            (_, __) => StreamOut<OrdemArquivadasUtils>(
-              stream: ordemCtrl.utilsArquivadasStream.listen,
-              builder: (_, utilsArquivadas) {
-                List<OrdemModel> ordens =
-                    ordemCtrl
-                        .getOrdensFiltered(
-                          utilsArquivadas.search.text,
-                          __.where((e) => e.produtos.isNotEmpty).toList(),
-                        )
-                        .toList();
-                if (utilsArquivadas.produto != null) {
-                  ordens =
-                      ordens
-                          .where(
-                            (e) => e.produto.id == utilsArquivadas.produto!.id,
-                          )
-                          .toList();
-                }
-                ordens.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        builder: (_, __) => StreamOut<OrdemArquivadasUtils>(
+          stream: ordemCtrl.utilsArquivadasStream.listen,
+          builder: (_, utilsArquivadas) {
+            List<OrdemModel> ordens = ordemCtrl
+                .getOrdensFiltered(
+                  utilsArquivadas.search.text,
+                  __.where((e) => e.produtos.isNotEmpty).toList(),
+                )
+                .toList();
+            if (utilsArquivadas.produto != null) {
+              ordens = ordens
+                  .where((e) => e.produto.id == utilsArquivadas.produto!.id)
+                  .toList();
+            }
+            ordens.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-                return RefreshIndicator(
-                  onRefresh: () async => FirestoreClient.ordens.fetch(),
-                  child: ListView(
-                    children: [
-                      if (utilsArquivadas.showFilter)
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              AppField(
-                                label: 'Pesquisar',
-                                controller: utilsArquivadas.search,
-                                suffixIcon: Icons.search,
-                                onChanged:
-                                    (_) =>
-                                        ordemCtrl.utilsArquivadasStream
-                                            .update(),
-                              ),
-                              const H(16),
-                              AppDropDown<ProdutoModel?>(
-                                label: 'Bitola',
-                                item: utilsArquivadas.produto,
-                                itens: FirestoreClient.produtos.data.toList(),
-                                itemLabel:
-                                    (e) =>
-                                        e != null
-                                            ? e.descricao
-                                            : 'Selecione um produto',
-                                onSelect: (e) {
-                                  utilsArquivadas.produto = e;
-                                  ordemCtrl.utilsArquivadasStream.update();
-                                },
-                              ),
-                            ],
+            return RefreshIndicator(
+              onRefresh: () async => FirestoreClient.ordens.fetch(),
+              child: ListView(
+                children: [
+                  if (utilsArquivadas.showFilter)
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          AppField(
+                            label: 'Pesquisar',
+                            controller: utilsArquivadas.search,
+                            suffixIcon: Icons.search,
+                            onChanged: (_) =>
+                                ordemCtrl.utilsArquivadasStream.update(),
                           ),
+                          const H(16),
+                          AppDropDown<ProdutoModel?>(
+                            label: 'Bitola',
+                            item: utilsArquivadas.produto,
+                            itens: FirestoreClient.produtos.data.toList(),
+                            itemLabel: (e) => e != null
+                                ? e.descricao
+                                : 'Selecione um produto',
+                            onSelect: (e) {
+                              utilsArquivadas.produto = e;
+                              ordemCtrl.utilsArquivadasStream.update();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ordens.isEmpty
+                      ? const EmptyData()
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          cacheExtent: 200,
+                          itemCount: ordens.length,
+                          itemBuilder: (_, i) => _itemOrdemWidget(ordens[i]),
                         ),
-                      ordens.isEmpty
-                          ? const EmptyData()
-                          : ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            cacheExtent: 200,
-                            itemCount: ordens.length,
-                            itemBuilder: (_, i) => _itemOrdemWidget(ordens[i]),
-                          ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

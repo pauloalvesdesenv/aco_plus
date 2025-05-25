@@ -37,12 +37,11 @@ class MateriaPrimaModel {
       fabricanteModel: FabricanteModel.fromMap(map['fabricanteModel']),
       produto: ProdutoModel.fromMap(map['produto']),
       corridaLote: map['corridaLote'] as String,
-      anexos:
-          map['anexos'] != null
-              ? (map['anexos'] as List<dynamic>)
-                  .map((e) => ArchiveModel.fromMap(e))
-                  .toList()
-              : [],
+      anexos: map['anexos'] != null
+          ? (map['anexos'] as List<dynamic>)
+                .map((e) => ArchiveModel.fromMap(e))
+                .toList()
+          : [],
       status: MateriaPrimaStatus.values[map['status']],
     );
   }

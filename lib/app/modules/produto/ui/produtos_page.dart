@@ -52,45 +52,41 @@ class _ProdutosPageState extends State<ProdutosPage> {
       ),
       body: StreamOut<List<ProdutoModel>>(
         stream: FirestoreClient.produtos.dataStream.listen,
-        builder:
-            (_, __) => StreamOut<ProdutoUtils>(
-              stream: produtoCtrl.utilsStream.listen,
-              builder: (_, utils) {
-                final produtos =
-                    produtoCtrl
-                        .getProdutoesFiltered(utils.search.text, __)
-                        .toList();
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: AppField(
-                        hint: 'Pesquisar',
-                        controller: utils.search,
-                        suffixIcon: Icons.search,
-                        onChanged: (_) => produtoCtrl.utilsStream.update(),
-                      ),
-                    ),
-                    Expanded(
-                      child:
-                          produtos.isEmpty
-                              ? const EmptyData()
-                              : RefreshIndicator(
-                                onRefresh:
-                                    () async =>
-                                        FirestoreClient.produtos.fetch(),
-                                child: ListView.separated(
-                                  itemCount: produtos.length,
-                                  separatorBuilder: (_, i) => const Divisor(),
-                                  itemBuilder:
-                                      (_, i) => _itemProdutoWidget(produtos[i]),
-                                ),
-                              ),
-                    ),
-                  ],
-                );
-              },
-            ),
+        builder: (_, __) => StreamOut<ProdutoUtils>(
+          stream: produtoCtrl.utilsStream.listen,
+          builder: (_, utils) {
+            final produtos = produtoCtrl
+                .getProdutoesFiltered(utils.search.text, __)
+                .toList();
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: AppField(
+                    hint: 'Pesquisar',
+                    controller: utils.search,
+                    suffixIcon: Icons.search,
+                    onChanged: (_) => produtoCtrl.utilsStream.update(),
+                  ),
+                ),
+                Expanded(
+                  child: produtos.isEmpty
+                      ? const EmptyData()
+                      : RefreshIndicator(
+                          onRefresh: () async =>
+                              FirestoreClient.produtos.fetch(),
+                          child: ListView.separated(
+                            itemCount: produtos.length,
+                            separatorBuilder: (_, i) => const Divisor(),
+                            itemBuilder: (_, i) =>
+                                _itemProdutoWidget(produtos[i]),
+                          ),
+                        ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

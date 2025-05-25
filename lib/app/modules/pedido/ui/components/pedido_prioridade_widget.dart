@@ -23,11 +23,13 @@ class PedidoPrioridadeWidget extends StatelessWidget {
           margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           decoration: BoxDecoration(
-            color:
-                pedido.prioridade != null ? Colors.orange : Color(0xFFF8FCFC),
+            color: pedido.prioridade != null
+                ? Colors.orange
+                : Color(0xFFF8FCFC),
             border: Border.all(
-              color:
-                  pedido.prioridade != null ? Colors.black : Colors.grey[400]!,
+              color: pedido.prioridade != null
+                  ? Colors.black
+                  : Colors.grey[400]!,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -35,10 +37,9 @@ class PedidoPrioridadeWidget extends StatelessWidget {
             children: [
               Icon(
                 Icons.priority_high,
-                color:
-                    pedido.prioridade != null
-                        ? Colors.black
-                        : Colors.grey[400]!,
+                color: pedido.prioridade != null
+                    ? Colors.black
+                    : Colors.grey[400]!,
                 weight: pedido.prioridade != null ? 600 : 400,
                 size: 16,
               ),
@@ -48,14 +49,12 @@ class PedidoPrioridadeWidget extends StatelessWidget {
                 child: Text(
                   pedido.prioridade?.getLabel() ?? 'Sem Prioridade',
                   style: TextStyle(
-                    color:
-                        pedido.prioridade != null
-                            ? Colors.black
-                            : Colors.grey[400]!,
-                    fontWeight:
-                        pedido.prioridade != null
-                            ? FontWeight.w600
-                            : FontWeight.w400,
+                    color: pedido.prioridade != null
+                        ? Colors.black
+                        : Colors.grey[400]!,
+                    fontWeight: pedido.prioridade != null
+                        ? FontWeight.w600
+                        : FontWeight.w400,
                     fontSize: 12,
                   ),
                 ),

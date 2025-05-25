@@ -55,9 +55,8 @@ class PedidoTopBar extends StatelessWidget implements PreferredSizeWidget {
         Tooltip(
           message: 'Acompanhar pedido',
           child: InkWell(
-            onTap:
-                () async =>
-                    context.push('/acompanhamento/pedidos/${pedido.id}'),
+            onTap: () async =>
+                context.push('/acompanhamento/pedidos/${pedido.id}'),
             child: Icon(Icons.local_shipping, color: AppColors.white),
           ),
         ),
@@ -74,14 +73,13 @@ class PedidoTopBar extends StatelessWidget implements PreferredSizeWidget {
           Tooltip(
             message: 'Arquivar pedido',
             child: InkWell(
-              onTap:
-                  () async => pedidoCtrl
-                      .onArchive(context, pedido, isPedido: false)
-                      .then((result) {
-                        if (result) {
-                          kanbanCtrl.setPedido(null);
-                        }
-                      }),
+              onTap: () async => pedidoCtrl
+                  .onArchive(context, pedido, isPedido: false)
+                  .then((result) {
+                    if (result) {
+                      kanbanCtrl.setPedido(null);
+                    }
+                  }),
               child: Icon(Icons.archive, color: AppColors.white, size: 20),
             ),
           ),
@@ -108,14 +106,12 @@ class PedidoTopBar extends StatelessWidget implements PreferredSizeWidget {
         Tooltip(
           message: 'Excluir pedido',
           child: InkWell(
-            onTap:
-                () async => pedidoCtrl
-                    .onDelete(context, pedido, isPedido: false)
-                    .then((e) {
-                      if (e) {
-                        kanbanCtrl.setPedido(null);
-                      }
-                    }),
+            onTap: () async =>
+                pedidoCtrl.onDelete(context, pedido, isPedido: false).then((e) {
+                  if (e) {
+                    kanbanCtrl.setPedido(null);
+                  }
+                }),
             child: Icon(Icons.delete, color: AppColors.white, size: 20),
           ),
         ),
@@ -166,8 +162,8 @@ class PedidoTopBar extends StatelessWidget implements PreferredSizeWidget {
       Tooltip(
         message: 'Editar pedido',
         child: IconButton(
-          onPressed:
-              () async => push(context, PedidoCreatePage(pedido: pedido)),
+          onPressed: () async =>
+              push(context, PedidoCreatePage(pedido: pedido)),
           icon: Icon(Icons.edit, color: AppColors.white),
         ),
       ),

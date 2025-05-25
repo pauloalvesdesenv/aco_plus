@@ -87,15 +87,15 @@ class OrdemController {
 
   List<PedidoProdutoModel> _getPedidosProdutosAtual({OrdemModel? ordem}) =>
       ordem != null
-          ? ordem.produtos
-              .map(
-                (e) => e.copyWith(
-                  isSelected: true,
-                  isAvailable: e.isAvailableToChanges,
-                ),
-              )
-              .toList()
-          : [];
+      ? ordem.produtos
+            .map(
+              (e) => e.copyWith(
+                isSelected: true,
+                isAvailable: e.isAvailableToChanges,
+              ),
+            )
+            .toList()
+      : [];
 
   List<PedidoProdutoModel> _getPedidosProdutosSeparados(ProdutoModel produto) {
     List<PedidoProdutoModel> pedidos = [];
@@ -105,14 +105,13 @@ class OrdemController {
               (e) => FirestoreClient.steps.getById(e.step.id).isPermiteProducao,
             )
             .toList()) {
-      final pedidoProdutos =
-          pedido.produtos
-              .where(
-                (e) =>
-                    e.status.status == PedidoProdutoStatus.separado &&
-                    e.produto.id == produto.id,
-              )
-              .toList();
+      final pedidoProdutos = pedido.produtos
+          .where(
+            (e) =>
+                e.status.status == PedidoProdutoStatus.separado &&
+                e.produto.id == produto.id,
+          )
+          .toList();
       for (final pedidoProduto in pedidoProdutos) {
         final isFiltered =
             form.localizador.text.isEmpty ||
@@ -128,16 +127,15 @@ class OrdemController {
   }
 
   List<PedidoProdutoModel> getPedidosPorProdutoEdit(OrdemModel ordem) {
-    final pedidos =
-        ordem.produtos
-            .where(
-              (e) =>
-                  form.localizador.text.isEmpty ||
-                  e.cliente.nome.toCompare.contains(
-                    form.localizador.text.toCompare,
-                  ),
-            )
-            .toList();
+    final pedidos = ordem.produtos
+        .where(
+          (e) =>
+              form.localizador.text.isEmpty ||
+              e.cliente.nome.toCompare.contains(
+                form.localizador.text.toCompare,
+              ),
+        )
+        .toList();
     onSortPedidos(pedidos);
 
     return pedidos;
@@ -288,30 +286,27 @@ class OrdemController {
     switch (form.sortType) {
       case SortType.localizator:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? a.pedido.localizador.compareTo(b.pedido.localizador)
-                  : b.pedido.localizador.compareTo(a.pedido.localizador),
+          (a, b) => isAsc
+              ? a.pedido.localizador.compareTo(b.pedido.localizador)
+              : b.pedido.localizador.compareTo(a.pedido.localizador),
         );
         break;
       case SortType.alfabetic:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? a.pedido.localizador.compareTo(b.pedido.localizador)
-                  : b.pedido.localizador.compareTo(a.pedido.localizador),
+          (a, b) => isAsc
+              ? a.pedido.localizador.compareTo(b.pedido.localizador)
+              : b.pedido.localizador.compareTo(a.pedido.localizador),
         );
         break;
       case SortType.createdAt:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? (a.pedido.deliveryAt ?? DateTime.now()).compareTo(
-                    (b.pedido.deliveryAt ?? DateTime.now()),
-                  )
-                  : (b.pedido.deliveryAt ?? DateTime.now()).compareTo(
-                    (a.pedido.deliveryAt ?? DateTime.now()),
-                  ),
+          (a, b) => isAsc
+              ? (a.pedido.deliveryAt ?? DateTime.now()).compareTo(
+                  (b.pedido.deliveryAt ?? DateTime.now()),
+                )
+              : (b.pedido.deliveryAt ?? DateTime.now()).compareTo(
+                  (a.pedido.deliveryAt ?? DateTime.now()),
+                ),
         );
         break;
       default:
@@ -506,14 +501,15 @@ class OrdemController {
     );
   }
 
-  Future<bool> _isArchiveUnavailable(OrdemModel ordem) async =>
-      !await onDeleteProcess(
-        deleteTitle: 'Deseja arquivar a ordem?',
-        deleteMessage: 'A ordem será movida para a lista de ordens arquivadas.',
-        infoMessage:
-            'A ordem só pode ser arquivada se todos os produtos estiverem prontos.',
-        conditional: ordem.status != PedidoProdutoStatus.pronto,
-      );
+  Future<bool> _isArchiveUnavailable(
+    OrdemModel ordem,
+  ) async => !await onDeleteProcess(
+    deleteTitle: 'Deseja arquivar a ordem?',
+    deleteMessage: 'A ordem será movida para a lista de ordens arquivadas.',
+    infoMessage:
+        'A ordem só pode ser arquivada se todos os produtos estiverem prontos.',
+    conditional: ordem.status != PedidoProdutoStatus.pronto,
+  );
 
   Future<void> onUnarchive(
     BuildContext context,

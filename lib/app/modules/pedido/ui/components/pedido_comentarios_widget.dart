@@ -18,13 +18,12 @@ class PedidoCommentsWidget extends StatelessWidget {
         children: [
           StreamOut(
             stream: pedidoCtrl.utilsStream.listen,
-            builder:
-                (_, utils) => CommentsWidget(
-                  titleNotification:
-                      '${usuario.nome} mencionou você no pedido ${pedido.localizador}',
-                  items: pedido.comments,
-                  onChanged: () => pedidoCtrl.updatePedidoFirestore(),
-                ),
+            builder: (_, utils) => CommentsWidget(
+              titleNotification:
+                  '${usuario.nome} mencionou você no pedido ${pedido.localizador}',
+              items: pedido.comments,
+              onChanged: () => pedidoCtrl.updatePedidoFirestore(),
+            ),
           ),
         ],
       ),

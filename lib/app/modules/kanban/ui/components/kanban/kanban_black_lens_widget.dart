@@ -11,24 +11,23 @@ class KanbanBlackLensWidget extends StatelessWidget {
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 400),
       opacity: utils.isPedidoSelected || utils.isDaySelected ? 1 : 0,
-      child:
-          !utils.isPedidoSelected && !utils.isDaySelected
-              ? const SizedBox()
-              : InkWell(
-                onTap: () {
-                  if (utils.isPedidoSelected) {
-                    kanbanCtrl.setPedido(null);
-                  }
-                  if (utils.isDaySelected) {
-                    kanbanCtrl.setDay(null);
-                  }
-                },
-                child: Container(
-                  height: double.maxFinite,
-                  width: double.maxFinite,
-                  color: Colors.black.withValues(alpha: 0.8),
-                ),
+      child: !utils.isPedidoSelected && !utils.isDaySelected
+          ? const SizedBox()
+          : InkWell(
+              onTap: () {
+                if (utils.isPedidoSelected) {
+                  kanbanCtrl.setPedido(null);
+                }
+                if (utils.isDaySelected) {
+                  kanbanCtrl.setDay(null);
+                }
+              },
+              child: Container(
+                height: double.maxFinite,
+                width: double.maxFinite,
+                color: Colors.black.withValues(alpha: 0.8),
               ),
+            ),
     );
   }
 }

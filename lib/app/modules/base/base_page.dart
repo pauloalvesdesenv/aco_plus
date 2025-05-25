@@ -33,7 +33,7 @@ class _BasePageState extends State<BasePage> {
       bottomNav: usuario.role == UsuarioRole.operador
           ? const AppBottomNav()
           : null,
-        body: StreamOut(
+      body: StreamOut(
         stream: baseCtrl.moduleStream.listen,
         builder: (_, __) => __.widget,
       ),

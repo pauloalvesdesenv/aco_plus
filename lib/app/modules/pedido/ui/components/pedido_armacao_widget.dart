@@ -26,16 +26,15 @@ class PedidoArmacaoWidget extends StatelessWidget {
             childrenPadding: EdgeInsets.zero,
             tilePadding: EdgeInsets.zero,
             title: _itemWidget(status, status),
-            children:
-                statusess
-                    .getRange(1, statusess.length)
-                    .map(
-                      (e) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: _itemWidget(e, status),
-                      ),
-                    )
-                    .toList(),
+            children: statusess
+                .getRange(1, statusess.length)
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: _itemWidget(e, status),
+                  ),
+                )
+                .toList(),
           ),
         ],
       ),

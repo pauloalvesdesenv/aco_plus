@@ -161,8 +161,9 @@ class PedidoHistoryModel {
       'createdAt': createdAt.millisecondsSinceEpoch,
       'usuario': usuario.toMap(),
       'action': action.index,
-      'data':
-          data is StepModel ? (data as StepModel).toHistoryMap() : data.toMap(),
+      'data': data is StepModel
+          ? (data as StepModel).toHistoryMap()
+          : data.toMap(),
     };
   }
 

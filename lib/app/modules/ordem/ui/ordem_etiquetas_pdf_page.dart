@@ -17,10 +17,9 @@ class OrdemEtiquetasPdfPage {
     margin: pw.EdgeInsets.zero,
     orientation: pw.PageOrientation.portrait,
     pageFormat: PdfPageFormat.a6,
-    build:
-        (pw.Context context) => [
-          for (var etiqueta in model) _etiquetaItem(etiqueta, bytes),
-        ],
+    build: (pw.Context context) => [
+      for (var etiqueta in model) _etiquetaItem(etiqueta, bytes),
+    ],
   );
 
   pw.Widget _etiquetaItem(OrdemEtiquetaModel etiqueta, Uint8List bytes) {
@@ -89,7 +88,7 @@ class OrdemEtiquetasPdfPage {
             'MATERIA PRIMA',
             etiqueta.ordem.materiaPrima != null
                 ? '${etiqueta.ordem.materiaPrima?.fabricanteModel.nome} - ${etiqueta.ordem.materiaPrima?.corridaLote}'
-                    .toUpperCase()
+                      .toUpperCase()
                 : 'NÃO ESPECIFICADO',
           ),
           PdfDivisor.build(),

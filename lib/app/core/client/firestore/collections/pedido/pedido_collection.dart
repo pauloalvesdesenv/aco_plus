@@ -45,8 +45,9 @@ class PedidoCollection {
     if (_isStarted && lock) return;
     _isStarted = true;
     final data = await FirebaseFirestore.instance.collection(name).get();
-    final pedidos =
-        data.docs.map((e) => PedidoModel.fromMap(e.data())).toList();
+    final pedidos = data.docs
+        .map((e) => PedidoModel.fromMap(e.data()))
+        .toList();
     dataStream.add(pedidos);
     pedidosUnarchivedsStream.add(pedidos.where((e) => !e.isArchived).toList());
     pedidosArchivedsStream.add(pedidos.where((e) => e.isArchived).toList());
@@ -74,24 +75,25 @@ class PedidoCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-              field,
-              isEqualTo: isEqualTo,
-              isNotEqualTo: isNotEqualTo,
-              isLessThan: isLessThan,
-              isLessThanOrEqualTo: isLessThanOrEqualTo,
-              isGreaterThan: isGreaterThan,
-              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-              arrayContains: arrayContains,
-              arrayContainsAny: arrayContainsAny,
-              whereIn: whereIn,
-              whereNotIn: whereNotIn,
-              isNull: isNull,
-            )
+                field,
+                isEqualTo: isEqualTo,
+                isNotEqualTo: isNotEqualTo,
+                isLessThan: isLessThan,
+                isLessThanOrEqualTo: isLessThanOrEqualTo,
+                isGreaterThan: isGreaterThan,
+                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+                arrayContains: arrayContains,
+                arrayContainsAny: arrayContainsAny,
+                whereIn: whereIn,
+                whereNotIn: whereNotIn,
+                isNull: isNull,
+              )
             : collection)
         .snapshots()
         .listen((e) {
-          final data =
-              e.docs.map((e) => PedidoModel.fromMap(e.data())).toList();
+          final data = e.docs
+              .map((e) => PedidoModel.fromMap(e.data()))
+              .toList();
           dataStream.add(data);
           pedidosUnarchivedsStream.add(
             data.where((e) => !e.isArchived).toList(),

@@ -57,63 +57,60 @@ class DashboardPageState extends State<DashboardPage> {
   Widget body() {
     return StreamOut(
       stream: FirestoreClient.pedidos.pedidosUnarchivedsStream.listen,
-      builder:
-          (_, pedidos) => StreamOut(
-            stream: FirestoreClient.ordens.dataStream.listen,
-            builder:
-                (_, __) => StreamOut(
-                  stream: dashCtrl.utilsStream.listen,
-                  builder:
-                      (_, utils) => LayoutBuilder(
-                        builder: (context, constraints) {
-                          if (constraints.maxWidth < 1000) {
-                            return ListView(
-                              children: [
-                                Column(
-                                  children: [
-                                    _graficoOrdemStatus(),
-                                    const Divisor(),
-                                    _graficoPedidoStatus(),
-                                    const Divisor(),
-                                    _graficoPedidoEtapa(),
-                                    const Divisor(),
-                                    _graficoProdutosStatus(),
-                                    const Divisor(),
-                                    _graficoProdutoProduzido(),
-                                    const Divisor(),
-                                  ],
-                                ),
-                              ],
-                            );
-                          } else {
-                            return ListView(
-                              children: [
-                                _pedidoPrioridadeWidget(),
-                                const Divisor(),
-                                _ordemProducaoWidget(),
-                                const Divisor(),
-                                Row(
-                                  children: [
-                                    Expanded(child: _graficoOrdemStatus()),
-                                    Expanded(child: _graficoPedidoStatus()),
-                                    Expanded(child: _graficoPedidoEtapa()),
-                                  ],
-                                ),
-                                const Divisor(),
-                                Row(
-                                  children: [
-                                    Expanded(child: _graficoProdutosStatus()),
-                                    Expanded(child: _graficoProdutoProduzido()),
-                                  ],
-                                ),
-                                const Divisor(),
-                              ],
-                            );
-                          }
-                        },
-                      ),
-                ),
+      builder: (_, pedidos) => StreamOut(
+        stream: FirestoreClient.ordens.dataStream.listen,
+        builder: (_, __) => StreamOut(
+          stream: dashCtrl.utilsStream.listen,
+          builder: (_, utils) => LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 1000) {
+                return ListView(
+                  children: [
+                    Column(
+                      children: [
+                        _graficoOrdemStatus(),
+                        const Divisor(),
+                        _graficoPedidoStatus(),
+                        const Divisor(),
+                        _graficoPedidoEtapa(),
+                        const Divisor(),
+                        _graficoProdutosStatus(),
+                        const Divisor(),
+                        _graficoProdutoProduzido(),
+                        const Divisor(),
+                      ],
+                    ),
+                  ],
+                );
+              } else {
+                return ListView(
+                  children: [
+                    _pedidoPrioridadeWidget(),
+                    const Divisor(),
+                    _ordemProducaoWidget(),
+                    const Divisor(),
+                    Row(
+                      children: [
+                        Expanded(child: _graficoOrdemStatus()),
+                        Expanded(child: _graficoPedidoStatus()),
+                        Expanded(child: _graficoPedidoEtapa()),
+                      ],
+                    ),
+                    const Divisor(),
+                    Row(
+                      children: [
+                        Expanded(child: _graficoProdutosStatus()),
+                        Expanded(child: _graficoProdutoProduzido()),
+                      ],
+                    ),
+                    const Divisor(),
+                  ],
+                );
+              }
+            },
           ),
+        ),
+      ),
     );
   }
 
@@ -344,28 +341,26 @@ class DashboardPageState extends State<DashboardPage> {
                       shape: BoxShape.circle,
                       color: isPrioridadeEmpty ? null : Colors.orange,
                       border: Border.all(
-                        color:
-                            isPrioridadeEmpty
-                                ? Colors.grey[200]!
-                                : Colors.black,
+                        color: isPrioridadeEmpty
+                            ? Colors.grey[200]!
+                            : Colors.black,
                         width: 0.8,
                       ),
                     ),
-                    child:
-                        isPrioridadeEmpty
-                            ? Icon(
-                              Icons.priority_high,
-                              size: 14,
-                              color: Colors.grey[200],
-                            )
-                            : Text(
-                              pedidos.length.toString(),
-                              style: AppCss.minimumRegular.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontSize: 14,
-                              ),
+                    child: isPrioridadeEmpty
+                        ? Icon(
+                            Icons.priority_high,
+                            size: 14,
+                            color: Colors.grey[200],
+                          )
+                        : Text(
+                            pedidos.length.toString(),
+                            style: AppCss.minimumRegular.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 14,
                             ),
+                          ),
                   ),
                   Gap(8),
                   Text('Fila de Prioridades:', style: AppCss.largeBold),
@@ -376,107 +371,98 @@ class DashboardPageState extends State<DashboardPage> {
           Expanded(
             flex: 2,
             child: Row(
-              children:
-                  PedidoPrioridadeTipo.values.map((tipo) {
-                    final pedidosPorFiltro =
-                        pedidos
-                            .where(
-                              (element) => element.prioridade!.tipo == tipo,
-                            )
-                            .toList();
-                    return Expanded(
-                      child: Container(
-                        width: double.maxFinite,
-                        height: 250,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                              color: Colors.grey[200]!,
-                              width: 0.8,
+              children: PedidoPrioridadeTipo.values.map((tipo) {
+                final pedidosPorFiltro = pedidos
+                    .where((element) => element.prioridade!.tipo == tipo)
+                    .toList();
+                return Expanded(
+                  child: Container(
+                    width: double.maxFinite,
+                    height: 250,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        left: BorderSide(color: Colors.grey[200]!, width: 0.8),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: pedidosPorFiltro.isEmpty
+                                ? null
+                                : Colors.orange.withValues(alpha: 0.3),
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Colors.grey[200]!,
+                                width: 0.8,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Gap(8),
+                              Icon(tipo.getIcon(), size: 18),
+                              W(16),
+                              Expanded(
+                                child: Text(
+                                  tipo.getLabel(),
+                                  style: AppCss.mediumBold,
+                                ),
+                              ),
+                              W(16),
+                              InkWell(
+                                onTap: () async {
+                                  final result =
+                                      await showDashboardPedidoPrioridadeBottom(
+                                        tipo,
+                                        pedidosPorFiltro,
+                                      );
+                                  if (result != null) {
+                                    dashCtrl.onReorderPrioridade(result);
+                                  }
+                                },
+                                child: Icon(
+                                  Icons.fullscreen,
+                                  color: Colors.grey[600],
+                                  size: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            color: pedidosPorFiltro.isEmpty
+                                ? null
+                                : Colors.orange.withValues(alpha: 0.1),
+                            child: Builder(
+                              builder: (context) {
+                                if (pedidosPorFiltro.isEmpty) {
+                                  return const SizedBox();
+                                }
+                                pedidosPorFiltro.sort(
+                                  (a, b) => a.prioridade!.index.compareTo(
+                                    b.prioridade!.index,
+                                  ),
+                                );
+                                return ListView.builder(
+                                  itemCount: pedidosPorFiltro.length,
+                                  itemBuilder: (_, i) =>
+                                      _pedidoPrioridadeItemWidget(
+                                        i,
+                                        pedidosPorFiltro[i],
+                                      ),
+                                );
+                              },
                             ),
                           ),
                         ),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color:
-                                    pedidosPorFiltro.isEmpty
-                                        ? null
-                                        : Colors.orange.withValues(alpha: 0.3),
-                                border: Border(
-                                  bottom: BorderSide(
-                                    color: Colors.grey[200]!,
-                                    width: 0.8,
-                                  ),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Gap(8),
-                                  Icon(tipo.getIcon(), size: 18),
-                                  W(16),
-                                  Expanded(
-                                    child: Text(
-                                      tipo.getLabel(),
-                                      style: AppCss.mediumBold,
-                                    ),
-                                  ),
-                                  W(16),
-                                  InkWell(
-                                    onTap: () async {
-                                      final result =
-                                          await showDashboardPedidoPrioridadeBottom(
-                                            tipo,
-                                            pedidosPorFiltro,
-                                          );
-                                      if (result != null) {
-                                        dashCtrl.onReorderPrioridade(result);
-                                      }
-                                    },
-                                    child: Icon(
-                                      Icons.fullscreen,
-                                      color: Colors.grey[600],
-                                      size: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                color:
-                                    pedidosPorFiltro.isEmpty
-                                        ? null
-                                        : Colors.orange.withValues(alpha: 0.1),
-                                child: Builder(
-                                  builder: (context) {
-                                    if (pedidosPorFiltro.isEmpty) {
-                                      return const SizedBox();
-                                    }
-                                    pedidosPorFiltro.sort(
-                                      (a, b) => a.prioridade!.index.compareTo(
-                                        b.prioridade!.index,
-                                      ),
-                                    );
-                                    return ListView.builder(
-                                      itemCount: pedidosPorFiltro.length,
-                                      itemBuilder:
-                                          (_, i) => _pedidoPrioridadeItemWidget(
-                                            i,
-                                            pedidosPorFiltro[i],
-                                          ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ],
@@ -486,8 +472,8 @@ class DashboardPageState extends State<DashboardPage> {
 
   Widget _pedidoPrioridadeItemWidget(int index, PedidoModel pedido) {
     return InkWell(
-      onTap:
-          () => push(PedidoPage(pedido: pedido, reason: PedidoInitReason.page)),
+      onTap: () =>
+          push(PedidoPage(pedido: pedido, reason: PedidoInitReason.page)),
       child: Container(
         decoration: BoxDecoration(
           border: Border(
@@ -531,10 +517,9 @@ class DashboardPageState extends State<DashboardPage> {
     builder: (_, ordens) {
       List<OrdemModel> ordensFiltradas = ordens.toList();
       ordensFiltradas.removeWhere((element) => element.freezed.isFreezed);
-      ordensFiltradas =
-          ordensFiltradas
-              .where((element) => element.status != PedidoProdutoStatus.pronto)
-              .toList();
+      ordensFiltradas = ordensFiltradas
+          .where((element) => element.status != PedidoProdutoStatus.pronto)
+          .toList();
 
       return Row(
         children: [
@@ -565,9 +550,8 @@ class DashboardPageState extends State<DashboardPage> {
               ),
               child: ListView.builder(
                 itemCount: ordensFiltradas.length,
-                itemBuilder:
-                    (_, i) =>
-                        _ordemProducaoItemWidget(context, ordensFiltradas[i]),
+                itemBuilder: (_, i) =>
+                    _ordemProducaoItemWidget(context, ordensFiltradas[i]),
               ),
             ),
           ),
@@ -589,10 +573,9 @@ class DashboardPageState extends State<DashboardPage> {
       child: Stack(
         children: [
           Container(
-            color:
-                ordem.freezed.isFreezed
-                    ? Colors.grey[200]!
-                    : const Color(0xFFF8FCFC),
+            color: ordem.freezed.isFreezed
+                ? Colors.grey[200]!
+                : const Color(0xFFF8FCFC),
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [

@@ -20,25 +20,22 @@ class GrahpOrdemTotalController {
   GraphOrdemTotalModel get filter => filterStream.value;
 
   List<GraphModel> getCirucularChart(GraphOrdemTotalModel filter) {
-    List<OrdemModel> ordens =
-        FirestoreClient.ordens.data
-            .map(
-              (o) => o.copyWith(
-                produto: o.produto.copyWith(),
-                produtos:
-                    o.produtos
-                        .map(
-                          (p) => p.copyWith(
-                            statusess:
-                                p.statusess.map((s) => s.copyWith()).toList(),
-                          ),
-                        )
-                        .toList(),
-              ),
-            )
-            .toList()
-            .where((e) => e.status != PedidoProdutoStatus.pronto)
-            .toList();
+    List<OrdemModel> ordens = FirestoreClient.ordens.data
+        .map(
+          (o) => o.copyWith(
+            produto: o.produto.copyWith(),
+            produtos: o.produtos
+                .map(
+                  (p) => p.copyWith(
+                    statusess: p.statusess.map((s) => s.copyWith()).toList(),
+                  ),
+                )
+                .toList(),
+          ),
+        )
+        .toList()
+        .where((e) => e.status != PedidoProdutoStatus.pronto)
+        .toList();
 
     List<GraphModel> source = [];
 
@@ -46,8 +43,9 @@ class GrahpOrdemTotalController {
       double volFinal = 0.0;
       double lengthFinal = 0.0;
       for (OrdemModel ordem in ordens) {
-        final pedidos =
-            ordem.produtos.where((p) => p.status.status == status).toList();
+        final pedidos = ordem.produtos
+            .where((p) => p.status.status == status)
+            .toList();
         double vol = pedidos.fold(.0, (a, b) => a + b.qtde);
         volFinal += vol;
         lengthFinal += pedidos.length;

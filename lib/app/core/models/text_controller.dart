@@ -41,10 +41,9 @@ class TextController<T> {
   String get text => controller.text;
   set text(String value) => controller.text = value;
 
-  String? get mask =>
-      (controller is MaskedTextController)
-          ? (controller as MaskedTextController).mask
-          : null;
+  String? get mask => (controller is MaskedTextController)
+      ? (controller as MaskedTextController).mask
+      : null;
 
   void updateMask(String mask) {
     (controller as MaskedTextController).updateMask(mask);

@@ -43,8 +43,8 @@ class _AppScaffoldState extends State<AppScaffold> {
         systemNavigationBarColor: (widget.bottomColor ?? backgroundColor),
         systemNavigationBarIconBrightness:
             (widget.bottomColor ?? backgroundColor).computeLuminance() > 0.5
-                ? Brightness.dark
-                : Brightness.light,
+            ? Brightness.dark
+            : Brightness.light,
         systemNavigationBarDividerColor:
             (widget.bottomColor ?? backgroundColor),
         systemNavigationBarContrastEnforced: true,

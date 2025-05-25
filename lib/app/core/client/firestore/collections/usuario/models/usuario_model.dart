@@ -88,15 +88,13 @@ class UsuarioModel {
       email: map['email'] ?? '',
       senha: map['senha'] ?? '',
       role: UsuarioRole.values[map['role']],
-      permission:
-          map['permission'] != null
-              ? UserPermissionModel.fromMap(map['permission'])
-              : UserPermissionModel.all(),
+      permission: map['permission'] != null
+          ? UserPermissionModel.fromMap(map['permission'])
+          : UserPermissionModel.all(),
       steps: [],
-      deviceTokens:
-          map['deviceTokens'] != null
-              ? List<String>.from(map['deviceTokens'])
-              : [],
+      deviceTokens: map['deviceTokens'] != null
+          ? List<String>.from(map['deviceTokens'])
+          : [],
     );
   }
 

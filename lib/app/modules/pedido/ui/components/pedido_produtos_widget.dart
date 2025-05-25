@@ -18,8 +18,9 @@ class PedidoProdutosWidget extends StatelessWidget {
     return IgnorePointer(
       ignoring: pedido.isAguardandoEntradaProducao(),
       child: Column(
-        children:
-            pedido.produtos.map((produto) => _produtoWidget(produto)).toList(),
+        children: pedido.produtos
+            .map((produto) => _produtoWidget(produto))
+            .toList(),
       ),
     );
   }
@@ -79,8 +80,9 @@ class PedidoProdutosWidget extends StatelessWidget {
                 ),
             ],
           ),
-          trailing:
-              pedido.isAguardandoEntradaProducao() ? const SizedBox() : null,
+          trailing: pedido.isAguardandoEntradaProducao()
+              ? const SizedBox()
+              : null,
           childrenPadding: const EdgeInsets.all(16),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,12 +94,12 @@ class PedidoProdutosWidget extends StatelessWidget {
 
                   return ordem?.materiaPrima != null
                       ? Padding(
-                        padding: const EdgeInsets.only(top: 2),
-                        child: Text(
-                          '${ordem?.materiaPrima?.fabricanteModel.nome} - ${ordem?.materiaPrima?.corridaLote}',
-                          style: AppCss.minimumBold,
-                        ),
-                      )
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            '${ordem?.materiaPrima?.fabricanteModel.nome} - ${ordem?.materiaPrima?.corridaLote}',
+                            style: AppCss.minimumBold,
+                          ),
+                        )
                       : const SizedBox();
                 },
               ),

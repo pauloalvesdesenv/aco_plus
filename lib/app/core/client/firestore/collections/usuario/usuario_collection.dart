@@ -27,8 +27,9 @@ class UsuarioCollection {
     if (_isStarted && lock) return;
     _isStarted = true;
     final data = await FirebaseFirestore.instance.collection(name).get();
-    final usuarios =
-        data.docs.map((e) => UsuarioModel.fromMap(e.data())).toList();
+    final usuarios = data.docs
+        .map((e) => UsuarioModel.fromMap(e.data()))
+        .toList();
 
     dataStream.add(usuarios);
   }
@@ -52,24 +53,25 @@ class UsuarioCollection {
     _isListen = true;
     (field != null
             ? collection.where(
-              field,
-              isEqualTo: isEqualTo,
-              isNotEqualTo: isNotEqualTo,
-              isLessThan: isLessThan,
-              isLessThanOrEqualTo: isLessThanOrEqualTo,
-              isGreaterThan: isGreaterThan,
-              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-              arrayContains: arrayContains,
-              arrayContainsAny: arrayContainsAny,
-              whereIn: whereIn,
-              whereNotIn: whereNotIn,
-              isNull: isNull,
-            )
+                field,
+                isEqualTo: isEqualTo,
+                isNotEqualTo: isNotEqualTo,
+                isLessThan: isLessThan,
+                isLessThanOrEqualTo: isLessThanOrEqualTo,
+                isGreaterThan: isGreaterThan,
+                isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+                arrayContains: arrayContains,
+                arrayContainsAny: arrayContainsAny,
+                whereIn: whereIn,
+                whereNotIn: whereNotIn,
+                isNull: isNull,
+              )
             : collection)
         .snapshots()
         .listen((e) {
-          final data =
-              e.docs.map((e) => UsuarioModel.fromMap(e.data())).toList();
+          final data = e.docs
+              .map((e) => UsuarioModel.fromMap(e.data()))
+              .toList();
           dataStream.add(data);
         });
   }

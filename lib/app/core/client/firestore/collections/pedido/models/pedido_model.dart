@@ -101,15 +101,14 @@ class PedidoModel {
 
   List<PedidoStatusModel> getArmacaoStatusses() {
     final statusessFiltered = <PedidoStatusModel>[];
-    final status =
-        statusess
-            .where(
-              (e) =>
-                  e.status == PedidoStatus.produzindoCD ||
-                  e.status == PedidoStatus.aguardandoProducaoCD,
-            )
-            .toList()
-            .first;
+    final status = statusess
+        .where(
+          (e) =>
+              e.status == PedidoStatus.produzindoCD ||
+              e.status == PedidoStatus.aguardandoProducaoCD,
+        )
+        .toList()
+        .first;
     for (var status in statusess) {
       if (status.status != PedidoStatus.produzindoCD &&
           status.status != PedidoStatus.aguardandoProducaoCD) {
@@ -253,10 +252,9 @@ class PedidoModel {
       descricao: map['descricao'] ?? '',
       id: map['id'] ?? '',
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
-      deliveryAt:
-          map['deliveryAt'] != null
-              ? DateTime.fromMillisecondsSinceEpoch(map['deliveryAt'])
-              : null,
+      deliveryAt: map['deliveryAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['deliveryAt'])
+          : null,
       cliente: ClienteModel.fromMap(map['cliente']),
       obra: ObraModel.fromMap(map['obra']),
       tipo: PedidoTipo.values[map['tipo']],
@@ -275,43 +273,37 @@ class PedidoModel {
       comments: List<CommentModel>.from(
         map['comments']?.map((x) => CommentModel.fromMap(x)) ?? [],
       ),
-      steps:
-          map['steps'] != null && map['steps'].isNotEmpty
-              ? List<PedidoStepModel>.from(
-                map['steps']?.map((x) => PedidoStepModel.fromMap(x)),
-              )
-              : [
-                PedidoStepModel(
-                  id: HashService.get,
-                  step: FirestoreClient.steps.data.first,
-                  createdAt: DateTime.now(),
-                ),
-              ],
-      tags:
-          map['tags'] != null
-              ? List<TagModel>.from(
-                map['tags']?.map((x) => TagModel.fromMap(x)),
-              )
-              : [],
+      steps: map['steps'] != null && map['steps'].isNotEmpty
+          ? List<PedidoStepModel>.from(
+              map['steps']?.map((x) => PedidoStepModel.fromMap(x)),
+            )
+          : [
+              PedidoStepModel(
+                id: HashService.get,
+                step: FirestoreClient.steps.data.first,
+                createdAt: DateTime.now(),
+              ),
+            ],
+      tags: map['tags'] != null
+          ? List<TagModel>.from(map['tags']?.map((x) => TagModel.fromMap(x)))
+          : [],
       users: List<UsuarioModel>.from(
         map['users']?.map((x) => FirestoreClient.usuarios.getById(x)) ?? [],
       ),
       index: map['index'] ?? 0,
-      histories:
-          map['histories'] != null
-              ? List<PedidoHistoryModel>.from(
-                map['histories']?.map((x) => PedidoHistoryModel.fromMap(x)),
-              )
-              : [],
+      histories: map['histories'] != null
+          ? List<PedidoHistoryModel>.from(
+              map['histories']?.map((x) => PedidoHistoryModel.fromMap(x)),
+            )
+          : [],
       isArchived: map['isArchived'] ?? false,
       planilhamento: map['planilhamento'] ?? '',
       pedidoFinanceiro: map['pedidoFinanceiro'] ?? '',
       instrucoesEntrega: map['instrucoesEntrega'] ?? '',
       instrucoesFinanceiras: map['instrucoesFinanceiras'] ?? '',
-      prioridade:
-          map['prioridade'] != null
-              ? PedidoPrioridadeModel.fromMap(map['prioridade'])
-              : null,
+      prioridade: map['prioridade'] != null
+          ? PedidoPrioridadeModel.fromMap(map['prioridade'])
+          : null,
     );
   }
 

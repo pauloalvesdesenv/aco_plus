@@ -44,87 +44,80 @@ class _PedidoStepBottomState extends State<PedidoStepBottom> {
   Widget build(BuildContext context) {
     return BottomSheet(
       onClosing: () {},
-      builder:
-          (context) => Container(
-            height: 600,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
+      builder: (context) => Container(
+        height: 600,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        child: Column(
+          children: [
+            const H(16),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: IconButton(
+                  style: ButtonStyle(
+                    padding: const WidgetStatePropertyAll(EdgeInsets.all(16)),
+                    backgroundColor: WidgetStatePropertyAll(AppColors.white),
+                    foregroundColor: WidgetStatePropertyAll(AppColors.black),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.keyboard_backspace),
+                ),
               ),
             ),
-            child: Column(
-              children: [
-                const H(16),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: IconButton(
-                      style: ButtonStyle(
-                        padding: const WidgetStatePropertyAll(
-                          EdgeInsets.all(16),
-                        ),
-                        backgroundColor: WidgetStatePropertyAll(
-                          AppColors.white,
-                        ),
-                        foregroundColor: WidgetStatePropertyAll(
-                          AppColors.black,
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.keyboard_backspace),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Selecione a Etapa', style: AppCss.largeBold),
-                        const H(16),
-                        Expanded(
-                          child: ListView(
-                            children: [
-                              for (var step in FirestoreClient.steps.data)
-                                Container(
-                                  margin: const EdgeInsets.only(bottom: 8),
-                                  decoration: BoxDecoration(
-                                    color: step.color.withValues(alpha: 0.4),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: RadioListTile<StepModel>(
-                                    title: Text(
-                                      step.name,
-                                      style: AppCss.mediumRegular,
-                                    ),
-                                    value: step,
-                                    groupValue: currentStep,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        currentStep = value!;
-                                      });
-                                    },
-                                  ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Selecione a Etapa', style: AppCss.largeBold),
+                    const H(16),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          for (var step in FirestoreClient.steps.data)
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 8),
+                              decoration: BoxDecoration(
+                                color: step.color.withValues(alpha: 0.4),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: RadioListTile<StepModel>(
+                                title: Text(
+                                  step.name,
+                                  style: AppCss.mediumRegular,
                                 ),
-                            ],
-                          ),
-                        ),
-                        const H(16),
-                        AppTextButton(
-                          label: 'Confirmar',
-                          onPressed: () => Navigator.pop(context, currentStep),
-                        ),
-                      ],
+                                value: step,
+                                groupValue: currentStep,
+                                onChanged: (value) {
+                                  setState(() {
+                                    currentStep = value!;
+                                  });
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
+                    const H(16),
+                    AppTextButton(
+                      label: 'Confirmar',
+                      onPressed: () => Navigator.pop(context, currentStep),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
+        ),
+      ),
     );
   }
 }

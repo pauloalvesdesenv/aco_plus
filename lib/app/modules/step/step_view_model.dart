@@ -37,14 +37,12 @@ class StepCreateModel {
     createdAt = etapa.createdAt;
     isDefault = etapa.isDefault;
     isShipping = etapa.isShipping;
-    shipping =
-        etapa.shipping != null
-            ? StepShippingCreateModel.edit(etapa.shipping!)
-            : null;
+    shipping = etapa.shipping != null
+        ? StepShippingCreateModel.edit(etapa.shipping!)
+        : null;
     isArchivedAvailable = etapa.isArchivedAvailable;
     isPermiteProducao = etapa.isPermiteProducao;
-    considerarConsumoRelatorioPedidos =
-        etapa.considerarConsumoRelatorioPedidos;
+    considerarConsumoRelatorioPedidos = etapa.considerarConsumoRelatorioPedidos;
   }
 
   StepModel toStepModel(StepModel? etapa) => StepModel(
@@ -60,7 +58,6 @@ class StepCreateModel {
     shipping: shipping?.toStepShippingModel(),
     isArchivedAvailable: isArchivedAvailable,
     isPermiteProducao: isPermiteProducao,
-    considerarConsumoRelatorioPedidos:
-        considerarConsumoRelatorioPedidos,
+    considerarConsumoRelatorioPedidos: considerarConsumoRelatorioPedidos,
   );
 }

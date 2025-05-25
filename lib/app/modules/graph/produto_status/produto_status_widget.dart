@@ -67,8 +67,9 @@ class _GrapOrdemhTotalWidgetState extends State<ProdutoStatusWidget> {
                 fontSize: 12,
               );
               double qtde = double.parse(dataLabelArgs.text ?? '0');
-              dataLabelArgs.text =
-                  qtde == 0 ? empty : qtde.toKg().replaceAll('Kg', '');
+              dataLabelArgs.text = qtde == 0
+                  ? empty
+                  : qtde.toKg().replaceAll('Kg', '');
             },
             legend: const Legend(
               isVisible: true,

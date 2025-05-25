@@ -25,8 +25,9 @@ class TipWidget extends StatelessWidget {
             color: isSelected ? AppColors.primaryDark : null,
             borderRadius: AppCss.radius16,
             border: Border.all(
-              color:
-                  isSelected ? AppColors.primaryDark : AppColors.neutralMedium,
+              color: isSelected
+                  ? AppColors.primaryDark
+                  : AppColors.neutralMedium,
             ),
           ),
           child: Center(

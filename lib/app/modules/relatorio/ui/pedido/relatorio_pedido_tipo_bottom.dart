@@ -27,70 +27,69 @@ class _RelatorioPedidoTipoBottomState extends State<RelatorioPedidoTipoBottom> {
   Widget build(BuildContext context) {
     return BottomSheet(
       onClosing: () {},
-      builder:
-          (context) => KeyboardVisibilityBuilder(
-            builder: (context, isVisible) {
-              return Container(
-                height: 390,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(24),
-                    topRight: Radius.circular(24),
-                  ),
-                ),
-                child: ListView(
-                  children: [
-                    const H(16),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: IconButton(
-                          style: ButtonStyle(
-                            padding: const WidgetStatePropertyAll(
-                              EdgeInsets.all(16),
-                            ),
-                            backgroundColor: WidgetStatePropertyAll(
-                              AppColors.white,
-                            ),
-                            foregroundColor: WidgetStatePropertyAll(
-                              AppColors.black,
-                            ),
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.keyboard_backspace),
+      builder: (context) => KeyboardVisibilityBuilder(
+        builder: (context, isVisible) {
+          return Container(
+            height: 390,
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
+              ),
+            ),
+            child: ListView(
+              children: [
+                const H(16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: IconButton(
+                      style: ButtonStyle(
+                        padding: const WidgetStatePropertyAll(
+                          EdgeInsets.all(16),
+                        ),
+                        backgroundColor: WidgetStatePropertyAll(
+                          AppColors.white,
+                        ),
+                        foregroundColor: WidgetStatePropertyAll(
+                          AppColors.black,
                         ),
                       ),
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.keyboard_backspace),
                     ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Selecione o Tipo de Relatório',
+                        style: AppCss.largeBold,
+                      ),
+                      const H(16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            'Selecione o Tipo de Relatório',
-                            style: AppCss.largeBold,
-                          ),
-                          const H(16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              for (var tipo in RelatorioPedidoTipo.values)
-                                ListTile(
-                                  title: Text(tipo.label),
-                                  onTap: () => Navigator.pop(context, tipo),
-                                ),
-                            ],
-                          ),
+                          for (var tipo in RelatorioPedidoTipo.values)
+                            ListTile(
+                              title: Text(tipo.label),
+                              onTap: () => Navigator.pop(context, tipo),
+                            ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              );
-            },
-          ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

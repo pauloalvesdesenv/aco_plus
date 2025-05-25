@@ -48,95 +48,85 @@ class _DashboardPedidoPrioridadeBottomState
   Widget build(BuildContext context) {
     return BottomSheet(
       onClosing: () {},
-      builder:
-          (context) => Container(
-            height: 610,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
+      builder: (context) => Container(
+        height: 610,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        child: Column(
+          children: [
+            const H(16),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: IconButton(
+                  style: ButtonStyle(
+                    padding: const WidgetStatePropertyAll(EdgeInsets.all(16)),
+                    backgroundColor: WidgetStatePropertyAll(AppColors.white),
+                    foregroundColor: WidgetStatePropertyAll(AppColors.black),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.keyboard_backspace),
+                ),
               ),
             ),
-            child: Column(
-              children: [
-                const H(16),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: IconButton(
-                      style: ButtonStyle(
-                        padding: const WidgetStatePropertyAll(
-                          EdgeInsets.all(16),
-                        ),
-                        backgroundColor: WidgetStatePropertyAll(
-                          AppColors.white,
-                        ),
-                        foregroundColor: WidgetStatePropertyAll(
-                          AppColors.black,
-                        ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Pedidos com prioridade em ${widget.tipo.getLabel()}:',
+                      style: AppCss.largeBold,
+                    ),
+                    const H(16),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.neutralLight),
+                        borderRadius: BorderRadius.circular(4),
                       ),
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.keyboard_backspace),
+                      width: double.infinity,
+                      height: 400,
+                      child: ReorderableListView.builder(
+                        buildDefaultDragHandles: false,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        cacheExtent: 200,
+                        itemCount: pedidos.length,
+                        onReorder: (oldIndex, newIndex) {
+                          setState(() {
+                            if (newIndex > oldIndex) {
+                              newIndex = newIndex - 1;
+                            }
+                            final step = pedidos.removeAt(oldIndex);
+                            pedidos.insert(newIndex, step);
+                            for (var i = 0; i < pedidos.length; i++) {
+                              pedidos[i].prioridade!.index = i;
+                            }
+                          });
+                        },
+                        itemBuilder: (_, i) =>
+                            _itemDashboardPedidoPrioridadeWidget(i, pedidos[i]),
+                      ),
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Pedidos com prioridade em ${widget.tipo.getLabel()}:',
-                          style: AppCss.largeBold,
-                        ),
-                        const H(16),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.neutralLight),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          width: double.infinity,
-                          height: 400,
-                          child: ReorderableListView.builder(
-                            buildDefaultDragHandles: false,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            cacheExtent: 200,
-                            itemCount: pedidos.length,
-                            onReorder: (oldIndex, newIndex) {
-                              setState(() {
-                                if (newIndex > oldIndex) {
-                                  newIndex = newIndex - 1;
-                                }
-                                final step = pedidos.removeAt(oldIndex);
-                                pedidos.insert(newIndex, step);
-                                for (var i = 0; i < pedidos.length; i++) {
-                                  pedidos[i].prioridade!.index = i;
-                                }
-                              });
-                            },
-                            itemBuilder:
-                                (_, i) => _itemDashboardPedidoPrioridadeWidget(
-                                  i,
-                                  pedidos[i],
-                                ),
-                          ),
-                        ),
-                        const H(16),
-                        AppTextButton(
-                          label: 'Confirmar',
-                          onPressed: () => Navigator.pop(context, pedidos),
-                        ),
-                      ],
+                    const H(16),
+                    AppTextButton(
+                      label: 'Confirmar',
+                      onPressed: () => Navigator.pop(context, pedidos),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
+        ),
+      ),
     );
   }
 

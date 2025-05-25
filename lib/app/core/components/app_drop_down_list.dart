@@ -49,8 +49,9 @@ class _AppDropDownList<T> extends State<AppDropDownList<T>> {
           if (widget.label.isNotEmpty) const H(4),
           Container(
             decoration: BoxDecoration(
-              color:
-                  widget.enable ? null : AppColors.black.withValues(alpha: 0.3),
+              color: widget.enable
+                  ? null
+                  : AppColors.black.withValues(alpha: 0.3),
               border: Border.all(color: AppColors.neutralMedium),
               borderRadius: AppCss.radius8,
             ),
@@ -67,86 +68,84 @@ class _AppDropDownList<T> extends State<AppDropDownList<T>> {
                     ? 'Todos os itens foram selecionados'
                     : 'Selecione Multiplos',
               ),
-              items:
-                  widget.itens
-                      .where((e) => !widget.addeds.contains(e))
-                      .map(
-                        (e) => DropdownMenuItem<T>(
-                          value: e,
-                          child: Text(widget.itemLabel.call(e)),
-                        ),
-                      )
-                      .toList(),
+              items: widget.itens
+                  .where((e) => !widget.addeds.contains(e))
+                  .map(
+                    (e) => DropdownMenuItem<T>(
+                      value: e,
+                      child: Text(widget.itemLabel.call(e)),
+                    ),
+                  )
+                  .toList(),
             ),
           ),
           if (widget.enable) const H(8),
           if (widget.enable)
             widget.addeds.isEmpty
                 ? InkWell(
-                  onTap: () {
-                    widget.addeds.clear();
-                    widget.addeds.addAll(widget.itens);
-                    widget.onChanged.call();
-                  },
-                  child: Container(
-                    height: 30,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 4,
+                    onTap: () {
+                      widget.addeds.clear();
+                      widget.addeds.addAll(widget.itens);
+                      widget.onChanged.call();
+                    },
+                    child: Container(
+                      height: 30,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.neutralLight),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        'Adicionar Todos',
+                        style: TextStyle(color: AppColors.neutralDark),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.neutralLight),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      'Adicionar Todos',
-                      style: TextStyle(color: AppColors.neutralDark),
-                    ),
-                  ),
-                )
+                  )
                 : SizedBox(
-                  width: double.maxFinite,
-                  child: Wrap(
-                    spacing: 4,
-                    runSpacing: 4,
-                    children:
-                        widget.addeds
-                            .map(
-                              (e) => IntrinsicWidth(
-                                child: AppContainer(
-                                  padding: const [6, 4],
-                                  radius: 4,
-                                  color:
-                                      widget.itemColor?.call(e) ??
-                                      AppColors.primaryMedium,
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        widget.itemLabel.call(e),
-                                        style: const TextStyle(
-                                          color: Color(0xFF000014),
-                                        ),
+                    width: double.maxFinite,
+                    child: Wrap(
+                      spacing: 4,
+                      runSpacing: 4,
+                      children: widget.addeds
+                          .map(
+                            (e) => IntrinsicWidth(
+                              child: AppContainer(
+                                padding: const [6, 4],
+                                radius: 4,
+                                color:
+                                    widget.itemColor?.call(e) ??
+                                    AppColors.primaryMedium,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      widget.itemLabel.call(e),
+                                      style: const TextStyle(
+                                        color: Color(0xFF000014),
                                       ),
-                                      const W(4),
-                                      InkWell(
-                                        onTap: () {
-                                          widget.addeds.remove(e);
-                                          widget.onChanged.call();
-                                        },
-                                        child: const Icon(
-                                          Icons.close,
-                                          color: Color(0xFF000014),
-                                          size: 20,
-                                        ),
+                                    ),
+                                    const W(4),
+                                    InkWell(
+                                      onTap: () {
+                                        widget.addeds.remove(e);
+                                        widget.onChanged.call();
+                                      },
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Color(0xFF000014),
+                                        size: 20,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            )
-                            .toList(),
+                            ),
+                          )
+                          .toList(),
+                    ),
                   ),
-                ),
         ],
       ),
     );

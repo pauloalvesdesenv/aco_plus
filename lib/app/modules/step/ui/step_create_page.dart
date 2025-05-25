@@ -135,7 +135,7 @@ class _StepCreatePageState extends State<StepCreatePage> {
         const H(8),
         AppCheckbox(
           value: form.isArchivedAvailable,
-        label: 'Permite arquivamento de pedidos',
+          label: 'Permite arquivamento de pedidos',
           onChanged: (e) {
             form.isArchivedAvailable = !form.isArchivedAvailable;
             stepCtrl.formStream.update();

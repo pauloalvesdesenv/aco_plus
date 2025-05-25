@@ -1,10 +1,14 @@
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
+import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/w.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
+import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_notificao_widget.dart';
+import 'package:aco_plus/app/modules/notificacao/notificacao_controller.dart';
+import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
 
 class PedidoItemWidget extends StatelessWidget {
@@ -18,6 +22,11 @@ class PedidoItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notificacoes = notificacaoCtrl.getNotificaoByUsuarioPedido(
+      FirestoreClient.notificacoes.data,
+      usuarioCtrl.usuario!,
+      pedido,
+    );
     return InkWell(
       onTap: () => onTap(pedido),
       child: Stack(
@@ -25,6 +34,9 @@ class PedidoItemWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
+              color: notificacoes.isNotEmpty
+                  ? const Color.fromARGB(255, 255, 241, 240)
+                  : null,
               border: Border(bottom: BorderSide(color: AppColors.neutralLight)),
             ),
             child: Row(
@@ -35,6 +47,11 @@ class PedidoItemWidget extends StatelessWidget {
                     children: [
                       Row(
                         children: [
+                          if (notificacoes.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.only(right: 8),
+                              child: KanbanCardNotificacaoWidget(),
+                            ),
                           if (pedido.prioridade != null) _prioridadeWidget(),
                           Text(
                             pedido.localizador.trim(),
@@ -67,13 +84,12 @@ class PedidoItemWidget extends StatelessWidget {
                 ),
                 const W(8),
                 ColorFiltered(
-                  colorFilter:
-                      pedido.isAguardandoEntradaProducao()
-                          ? ColorFilter.mode(Colors.grey[200]!, BlendMode.srcIn)
-                          : const ColorFilter.mode(
-                            Colors.transparent,
-                            BlendMode.color,
-                          ),
+                  colorFilter: pedido.isAguardandoEntradaProducao()
+                      ? ColorFilter.mode(Colors.grey[200]!, BlendMode.srcIn)
+                      : const ColorFilter.mode(
+                          Colors.transparent,
+                          BlendMode.color,
+                        ),
                   child: Row(
                     children: [
                       _progressChartWidget(

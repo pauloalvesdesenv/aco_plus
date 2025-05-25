@@ -1,5 +1,4 @@
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/enums/usuario_role.dart';
-import 'package:aco_plus/app/core/client/http/fcm/fcm_provider.dart';
 import 'package:aco_plus/app/core/enums/app_module.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
@@ -24,6 +23,5 @@ class BaseController {
           ? AppModule.ordens
           : AppModule.values.first,
     );
-    FCMProvider.putToken();
   }
 }

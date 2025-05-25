@@ -18,17 +18,17 @@ class PedidoStatusWidget extends StatelessWidget {
         children: [
           Expanded(child: Text('Status de Produção', style: AppCss.largeBold)),
           InkWell(
-            onTap:
-                pedido.isChangeStatusAvailable
-                    ? () => pedidoCtrl.onChangePedidoStatus(pedido)
-                    : null,
+            onTap: pedido.isChangeStatusAvailable
+                ? () => pedidoCtrl.onChangePedidoStatus(pedido)
+                : null,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
               decoration: BoxDecoration(
-                color: (pedido.isAguardandoEntradaProducao()
-                        ? Colors.grey
-                        : pedido.status.color)
-                    .withValues(alpha: 0.4),
+                color:
+                    (pedido.isAguardandoEntradaProducao()
+                            ? Colors.grey
+                            : pedido.status.color)
+                        .withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: IntrinsicWidth(

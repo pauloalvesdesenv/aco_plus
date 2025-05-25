@@ -37,20 +37,18 @@ class _KanbanCardStepWidgetState extends State<KanbanCardStepWidget> {
         color: widget.step.color.withValues(alpha: 0.2),
         borderRadius: const BorderRadius.all(Radius.circular(4)),
       ),
-      child:
-          isCollapsed
-              ? SizedBox(height: 4, width: widget.step.name.length * 3.0)
-              : Text(
-                widget.step.name,
-                style: AppCss.minimumRegular.copyWith(
-                  fontSize: 9,
-                  fontWeight: FontWeight.bold,
-                  color:
-                      widget.step.color.computeLuminance() > 0.2
-                          ? Colors.black
-                          : Colors.white,
-                ),
+      child: isCollapsed
+          ? SizedBox(height: 4, width: widget.step.name.length * 3.0)
+          : Text(
+              widget.step.name,
+              style: AppCss.minimumRegular.copyWith(
+                fontSize: 9,
+                fontWeight: FontWeight.bold,
+                color: widget.step.color.computeLuminance() > 0.2
+                    ? Colors.black
+                    : Colors.white,
               ),
+            ),
     );
   }
 }

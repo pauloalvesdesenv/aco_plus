@@ -1,4 +1,3 @@
-import 'package:aco_plus/app/core/client/firestore/collections/notificacao/notificacao_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/enums/user_permission_type.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/enums/usuario_role.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/version/version_collection.dart';
@@ -12,6 +11,8 @@ import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/base/base_controller.dart';
 import 'package:aco_plus/app/modules/config/config_page.dart';
+import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_notificao_widget.dart';
+import 'package:aco_plus/app/modules/notificacao/notificacao_controller.dart';
 import 'package:aco_plus/app/modules/notificacao/ui/notificacoes_page.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +25,14 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: StreamOut<AppModule>(
         stream: baseCtrl.moduleStream.listen,
-        builder:
-            (_, module) => Column(
+        builder: (_, module) => StreamOut(
+          stream: FirestoreClient.notificacoes.dataStream.listen,
+          builder: (context, value) {
+            final notificacoes = notificacaoCtrl.getNotificaoByUsuario(
+              value,
+              usuarioCtrl.usuario!,
+            );
+            return Column(
               children: [
                 Expanded(
                   child: ListView(
@@ -107,50 +114,37 @@ class AppDrawer extends StatelessWidget {
                             ),
                           ),
                           if (usuario.role != UsuarioRole.operador)
-                            StreamOut<List<NotificacaoModel>>(
-                              stream:
-                                  FirestoreClient
-                                      .notificacoes
-                                      .dataStream
-                                      .listen,
-                              builder:
-                                  (context, notificacoes) => Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: InkWell(
-                                      onTap:
-                                          () =>
-                                              push(context, NotificacoesPage()),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(
-                                          16,
-                                        ).add(EdgeInsets.only(bottom: 16)),
-                                        child: Stack(
-                                          children: [
-                                            Icon(
-                                              Icons.notifications,
-                                              color: Colors.white,
-                                            ),
-                                            if (notificacoes
-                                                .where((e) => !e.viewed)
-                                                .toList()
-                                                .isNotEmpty)
-                                              Align(
-                                                alignment: Alignment.topRight,
-                                                child: Container(
-                                                  width: 10,
-                                                  height: 10,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Colors.orange,
-                                                  ),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: InkWell(
+                                onTap: () => push(context, NotificacoesPage()),
+                                child: Padding(
+                                  padding: EdgeInsets.all(
+                                    16,
+                                  ).add(EdgeInsets.only(bottom: 16)),
+                                  child: Stack(
+                                    children: [
+                                      Icon(
+                                        Icons.notifications,
+                                        color: Colors.white,
                                       ),
-                                    ),
+                                      if (notificacoes.isNotEmpty)
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: Container(
+                                            width: 10,
+                                            height: 10,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.orange,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
                                   ),
+                                ),
+                              ),
                             ),
                         ],
                       ),
@@ -188,7 +182,8 @@ class AppDrawer extends StatelessWidget {
                                 default:
                               }
                             } else {
-                              isEnabled = item == AppModule.ordens ||
+                              isEnabled =
+                                  item == AppModule.ordens ||
                                   item == AppModule.materiaPrima;
                             }
                             if (!isEnabled) return const SizedBox();
@@ -199,20 +194,26 @@ class AppDrawer extends StatelessWidget {
                               },
                               leading: Icon(
                                 item.icon,
-                                color:
-                                    item == module
-                                        ? AppColors.primaryMain
-                                        : null,
+                                color: item == module
+                                    ? AppColors.primaryMain
+                                    : null,
                               ),
                               title: Text(
                                 item.label,
                                 style: TextStyle(
-                                  color:
-                                      item == module
-                                          ? AppColors.primaryMain
-                                          : null,
+                                  color: item == module
+                                      ? AppColors.primaryMain
+                                      : null,
                                 ),
                               ),
+                              trailing:
+                                  notificacoes.isNotEmpty &&
+                                      ([
+                                        AppModule.kanban,
+                                        AppModule.pedidos,
+                                      ].contains(item))
+                                  ? KanbanCardNotificacaoWidget()
+                                  : SizedBox(),
                             );
                           },
                         ),
@@ -225,7 +226,9 @@ class AppDrawer extends StatelessWidget {
                   title: Text('Sair', style: TextStyle(color: AppColors.error)),
                 ),
               ],
-            ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -29,25 +29,24 @@ class KanbanStepTitleWidget extends StatelessWidget {
         surfaceTintColor: Colors.white,
         color: Colors.white,
         onSelected: (e) => kanbanCtrl.onOrderPedidos(e, pedidos),
-        itemBuilder:
-            (context) => [
-              PopupMenuItem(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Ordenação',
-                        style: AppCss.minimumBold.setSize(16),
-                      ),
-                    ),
-                    const Icon(Icons.close, color: Colors.black, size: 16),
-                  ],
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Ordenação',
+                    style: AppCss.minimumBold.setSize(16),
+                  ),
                 ),
-              ),
-              ...SortStepType.values.map(
-                (e) => PopupMenuItem(value: e, child: Text(e.label)),
-              ),
-            ],
+                const Icon(Icons.close, color: Colors.black, size: 16),
+              ],
+            ),
+          ),
+          ...SortStepType.values.map(
+            (e) => PopupMenuItem(value: e, child: Text(e.label)),
+          ),
+        ],
       ),
       title: Row(
         children: [

@@ -42,13 +42,11 @@ class _OrderCreatePedidosSelecionadosBottomState
           form.produto!,
           ordem: widget.ordem,
         );
-        produtos =
-            produtos
-                .where(
-                  (produto) =>
-                      form.produtos.map((e) => e.id).contains(produto.id),
-                )
-                .toList();
+        produtos = produtos
+            .where(
+              (produto) => form.produtos.map((e) => e.id).contains(produto.id),
+            )
+            .toList();
 
         return AppBottom(
           title: 'Pedidos Selecionados',
@@ -65,8 +63,8 @@ class _OrderCreatePedidosSelecionadosBottomState
                         for (var produto in produtos) {
                           form.produtos.map((e) => e.id).contains(produto.id)
                               ? form.produtos.removeWhere(
-                                (e) => e.id == produto.id,
-                              )
+                                  (e) => e.id == produto.id,
+                                )
                               : form.produtos.add(produto);
                           ordemCtrl.formStream.update();
                         }

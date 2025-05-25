@@ -66,10 +66,9 @@ class PedidoController {
     String search,
     List<PedidoModel> pedidos,
   ) {
-    pedidos =
-        utils.steps.isEmpty
-            ? pedidos
-            : pedidos.where((e) => e.step.id == utils.steps.last.id).toList();
+    pedidos = utils.steps.isEmpty
+        ? pedidos
+        : pedidos.where((e) => e.step.id == utils.steps.last.id).toList();
     if (search.length < 3) return pedidos;
     List<PedidoModel> filtered = [];
     for (final pedido in pedidos) {
@@ -84,15 +83,14 @@ class PedidoController {
     String search,
     List<PedidoModel> pedidos,
   ) {
-    pedidos =
-        utilsArquiveds.steps.isEmpty
-            ? pedidos
-            : pedidos
-                .where(
-                  (e) =>
-                      utilsArquiveds.steps.map((e) => e.id).contains(e.step.id),
-                )
-                .toList();
+    pedidos = utilsArquiveds.steps.isEmpty
+        ? pedidos
+        : pedidos
+              .where(
+                (e) =>
+                    utilsArquiveds.steps.map((e) => e.id).contains(e.step.id),
+              )
+              .toList();
     if (search.length < 3) return pedidos;
     List<PedidoModel> filtered = [];
     for (final pedido in pedidos) {
@@ -164,16 +162,17 @@ class PedidoController {
     return true;
   }
 
-  Future<bool> _isDeleteUnavailable(PedidoModel pedido) async =>
-      !await onDeleteProcess(
-        deleteTitle: 'Deseja excluir o pedido?',
-        deleteMessage: 'Todos seus dados do pedido apagados do sistema',
-        infoMessage:
-            'Não é possível exlcuir o pedido, pois ele está vinculado a uma ordem de produção.',
-        conditional: FirestoreClient.ordens.data
-            .expand((e) => e.produtos.map((e) => e.pedidoId))
-            .any((e) => e == pedido.id),
-      );
+  Future<bool> _isDeleteUnavailable(
+    PedidoModel pedido,
+  ) async => !await onDeleteProcess(
+    deleteTitle: 'Deseja excluir o pedido?',
+    deleteMessage: 'Todos seus dados do pedido apagados do sistema',
+    infoMessage:
+        'Não é possível exlcuir o pedido, pois ele está vinculado a uma ordem de produção.',
+    conditional: FirestoreClient.ordens.data
+        .expand((e) => e.produtos.map((e) => e.pedidoId))
+        .any((e) => e == pedido.id),
+  );
 
   void onValid() {
     if (form.cliente == null) {
@@ -211,7 +210,7 @@ class PedidoController {
     );
   }
 
-  void onInitPage(PedidoModel pedido) {
+  Future<void> onInitPage(PedidoModel pedido) async {
     pedidoStream.add(pedido);
   }
 
@@ -238,38 +237,34 @@ class PedidoController {
     switch (utils.sortType) {
       case SortType.localizator:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? a.localizador.compareTo(b.localizador)
-                  : b.localizador.compareTo(a.localizador),
+          (a, b) => isAsc
+              ? a.localizador.compareTo(b.localizador)
+              : b.localizador.compareTo(a.localizador),
         );
         break;
       case SortType.alfabetic:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? a.localizador.compareTo(b.localizador)
-                  : b.localizador.compareTo(a.localizador),
+          (a, b) => isAsc
+              ? a.localizador.compareTo(b.localizador)
+              : b.localizador.compareTo(a.localizador),
         );
         break;
       case SortType.deliveryAt:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? (a.deliveryAt ?? DateTime.now()).compareTo(
-                    (b.deliveryAt ?? DateTime.now()),
-                  )
-                  : (b.deliveryAt ?? DateTime.now()).compareTo(
-                    (a.deliveryAt ?? DateTime.now()),
-                  ),
+          (a, b) => isAsc
+              ? (a.deliveryAt ?? DateTime.now()).compareTo(
+                  (b.deliveryAt ?? DateTime.now()),
+                )
+              : (b.deliveryAt ?? DateTime.now()).compareTo(
+                  (a.deliveryAt ?? DateTime.now()),
+                ),
         );
         break;
       case SortType.createdAt:
         pedidos.sort(
-          (a, b) =>
-              isAsc
-                  ? a.createdAt.compareTo(b.createdAt)
-                  : b.createdAt.compareTo(a.createdAt),
+          (a, b) => isAsc
+              ? a.createdAt.compareTo(b.createdAt)
+              : b.createdAt.compareTo(a.createdAt),
         );
         break;
       default:
@@ -361,16 +356,14 @@ class PedidoController {
   }
 
   List<PedidoHistoryModel> getHistoricoAcompanhamento(PedidoModel pedido) {
-    List<PedidoHistoryModel> histories =
-        pedido.histories.reversed
-            .where((e) => e.type == PedidoHistoryType.step)
-            .toList();
+    List<PedidoHistoryModel> histories = pedido.histories.reversed
+        .where((e) => e.type == PedidoHistoryType.step)
+        .toList();
 
-    histories =
-        histories.where((e) {
-          final data = e.data as StepModel?;
-          return data?.isShipping ?? false;
-        }).toList();
+    histories = histories.where((e) {
+      final data = e.data as StepModel?;
+      return data?.isShipping ?? false;
+    }).toList();
 
     return histories;
   }
@@ -384,14 +377,15 @@ class PedidoController {
   Future<void> onGeneratePDF(PedidoModel pedido) async {
     final RelatorioPedidoViewModel relatorio = RelatorioPedidoViewModel();
     relatorio.cliente = FirestoreClient.clientes.getById(pedido.cliente.id);
-    relatorio.produtos =
-        pedido.produtos.map((e) => e.copyWith()).map((e) => e.produto).toList();
-    relatorio.status =
-        pedido.produtos
-            .map((e) => e.copyWith())
-            .map((e) => e.status.status)
-            .toSet()
-            .toList();
+    relatorio.produtos = pedido.produtos
+        .map((e) => e.copyWith())
+        .map((e) => e.produto)
+        .toList();
+    relatorio.status = pedido.produtos
+        .map((e) => e.copyWith())
+        .map((e) => e.status.status)
+        .toSet()
+        .toList();
 
     relatorio.tipo = RelatorioPedidoTipo.pedidos;
 
@@ -433,11 +427,10 @@ class PedidoController {
     PedidoModel pedido,
     PedidoPrioridadeTipo tipo,
   ) {
-    final pedidos =
-        FirestoreClient.pedidos.pedidosPrioridade
-            .where((e) => e.prioridade?.tipo == tipo)
-            .map((e) => e.copyWith())
-            .toList();
+    final pedidos = FirestoreClient.pedidos.pedidosPrioridade
+        .where((e) => e.prioridade?.tipo == tipo)
+        .map((e) => e.copyWith())
+        .toList();
     if (pedido.prioridade?.tipo != tipo) {
       final copy = pedido.copyWith(
         prioridade: PedidoPrioridadeModel(
@@ -465,10 +458,9 @@ class PedidoController {
       (e) => e.id == pedido.id,
     );
     if (pedido.prioridade?.tipo != pedidoInList.prioridade?.tipo) {
-      final pedidos =
-          FirestoreClient.pedidos.pedidosPrioridade
-              .where((e) => e.prioridade?.tipo == pedido.prioridade?.tipo)
-              .toList();
+      final pedidos = FirestoreClient.pedidos.pedidosPrioridade
+          .where((e) => e.prioridade?.tipo == pedido.prioridade?.tipo)
+          .toList();
       for (var i = 0; i < pedidos.length; i++) {
         final copy = pedidos[i].copyWith(
           prioridade: pedidos[i].prioridade!.copyWith(index: i),
