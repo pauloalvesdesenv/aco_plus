@@ -5,10 +5,10 @@ publish_to: "none"
 
 version: 0.0.0
 
-#Flutter SDK 3.29.3
+#Flutter SDK 3.32.0
 #BANCO EM PROD: ACO-PLUS
 environment:
-  sdk: "3.7.2"
+  sdk: "3.8.0"
 
 dependencies:
   flutter:
@@ -32,7 +32,7 @@ dependencies:
   material_symbols_icons: ^4.2661.1
 
   #OUTROS
-  intl: ^0.19.0
+  intl: ^0.20.2
   rxdart: ^0.28.0
   flutter_native_splash: ^2.2.0+1
   shimmer: ^3.0.0
