@@ -3,6 +3,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/enu
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
+import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:aco_plus/app/core/services/notification_service.dart';
@@ -94,16 +95,17 @@ class MateriaPrimaController {
     );
   }
 
-  Future<bool> _isDeleteUnavailable(MateriaPrimaModel materiaPrima) async =>
-      !await onDeleteProcess(
-        deleteTitle: 'Deseja excluir a Matéria Prima?',
-        deleteMessage: 'Todos seus dados serão apagados do sistema',
-        infoMessage:
-            'Não é possível exlcuir a Matéria Prima, pois ela está vinculada a uma Ordem.',
-        conditional: true,
-        // conditional: FirestoreClient.produtos.data
-        //     .any((e) => e.materiaPrima.id == materiaPrima.id),
-      );
+  Future<bool> _isDeleteUnavailable(
+    MateriaPrimaModel materiaPrima,
+  ) async => !await onDeleteProcess(
+    deleteTitle: 'Deseja excluir a Matéria Prima?',
+    deleteMessage: 'Todos seus dados serão apagados do sistema',
+    infoMessage:
+        'Não é possível exlcuir a Matéria Prima, pois ela está vinculada a uma Ordem.',
+    conditional: true,
+    // conditional: FirestoreClient.produtos.data
+    //     .any((e) => e.materiaPrima.id == materiaPrima.id),
+  );
 
   void onValid(MateriaPrimaModel? materiaPrima) {
     if (form.fabricanteModel == null) {
@@ -136,5 +138,26 @@ class MateriaPrimaController {
         materiaPrima.corridaLote == form.corridaLote.text &&
         materiaPrima.status == form.status &&
         materiaPrima.anexos.length == form.anexos.length);
+  }
+
+  Future<void> finalizarMateriaPrima(MateriaPrimaModel materiaPrima) async {
+    try {
+      final result = await showConfirmDialog(
+        'Mover Matéria Prima para finalizada',
+        'Deseja mover a Matéria Prima para finalizada?',
+      );
+      if (result == true) {
+        materiaPrima.status = MateriaPrimaStatus.finalizada;
+        await FirestoreClient.materiaPrimas.update(materiaPrima);
+        await FirestoreClient.materiaPrimas.fetch();
+        NotificationService.showPositive(
+          'Matéria Prima finalizada',
+          'Operação realizada com sucesso',
+          position: NotificationPosition.bottom,
+        );
+      }
+    } catch (e) {
+      NotificationService.showNegative('Erro', e.toString());
+    }
   }
 }

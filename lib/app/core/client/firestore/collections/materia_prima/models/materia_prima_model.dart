@@ -9,7 +9,7 @@ class MateriaPrimaModel {
   final ProdutoModel produto;
   final String corridaLote;
   final List<ArchiveModel> anexos;
-  final MateriaPrimaStatus status;
+  MateriaPrimaStatus status;
 
   MateriaPrimaModel({
     required this.id,

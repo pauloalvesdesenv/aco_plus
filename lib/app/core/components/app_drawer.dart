@@ -188,7 +188,8 @@ class AppDrawer extends StatelessWidget {
                                 default:
                               }
                             } else {
-                              isEnabled = item == AppModule.ordens;
+                              isEnabled = item == AppModule.ordens ||
+                                  item == AppModule.materiaPrima;
                             }
                             if (!isEnabled) return const SizedBox();
                             return ListTile(

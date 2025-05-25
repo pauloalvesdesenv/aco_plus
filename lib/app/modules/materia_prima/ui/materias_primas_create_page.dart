@@ -16,6 +16,7 @@ import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/materia_prima/materia_prima_controller.dart';
 import 'package:aco_plus/app/modules/materia_prima/materia_prima_view_model.dart';
+import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -121,6 +122,7 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
         ),
         const H(16),
         AppDropDown<MateriaPrimaStatus?>(
+          disable: usuario.isOperador,
           label: 'Status',
           item: form.status,
           itens: MateriaPrimaStatus.values,
@@ -152,8 +154,8 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
                 ),
               ),
             ),
-            onPressed:
-                () => materiaPrimaCtrl.onDelete(context, widget.materiaPrima!),
+            onPressed: () =>
+                materiaPrimaCtrl.onDelete(context, widget.materiaPrima!),
             label: const Text('Excluir'),
             icon: const Icon(Icons.delete_outline),
           ),
