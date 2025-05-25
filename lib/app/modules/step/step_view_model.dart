@@ -23,6 +23,7 @@ class StepCreateModel {
   StepShippingCreateModel? shipping;
   bool isArchivedAvailable = false;
   bool isPermiteProducao = false;
+  bool considerarConsumoRelatorioPedidos = true;
 
   late bool isEdit;
 
@@ -42,6 +43,8 @@ class StepCreateModel {
             : null;
     isArchivedAvailable = etapa.isArchivedAvailable;
     isPermiteProducao = etapa.isPermiteProducao;
+    considerarConsumoRelatorioPedidos =
+        etapa.considerarConsumoRelatorioPedidos;
   }
 
   StepModel toStepModel(StepModel? etapa) => StepModel(
@@ -57,5 +60,7 @@ class StepCreateModel {
     shipping: shipping?.toStepShippingModel(),
     isArchivedAvailable: isArchivedAvailable,
     isPermiteProducao: isPermiteProducao,
+    considerarConsumoRelatorioPedidos:
+        considerarConsumoRelatorioPedidos,
   );
 }

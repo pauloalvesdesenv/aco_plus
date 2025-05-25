@@ -20,6 +20,7 @@ class StepModel {
   StepShippingModel? shipping;
   bool isArchivedAvailable = false;
   bool isPermiteProducao = false;
+  bool considerarConsumoRelatorioPedidos = true;
 
   static StepModel notFound = StepModel(
     createdAt: DateTime.now(),
@@ -34,16 +35,16 @@ class StepModel {
     shipping: null,
     isArchivedAvailable: false,
     isPermiteProducao: false,
+    considerarConsumoRelatorioPedidos: false,
   );
 
-  List<StepModel> get fromSteps =>
-      fromStepsIds
-          .map(
-            (e) => FirestoreClient.steps
-                .getById(e)
-                .copyWith(fromStepsIds: [], toStepsIds: []),
-          )
-          .toList();
+  List<StepModel> get fromSteps => fromStepsIds
+      .map(
+        (e) => FirestoreClient.steps
+            .getById(e)
+            .copyWith(fromStepsIds: [], toStepsIds: []),
+      )
+      .toList();
 
   bool get isEnable => moveRoles.contains(usuario.role);
 
@@ -60,6 +61,7 @@ class StepModel {
     required this.shipping,
     required this.isArchivedAvailable,
     required this.isPermiteProducao,
+    required this.considerarConsumoRelatorioPedidos,
   });
 
   StepModel copyWith({
@@ -76,6 +78,7 @@ class StepModel {
     StepShippingModel? shipping,
     bool? isArchivedAvailable,
     bool? isPermiteProducao,
+    bool? considerarConsumoRelatorioPedidos,
   }) {
     return StepModel(
       id: id ?? this.id,
@@ -90,6 +93,9 @@ class StepModel {
       shipping: shipping ?? this.shipping,
       isArchivedAvailable: isArchivedAvailable ?? this.isArchivedAvailable,
       isPermiteProducao: isPermiteProducao ?? this.isPermiteProducao,
+      considerarConsumoRelatorioPedidos:
+          considerarConsumoRelatorioPedidos ??
+          this.considerarConsumoRelatorioPedidos,
     );
   }
 
@@ -107,6 +113,7 @@ class StepModel {
       'shipping': shipping?.toMap(),
       'isArchivedAvailable': isArchivedAvailable,
       'isPermiteProducao': isPermiteProducao,
+      'considerarConsumoRelatorioPedidos': considerarConsumoRelatorioPedidos,
     };
   }
 
@@ -135,12 +142,12 @@ class StepModel {
         createdAt: DateTime.now(),
         isDefault: false,
         isShipping: map['isShipping'] ?? false,
-        shipping:
-            map['shipping'] != null
-                ? StepShippingModel.fromMap(map['shipping'])
-                : null,
+        shipping: map['shipping'] != null
+            ? StepShippingModel.fromMap(map['shipping'])
+            : null,
         isArchivedAvailable: false,
         isPermiteProducao: false,
+        considerarConsumoRelatorioPedidos: false,
       );
     }
     return StepModel(
@@ -148,22 +155,22 @@ class StepModel {
       name: map['name'] ?? '',
       index: map['index'] ?? 0,
       color: Color(map['color']),
-      fromStepsIds:
-          map['fromStepsIds'] != null
-              ? List<String>.from(map['fromStepsIds'])
-              : <String>[],
+      fromStepsIds: map['fromStepsIds'] != null
+          ? List<String>.from(map['fromStepsIds'])
+          : <String>[],
       moveRoles: List<UsuarioRole>.from(
         map['moveRoles']?.map((x) => UsuarioRole.values[x]),
       ),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
       isDefault: map['isDefault'] ?? false,
       isShipping: map['isShipping'] ?? false,
-      shipping:
-          map['shipping'] != null
-              ? StepShippingModel.fromMap(map['shipping'])
-              : null,
+      shipping: map['shipping'] != null
+          ? StepShippingModel.fromMap(map['shipping'])
+          : null,
       isArchivedAvailable: map['isArchivedAvailable'] ?? false,
       isPermiteProducao: map['isPermiteProducao'] ?? false,
+      considerarConsumoRelatorioPedidos:
+          map['considerarConsumoRelatorioPedidos'] ?? true,
     );
   }
 
@@ -174,6 +181,6 @@ class StepModel {
 
   @override
   String toString() {
-    return 'StepModel(id: $id, name: $name, color: $color, fromSteps: $fromSteps, moveRoles: $moveRoles, createdAt: $createdAt, index: $index, isDefault: $isDefault, isShipping: $isShipping, shipping: $shipping, isArchivedAvailable: $isArchivedAvailable)';
+    return 'StepModel(id: $id, name: $name, color: $color, fromSteps: $fromSteps, moveRoles: $moveRoles, createdAt: $createdAt, index: $index, isDefault: $isDefault, isShipping: $isShipping, shipping: $shipping, isArchivedAvailable: $isArchivedAvailable, considerarConsumoRelatorioPedidos: $considerarConsumoRelatorioPedidos  )';
   }
 }

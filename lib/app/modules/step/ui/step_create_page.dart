@@ -91,8 +91,9 @@ class _StepCreatePageState extends State<StepCreatePage> {
         AppDropDownList<StepModel>(
           label: 'Recebe de',
           addeds: form.fromSteps,
-          itens:
-              FirestoreClient.steps.data.where((e) => e.id != form.id).toList(),
+          itens: FirestoreClient.steps.data
+              .where((e) => e.id != form.id)
+              .toList(),
           itemLabel: (e) => e.name,
           onChanged: () {
             stepCtrl.formStream.add(form);
@@ -134,7 +135,7 @@ class _StepCreatePageState extends State<StepCreatePage> {
         const H(8),
         AppCheckbox(
           value: form.isArchivedAvailable,
-          label: 'Permite arquivamento de pedidos',
+        label: 'Permite arquivamento de pedidos',
           onChanged: (e) {
             form.isArchivedAvailable = !form.isArchivedAvailable;
             stepCtrl.formStream.update();
@@ -146,6 +147,16 @@ class _StepCreatePageState extends State<StepCreatePage> {
           label: 'Permite Entrada em Produção',
           onChanged: (e) {
             form.isPermiteProducao = !form.isPermiteProducao;
+            stepCtrl.formStream.update();
+          },
+        ),
+        const H(8),
+        AppCheckbox(
+          value: form.considerarConsumoRelatorioPedidos,
+          label: 'Consumo Relatório de Pedidos',
+          onChanged: (e) {
+            form.considerarConsumoRelatorioPedidos =
+                !form.considerarConsumoRelatorioPedidos;
             stepCtrl.formStream.update();
           },
         ),

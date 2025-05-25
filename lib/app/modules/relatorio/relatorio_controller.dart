@@ -40,6 +40,8 @@ class PedidoController {
         )
         .toList();
 
+    pedidos = pedidos.where((e) => e.step.considerarConsumoRelatorioPedidos).toList();
+
     for (PedidoModel pedido in pedidos) {
       List<PedidoProdutoModel> produtos = pedido.produtos
           .map((e) => e.copyWith())
