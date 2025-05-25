@@ -6,6 +6,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/step/models/step_
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/enums/sort_step_type.dart';
+import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:aco_plus/app/core/services/notification_service.dart';
 import 'package:aco_plus/app/modules/kanban/kanban_view_model.dart';
@@ -63,16 +64,16 @@ class StepController {
 
   Map<String, List<PedidoModel>> _mountCalendar() {
     final calendar = <String, List<PedidoModel>>{};
-    final keys =
-        FirestoreClient.pedidos.pepidosUnarchiveds
-            .where((e) => e.deliveryAt != null)
-            .map((e) => e.deliveryAt!)
-            .toSet();
+    final keys = FirestoreClient.pedidos.pepidosUnarchiveds
+        .where((e) => e.deliveryAt != null)
+        .map((e) => e.deliveryAt!)
+        .toSet();
     for (DateTime key in keys) {
-      calendar[DateFormat('dd/MM/yyyy').format(key)] =
-          FirestoreClient.pedidos.pepidosUnarchiveds
-              .where((e) => e.deliveryAt == key)
-              .toList();
+      calendar[DateFormat('dd/MM/yyyy').format(key)] = FirestoreClient
+          .pedidos
+          .pepidosUnarchiveds
+          .where((e) => e.deliveryAt == key)
+          .toList();
     }
     return calendar;
   }
@@ -90,6 +91,26 @@ class StepController {
   void setDay(Map<DateTime, List<PedidoModel>>? day) {
     utils.day = day;
     utilsStream.update();
+  }
+
+  void setNextDay(DateTime currentDate) {
+    DateTime nextDate = currentDate.onlyDate().add(const Duration(days: 1));
+    if (nextDate.weekday == DateTime.saturday) {
+      nextDate = nextDate.add(const Duration(days: 2));
+    }
+    final pedidos = utils.calendar[nextDate.ddMMyyyy()] ?? [];
+    setDay({nextDate: pedidos});
+  }
+
+  void setPreviousDay(DateTime currentDate) {
+    DateTime previousDate = currentDate.onlyDate().subtract(
+      const Duration(days: 1),
+    );
+    if (previousDate.weekday == DateTime.sunday) {
+      previousDate = previousDate.subtract(const Duration(days: 2));
+    }
+    final pedidos = utils.calendar[previousDate.ddMMyyyy()] ?? [];
+    setDay({previousDate: pedidos});
   }
 
   void onAccept(

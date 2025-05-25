@@ -91,4 +91,8 @@ extension StringExt on String {
   }
 
   String getExtFromFirebaseURL() => split('?')[0].split('.').last;
+
+  String toCaptalized() {
+    return this[0].toUpperCase() + substring(1);
+  }
 }
