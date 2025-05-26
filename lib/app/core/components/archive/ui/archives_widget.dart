@@ -8,6 +8,7 @@ import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:flutter/material.dart';
 
 class ArchivesWidget extends StatelessWidget {
+  final String label;
   final List<ArchiveModel> archives;
   final void Function() onChanged;
   final String path;
@@ -16,6 +17,7 @@ class ArchivesWidget extends StatelessWidget {
     required this.path,
     required this.archives,
     required this.onChanged,
+    this.label = 'Arquivos',
     super.key,
   });
 
@@ -25,7 +27,7 @@ class ArchivesWidget extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text('Arquivos', style: AppCss.largeBold),
+            Text(label, style: AppCss.largeBold),
             const W(16),
             InkWell(
               onTap: () => onAdd(),

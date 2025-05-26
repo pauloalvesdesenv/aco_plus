@@ -66,6 +66,7 @@ dependencies:
     git: https://github.com/pauloalvesdesenv/info_popup
   gap: ^3.0.1
   http: any
+  image_picker: ^1.1.2
 
   # f pub run flutter_launcher_icons && dart run flutter_native_splash:create
 
@@ -105,6 +106,7 @@ flutter:
   assets:
     - assets/images/
     - assets/launcher/
+    - assets/google_service_account.json
 
   fonts:
     - family: WorkSans

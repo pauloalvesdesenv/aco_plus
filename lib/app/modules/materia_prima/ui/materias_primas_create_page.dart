@@ -115,25 +115,28 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
           },
         ),
         const H(16),
-        AppField(
-          label: 'Corrida/Lote',
-          controller: form.corridaLote,
-          onChanged: (_) => materiaPrimaCtrl.formStream.update(),
-        ),
-        const H(16),
-        AppDropDown<MateriaPrimaStatus?>(
-          disable: usuario.isOperador,
-          label: 'Status',
-          item: form.status,
-          itens: MateriaPrimaStatus.values,
-          itemLabel: (item) => item!.label,
-          onSelect: (item) {
-            form.status = item!;
-            materiaPrimaCtrl.formStream.update();
-          },
-        ),
-        const H(16),
+        if (usuario.isNotOperador) ...[
+          AppField(
+            label: 'Corrida/Lote',
+            controller: form.corridaLote,
+            onChanged: (_) => materiaPrimaCtrl.formStream.update(),
+          ),
+          const H(16),
+          AppDropDown<MateriaPrimaStatus?>(
+            disable: usuario.isOperador,
+            label: 'Status',
+            item: form.status,
+            itens: MateriaPrimaStatus.values,
+            itemLabel: (item) => item!.label,
+            onSelect: (item) {
+              form.status = item!;
+              materiaPrimaCtrl.formStream.update();
+            },
+          ),
+          const H(16),
+        ],
         ArchivesWidget(
+          label: 'Fotos da Etiqueta',
           path: 'materia_primas/${form.id}',
           archives: form.anexos,
           onChanged: () => materiaPrimaCtrl.formStream.update(),
