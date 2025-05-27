@@ -6,6 +6,7 @@ import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/app_drop_down.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
 import 'package:aco_plus/app/core/components/app_scaffold.dart';
+import 'package:aco_plus/app/core/components/archive/ui/archive_simple_widget.dart';
 import 'package:aco_plus/app/core/components/archive/ui/archives_widget.dart';
 import 'package:aco_plus/app/core/components/done_button.dart';
 import 'package:aco_plus/app/core/components/h.dart';
@@ -96,15 +97,18 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
         const H(16),
         Builder(
           builder: (context) {
-            final produtos = materiaPrimaCtrl.getProdutosAvailable(
-              form.fabricanteModel,
-            );
+            final produtos = widget.materiaPrima != null
+                ? [widget.materiaPrima!.produto]
+                : materiaPrimaCtrl.getProdutosAvailable(form.fabricanteModel);
             return AppDropDown<ProdutoModel?>(
               label: 'Produto',
-              item: produtos.firstWhereOrNull(
-                (e) => e.id == form.produtoModel?.id,
-              ),
-              disable: form.fabricanteModel == null,
+              item: widget.materiaPrima != null
+                  ? produtos.first
+                  : produtos.firstWhereOrNull(
+                      (e) => e.id == form.produtoModel?.id,
+                    ),
+              disable:
+                  form.fabricanteModel == null || widget.materiaPrima != null,
               itens: produtos,
               itemLabel: (item) => item!.labelMinified,
               onSelect: (item) {
@@ -135,12 +139,21 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
           ),
           const H(16),
         ],
-        ArchivesWidget(
-          label: 'Fotos da Etiqueta',
-          path: 'materia_primas/${form.id}',
-          archives: form.anexos,
-          onChanged: () => materiaPrimaCtrl.formStream.update(),
-        ),
+        usuario.isOperador
+            ? ArchiveSimpleWidget(
+                label: 'Fotografar Etiqueta',
+                path: 'materia_primas/${form.id}',
+                archive: form.anexos.firstOrNull,
+                onChanged: (archive) {
+                  form.anexos = [archive!];
+                  materiaPrimaCtrl.formStream.update();
+                },
+              )
+            : ArchivesWidget(
+                path: 'materia_primas/${form.id}',
+                archives: form.anexos,
+                onChanged: () => materiaPrimaCtrl.formStream.update(),
+              ),
         const H(16),
         if (form.isEdit)
           TextButton.icon(

@@ -41,7 +41,14 @@ class PedidoController {
         .toList();
 
     pedidos = pedidos
-        .where((e) => e.step.considerarConsumoRelatorioPedidos)
+        .where(
+          (e) =>
+              FirestoreClient.steps.data
+                  .where((step) => step.id == e.step.id)
+                  .firstOrNull
+                  ?.considerarConsumoRelatorioPedidos ??
+              true,
+        )
         .toList();
 
     for (PedidoModel pedido in pedidos) {

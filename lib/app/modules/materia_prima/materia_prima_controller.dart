@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:aco_plus/app/core/client/firestore/collections/fabricante/fabricante_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/enums/materia_prima_status.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
-import 'package:aco_plus/app/core/client/http/vision/vision_provider.dart';
 import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
@@ -13,8 +10,6 @@ import 'package:aco_plus/app/core/services/notification_service.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/materia_prima/materia_prima_view_model.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 final materiaPrimaCtrl = MateriaPrimaController();
@@ -69,9 +64,11 @@ class MateriaPrimaController {
   Future<void> onConfirm(value, MateriaPrimaModel? materiaPrima) async {
     try {
       onValid(materiaPrima);
-      if (form.isEdit) {
+      if (usuario.isOperador) {
         form.corridaLote.text =
             '${form.fabricanteModel!.nome} - ${form.produtoModel!.nome}';
+      }
+      if (form.isEdit) {
         final edit = form.toMateriaPrimaModel();
         await FirestoreClient.materiaPrimas.update(edit);
       } else {
@@ -109,10 +106,10 @@ class MateriaPrimaController {
     deleteTitle: 'Deseja excluir a Matéria Prima?',
     deleteMessage: 'Todos seus dados serão apagados do sistema',
     infoMessage:
-        'Não é possível exlcuir a Matéria Prima, pois ela está vinculada a uma Ordem.',
-    conditional: true,
-    // conditional: FirestoreClient.produtos.data
-    //     .any((e) => e.materiaPrima.id == materiaPrima.id),
+        'Não é possível exlcuir a Matéria Prima, pois ela está sendo utilizada.',
+    conditional: FirestoreClient.produtos.data.any(
+      (e) => e.id == materiaPrima.id,
+    ),
   );
 
   void onValid(MateriaPrimaModel? materiaPrima) {
@@ -165,21 +162,6 @@ class MateriaPrimaController {
           'Operação realizada com sucesso',
           position: NotificationPosition.bottom,
         );
-      }
-    } catch (e) {
-      NotificationService.showNegative('Erro', e.toString());
-    }
-  }
-
-  Future<void> onPhotoPressed(BuildContext context) async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (image != null) {
-        final imageBase64 = await image.readAsBytes();
-        final text = await VisionProvider().getTextFromImage(
-          base64Encode(imageBase64),
-        );
-        print(text);
       }
     } catch (e) {
       NotificationService.showNegative('Erro', e.toString());
