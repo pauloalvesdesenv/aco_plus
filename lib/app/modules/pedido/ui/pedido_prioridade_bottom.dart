@@ -46,7 +46,7 @@ class _PedidoPrioridadeBottomState extends State<PedidoPrioridadeBottom> {
     return BottomSheet(
       onClosing: () {},
       builder: (context) => Container(
-        height: 760,
+        height: 500,
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: const BorderRadius.only(
@@ -79,95 +79,92 @@ class _PedidoPrioridadeBottomState extends State<PedidoPrioridadeBottom> {
                   final pedidoSelected = form.pedidos.firstWhere(
                     (e) => e.id == widget.pedido.id,
                   );
-                  return Container(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Prioridade', style: AppCss.largeBold),
-                        const H(16),
-                        AppDropDown<PedidoPrioridadeTipo?>(
-                          label: 'Tipo',
-                          item: pedidoSelected.prioridade?.tipo,
-                          itens: PedidoPrioridadeTipo.values,
-                          itemLabel: (e) => e?.getLabel() ?? 'Selecione',
-                          onSelect: (e) {
-                            if (e != null) {
-                              pedidoCtrl.onSelectPrioridadeTipo(
-                                widget.pedido,
-                                e,
-                              );
-                            }
-                          },
+                  return ListView(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                    children: [
+                      Text('Prioridade', style: AppCss.largeBold),
+                      const H(16),
+                      AppDropDown<PedidoPrioridadeTipo?>(
+                        label: 'Tipo',
+                        item: pedidoSelected.prioridade?.tipo,
+                        itens: PedidoPrioridadeTipo.values,
+                        itemLabel: (e) => e?.getLabel() ?? 'Selecione',
+                        onSelect: (e) {
+                          if (e != null) {
+                            pedidoCtrl.onSelectPrioridadeTipo(
+                              widget.pedido,
+                              e,
+                            );
+                          }
+                        },
+                      ),
+                      Gap(16),
+                      Text('Posição:*', style: AppCss.smallBold),
+                      const H(4),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.neutralLight),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        Gap(16),
-                        Text('Posição:*', style: AppCss.smallBold),
-                        const H(4),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.neutralLight),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          width: double.infinity,
-                          height: 370,
-                          child: ReorderableListView.builder(
-                            buildDefaultDragHandles: false,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            cacheExtent: 200,
-                            itemCount: form.pedidos.length,
-                            onReorder: (oldIndex, newIndex) {
-                              if (newIndex > oldIndex) {
-                                newIndex = newIndex - 1;
-                              }
-                              final step = form.pedidos.removeAt(oldIndex);
-                              form.pedidos.insert(newIndex, step);
-                              pedidoCtrl.onReorderPrioridade(form.pedidos);
-                              pedidoCtrl.formPrioridadeStream.update();
-                            },
-                            itemBuilder: (_, i) =>
-                                form.pedidos[i].id == widget.pedido.id
-                                ? ReorderableDragStartListener(
-                                    key: ValueKey(form.pedidos[i].id),
-                                    index: i,
-                                    child: MouseRegion(
-                                      cursor: SystemMouseCursors.move,
-                                      child: _itemPedidoPrioridadeWidget(
-                                        i,
-                                        form.pedidos[i],
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    key: ValueKey(form.pedidos[i].id),
+                        width: double.infinity,
+                        height: 300,
+                        child: ReorderableListView.builder(
+                          buildDefaultDragHandles: false,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          cacheExtent: 200,
+                          itemCount: form.pedidos.length,
+                          onReorder: (oldIndex, newIndex) {
+                            if (newIndex > oldIndex) {
+                              newIndex = newIndex - 1;
+                            }
+                            final step = form.pedidos.removeAt(oldIndex);
+                            form.pedidos.insert(newIndex, step);
+                            pedidoCtrl.onReorderPrioridade(form.pedidos);
+                            pedidoCtrl.formPrioridadeStream.update();
+                          },
+                          itemBuilder: (_, i) =>
+                              form.pedidos[i].id == widget.pedido.id
+                              ? ReorderableDragStartListener(
+                                  key: ValueKey(form.pedidos[i].id),
+                                  index: i,
+                                  child: MouseRegion(
+                                    cursor: SystemMouseCursors.move,
                                     child: _itemPedidoPrioridadeWidget(
                                       i,
                                       form.pedidos[i],
                                     ),
                                   ),
-                          ),
+                                )
+                              : Container(
+                                  key: ValueKey(form.pedidos[i].id),
+                                  child: _itemPedidoPrioridadeWidget(
+                                    i,
+                                    form.pedidos[i],
+                                  ),
+                                ),
                         ),
-                        const H(16),
+                      ),
+                      const H(16),
+                      AppTextButton(
+                        label: 'Confirmar',
+                        onPressed: () => pedidoCtrl.onConfirmarPrioridade(
+                          context,
+                          widget.pedido,
+                        ),
+                      ),
+                      if (widget.pedido.prioridade != null) ...[
+                        Gap(12),
                         AppTextButton(
-                          label: 'Confirmar',
-                          onPressed: () => pedidoCtrl.onConfirmarPrioridade(
+                          label: 'Remover',
+                          fill: Fill.outlined,
+                          onPressed: () => pedidoCtrl.onRemoverPrioridade(
                             context,
                             widget.pedido,
                           ),
                         ),
-                        if (widget.pedido.prioridade != null) ...[
-                          Gap(12),
-                          AppTextButton(
-                            label: 'Remover',
-                            fill: Fill.outlined,
-                            onPressed: () => pedidoCtrl.onRemoverPrioridade(
-                              context,
-                              widget.pedido,
-                            ),
-                          ),
-                        ],
                       ],
-                    ),
+                    ],
                   );
                 },
               ),

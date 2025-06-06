@@ -453,6 +453,7 @@ class PedidoController {
 
   Future<void> onConfirmarPrioridade(context, PedidoModel pedido) async {
     showLoadingDialog();
+    await Future.delayed(const Duration(milliseconds: 300));
     await FirestoreClient.pedidos.updateAll(formPrioridade.pedidos);
     final pedidoInList = formPrioridade.pedidos.firstWhere(
       (e) => e.id == pedido.id,
@@ -502,6 +503,7 @@ class PedidoController {
   ) async {
     pedido.prioridade = null;
     showLoadingDialog();
+    await Future.delayed(const Duration(milliseconds: 300));
     await FirestoreClient.pedidos.update(pedido);
     onReorderPrioridade(FirestoreClient.pedidos.pedidosPrioridade);
     await FirestoreClient.pedidos.updateAll(

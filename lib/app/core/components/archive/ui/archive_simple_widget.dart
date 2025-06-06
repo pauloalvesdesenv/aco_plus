@@ -34,13 +34,19 @@ class _ArchiveSimpleWidgetState extends State<ArchiveSimpleWidget> {
   XFile? result;
 
   @override
+  void initState() {
+    super.initState();
+    archive = widget.archive;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.label, style: AppCss.largeBold),
         const H(16),
-        widget.archive != null ? _addedWidget() : _addWidget(),
+        archive != null ? _addedWidget() : _addWidget(),
       ],
     );
   }
@@ -53,7 +59,7 @@ class _ArchiveSimpleWidgetState extends State<ArchiveSimpleWidget> {
           child: Stack(
             alignment: Alignment.topRight,
             children: [
-              ArchiveWidget(widget.archive!, inList: false),
+              ArchiveWidget(archive!, inList: false),
               Align(
                 alignment: Alignment.topRight,
                 child: InkWell(
@@ -140,10 +146,13 @@ class _ArchiveSimpleWidgetState extends State<ArchiveSimpleWidget> {
       );
       archive!.url = await FirebaseService.uploadFile(
         name: archive!.name!,
-        bytes: await result!.readAsBytes(),
+        bytes: archive!.bytes!,
         mimeType: archive!.mime,
         path: widget.path,
       );
+      archive!.bytes = null;
+
+      setState(() {});
       widget.onChanged.call(archive);
       Navigator.pop(context);
     }
