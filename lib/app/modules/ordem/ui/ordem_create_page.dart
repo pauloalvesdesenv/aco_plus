@@ -47,10 +47,13 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => pop(context),
-          icon: Icon(Icons.arrow_back, color: AppColors.white),
+          icon: Icon(Icons.arrow_back, color: AppColors.
+          white),
         ),
         title: Text(
-          '${ordemCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Ordem',
+          ordemCtrl.form.isEdit
+              ? 'Editar Ordem ${widget.ordem?.localizator}'
+              : 'Adicionar Ordem',
           style: AppCss.largeBold.setColor(AppColors.white),
         ),
         actions: [
@@ -339,6 +342,7 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
                             ),
                           ],
                         ),
+                        if (produto.pedido.deliveryAt != null)
                         Text(
                           'Previsão de Entrega: ${produto.pedido.deliveryAt.text()}',
                           style: AppCss.minimumRegular

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
@@ -19,6 +20,7 @@ class PedidoProdutoModel {
   final double qtde;
   bool isSelected = true;
   bool isAvailable = true;
+  MateriaPrimaModel? materiaPrima;
 
   factory PedidoProdutoModel.empty(PedidoModel pedido) => PedidoProdutoModel(
     id: HashService.get,
@@ -64,6 +66,7 @@ class PedidoProdutoModel {
     required this.qtde,
     this.isAvailable = true,
     this.isSelected = true,
+    this.materiaPrima,
   });
 
   Map<String, dynamic> toMap() {
@@ -75,6 +78,7 @@ class PedidoProdutoModel {
       'produto': produto.toMap(),
       'statusess': statusess.map((x) => x.toMap()).toList(),
       'qtde': qtde,
+      'materiaPrima': materiaPrima?.toMap(),
     };
   }
 
@@ -89,6 +93,9 @@ class PedidoProdutoModel {
         map['statusess']?.map((x) => PedidoProdutoStatusModel.fromMap(x)),
       ),
       qtde: map['qtde'] != null ? double.parse(map['qtde'].toString()) : 0.0,
+      materiaPrima: map['materiaPrima'] != null
+          ? MateriaPrimaModel.fromMap(map['materiaPrima'])
+          : null,
     );
   }
 
@@ -107,6 +114,7 @@ class PedidoProdutoModel {
     double? qtde,
     bool? isAvailable,
     bool? isSelected,
+    MateriaPrimaModel? materiaPrima,
   }) {
     return PedidoProdutoModel(
       id: id ?? this.id,
@@ -118,6 +126,7 @@ class PedidoProdutoModel {
       qtde: qtde ?? this.qtde,
       isAvailable: isAvailable ?? this.isAvailable,
       isSelected: isSelected ?? this.isSelected,
+      materiaPrima: materiaPrima ?? this.materiaPrima,
     );
   }
 }

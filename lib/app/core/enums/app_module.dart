@@ -6,17 +6,21 @@ import 'package:aco_plus/app/modules/materia_prima/ui/materias_primas_page.dart'
 import 'package:aco_plus/app/modules/ordem/ui/ordens_page.dart';
 import 'package:aco_plus/app/modules/pedido/ui/pedidos_page.dart';
 import 'package:aco_plus/app/modules/produto/ui/produtos_page.dart';
-import 'package:aco_plus/app/modules/relatorio/ui/relatorios_page.dart';
+import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorios_ordem_page.dart';
+import 'package:aco_plus/app/modules/relatorio/ui/pedido/relatorios_pedido_page.dart';
 import 'package:aco_plus/app/modules/step/ui/steps_page.dart';
 import 'package:aco_plus/app/modules/tag/ui/tags_page.dart';
+import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 enum AppModule {
   dashboard,
   kanban,
   pedidos,
   ordens,
-  relatorios,
+  pedidoRelatorio,
+  ordemRelatorio,
   cliente,
   steps,
   tags,
@@ -36,8 +40,10 @@ extension AppModuleExt on AppModule {
         return const PedidosPage();
       case AppModule.ordens:
         return const OrdensPage();
-      case AppModule.relatorios:
-        return const RelatoriosPage();
+      case AppModule.pedidoRelatorio:
+        return const RelatoriosPedidoPage();
+      case AppModule.ordemRelatorio:
+        return const RelatoriosOrdemPage();
       case AppModule.steps:
         return const StepsPage();
       case AppModule.tags:
@@ -60,17 +66,21 @@ extension AppModuleExt on AppModule {
       case AppModule.cliente:
         return Icons.group_outlined;
       case AppModule.pedidos:
-        return Icons.shopping_cart_outlined;
+        return Icons.list;
       case AppModule.ordens:
+        return (usuarioCtrl.usuario?.isNotOperador ?? false)
+            ? Icons.list
+            : Icons.work_outline;
+      case AppModule.pedidoRelatorio:
+        return Icons.shopping_cart_outlined;
+      case AppModule.ordemRelatorio:
         return Icons.work_outline;
-      case AppModule.relatorios:
-        return Icons.analytics_outlined;
       case AppModule.steps:
         return Icons.list_alt_outlined;
       case AppModule.tags:
         return Icons.label_outlined;
       case AppModule.kanban:
-        return Icons.view_agenda_outlined;
+        return Symbols.view_kanban;
       case AppModule.fabricantes:
         return Icons.business_outlined;
       case AppModule.produtos:
@@ -87,11 +97,13 @@ extension AppModuleExt on AppModule {
       case AppModule.cliente:
         return 'Clientes';
       case AppModule.pedidos:
-        return 'Pedidos';
+        return 'Lista';
       case AppModule.ordens:
-        return 'Ordens';
-      case AppModule.relatorios:
-        return 'Relatórios';
+        return (usuarioCtrl.usuario?.isNotOperador ?? false) ? 'Lista' : 'Ordens';
+      case AppModule.ordemRelatorio:
+        return 'Ordens de Produção';
+      case AppModule.pedidoRelatorio:
+        return 'Pedidos';
       case AppModule.steps:
         return 'Etapas';
       case AppModule.kanban:

@@ -8,12 +8,15 @@ import 'package:aco_plus/app/core/components/divisor.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/components/type_selector_widget.dart';
+import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
+import 'package:aco_plus/app/modules/base/base_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
+import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordens_pdf_exportar_tipo_bottom.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -38,6 +41,10 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
     return AppScaffold(
       resizeAvoid: true,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => baseCtrl.key.currentState!.openDrawer(),
+          icon: Icon(Icons.menu, color: AppColors.white),
+        ),
         title: Text(
           'Relatórios de Ordem',
           style: AppCss.largeBold.setColor(AppColors.white),
@@ -48,7 +55,13 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
             stream: relatorioCtrl.ordemViewModelStream.listen,
             builder: (_, model) => IconButton(
               onPressed: model.relatorio != null
-                  ? () => relatorioCtrl.onExportRelatorioOrdemPDF()
+                  ? () async {
+                      final tipo =
+                          await showRelatorioOrdensPdfExportarTipoBottom();
+                      if (tipo != null) {
+                        relatorioCtrl.onExportRelatorioOrdemPDF(tipo);
+                      }
+                    }
                   : null,
               icon: Icon(
                 Icons.picture_as_pdf_outlined,
@@ -289,7 +302,24 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
                   produto.qtde.toKg(),
                   color: produto.status.status.color.withValues(alpha: 0.06),
                 ),
-                Divisor(color: Colors.grey[200]),
+                if (produto.pedido.deliveryAt == null)
+                  Divisor(color: Colors.grey[200]),
+                if (produto.pedido.deliveryAt != null) ...[
+                  itemInfo(
+                    'Previsão de Entrega',
+                    '${produto.pedido.deliveryAt?.text()}',
+                    color: produto.status.status.color.withValues(alpha: 0.06),
+                  ),
+                  Divisor(color: Colors.grey[200]),
+                ],
+                if (produto.materiaPrima != null &&
+                    produto.materiaPrima?.id != ordem.materiaPrima?.id) ...[
+                  itemInfo(
+                    'Materia Prima',
+                    '${produto.materiaPrima?.fabricanteModel.nome} - ${produto.materiaPrima?.corridaLote}',
+                  ),
+                  Divisor(color: Colors.grey[200]),
+                ],
               ],
             ),
         ],

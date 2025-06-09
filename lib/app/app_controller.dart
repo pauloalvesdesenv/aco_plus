@@ -2,7 +2,6 @@ import 'package:aco_plus/app/core/models/service_model.dart';
 import 'package:aco_plus/app/modules/kanban/kanban_controller.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 AppController appCtrl = AppController();
 
@@ -27,7 +26,5 @@ class AppController {
       const AssetImage('assets/images/kanban_background.png'),
       context,
     );
-    Future.delayed(const Duration(milliseconds: 200));
-    FlutterNativeSplash.remove();
   }
 }

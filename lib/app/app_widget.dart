@@ -40,13 +40,6 @@ class _AppState extends State<App> {
           routeInformationParser: RouteConfig.config.routeInformationParser,
           routeInformationProvider: RouteConfig.config.routeInformationProvider,
           routerDelegate: RouteConfig.config.routerDelegate,
-          // navigatorKey: _appController.key,
-          // home: StreamOutNull<UsuarioModel?>(
-          //   stream: usuarioCtrl.usuarioStream.listen,
-          //   child: (_, data) => data == null
-          //       ? const SignUpPage()
-          //       : const Portal(child: BasePage()),
-          // ),
         ),
       ),
     );
@@ -60,6 +53,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamOutNull<UsuarioModel?>(
       stream: usuarioCtrl.usuarioStream.listen,
+      loading: const Center(child: CircularProgressIndicator()),
       child: (_, data) =>
           data == null ? const SignUpPage() : const Portal(child: BasePage()),
     );

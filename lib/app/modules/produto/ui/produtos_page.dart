@@ -1,6 +1,6 @@
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
-import 'package:aco_plus/app/core/components/app_drawer.dart';
+import 'package:aco_plus/app/core/components/drawer/app_drawer.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
 import 'package:aco_plus/app/core/components/app_scaffold.dart';
 import 'package:aco_plus/app/core/components/divisor.dart';

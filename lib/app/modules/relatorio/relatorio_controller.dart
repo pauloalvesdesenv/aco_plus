@@ -12,6 +12,7 @@ import 'package:aco_plus/app/core/services/notification_service.dart';
 import 'package:aco_plus/app/core/services/pdf_download_service/pdf_download_service_mobile.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordem_pdf_ordem_page.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordem_pdf_status_page.dart';
+import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordens_pdf_exportar_tipo_bottom.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/pedido/relatorio_pedido_pdf_page.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_pedido_view_model.dart';
@@ -358,7 +359,7 @@ class PedidoController {
     return pedidoProdutos;
   }
 
-  Future<void> onExportRelatorioOrdemPDF() async {
+  Future<void> onExportRelatorioOrdemPDF(RelatorioOrdensPdfExportarTipo tipo) async {
     final pdf = pw.Document();
 
     final img = await rootBundle.load('assets/images/logo.png');
@@ -370,9 +371,11 @@ class PedidoController {
       (isOrdemType
           ? RelatorioOrdemPdfOrdemPage(
               ordemViewModel.relatorio!,
+              tipo,
             ).build(imageBytes)
           : RelatorioOrdemPdfStatusPage(
               ordemViewModel.relatorio!,
+              tipo,
             ).build(imageBytes)),
     );
 
@@ -391,7 +394,7 @@ class PedidoController {
     final img = await rootBundle.load('assets/images/logo.png');
     final imageBytes = img.buffer.asUint8List();
 
-    pdf.addPage(RelatorioOrdemPdfOrdemPage(relatorio).build(imageBytes));
+    pdf.addPage(RelatorioOrdemPdfOrdemPage(relatorio, RelatorioOrdensPdfExportarTipo.completo).build(imageBytes));
 
     final name =
         "m2_relatorio_ordem_${ordemViewModel.relatorio!.ordem.localizator.toLowerCase()}_${DateTime.now().toFileName()}.pdf";

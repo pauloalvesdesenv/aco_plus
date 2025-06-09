@@ -14,7 +14,7 @@ class OrdemModel {
   final ProdutoModel produto;
   final DateTime createdAt;
   DateTime updatedAt;
-  final MateriaPrimaModel? materiaPrima;
+  MateriaPrimaModel? materiaPrima;
   DateTime? endAt;
   List<PedidoProdutoModel> produtos;
   bool selected = true;

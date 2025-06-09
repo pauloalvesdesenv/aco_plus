@@ -1,3 +1,4 @@
+import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_status.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_tipo.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
@@ -133,6 +134,21 @@ class PedidoCollection {
       batch.update(collection.doc(pedido.id), map);
     }
     await batch.commit();
+  }
+
+   Future<void> updateProdutoMateriaPrima(
+    PedidoProdutoModel produto,
+    MateriaPrimaModel? materiaPrima,
+  ) async {
+    final pedido = getById(produto.pedidoId);
+
+    final pedidoProduto = pedido.produtos.firstWhere(
+      (element) => element.id == produto.id,
+    );
+
+    pedidoProduto.materiaPrima = materiaPrima;
+
+    return await collection.doc(pedido.id).update(pedido.toMap());
   }
 
   Future<void> updateProdutoStatus(

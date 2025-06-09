@@ -302,114 +302,133 @@ class _OrdemPageState extends State<OrdemPage> {
     );
   }
 
-  ListTile _produtoWidget(OrdemModel ordem, PedidoProdutoModel produto) {
-    return ListTile(
-      title: Text(produto.pedido.localizador, style: AppCss.minimumBold),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(produto.qtde.toKg(), style: AppCss.minimumRegular.setSize(12)),
-          Text(
-            '${produto.cliente.nome} - ${produto.obra.descricao}',
-            style: AppCss.minimumRegular.setSize(12),
-          ),
-          if (produto.pedido.deliveryAt != null)
-            Text(
-              'Previsão de Entrega: ${produto.pedido.deliveryAt.text()}',
-              style: AppCss.minimumRegular
-                  .copyWith(fontSize: 12)
-                  .setColor(AppColors.neutralDark),
-            ),
-        ],
+  Widget _produtoWidget(OrdemModel ordem, PedidoProdutoModel produto) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
       ),
-      trailing: usuario.isOperador
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children:
-                  (produto.status.status ==
-                              PedidoProdutoStatus.aguardandoProducao
-                          ? [PedidoProdutoStatus.aguardandoProducao]
-                          : [
-                              PedidoProdutoStatus.produzindo,
-                              PedidoProdutoStatus.pronto,
-                            ])
-                      .map(
-                        (status) => InkWell(
-                          onTap: status == produto.status.status
-                              ? null
-                              : () => ordemCtrl.onSelectProdutoStatus(
-                                  ordem,
-                                  produto,
-                                  status,
+      child: ListTile(
+        title: Text(produto.pedido.localizador, style: AppCss.minimumBold),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(produto.qtde.toKg(), style: AppCss.minimumRegular.setSize(12)),
+            Text(
+              '${produto.cliente.nome} - ${produto.obra.descricao}',
+              style: AppCss.minimumRegular.setSize(12),
+            ),
+            if (produto.pedido.deliveryAt != null)
+              Text(
+                'Previsão de Entrega: ${produto.pedido.deliveryAt.text()}',
+                style: AppCss.minimumRegular
+                    .copyWith(fontSize: 12)
+                    .setColor(AppColors.neutralDark),
+              ),
+            if (produto.materiaPrima != null)
+              Text(
+                'Materia Prima: ${produto.materiaPrima?.fabricanteModel.nome} - ${produto.materiaPrima?.produto.labelMinified.replaceAll(' - ', ' ')}',
+                style: AppCss.minimumRegular
+                    .copyWith(fontSize: 12)
+                    .setColor(AppColors.neutralDark),
+              ),
+          ],
+        ),
+        trailing: usuario.isOperador
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children:
+                    (produto.status.status ==
+                                PedidoProdutoStatus.aguardandoProducao
+                            ? [PedidoProdutoStatus.aguardandoProducao]
+                            : [
+                                PedidoProdutoStatus.produzindo,
+                                PedidoProdutoStatus.pronto,
+                              ])
+                        .map(
+                          (status) => InkWell(
+                            onTap: status == produto.status.status
+                                ? null
+                                : () => ordemCtrl.onSelectProdutoStatus(
+                                    ordem,
+                                    produto,
+                                    status,
+                                  ),
+                            child: Tooltip(
+                              enableFeedback: status != produto.status.status,
+                              message: status == produto.status.status
+                                  ? 'Este pedido atualmente está ${status.label}'
+                                  : 'Clique para alterar para ${status.label}',
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
                                 ),
-                          child: Tooltip(
-                            enableFeedback: status != produto.status.status,
-                            message: status == produto.status.status
-                                ? 'Este pedido atualmente está ${status.label}'
-                                : 'Clique para alterar para ${status.label}',
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: status.color.withValues(
-                                  alpha: status == produto.status.status
-                                      ? 1
-                                      : 0.1,
+                                decoration: BoxDecoration(
+                                  color: status.color.withValues(
+                                    alpha: status == produto.status.status
+                                        ? 1
+                                        : 0.1,
+                                  ),
                                 ),
-                              ),
-                              child: Text(
-                                status.label,
-                                style: AppCss.minimumRegular
-                                    .setSize(16)
-                                    .copyWith(
-                                      color:
-                                          (status == PedidoProdutoStatus.pronto
-                                                  ? Colors.white
-                                                  : Colors.black)
-                                              .withValues(
-                                                alpha:
-                                                    status ==
-                                                        produto.status.status
-                                                    ? 1
-                                                    : 0.4,
-                                              ),
-                                    ),
+                                child: Text(
+                                  status.label,
+                                  style: AppCss.minimumRegular
+                                      .setSize(16)
+                                      .copyWith(
+                                        color:
+                                            (status ==
+                                                        PedidoProdutoStatus
+                                                            .pronto
+                                                    ? Colors.white
+                                                    : Colors.black)
+                                                .withValues(
+                                                  alpha:
+                                                      status ==
+                                                          produto.status.status
+                                                      ? 1
+                                                      : 0.4,
+                                                ),
+                                      ),
+                                ),
                               ),
                             ),
                           ),
+                        )
+                        .toList(),
+              )
+            : InkWell(
+                onTap: () =>
+                    ordemCtrl.showBottomChangeProdutoStatus(ordem, produto),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: produto.statusView.status.color.withValues(
+                      alpha: 0.4,
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: IntrinsicWidth(
+                    child: Row(
+                      children: [
+                        Text(
+                          produto.statusView.status.label,
+                          style: AppCss.mediumRegular.setSize(12),
                         ),
-                      )
-                      .toList(),
-            )
-          : InkWell(
-              onTap: () =>
-                  ordemCtrl.showBottomChangeProdutoStatus(ordem, produto),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                decoration: BoxDecoration(
-                  color: produto.statusView.status.color.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: IntrinsicWidth(
-                  child: Row(
-                    children: [
-                      Text(
-                        produto.statusView.status.label,
-                        style: AppCss.mediumRegular.setSize(12),
-                      ),
-                      const W(2),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 16,
-                        color: AppColors.black.withValues(alpha: 0.6),
-                      ),
-                    ],
+                        const W(2),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 16,
+                          color: AppColors.black.withValues(alpha: 0.6),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 

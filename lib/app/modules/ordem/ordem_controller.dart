@@ -8,6 +8,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/ped
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
+import 'package:aco_plus/app/core/dialogs/info_dialog.dart';
 import 'package:aco_plus/app/core/dialogs/loading_dialog.dart';
 import 'package:aco_plus/app/core/enums/sort_type.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
@@ -172,6 +173,12 @@ class OrdemController {
       }
     }
     for (PedidoProdutoModel produto in ordemCriada.produtos) {
+      if (ordemCriada.materiaPrima != null) {
+        await FirestoreClient.pedidos.updateProdutoMateriaPrima(
+          produto,
+          ordemCriada.materiaPrima!,
+        );
+      }
       await FirestoreClient.pedidos.updateProdutoStatus(
         produto,
         produto.statusess.last.status,
@@ -211,12 +218,17 @@ class OrdemController {
       }
     }
     for (PedidoProdutoModel produto in ordemEditada.produtos) {
+      if (ordemEditada.materiaPrima?.id != produto.materiaPrima?.id) {
+        await FirestoreClient.pedidos.updateProdutoMateriaPrima(
+          produto,
+          ordemEditada.materiaPrima!,
+        );
+      }
       await FirestoreClient.pedidos.updateProdutoStatus(
         produto,
         produto.statusess.last.status,
       );
     }
-    //TODO
     ordemEditada.produtos.removeWhere((e) => e.status.status.index == 0);
     await FirestoreClient.ordens.update(ordemEditada);
     await FirestoreClient.pedidos.fetch();
@@ -365,6 +377,13 @@ class OrdemController {
     final produtoStatus = produto.statusess.last.status;
     final status = await showOrdemProdutoStatusBottom(produtoStatus);
     if (status == null || produtoStatus == status) return;
+    if (status == PedidoProdutoStatus.pronto && produto.materiaPrima == null) {
+      showInfoDialog(
+        'Para finalizar a ordem, é necessário selecionar uma matéria prima para o produto.',
+      );
+      return;
+    }
+
     await onChangeProdutoStatus(produto, status);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
     onUpdateAt(ordem);
@@ -375,6 +394,12 @@ class OrdemController {
     PedidoProdutoModel produto,
     PedidoProdutoStatus status,
   ) async {
+    if (status == PedidoProdutoStatus.pronto && produto.materiaPrima == null) {
+      showInfoDialog(
+        'Para finalizar a ordem, é necessário selecionar uma matéria prima para o produto.',
+      );
+      return;
+    }
     showLoadingDialog();
     await onChangeProdutoStatus(produto, status);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);

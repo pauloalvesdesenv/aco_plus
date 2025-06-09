@@ -3,7 +3,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/ped
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/enums/user_permission_type.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
-import 'package:aco_plus/app/core/components/app_drawer.dart';
+import 'package:aco_plus/app/core/components/drawer/app_drawer.dart';
 import 'package:aco_plus/app/core/components/app_drop_down.dart';
 import 'package:aco_plus/app/core/components/app_drop_down_list.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';

@@ -91,12 +91,14 @@ class PedidoProdutosWidget extends StatelessWidget {
               Builder(
                 builder: (context) {
                   final ordem = pedidoCtrl.getOrdemByProduto(produto);
+                  final materiaPrima =
+                      produto.materiaPrima ?? ordem?.materiaPrima;
 
-                  return ordem?.materiaPrima != null
+                  return materiaPrima != null
                       ? Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
-                            '${ordem?.materiaPrima?.fabricanteModel.nome} - ${ordem?.materiaPrima?.corridaLote}',
+                            '${materiaPrima.fabricanteModel.nome} - ${materiaPrima.corridaLote}',
                             style: AppCss.minimumBold,
                           ),
                         )

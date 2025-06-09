@@ -1,6 +1,7 @@
 import 'package:aco_plus/app/core/client/firestore/collections/fabricante/fabricante_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/enums/materia_prima_status.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
@@ -70,6 +71,9 @@ class MateriaPrimaController {
       }
       if (form.isEdit) {
         final edit = form.toMateriaPrimaModel();
+        if (edit.status == MateriaPrimaStatus.finalizada) {
+          await finalizarMateriaPrima(edit);
+        }
         await FirestoreClient.materiaPrimas.update(edit);
       } else {
         await FirestoreClient.materiaPrimas.add(form.toMateriaPrimaModel());
@@ -154,6 +158,28 @@ class MateriaPrimaController {
         'Deseja mover a Matéria Prima para finalizada?',
       );
       if (result == true) {
+        for (final ordem in FirestoreClient.ordens.data.where(
+          (e) =>
+              e.status != PedidoProdutoStatus.pronto &&
+              e.status != PedidoProdutoStatus.separado,
+        )) {
+          if (ordem.materiaPrima?.id == materiaPrima.id) {
+            ordem.materiaPrima = null;
+            await FirestoreClient.ordens.update(ordem);
+          }
+          for (final produto in ordem.produtos.where(
+            (e) =>
+                e.status.status != PedidoProdutoStatus.pronto &&
+                e.status.status != PedidoProdutoStatus.separado,
+          )) {
+            if (produto.materiaPrima?.id == materiaPrima.id) {
+              await FirestoreClient.pedidos.updateProdutoMateriaPrima(
+                produto,
+                null,
+              );
+            }
+          }
+        }
         materiaPrima.status = MateriaPrimaStatus.finalizada;
         await FirestoreClient.materiaPrimas.update(materiaPrima);
         await FirestoreClient.materiaPrimas.fetch();

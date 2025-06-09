@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/components/pdf_divisor.dart';
+import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
+import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordens_pdf_exportar_tipo_bottom.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +15,8 @@ import 'package:pdf/widgets.dart' as pw;
 
 class RelatorioOrdemPdfStatusPage {
   final RelatorioOrdemModel model;
-  RelatorioOrdemPdfStatusPage(this.model);
+  final RelatorioOrdensPdfExportarTipo tipo;
+  RelatorioOrdemPdfStatusPage(this.model, this.tipo);
 
   pw.Page build(Uint8List bytes) => pw.MultiPage(
     crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -70,24 +73,44 @@ class RelatorioOrdemPdfStatusPage {
             ],
           ),
           _itemInfo('Bitola', '${ordem.produto.descricaoReplaced}mm'),
+                 if (ordem.materiaPrima != null ||
+              tipo == RelatorioOrdensPdfExportarTipo.completo)
           PdfDivisor.build(),
           if (ordem.materiaPrima != null) ...[
             _itemInfo(
               'Materia Prima',
               '${ordem.materiaPrima!.fabricanteModel.nome} - ${ordem.materiaPrima!.corridaLote}',
             ),
-            PdfDivisor.build(),
+            if (tipo == RelatorioOrdensPdfExportarTipo.completo) PdfDivisor.build(),
           ],
-          for (final produto in ordem.produtos)
-            pw.Column(
-              children: [
-                _itemInfo(
-                  '${produto.pedido.localizador} - ${produto.cliente.nome} - ${produto.obra.descricao}',
-                  '${produto.qtde} kg',
-                ),
-                PdfDivisor.build(color: Colors.grey[200]),
-              ],
-            ),
+          if (tipo == RelatorioOrdensPdfExportarTipo.completo) ...[
+            for (final produto in ordem.produtos)
+              pw.Column(
+                children: [
+                  _itemInfo(
+                    '${produto.pedido.localizador} - ${produto.cliente.nome} - ${produto.obra.descricao}',
+                    '${produto.qtde} kg',
+                  ),
+                  if (produto.pedido.deliveryAt == null)
+                    PdfDivisor.build(color: Colors.grey[200]),
+                  if (produto.pedido.deliveryAt != null) ...[
+                    _itemInfo(
+                      'Previsão de Entrega',
+                      '${produto.pedido.deliveryAt?.text()}',
+                    ),
+                    PdfDivisor.build(color: Colors.grey[200]),
+                  ],
+                  if (produto.materiaPrima != null &&
+                      produto.materiaPrima?.id != ordem.materiaPrima?.id) ...[
+                    _itemInfo(
+                      'Materia Prima',
+                      '${produto.materiaPrima?.fabricanteModel.nome} - ${produto.materiaPrima?.corridaLote}',
+                    ),
+                    PdfDivisor.build(color: Colors.grey[200]),
+                  ],
+                ],
+              ),
+          ],
         ],
       ),
     );
