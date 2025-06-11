@@ -4,7 +4,6 @@ import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/orde
 import 'package:aco_plus/app/core/components/pdf_divisor.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
-import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordens_pdf_exportar_tipo_bottom.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,11 +17,12 @@ class RelatorioOrdemPdfOrdemPage {
 
   pw.Page build(Uint8List bytes) => pw.MultiPage(
     pageFormat: PdfPageFormat.a4,
+    margin: const pw.EdgeInsets.all(9),
     crossAxisAlignment: pw.CrossAxisAlignment.center,
     build: (pw.Context context) => [
-      pw.Image(pw.MemoryImage(bytes), width: 60, height: 60),
-      pw.SizedBox(height: 24),
-      pw.Text('RELATÓRIO DE ORDEM DE PRODUÇÃO ${model.ordem.localizator}'),
+      // pw.Image(pw.MemoryImage(bytes), width: 60, height: 60),
+      // pw.SizedBox(height: 24),
+      pw.Text('RELATÓRIO DE ORDEM DE PRODUÇÃO ${model.ordem.localizator}', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),),
       pw.SizedBox(height: 16),
       _itemRelatorio(model.ordem),
     ],

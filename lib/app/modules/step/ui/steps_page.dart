@@ -37,10 +37,6 @@ class _StepsPageState extends State<StepsPage> {
     return AppScaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => baseCtrl.key.currentState!.openDrawer(),
-          icon: Icon(Icons.menu, color: AppColors.white),
-        ),
         title: Text(
           'Etapas',
           style: AppCss.largeBold.setColor(AppColors.white),

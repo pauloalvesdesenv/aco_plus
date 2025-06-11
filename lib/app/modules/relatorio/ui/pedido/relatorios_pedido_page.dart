@@ -16,6 +16,7 @@ import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
+import 'package:aco_plus/app/modules/base/base_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_pedido_view_model.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,10 @@ class _RelatoriosPedidoPageState extends State<RelatoriosPedidoPage> {
     return AppScaffold(
       resizeAvoid: true,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => baseCtrl.key.currentState!.openDrawer(),
+          icon: Icon(Icons.menu, color: AppColors.white),
+        ),
         title: Text(
           'Relatórios de Pedido',
           style: AppCss.largeBold.setColor(AppColors.white),

@@ -66,7 +66,7 @@ extension AppModuleExt on AppModule {
       case AppModule.cliente:
         return Icons.group_outlined;
       case AppModule.pedidos:
-        return Icons.list;
+        return Icons.shopping_cart_outlined;
       case AppModule.ordens:
         return (usuarioCtrl.usuario?.isNotOperador ?? false)
             ? Icons.list
@@ -97,9 +97,11 @@ extension AppModuleExt on AppModule {
       case AppModule.cliente:
         return 'Clientes';
       case AppModule.pedidos:
-        return 'Lista';
+        return 'Pedidos';
       case AppModule.ordens:
-        return (usuarioCtrl.usuario?.isNotOperador ?? false) ? 'Lista' : 'Ordens';
+        return (usuarioCtrl.usuario?.isNotOperador ?? false)
+            ? 'Lista'
+            : 'Ordens';
       case AppModule.ordemRelatorio:
         return 'Ordens de Produção';
       case AppModule.pedidoRelatorio:

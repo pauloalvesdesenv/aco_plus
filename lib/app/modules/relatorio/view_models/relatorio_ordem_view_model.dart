@@ -4,6 +4,28 @@ import 'package:aco_plus/app/core/models/text_controller.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
+enum RelatorioOrdensPdfExportarTipo { completo, resumido }
+
+extension RelatorioOrdensPdfExportarTipoExtension
+    on RelatorioOrdensPdfExportarTipo {
+  String get label => switch (this) {
+    RelatorioOrdensPdfExportarTipo.completo => 'Completo',
+    RelatorioOrdensPdfExportarTipo.resumido => 'Resumido',
+  };
+
+  String get descricao => switch (this) {
+    RelatorioOrdensPdfExportarTipo.completo =>
+      'Relatório completo com todas as bitolas',
+    RelatorioOrdensPdfExportarTipo.resumido =>
+      'Relatório resumido sem as bitolas',
+  };
+
+  IconData get icon => switch (this) {
+    RelatorioOrdensPdfExportarTipo.completo => Icons.description,
+    RelatorioOrdensPdfExportarTipo.resumido => Icons.description_outlined,
+  };
+}
+
 enum RelatorioOrdemType { STATUS, ORDEM }
 
 extension RelatorioOrdemTypeExt on RelatorioOrdemType {
@@ -55,6 +77,7 @@ class RelatorioOrdemViewModel {
   OrdemModel? ordem;
   SortType sortType = SortType.alfabetic;
   SortOrder sortOrder = SortOrder.asc;
+  RelatorioOrdensPdfExportarTipo tipo = RelatorioOrdensPdfExportarTipo.completo;
 }
 
 class RelatorioOrdemModel {

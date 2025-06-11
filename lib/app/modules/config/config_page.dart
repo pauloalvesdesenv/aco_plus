@@ -4,6 +4,8 @@ import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/automatizacao/ui/automatizacao_page.dart';
 import 'package:aco_plus/app/modules/backup/ui/backups_page.dart';
 import 'package:aco_plus/app/modules/checklist/ui/checklists_page.dart';
+import 'package:aco_plus/app/modules/step/ui/steps_page.dart';
+import 'package:aco_plus/app/modules/tag/ui/tags_page.dart';
 import 'package:aco_plus/app/modules/usuario/ui/usuarios_page.dart';
 import 'package:flutter/material.dart';
 
@@ -52,8 +54,28 @@ class ConfigPage extends StatelessWidget {
           ),
           const Divisor(),
           ListTile(
+            onTap: () => push(context, const StepsPage()),
+            title: const Text('Etapas'),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey[400]!,
+            ),
+          ),
+          const Divisor(),
+          ListTile(
             onTap: () => push(context, const AutomatizacaoPage()),
             title: const Text('Automatização de Etapas'),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey[400]!,
+            ),
+          ),
+          const Divisor(),
+          ListTile(
+            onTap: () => push(context, const TagsPage()),
+            title: const Text('Etiquetas'),
             trailing: Icon(
               Icons.arrow_forward_ios,
               size: 16,

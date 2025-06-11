@@ -1,5 +1,6 @@
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
+import 'package:aco_plus/app/core/components/app_drop_down.dart';
 import 'package:aco_plus/app/core/components/app_drop_down_list.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
 import 'package:aco_plus/app/core/components/app_scaffold.dart';
@@ -16,7 +17,6 @@ import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/base/base_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
-import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordens_pdf_exportar_tipo_bottom.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -56,11 +56,7 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
             builder: (_, model) => IconButton(
               onPressed: model.relatorio != null
                   ? () async {
-                      final tipo =
-                          await showRelatorioOrdensPdfExportarTipoBottom();
-                      if (tipo != null) {
-                        relatorioCtrl.onExportRelatorioOrdemPDF(tipo);
-                      }
+                      relatorioCtrl.onExportRelatorioOrdemPDF(model.tipo);
                     }
                   : null,
               icon: Icon(
@@ -114,7 +110,7 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
                     model.relatorio!.ordem,
                   if (model.type == RelatorioOrdemType.STATUS)
                     ...model.relatorio!.ordens,
-                ].map((e) => itemRelatorio(e)).toList(),
+                ].map((e) => itemRelatorio(model, e)).toList(),
               ),
           ],
         ),
@@ -183,6 +179,18 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
               },
             ),
             const H(16),
+            AppDropDown<RelatorioOrdensPdfExportarTipo?>(
+              label: 'Tipo',
+              itens: RelatorioOrdensPdfExportarTipo.values,
+              itemLabel: (e) => e?.label ?? 'SELECIONE O TIPO',
+              onSelect: (e) {
+                model.tipo = e!;
+                relatorioCtrl.ordemViewModelStream.add(model);
+                relatorioCtrl.onCreateRelatorio();
+              },
+              item: model.tipo,
+            ),
+            const H(16),
             InkWell(
               onTap: () async {
                 final dates = await showDateRangePicker(
@@ -246,7 +254,7 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
     );
   }
 
-  Widget itemRelatorio(OrdemModel ordem) {
+  Widget itemRelatorio(RelatorioOrdemViewModel model, OrdemModel ordem) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -293,35 +301,49 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const Divisor(),
-          for (final produto in ordem.produtos)
-            Column(
-              children: [
-                itemInfo(
-                  '${produto.pedido.localizador} - ${produto.cliente.nome}${produto.obra.descricao == 'Indefinido' ? ' - ${produto.obra.descricao}' : ''}',
-                  produto.qtde.toKg(),
-                  color: produto.status.status.color.withValues(alpha: 0.06),
-                ),
-                if (produto.pedido.deliveryAt == null)
-                  Divisor(color: Colors.grey[200]),
-                if (produto.pedido.deliveryAt != null) ...[
+          if (ordem.materiaPrima != null ||
+              model.tipo == RelatorioOrdensPdfExportarTipo.completo)
+            Divisor(color: Colors.grey[200]),
+          if (ordem.materiaPrima != null) ...[
+            itemInfo(
+              'Materia Prima',
+              '${ordem.materiaPrima!.fabricanteModel.nome} - ${ordem.materiaPrima!.corridaLote}',
+            ),
+            if (model.tipo == RelatorioOrdensPdfExportarTipo.completo)
+              Divisor(color: Colors.grey[200]),
+          ],
+          if (model.tipo == RelatorioOrdensPdfExportarTipo.completo) ...[
+            for (final produto in ordem.produtos)
+              Column(
+                children: [
                   itemInfo(
-                    'Previsão de Entrega',
-                    '${produto.pedido.deliveryAt?.text()}',
+                    '${produto.pedido.localizador} - ${produto.cliente.nome}${produto.obra.descricao == 'Indefinido' ? ' - ${produto.obra.descricao}' : ''}',
+                    produto.qtde.toKg(),
                     color: produto.status.status.color.withValues(alpha: 0.06),
                   ),
-                  Divisor(color: Colors.grey[200]),
+                  if (produto.pedido.deliveryAt == null)
+                    Divisor(color: Colors.grey[200]),
+                  if (produto.pedido.deliveryAt != null) ...[
+                    itemInfo(
+                      'Previsão de Entrega',
+                      '${produto.pedido.deliveryAt?.text()}',
+                      color: produto.status.status.color.withValues(
+                        alpha: 0.06,
+                      ),
+                    ),
+                    Divisor(color: Colors.grey[200]),
+                  ],
+                  if (produto.materiaPrima != null &&
+                      produto.materiaPrima?.id != ordem.materiaPrima?.id) ...[
+                    itemInfo(
+                      'Materia Prima',
+                      '${produto.materiaPrima?.fabricanteModel.nome} - ${produto.materiaPrima?.corridaLote}',
+                    ),
+                    Divisor(color: Colors.grey[200]),
+                  ],
                 ],
-                if (produto.materiaPrima != null &&
-                    produto.materiaPrima?.id != ordem.materiaPrima?.id) ...[
-                  itemInfo(
-                    'Materia Prima',
-                    '${produto.materiaPrima?.fabricanteModel.nome} - ${produto.materiaPrima?.corridaLote}',
-                  ),
-                  Divisor(color: Colors.grey[200]),
-                ],
-              ],
-            ),
+              ),
+          ],
         ],
       ),
     );

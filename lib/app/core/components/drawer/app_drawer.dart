@@ -119,17 +119,29 @@ class AppDrawerNotOperatorList extends StatelessWidget {
             notificacoes: notificacoes,
           ),
         ),
-        AppDrawerDropdown(
-          icon: Icons.shopping_cart_outlined,
-          title: 'Pedidos',
-          items: [
-            AppModule.kanban,
-            AppModule.pedidos,
-            AppModule.steps,
-            AppModule.tags,
-          ],
-          module: module,
-          notificacoes: notificacoes,
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: AppColors.black.withValues(alpha: 0.1)),
+            ),
+          ),
+          child: AppDrawerItem(
+            item: AppModule.kanban,
+            module: module,
+            notificacoes: notificacoes,
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: AppColors.black.withValues(alpha: 0.1)),
+            ),
+          ),
+          child: AppDrawerItem(
+            item: AppModule.pedidos,
+            module: module,
+            notificacoes: notificacoes,
+          ),
         ),
         AppDrawerDropdown(
           icon: Icons.work_outline,
