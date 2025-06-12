@@ -310,7 +310,7 @@ class OrdemController {
               : b.pedido.localizador.compareTo(a.pedido.localizador),
         );
         break;
-      case SortType.createdAt:
+      case SortType.deliveryAt:
         pedidos.sort(
           (a, b) => isAsc
               ? (a.pedido.deliveryAt ?? DateTime.now()).compareTo(
@@ -320,8 +320,24 @@ class OrdemController {
                   (a.pedido.deliveryAt ?? DateTime.now()),
                 ),
         );
+      case SortType.createdAt:
+        pedidos.sort(
+          (a, b) => isAsc
+              ? a.pedido.createdAt.compareTo(b.pedido.createdAt)
+              : b.pedido.createdAt.compareTo(a.pedido.createdAt),
+        );
         break;
-      default:
+      case SortType.qtde:
+        pedidos.sort(
+          (a, b) => isAsc ? a.qtde.compareTo(b.qtde) : b.qtde.compareTo(a.qtde),
+        );
+      case SortType.client:
+        pedidos.sort(
+          (a, b) => isAsc
+              ? a.pedido.cliente.nome.compareTo(b.pedido.cliente.nome)
+              : b.pedido.cliente.nome.compareTo(a.pedido.cliente.nome),
+        );
+        break;
     }
   }
 

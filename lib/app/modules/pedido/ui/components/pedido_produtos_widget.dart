@@ -1,11 +1,15 @@
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
+import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/divisor.dart';
 import 'package:aco_plus/app/core/components/w.dart';
+import 'package:aco_plus/app/core/dialogs/loading_dialog.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
+import 'package:aco_plus/app/core/utils/global_resource.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem_page.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -38,21 +42,28 @@ class PedidoProdutosWidget extends StatelessWidget {
                 Builder(
                   builder: (context) {
                     final ordem = pedidoCtrl.getOrdemByProduto(produto);
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        ordem?.localizator ?? 'N/A',
-                        style: AppCss.mediumRegular.copyWith(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                    if (ordem == null) return const SizedBox();
+                    return InkWell(
+                      onTap: () async {
+                        await push(context, OrdemPage(ordem.id));
+                        pedidoCtrl.pedidoStream.update();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          ordem.localizator,
+                          style: AppCss.mediumRegular.copyWith(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     );

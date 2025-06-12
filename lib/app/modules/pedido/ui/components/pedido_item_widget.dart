@@ -1,5 +1,7 @@
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_tipo.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/tag/models/tag_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/w.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
@@ -53,6 +55,9 @@ class PedidoItemWidget extends StatelessWidget {
                               child: KanbanCardNotificacaoWidget(),
                             ),
                           if (pedido.prioridade != null) _prioridadeWidget(),
+                          if (pedido.tags.isNotEmpty) ...[
+                            for (final tag in pedido.tags) _tagWidget(tag),
+                          ],
                           Text(
                             pedido.localizador.trim(),
                             style: AppCss.mediumBold,
@@ -162,6 +167,44 @@ class PedidoItemWidget extends StatelessWidget {
           Text(
             pedido.prioridade!.getLabel(),
             style: AppCss.minimumBold.setSize(9).setColor(Colors.black),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _tagWidget(TagModel tag) {
+    return Container(
+      margin: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      decoration: BoxDecoration(
+        color: tag.color,
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+      ),
+      child: Row(
+        children: [
+          Text(
+            tag.nome,
+            style: AppCss.minimumBold.setSize(9).setColor(Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _tipoWidget(PedidoModel pedido) {
+    return Container(
+      margin: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      decoration: BoxDecoration(
+        color: pedido.tipo.backgroundColor,
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+      ),
+      child: Row(
+        children: [
+          Text(
+            pedido.tipo.label,
+            style: AppCss.minimumBold.setSize(9).setColor(Colors.white),
           ),
         ],
       ),

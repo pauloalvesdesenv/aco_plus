@@ -23,6 +23,7 @@ import 'package:aco_plus/app/modules/ordem/ordem_controller.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_create_pedidos_selecionados_bottom.dart';
 import 'package:aco_plus/app/modules/ordem/view_models/ordem_view_model.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class OrdemCreatePage extends StatefulWidget {
@@ -101,24 +102,31 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
                       },
                     ),
                     const H(16),
-                    AppDropDown<MateriaPrimaModel?>(
-                      disable: form.produto == null,
-                      label: 'Materia Prima',
-                      item: form.materiaPrima,
-                      itens: [
-                        MateriaPrimaModel.empty(),
-                        ...FirestoreClient.materiaPrimas.data.where(
-                          (e) =>
-                              e.produto.id == form.produto?.id &&
-                              e.status == MateriaPrimaStatus.disponivel,
-                        ),
-                      ],
-                      itemLabel: (e) =>
-                          '${e!.fabricanteModel.nome} - ${e.corridaLote}',
-                      onSelect: (e) {
-                        form.materiaPrima = e;
-                        ordemCtrl.formStream.update();
-                      },
+                    Builder(
+                      builder: (context) {
+                        final materiasPrimas = [
+                            MateriaPrimaModel.empty(),
+                            ...FirestoreClient.materiaPrimas.data.where(
+                              (e) =>
+                                  e.produto.id == form.produto?.id &&
+                                  e.status == MateriaPrimaStatus.disponivel,
+                            ),
+                          ];
+                        return AppDropDown<MateriaPrimaModel?>(
+                          disable: form.produto == null,
+                          label: 'Materia Prima',
+                          item: materiasPrimas.firstWhereOrNull(
+                            (e) => e.id == form.materiaPrima?.id,
+                          ),
+                          itens: materiasPrimas,
+                          itemLabel: (e) =>
+                              '${e!.fabricanteModel.nome} - ${e.corridaLote}',
+                          onSelect: (e) {
+                            form.materiaPrima = e;
+                            ordemCtrl.formStream.update();
+                          },
+                        );
+                      }
                     ),
                     const H(16),
                     AppField(
