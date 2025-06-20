@@ -93,16 +93,18 @@ class StepController {
     utilsStream.update();
   }
 
-  void setNextDay(DateTime currentDate) {
+  void setNextDay(DateTime currentDate) async {
     DateTime nextDate = currentDate.onlyDate().add(const Duration(days: 1));
     if (nextDate.weekday == DateTime.saturday) {
       nextDate = nextDate.add(const Duration(days: 2));
     }
     final pedidos = utils.calendar[nextDate.ddMMyyyy()] ?? [];
     setDay({nextDate: pedidos});
+    utils.focusedDay = nextDate;
+    utilsStream.update();
   }
 
-  void setPreviousDay(DateTime currentDate) {
+  void setPreviousDay(DateTime currentDate) async {
     DateTime previousDate = currentDate.onlyDate().subtract(
       const Duration(days: 1),
     );
@@ -111,6 +113,8 @@ class StepController {
     }
     final pedidos = utils.calendar[previousDate.ddMMyyyy()] ?? [];
     setDay({previousDate: pedidos});
+    utils.focusedDay = previousDate;
+    utilsStream.update();
   }
 
   void onAccept(

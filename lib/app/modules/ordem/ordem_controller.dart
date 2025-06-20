@@ -311,15 +311,16 @@ class OrdemController {
         );
         break;
       case SortType.deliveryAt:
-        pedidos.sort(
-          (a, b) => isAsc
-              ? (a.pedido.deliveryAt ?? DateTime.now()).compareTo(
-                  (b.pedido.deliveryAt ?? DateTime.now()),
-                )
-              : (b.pedido.deliveryAt ?? DateTime.now()).compareTo(
-                  (a.pedido.deliveryAt ?? DateTime.now()),
-                ),
-        );
+        pedidos.sort((a, b) {
+          final aDelivery = a.pedido.deliveryAt;
+          final bDelivery = b.pedido.deliveryAt;
+          if (aDelivery == null && bDelivery == null) return 0;
+          if (aDelivery == null) return 1;
+          if (bDelivery == null) return -1;
+          return isAsc
+              ? aDelivery.compareTo(bDelivery)
+              : bDelivery.compareTo(aDelivery);
+        });
       case SortType.createdAt:
         pedidos.sort(
           (a, b) => isAsc

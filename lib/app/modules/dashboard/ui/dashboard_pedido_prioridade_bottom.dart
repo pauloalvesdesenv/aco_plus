@@ -2,6 +2,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedi
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/components/app_text_button.dart';
 import 'package:aco_plus/app/core/components/h.dart';
+import 'package:aco_plus/app/core/enums/fill.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
@@ -15,6 +16,7 @@ Future<List<PedidoModel>?> showDashboardPedidoPrioridadeBottom(
   backgroundColor: AppColors.white,
   context: contextGlobal,
   isScrollControlled: true,
+  isDismissible: false,
   builder: (_) => DashboardPedidoPrioridadeBottom(tipo, pedidos),
 );
 
@@ -77,7 +79,7 @@ class _DashboardPedidoPrioridadeBottomState
             ),
             Expanded(
               child: ListView(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                 children: [
                   Text(
                     'Pedidos com prioridade em ${widget.tipo.getLabel()}:',
@@ -117,6 +119,12 @@ class _DashboardPedidoPrioridadeBottomState
                   AppTextButton(
                     label: 'Confirmar',
                     onPressed: () => Navigator.pop(context, pedidos),
+                  ),
+                  Gap(12),
+                  AppTextButton(
+                    label: 'Apenas voltar',
+                    fill: Fill.outlined,
+                    onPressed: () => Navigator.pop(context),
                   ),
                 ],
               ),

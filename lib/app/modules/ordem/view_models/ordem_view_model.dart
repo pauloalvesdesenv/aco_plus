@@ -59,7 +59,7 @@ class OrdemCreateModel {
   ProdutoModel? produto;
   TextController localizador = TextController();
   List<PedidoProdutoModel> produtos = [];
-  SortType sortType = SortType.alfabetic;
+  SortType sortType = SortType.deliveryAt;
   SortOrder sortOrder = SortOrder.asc;
   bool isCreate = true;
   DateTime? createdAt;

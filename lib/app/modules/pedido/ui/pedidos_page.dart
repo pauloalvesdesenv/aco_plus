@@ -2,12 +2,12 @@ import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/ped
 import 'package:aco_plus/app/core/client/firestore/collections/step/models/step_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/enums/user_permission_type.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
-import 'package:aco_plus/app/core/components/drawer/app_drawer.dart';
 import 'package:aco_plus/app/core/components/app_drop_down.dart';
 import 'package:aco_plus/app/core/components/app_drop_down_list.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
 import 'package:aco_plus/app/core/components/app_scaffold.dart';
 import 'package:aco_plus/app/core/components/divisor.dart';
+import 'package:aco_plus/app/core/components/drawer/app_drawer.dart';
 import 'package:aco_plus/app/core/components/empty_data.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
@@ -80,7 +80,6 @@ class _PedidosPageState extends State<PedidosPage> {
         builder: (_, pedidos) => StreamOut<PedidoUtils>(
           stream: pedidoCtrl.utilsStream.listen,
           builder: (_, utils) {
-            pedidos = pedidos.where((e) => !e.isArchived).toList();
             pedidos = pedidoCtrl
                 .getPedidosFiltered(
                   utils.search.text,
@@ -89,6 +88,14 @@ class _PedidosPageState extends State<PedidosPage> {
                       .toList(),
                 )
                 .toList();
+            if (utils.steps.isNotEmpty) {
+              pedidos = pedidos
+                  .where(
+                    (pedido) =>
+                        utils.steps.map((e) => e.id).contains(pedido.step.id),
+                  )
+                  .toList();
+            }
             pedidoCtrl.onSortPedidos(pedidos);
             return RefreshIndicator(
               onRefresh: () async => await FirestoreClient.pedidos.fetch(),
@@ -145,7 +152,7 @@ class _PedidosPageState extends State<PedidosPage> {
                                   label: 'Ordernar',
                                   item: utils.sortOrder,
                                   itens: SortOrder.values,
-                                  itemLabel: (e) => e.name,
+                                  itemLabel: (e) => e.getName(utils.sortType),
                                   onSelect: (e) {
                                     utils.sortOrder = e ?? SortOrder.asc;
                                     pedidoCtrl.utilsStream.update();

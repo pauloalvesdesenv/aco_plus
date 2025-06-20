@@ -40,7 +40,7 @@ class OrdemCollection {
   Future<void> start({bool lock = true, GetOptions? options}) async {
     if (_isStarted && lock) return;
     _isStarted = true;
-    final data = await FirebaseFirestore.instance.collection(name).get();
+    final data = await FirebaseFirestore.instance.collection(name).where('isArchived', isEqualTo: false).get();
     final ordens = data.docs.map((e) => OrdemModel.fromMap(e.data())).toList();
 
     final ordensArquivadas = ordens.where((e) => e.isArchived).toList();
@@ -98,7 +98,7 @@ class OrdemCollection {
                 whereNotIn: whereNotIn,
                 isNull: isNull,
               )
-            : collection)
+            : collection).where('isArchived', isEqualTo: false)
         .snapshots()
         .listen((e) {
           final ordens = e.docs

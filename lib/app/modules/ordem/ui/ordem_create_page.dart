@@ -167,7 +167,7 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
                             label: 'Ordernar',
                             item: form.sortOrder,
                             itens: SortOrder.values,
-                            itemLabel: (e) => e.name,
+                            itemLabel: (e) => e.getName(form.sortType),
                             onSelect: (e) {
                               form.sortOrder = e ?? SortOrder.asc;
                               ordemCtrl.formStream.update();

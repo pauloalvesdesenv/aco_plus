@@ -26,6 +26,7 @@ class KanbanUtils {
   TextController clienteEC = TextController();
   Timer? timer;
   late InfoPopupController controller;
+  DateTime focusedDay = DateTime.now();
 
   void cancelTimer() {
     if (timer?.isActive ?? false) {

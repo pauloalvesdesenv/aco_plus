@@ -6,7 +6,6 @@ import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
-import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordens_pdf_exportar_tipo_bottom.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

@@ -12,7 +12,6 @@ import 'package:aco_plus/app/core/services/notification_service.dart';
 import 'package:aco_plus/app/core/services/pdf_download_service/pdf_download_service_mobile.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordem_pdf_ordem_page.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordem_pdf_status_page.dart';
-import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordens_pdf_exportar_tipo_bottom.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/pedido/relatorio_pedido_pdf_page.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_pedido_view_model.dart';

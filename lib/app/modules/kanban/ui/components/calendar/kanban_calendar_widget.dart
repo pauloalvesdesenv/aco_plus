@@ -66,11 +66,15 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   child: TableCalendar(
+                    // onCalendarCreated: (controller) {
+                    //   kanbanCtrl.utils.calendarPageController = controller;
+                    //   kanbanCtrl.utilsStream.update();
+                    // },
                     currentDay: DateTime.now(),
                     availableGestures: AvailableGestures.horizontalSwipe,
                     firstDay: getBorderDates(first: true),
                     lastDay: getBorderDates(last: true),
-                    focusedDay: DateTime.now(),
+                    focusedDay: kanbanCtrl.utils.focusedDay,
                     rowHeight:
                         widget.utils.calendarFormat == CalendarFormat.month
                         ? 170

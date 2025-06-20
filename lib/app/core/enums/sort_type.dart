@@ -6,9 +6,9 @@ extension SortTypeExt on SortType {
       case SortType.alfabetic:
         return 'Alfabética';
       case SortType.createdAt:
-        return 'Data Criação';
+        return 'Data de Criação';
       case SortType.deliveryAt:
-        return 'Previsão de Entrega';
+        return 'Data de Entrega';
       case SortType.localizator:
         return 'Localizador';
       case SortType.client:
@@ -22,12 +22,29 @@ extension SortTypeExt on SortType {
 enum SortOrder { asc, desc }
 
 extension SortOrderExt on SortOrder {
-  String get name {
-    switch (this) {
-      case SortOrder.asc:
-        return 'Crescente';
-      case SortOrder.desc:
-        return 'Decrescente';
+  String getName(SortType sortType) {
+    switch (sortType) {
+      case SortType.deliveryAt:
+      switch (this) {
+          case SortOrder.asc:
+            return 'Mais proximo primeiro';
+          case SortOrder.desc:
+            return 'Mais distante primeiro';
+        }
+      case SortType.createdAt:
+        switch (this) {
+          case SortOrder.asc:
+            return 'Mais recente primeiro';
+          case SortOrder.desc:
+            return 'Mais antigo primeiro';
+        }
+      default:
+        switch (this) {
+          case SortOrder.asc:
+            return 'Crescente';
+          case SortOrder.desc:
+            return 'Decrescente';
+        }
     }
   }
 }

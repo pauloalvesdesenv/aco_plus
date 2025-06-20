@@ -18,6 +18,7 @@ Future<PedidoModel?> showPedidoPrioridadeBottom(PedidoModel pedido) async =>
       context: contextGlobal,
       isScrollControlled: true,
       builder: (_) => PedidoPrioridadeBottom(pedido),
+      isDismissible: false,
     );
 
 class PedidoPrioridadeBottom extends StatefulWidget {
@@ -164,6 +165,12 @@ class _PedidoPrioridadeBottomState extends State<PedidoPrioridadeBottom> {
                           ),
                         ),
                       ],
+                        Gap(12),
+                        AppTextButton(
+                          label: 'Apenas voltar',
+                          fill: Fill.outlined,
+                          onPressed: () => Navigator.pop(context),
+                        ),
                     ],
                   );
                 },

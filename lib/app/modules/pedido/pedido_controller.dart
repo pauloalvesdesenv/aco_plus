@@ -250,15 +250,16 @@ class PedidoController {
         );
         break;
       case SortType.deliveryAt:
-        pedidos.sort(
-          (a, b) => isAsc
-              ? (a.deliveryAt ?? DateTime.now()).compareTo(
-                  (b.deliveryAt ?? DateTime.now()),
-                )
-              : (b.deliveryAt ?? DateTime.now()).compareTo(
-                  (a.deliveryAt ?? DateTime.now()),
-                ),
-        );
+        pedidos.sort((a, b) {
+          final aDelivery = a.deliveryAt;
+          final bDelivery = b.deliveryAt;
+          if (aDelivery == null && bDelivery == null) return 0;
+          if (aDelivery == null) return 1;
+          if (bDelivery == null) return -1;
+          return isAsc
+              ? aDelivery.compareTo(bDelivery)
+              : bDelivery.compareTo(aDelivery);
+        });
         break;
       case SortType.createdAt:
         pedidos.sort(

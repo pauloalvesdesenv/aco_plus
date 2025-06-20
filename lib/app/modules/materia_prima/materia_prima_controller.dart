@@ -76,8 +76,30 @@ class MateriaPrimaController {
         }
         await FirestoreClient.materiaPrimas.update(edit);
       } else {
-        await FirestoreClient.materiaPrimas.add(form.toMateriaPrimaModel());
+        final materiaPrimaCreate = form.toMateriaPrimaModel();
+        await FirestoreClient.materiaPrimas.add(materiaPrimaCreate);
+        for (var ordem in FirestoreClient.ordens.data.where(
+          (ordem) =>
+              ordem.status != PedidoProdutoStatus.pronto &&
+              ordem.materiaPrima == null &&
+              materiaPrimaCreate.produto.id == ordem.produto.id,
+        )) {
+          ordem.materiaPrima = materiaPrimaCreate;
+          await FirestoreClient.ordens.update(ordem);
+          for (var produto in ordem.produtos.where(
+            (e) =>
+                e.materiaPrima == null &&
+                e.status.status != PedidoProdutoStatus.pronto,
+          )) {
+            produto.materiaPrima = materiaPrimaCreate;
+            await FirestoreClient.pedidos.updateProdutoMateriaPrima(
+              produto,
+              materiaPrimaCreate,
+            );
+          }
+        }
       }
+      await FirestoreClient.ordens.fetch();
       pop(value);
       NotificationService.showPositive(
         'Matéria Prima ${form.isEdit ? 'Editada' : 'Adicionada'}',
@@ -103,18 +125,6 @@ class MateriaPrimaController {
       position: NotificationPosition.bottom,
     );
   }
-
-  Future<bool> _isDeleteUnavailable(
-    MateriaPrimaModel materiaPrima,
-  ) async => !await onDeleteProcess(
-    deleteTitle: 'Deseja excluir a Matéria Prima?',
-    deleteMessage: 'Todos seus dados serão apagados do sistema',
-    infoMessage:
-        'Não é possível exlcuir a Matéria Prima, pois ela está sendo utilizada.',
-    conditional: FirestoreClient.produtos.data.any(
-      (e) => e.id == materiaPrima.id,
-    ),
-  );
 
   void onValid(MateriaPrimaModel? materiaPrima) {
     if (form.fabricanteModel == null) {
@@ -193,4 +203,16 @@ class MateriaPrimaController {
       NotificationService.showNegative('Erro', e.toString());
     }
   }
+
+  Future<bool> _isDeleteUnavailable(
+    MateriaPrimaModel materiaPrima,
+  ) async => !await onDeleteProcess(
+    deleteTitle: 'Deseja apagar a Matéria Prima?',
+    deleteMessage: 'Todos os dados da Matéria Prima serão apagados do sistema',
+    infoMessage:
+        'Não é possível excluir a Matéria Prima, pois ela está vinculada a pedidos.',
+    conditional: FirestoreClient.pedidos.data.any(
+      (e) => e.produtos.any((p) => p.materiaPrima?.id == materiaPrima.id),
+    ),
+  );
 }

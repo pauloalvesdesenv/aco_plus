@@ -1,10 +1,8 @@
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
-import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/divisor.dart';
 import 'package:aco_plus/app/core/components/w.dart';
-import 'package:aco_plus/app/core/dialogs/loading_dialog.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
