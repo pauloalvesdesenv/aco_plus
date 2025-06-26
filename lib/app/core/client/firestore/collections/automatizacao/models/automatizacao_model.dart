@@ -10,6 +10,7 @@ class AutomatizacaoModel {
   final AutomatizacaoItemModel aguardandoArmacaoPedido;
   final AutomatizacaoItemModel produzindoArmacaoPedido;
   final AutomatizacaoItemModel prontoArmacaoPedido;
+  final AutomatizacaoItemModel naoMostrarNoCalendario;
 
   List<AutomatizacaoItemModel> get itens => [
     criacaoPedido,
@@ -19,6 +20,7 @@ class AutomatizacaoModel {
     aguardandoArmacaoPedido,
     produzindoArmacaoPedido,
     prontoArmacaoPedido,
+    naoMostrarNoCalendario,
   ];
 
   AutomatizacaoModel({
@@ -29,6 +31,7 @@ class AutomatizacaoModel {
     required this.aguardandoArmacaoPedido,
     required this.produzindoArmacaoPedido,
     required this.prontoArmacaoPedido,
+    required this.naoMostrarNoCalendario,
   });
 
   AutomatizacaoModel copyWith({
@@ -39,6 +42,7 @@ class AutomatizacaoModel {
     AutomatizacaoItemModel? aguardandoArmacaoPedido,
     AutomatizacaoItemModel? produzindoArmacaoPedido,
     AutomatizacaoItemModel? prontoArmacaoPedido,
+    AutomatizacaoItemModel? naoMostrarNoCalendario,
   }) {
     return AutomatizacaoModel(
       criacaoPedido: criacaoPedido ?? this.criacaoPedido,
@@ -51,6 +55,7 @@ class AutomatizacaoModel {
       produzindoArmacaoPedido:
           produzindoArmacaoPedido ?? this.produzindoArmacaoPedido,
       prontoArmacaoPedido: prontoArmacaoPedido ?? this.prontoArmacaoPedido,
+      naoMostrarNoCalendario: naoMostrarNoCalendario ?? this.naoMostrarNoCalendario,
     );
   }
 
@@ -63,6 +68,7 @@ class AutomatizacaoModel {
       'aguardandoArmacaoPedido': aguardandoArmacaoPedido.toMap(),
       'produzindoArmacaoPedido': produzindoArmacaoPedido.toMap(),
       'prontoArmacaoPedido': prontoArmacaoPedido.toMap(),
+      'naoMostrarNoCalendario': naoMostrarNoCalendario.toMap(),
     };
   }
 
@@ -84,6 +90,9 @@ class AutomatizacaoModel {
       ),
       prontoArmacaoPedido: AutomatizacaoItemModel.fromMap(
         map['prontoArmacaoPedido'],
+      ),
+      naoMostrarNoCalendario: AutomatizacaoItemModel.fromMap(
+        map['naoMostrarNoCalendario'],
       ),
     );
   }

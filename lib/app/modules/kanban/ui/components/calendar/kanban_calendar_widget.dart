@@ -1,3 +1,4 @@
+import 'package:aco_plus/app/core/client/firestore/collections/automatizacao/models/automatizacao_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/modules/kanban/kanban_controller.dart';
 import 'package:aco_plus/app/modules/kanban/kanban_view_model.dart';
@@ -10,7 +11,8 @@ import 'package:table_calendar/table_calendar.dart';
 
 class KanbanCalendarWidget extends StatefulWidget {
   final KanbanUtils utils;
-  const KanbanCalendarWidget(this.utils, {super.key});
+  final AutomatizacaoModel automatizacao;
+  const KanbanCalendarWidget(this.utils, this.automatizacao, {super.key});
 
   @override
   State<KanbanCalendarWidget> createState() => _KanbanCalendarWidgetState();
@@ -41,7 +43,15 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
 
   List<PedidoModel> getPedidos(DateTime day) {
     final key = DateFormat('dd/MM/yyyy').format(day);
-    return widget.utils.calendar[key] ?? [];
+    final pedidosByDay = widget.utils.calendar[key] ?? [];
+    if (pedidosByDay.isEmpty) return [];
+    final steps = widget.automatizacao.naoMostrarNoCalendario.steps!
+        .map((e) => e.id)
+        .toList();
+    final pedidosByMostramNoCalendario = pedidosByDay
+        .where((e) => !steps.contains(e.step.id))
+        .toList();
+    return pedidosByMostramNoCalendario;
   }
 
   @override
@@ -66,10 +76,6 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   child: TableCalendar(
-                    // onCalendarCreated: (controller) {
-                    //   kanbanCtrl.utils.calendarPageController = controller;
-                    //   kanbanCtrl.utilsStream.update();
-                    // },
                     currentDay: DateTime.now(),
                     availableGestures: AvailableGestures.horizontalSwipe,
                     firstDay: getBorderDates(first: true),

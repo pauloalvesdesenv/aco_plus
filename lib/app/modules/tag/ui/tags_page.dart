@@ -32,7 +32,6 @@ class _TagsPageState extends State<TagsPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      drawer: const AppDrawer(),
       appBar: AppBar(
         title: Text(
           'Etiquetas',

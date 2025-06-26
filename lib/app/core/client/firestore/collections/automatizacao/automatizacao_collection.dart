@@ -1,5 +1,3 @@
-import 'package:aco_plus/app/core/client/firestore/collections/automatizacao/enums/automatizacao_enum.dart';
-import 'package:aco_plus/app/core/client/firestore/collections/automatizacao/models/automatizacao_item_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/automatizacao/models/automatizacao_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
@@ -79,35 +77,5 @@ class AutomatizacaoCollection {
 
   Future<void> update(AutomatizacaoModel model) async {
     await collection.doc('instance').update(model.toMap());
-  }
-
-  Future<AutomatizacaoModel?> updateF() async {
-    final item = AutomatizacaoItemModel(
-      type: AutomatizacaoItemType.AGUARDANDO_ARMACAO_PEDIDO,
-      step: FirestoreClient.steps.data.first,
-    );
-    AutomatizacaoModel data = AutomatizacaoModel(
-      criacaoPedido: item.copyWith(type: AutomatizacaoItemType.CRIACAO_PEDIDO),
-      produtoPedidoSeparado: item.copyWith(
-        type: AutomatizacaoItemType.PRODUTO_PEDIDO_SEPARADO,
-      ),
-      produzindoCDPedido: item.copyWith(
-        type: AutomatizacaoItemType.PRODUZINDO_CD_PEDIDO,
-      ),
-      prontoCDPedido: item.copyWith(
-        type: AutomatizacaoItemType.PRONTO_CD_PEDIDO,
-      ),
-      aguardandoArmacaoPedido: item.copyWith(
-        type: AutomatizacaoItemType.AGUARDANDO_ARMACAO_PEDIDO,
-      ),
-      produzindoArmacaoPedido: item.copyWith(
-        type: AutomatizacaoItemType.PRODUZINDO_ARMACAO_PEDIDO,
-      ),
-      prontoArmacaoPedido: item.copyWith(
-        type: AutomatizacaoItemType.PRONTO_ARMACAO_PEDIDO,
-      ),
-    );
-    await collection.doc('instance').update(data.toMap());
-    return data;
   }
 }

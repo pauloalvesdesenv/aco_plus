@@ -1,5 +1,6 @@
 import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/usuario/models/usuario_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/app_drop_down.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
@@ -101,6 +102,18 @@ class _KanbanFilterWidgetState extends State<KanbanFilterWidget> {
                       itemLabel: (e) => e?.nome ?? 'Selecionar cliente',
                       onSelect: (e) {
                         utils.cliente = e;
+                        kanbanCtrl.utilsStream.update();
+                      },
+                    ),
+                    const H(8),
+                    AppDropDown<UsuarioModel?>(
+                      hasFilter: true,
+                      hint: 'Selecionar Usuario',
+                      item: utils.usuario,
+                      itens: FirestoreClient.usuarios.data,
+                      itemLabel: (e) => e?.nome ?? 'Selecionar usuario',
+                      onSelect: (e) {
+                        utils.usuario = e;
                         kanbanCtrl.utilsStream.update();
                       },
                     ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aco_plus/app/core/client/firestore/collections/automatizacao/models/automatizacao_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/step/models/step_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
@@ -52,7 +53,10 @@ class _KanbanPageState extends State<KanbanPage> {
       body: StreamOut(
         loading: const KanbanBodyShimmerWidget(),
         stream: kanbanCtrl.utilsStream.listen,
-        builder: (context, utils) => KanbanBodyWidget(utils),
+        builder: (context, utils) => StreamOut<AutomatizacaoModel>(
+          stream: FirestoreClient.automatizacao.dataStream.listen,
+          builder: (context, automatizacao) => KanbanBodyWidget(utils, automatizacao),
+        ),
       ),
     );
   }

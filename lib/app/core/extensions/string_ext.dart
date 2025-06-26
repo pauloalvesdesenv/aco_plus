@@ -9,18 +9,14 @@ extension StringExt on String {
   ).toLowerCase().removeSpecialCharacters().toNonDiacritics();
 
   String getInitials() {
-    List<String> nameParts = split(' ');
-    String initials = "";
-
-    if (nameParts.isNotEmpty) {
-      for (String part in nameParts) {
-        if (part.isNotEmpty) {
-          initials += part[0];
-        }
-      }
+    if (isEmpty) return '';
+    final names = split(' ');
+    names.removeWhere((element) => element.isEmpty);
+    if (names.length == 1) {
+      return names[0].substring(0, 2).toUpperCase();
     }
 
-    return initials.toUpperCase();
+    return (names[0][0] + names[1][0]).toUpperCase();
   }
 
   String get phone => replaceAll(

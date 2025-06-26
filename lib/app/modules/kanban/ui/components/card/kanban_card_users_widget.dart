@@ -39,7 +39,7 @@ class KanbanCardUsersWidget extends StatelessWidget {
             },
             child: AppAvatar(
               radius: viewMode == WidgetViewMode.minified ? 9 : 14,
-              name: e.nome.getInitials(),
+              name: e.nome,
               backgroundColor: Colors.grey[200],
             ),
           ),

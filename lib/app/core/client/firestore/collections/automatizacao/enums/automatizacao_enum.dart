@@ -6,6 +6,7 @@ enum AutomatizacaoItemType {
   AGUARDANDO_ARMACAO_PEDIDO,
   PRODUZINDO_ARMACAO_PEDIDO,
   PRONTO_ARMACAO_PEDIDO,
+  NAO_MOSTRAR_NO_CALENDARIO,
 }
 
 extension AutomatizacaoItemTypeExtension on AutomatizacaoItemType {
@@ -25,6 +26,8 @@ extension AutomatizacaoItemTypeExtension on AutomatizacaoItemType {
         return 'Produzindo armação do pedido';
       case AutomatizacaoItemType.PRONTO_ARMACAO_PEDIDO:
         return 'Armação do pedido pronta';
+      case AutomatizacaoItemType.NAO_MOSTRAR_NO_CALENDARIO:
+        return 'Não mostrar no calendário';
     }
   }
 
@@ -44,6 +47,8 @@ extension AutomatizacaoItemTypeExtension on AutomatizacaoItemType {
         return 'Armação começa a ser produzida';
       case AutomatizacaoItemType.PRONTO_ARMACAO_PEDIDO:
         return 'Armação está pronta';
+      case AutomatizacaoItemType.NAO_MOSTRAR_NO_CALENDARIO:
+        return 'Ao cair em alguma das etapas na lista, não será exibido no calendário';
     }
   }
 }

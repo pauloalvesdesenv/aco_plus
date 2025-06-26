@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/step/models/step_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/usuario/models/usuario_model.dart';
 import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class KanbanUtils {
   Timer? timer;
   late InfoPopupController controller;
   DateTime focusedDay = DateTime.now();
+  UsuarioModel? usuario;
 
   void cancelTimer() {
     if (timer?.isActive ?? false) {
@@ -46,7 +48,8 @@ class KanbanUtils {
     return qtde;
   }
 
-  bool hasFilter() => search.text.isNotEmpty || cliente != null;
+  bool hasFilter() =>
+      search.text.isNotEmpty || cliente != null || usuario != null;
 
   bool isPedidoVisibleFiltered(PedidoModel pedido) {
     if (!hasFilter()) return true;
@@ -57,6 +60,11 @@ class KanbanUtils {
     }
     if (cliente != null) {
       if (pedido.cliente.id == cliente!.id) return true;
+    }
+    if (usuario != null) {
+      if (pedido.users.any((user) => user.id == usuario!.id)) {
+        return true;
+      }
     }
     return false;
   }
