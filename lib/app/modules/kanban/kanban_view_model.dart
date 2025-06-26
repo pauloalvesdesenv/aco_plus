@@ -29,6 +29,7 @@ class KanbanUtils {
   late InfoPopupController controller;
   DateTime focusedDay = DateTime.now();
   UsuarioModel? usuario;
+  PageController? pageController;
 
   void cancelTimer() {
     if (timer?.isActive ?? false) {

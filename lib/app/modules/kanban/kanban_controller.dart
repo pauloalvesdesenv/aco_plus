@@ -84,11 +84,21 @@ class StepController {
   }
 
   void setPedido(PedidoModel? pedido) {
+    if (pedido != null) {
+      if (pedido.deliveryAt != null) {
+        utils.focusedDay = pedido.deliveryAt!;
+      }
+    }
     utils.pedido = pedido;
     utilsStream.update();
   }
 
   void setDay(Map<DateTime, List<PedidoModel>>? day) {
+    if (day != null) {
+      if (day.keys.isNotEmpty) {
+        utils.focusedDay = day.keys.first;
+      }
+    }
     utils.day = day;
     utilsStream.update();
   }
@@ -226,7 +236,9 @@ class StepController {
           .contains(step.id)) {
         pedido.prioridade = null;
         await FirestoreClient.pedidos.update(pedido);
-        pedidoCtrl.onReorderPrioridade(FirestoreClient.pedidos.pedidosPrioridade);
+        pedidoCtrl.onReorderPrioridade(
+          FirestoreClient.pedidos.pedidosPrioridade,
+        );
         await FirestoreClient.pedidos.updateAll(
           FirestoreClient.pedidos.pedidosPrioridade,
         );

@@ -54,6 +54,18 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
     return pedidosByMostramNoCalendario;
   }
 
+  DateTime getCurrentDay() {
+    if (widget.utils.pedido != null) {
+      if (widget.utils.pedido!.deliveryAt != null) {
+        return widget.utils.pedido!.deliveryAt!;
+      }
+    }
+    if (widget.utils.day != null) {
+      return widget.utils.day!.keys.first;
+    }
+    return DateTime.now();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -76,7 +88,7 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   child: TableCalendar(
-                    currentDay: DateTime.now(),
+                    key: UniqueKey(),
                     availableGestures: AvailableGestures.horizontalSwipe,
                     firstDay: getBorderDates(first: true),
                     lastDay: getBorderDates(last: true),
