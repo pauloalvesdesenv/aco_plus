@@ -232,6 +232,8 @@ class PedidoController {
     pedidoStream.update();
   }
 
+
+
   void onSortPedidos(List<PedidoModel> pedidos) {
     bool isAsc = utils.sortOrder == SortOrder.asc;
     switch (utils.sortType) {

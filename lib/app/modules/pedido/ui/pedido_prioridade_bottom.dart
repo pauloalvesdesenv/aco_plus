@@ -167,7 +167,7 @@ class _PedidoPrioridadeBottomState extends State<PedidoPrioridadeBottom> {
                       ],
                         Gap(12),
                         AppTextButton(
-                          label: 'Apenas voltar',
+                          label: 'Voltar',
                           fill: Fill.outlined,
                           onPressed: () => Navigator.pop(context),
                         ),

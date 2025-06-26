@@ -11,6 +11,8 @@ class AutomatizacaoModel {
   final AutomatizacaoItemModel produzindoArmacaoPedido;
   final AutomatizacaoItemModel prontoArmacaoPedido;
   final AutomatizacaoItemModel naoMostrarNoCalendario;
+  final AutomatizacaoItemModel removerListaPrioridade;
+
 
   List<AutomatizacaoItemModel> get itens => [
     criacaoPedido,
@@ -21,6 +23,7 @@ class AutomatizacaoModel {
     produzindoArmacaoPedido,
     prontoArmacaoPedido,
     naoMostrarNoCalendario,
+    removerListaPrioridade,
   ];
 
   AutomatizacaoModel({
@@ -32,6 +35,7 @@ class AutomatizacaoModel {
     required this.produzindoArmacaoPedido,
     required this.prontoArmacaoPedido,
     required this.naoMostrarNoCalendario,
+    required this.removerListaPrioridade,
   });
 
   AutomatizacaoModel copyWith({
@@ -43,6 +47,7 @@ class AutomatizacaoModel {
     AutomatizacaoItemModel? produzindoArmacaoPedido,
     AutomatizacaoItemModel? prontoArmacaoPedido,
     AutomatizacaoItemModel? naoMostrarNoCalendario,
+    AutomatizacaoItemModel? removerListaPrioridade,
   }) {
     return AutomatizacaoModel(
       criacaoPedido: criacaoPedido ?? this.criacaoPedido,
@@ -56,6 +61,7 @@ class AutomatizacaoModel {
           produzindoArmacaoPedido ?? this.produzindoArmacaoPedido,
       prontoArmacaoPedido: prontoArmacaoPedido ?? this.prontoArmacaoPedido,
       naoMostrarNoCalendario: naoMostrarNoCalendario ?? this.naoMostrarNoCalendario,
+      removerListaPrioridade: removerListaPrioridade ?? this.removerListaPrioridade,
     );
   }
 
@@ -69,6 +75,7 @@ class AutomatizacaoModel {
       'produzindoArmacaoPedido': produzindoArmacaoPedido.toMap(),
       'prontoArmacaoPedido': prontoArmacaoPedido.toMap(),
       'naoMostrarNoCalendario': naoMostrarNoCalendario.toMap(),
+      'removerListaPrioridade': removerListaPrioridade.toMap(),
     };
   }
 
@@ -94,6 +101,9 @@ class AutomatizacaoModel {
       naoMostrarNoCalendario: AutomatizacaoItemModel.fromMap(
         map['naoMostrarNoCalendario'],
       ),
+      removerListaPrioridade: AutomatizacaoItemModel.fromMap(
+        map['removerListaPrioridade'],
+      ),
     );
   }
 
@@ -104,7 +114,7 @@ class AutomatizacaoModel {
 
   @override
   String toString() {
-    return 'AutomatizacaoModel(criacaoPedido: $criacaoPedido, produzindoCDPedido: $produzindoCDPedido, prontoCDPedido: $prontoCDPedido, aguardandoArmacaoPedido: $aguardandoArmacaoPedido, produzindoArmacaoPedido: $produzindoArmacaoPedido, prontoArmacaoPedido: $prontoArmacaoPedido)';
+    return 'AutomatizacaoModel(criacaoPedido: $criacaoPedido, produzindoCDPedido: $produzindoCDPedido, prontoCDPedido: $prontoCDPedido, aguardandoArmacaoPedido: $aguardandoArmacaoPedido, produzindoArmacaoPedido: $produzindoArmacaoPedido, prontoArmacaoPedido: $prontoArmacaoPedido, naoMostrarNoCalendario: $naoMostrarNoCalendario, removerListaPrioridade: $removerListaPrioridade)';
   }
 
   @override
@@ -117,7 +127,9 @@ class AutomatizacaoModel {
         other.prontoCDPedido == prontoCDPedido &&
         other.aguardandoArmacaoPedido == aguardandoArmacaoPedido &&
         other.produzindoArmacaoPedido == produzindoArmacaoPedido &&
-        other.prontoArmacaoPedido == prontoArmacaoPedido;
+        other.prontoArmacaoPedido == prontoArmacaoPedido &&
+        other.naoMostrarNoCalendario == naoMostrarNoCalendario &&
+        other.removerListaPrioridade == removerListaPrioridade;
   }
 
   @override
@@ -127,6 +139,8 @@ class AutomatizacaoModel {
         prontoCDPedido.hashCode ^
         aguardandoArmacaoPedido.hashCode ^
         produzindoArmacaoPedido.hashCode ^
-        prontoArmacaoPedido.hashCode;
+        prontoArmacaoPedido.hashCode ^
+        naoMostrarNoCalendario.hashCode ^
+        removerListaPrioridade.hashCode;
   }
 }

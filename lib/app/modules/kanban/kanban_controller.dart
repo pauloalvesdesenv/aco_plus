@@ -126,6 +126,7 @@ class StepController {
     if (!onWillAccept(pedido, step, auto: auto)) return;
     _onMovePedido(pedido, step, index);
     _onAddStep(pedido, step);
+    onRemovePedidoFromPrioridadeIfNeeded(step, pedido);
     utilsStream.update();
   }
 
@@ -210,6 +211,26 @@ class StepController {
       utils.cancelTimer();
     } else if (align != null && utils.timer == null) {
       _setTimerByAlign(align);
+    }
+  }
+
+  Future<void> onRemovePedidoFromPrioridadeIfNeeded(
+    StepModel step,
+    PedidoModel pedido,
+  ) async {
+    final automatizacao = FirestoreClient.automatizacao.data;
+    final removerListaPrioridade = automatizacao.removerListaPrioridade;
+    if (pedido.prioridade != null) {
+      if ((removerListaPrioridade.steps ?? [])
+          .map((step) => step.id)
+          .contains(step.id)) {
+        pedido.prioridade = null;
+        await FirestoreClient.pedidos.update(pedido);
+        pedidoCtrl.onReorderPrioridade(FirestoreClient.pedidos.pedidosPrioridade);
+        await FirestoreClient.pedidos.updateAll(
+          FirestoreClient.pedidos.pedidosPrioridade,
+        );
+      }
     }
   }
 
