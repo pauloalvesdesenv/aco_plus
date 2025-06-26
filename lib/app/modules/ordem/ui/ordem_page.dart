@@ -1,6 +1,7 @@
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/tag/models/tag_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
 import 'package:aco_plus/app/core/components/app_scaffold.dart';
@@ -308,11 +309,23 @@ class _OrdemPageState extends State<OrdemPage> {
         border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
       ),
       child: ListTile(
-        title: Text(produto.pedido.localizador, style: AppCss.minimumBold),
+        title: Row(
+          children: [
+                _tagWidget(produto.pedido.tags.first),
+            Text(produto.pedido.localizador, style: AppCss.minimumBold),
+          ],
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(produto.qtde.toKg(), style: AppCss.minimumRegular.setSize(12)),
+            Row(
+              children: [
+                Text(
+                  produto.qtde.toKg(),
+                  style: AppCss.minimumRegular.setSize(12),
+                ),
+              ],
+            ),
             Text(
               '${produto.cliente.nome} - ${produto.obra.descricao}',
               style: AppCss.minimumRegular.setSize(12),
@@ -428,6 +441,27 @@ class _OrdemPageState extends State<OrdemPage> {
                   ),
                 ),
               ),
+      ),
+    );
+  }
+
+  Container _tagWidget(TagModel tag) {
+    return Container(
+      margin: const EdgeInsets.only(right: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 0.5),
+      decoration: BoxDecoration(
+        color: tag.color,
+        borderRadius: BorderRadius.circular(2),
+      ),
+      child: Text(
+        tag.nome,
+        style: TextStyle(
+          color: tag.color.computeLuminance() > 0.5
+              ? Colors.black
+              : Colors.white,
+          fontSize: 9,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

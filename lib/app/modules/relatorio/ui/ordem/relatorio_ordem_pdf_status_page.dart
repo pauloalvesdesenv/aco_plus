@@ -87,7 +87,7 @@ class RelatorioOrdemPdfStatusPage {
               pw.Column(
                 children: [
                   _itemInfo(
-                    '${produto.pedido.localizador} - ${produto.cliente.nome} - ${produto.obra.descricao}',
+                    '${produto.pedido.tipo.name.toUpperCase()} - ${produto.pedido.localizador} - ${produto.cliente.nome} - ${produto.obra.descricao}',
                     '${produto.qtde} kg',
                   ),
                   if (produto.pedido.deliveryAt == null)

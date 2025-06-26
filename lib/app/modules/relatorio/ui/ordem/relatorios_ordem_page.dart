@@ -33,7 +33,7 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
   void initState() {
     setWebTitle('Relatórios de Ordens');
     relatorioCtrl.ordemViewModelStream.add(RelatorioOrdemViewModel());
-    relatorioCtrl.onCreateRelatorioOrdem();
+    relatorioCtrl.onCreateRelatorioOrdemStatus();
     super.initState();
   }
 
@@ -318,7 +318,7 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
               Column(
                 children: [
                   itemInfo(
-                    '${produto.pedido.localizador} - ${produto.cliente.nome}${produto.obra.descricao == 'Indefinido' ? ' - ${produto.obra.descricao}' : ''}',
+                    '${produto.pedido.tipo.name.toUpperCase()} - ${produto.pedido.localizador} - ${produto.cliente.nome}${produto.obra.descricao == 'Indefinido' ? ' - ${produto.obra.descricao}' : ''}',
                     produto.qtde.toKg(),
                     color: produto.status.status.color.withValues(alpha: 0.06),
                   ),
