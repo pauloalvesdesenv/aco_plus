@@ -2,7 +2,6 @@ import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/ped
 import 'package:aco_plus/app/core/components/app_avatar.dart';
 import 'package:aco_plus/app/core/components/w.dart';
 import 'package:aco_plus/app/core/enums/widget_view_mode.dart';
-import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/modules/kanban/kanban_controller.dart';
 import 'package:aco_plus/app/modules/pedido/ui/pedido_users_bottom.dart';
 import 'package:flutter/material.dart';
