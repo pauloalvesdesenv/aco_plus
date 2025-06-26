@@ -39,7 +39,7 @@ class PedidoProdutosWidget extends StatelessWidget {
                   PedidoProdutoStatus.aguardandoProducao.index) ...[
                 Builder(
                   builder: (context) {
-                    final ordem = pedidoCtrl.getOrdemByProduto(produto);
+                    final ordem = pedidoCtrl.getOrdemByProduto(produto, true);
                     if (ordem == null) return const SizedBox();
                     return InkWell(
                       onTap: () async {
@@ -99,7 +99,7 @@ class PedidoProdutosWidget extends StatelessWidget {
               Text('${produto.qtde}Kg', style: AppCss.minimumRegular),
               Builder(
                 builder: (context) {
-                  final ordem = pedidoCtrl.getOrdemByProduto(produto);
+                  final ordem = pedidoCtrl.getOrdemByProduto(produto, true);
                   final materiaPrima =
                       produto.materiaPrima ?? ordem?.materiaPrima;
 

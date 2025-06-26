@@ -204,8 +204,8 @@ class PedidoController {
     }
   }
 
-  OrdemModel? getOrdemByProduto(PedidoProdutoModel produto) {
-    return FirestoreClient.ordens.data.firstWhereOrNull(
+  OrdemModel? getOrdemByProduto(PedidoProdutoModel produto, bool isArquivada) {
+    return ([...FirestoreClient.ordens.data, if(isArquivada) ...FirestoreClient.ordens.ordensArquivadas]).firstWhereOrNull(
       (e) => e.produtos.any((p) => p.id == produto.id),
     );
   }
@@ -504,6 +504,12 @@ class PedidoController {
     BuildContext context,
     PedidoModel pedido,
   ) async {
+    if (!(await showConfirmDialog(
+      'Deseja remover a prioridade do pedido?',
+      'O pedido será removido da lista de prioridades',
+    ))) {
+      return;
+    }
     pedido.prioridade = null;
     showLoadingDialog();
     await Future.delayed(const Duration(milliseconds: 300));

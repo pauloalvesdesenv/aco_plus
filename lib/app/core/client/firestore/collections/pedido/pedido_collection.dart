@@ -35,6 +35,15 @@ class PedidoCollection {
   CollectionReference<Map<String, dynamic>> get collection =>
       FirebaseFirestore.instance.collection(name);
 
+      Future<void> startOnlyArquivadas() async {
+    final data = await FirebaseFirestore.instance
+        .collection(name)
+        .where('isArchived', isEqualTo: true)
+        .get();
+    final pedidos = data.docs.map((e) => PedidoModel.fromMap(e.data())).toList();
+    pedidosArchivedsStream.add(pedidos);
+  }
+
   Future<void> fetch({bool lock = true, GetOptions? options}) async {
     _isStarted = false;
     await start(lock: false, options: options);
@@ -51,7 +60,6 @@ class PedidoCollection {
         .toList();
     dataStream.add(pedidos);
     pedidosUnarchivedsStream.add(pedidos.where((e) => !e.isArchived).toList());
-    pedidosArchivedsStream.add(pedidos.where((e) => e.isArchived).toList());
     pedidosPrioridadeStream.add(
       pedidos.where((e) => e.prioridade != null).toList(),
     );
@@ -99,7 +107,6 @@ class PedidoCollection {
           pedidosUnarchivedsStream.add(
             data.where((e) => !e.isArchived).toList(),
           );
-          pedidosArchivedsStream.add(data.where((e) => e.isArchived).toList());
           pedidosPrioridadeStream.add(
             data.where((e) => e.prioridade != null).toList(),
           );
@@ -107,7 +114,8 @@ class PedidoCollection {
   }
 
   PedidoModel getById(String id) =>
-      data.firstWhereOrNull((e) => e.id == id) ?? PedidoModel.empty();
+      ([...data, ...pedidosArchiveds]).firstWhereOrNull((e) => e.id == id) ??
+      PedidoModel.empty();
 
   PedidoProdutoModel getProdutoByPedidoId(String pedidoId, String produtoId) =>
       getById(pedidoId).produtos.firstWhereOrNull((e) => e.id == produtoId) ??

@@ -37,7 +37,9 @@ class FirestoreClient {
     await tags.start();
     await checklists.start();
     await clientes.start();
+    await pedidos.startOnlyArquivadas();
     await pedidos.start();
+    await ordens.startOnlyArquivadas();
     await ordens.start();
     await automatizacao.start();
     await notificacoes.start();

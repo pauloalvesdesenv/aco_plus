@@ -311,7 +311,7 @@ class _OrdemPageState extends State<OrdemPage> {
       child: ListTile(
         title: Row(
           children: [
-                _tagWidget(produto.pedido.tags.first),
+            if (produto.pedido.tags.isNotEmpty) _tagWidget(produto.pedido.tags.first),
             Text(produto.pedido.localizador, style: AppCss.minimumBold),
           ],
         ),

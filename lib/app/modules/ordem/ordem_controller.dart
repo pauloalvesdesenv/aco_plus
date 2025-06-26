@@ -160,7 +160,7 @@ class OrdemController {
 
   Future<void> onCreate(value) async {
     form.id =
-        'OP${form.produto!.descricao.replaceAll('m', '').replaceAll('.', '')}${form.id}';
+        'OP${form.produto!.descricao.replaceAll('m', '').replaceAll('.', '')}-${[...FirestoreClient.ordens.ordensNaoArquivadas, ...FirestoreClient.ordens.ordensArquivadas].length + 1}_${HashService.get}';
 
     final ordemCriada = form.toOrdemModel();
     onValid(ordemCriada);
@@ -394,7 +394,9 @@ class OrdemController {
     final produtoStatus = produto.statusess.last.status;
     final status = await showOrdemProdutoStatusBottom(produtoStatus);
     if (status == null || produtoStatus == status) return;
-    if (status == PedidoProdutoStatus.pronto && produto.materiaPrima == null) {
+    if ((status == PedidoProdutoStatus.pronto ||
+            status == PedidoProdutoStatus.produzindo) &&
+        produto.materiaPrima == null) {
       showInfoDialog(
         'Para finalizar a ordem, é necessário selecionar uma matéria prima para o produto.',
       );
@@ -411,7 +413,9 @@ class OrdemController {
     PedidoProdutoModel produto,
     PedidoProdutoStatus status,
   ) async {
-    if (status == PedidoProdutoStatus.pronto && produto.materiaPrima == null) {
+    if ((status == PedidoProdutoStatus.pronto ||
+            status == PedidoProdutoStatus.produzindo) &&
+        produto.materiaPrima == null) {
       showInfoDialog(
         'Para finalizar a ordem, é necessário selecionar uma matéria prima para o produto.',
       );

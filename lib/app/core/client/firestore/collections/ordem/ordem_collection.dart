@@ -30,6 +30,15 @@ class OrdemCollection {
   CollectionReference<Map<String, dynamic>> get collection =>
       FirebaseFirestore.instance.collection(name);
 
+  Future<void> startOnlyArquivadas() async {
+    final data = await FirebaseFirestore.instance
+        .collection(name)
+        .where('isArchived', isEqualTo: true)
+        .get();
+    final ordens = data.docs.map((e) => OrdemModel.fromMap(e.data())).toList();
+    ordensArquivadasStream.add(ordens);
+  }
+
   Future<void> fetch({bool lock = true, GetOptions? options}) async {
     _isStarted = false;
     await start(lock: false, options: options);
@@ -40,14 +49,12 @@ class OrdemCollection {
   Future<void> start({bool lock = true, GetOptions? options}) async {
     if (_isStarted && lock) return;
     _isStarted = true;
-    final data = await FirebaseFirestore.instance.collection(name).where('isArchived', isEqualTo: false).get();
+    final data = await FirebaseFirestore.instance
+        .collection(name)
+        .where('isArchived', isEqualTo: false)
+        .get();
     final ordens = data.docs.map((e) => OrdemModel.fromMap(e.data())).toList();
-
-    final ordensArquivadas = ordens.where((e) => e.isArchived).toList();
-    ordensArquivadasStream.add(ordensArquivadas);
-
     final ordensNaoArquivadas = ordens.where((e) => !e.isArchived).toList();
-
     ordensNaoArquivadas.sort((a, b) {
       if (a.freezed.isFreezed && !b.freezed.isFreezed) {
         return 1;
@@ -63,7 +70,7 @@ class OrdemCollection {
 
     ordensNaoArquivadasStream.add(ordensNaoArquivadas);
 
-    dataStream.add([...ordensArquivadas, ...ordensNaoArquivadas]);
+    dataStream.add(ordensNaoArquivadas);
   }
 
   bool _isListen = false;
@@ -98,15 +105,13 @@ class OrdemCollection {
                 whereNotIn: whereNotIn,
                 isNull: isNull,
               )
-            : collection).where('isArchived', isEqualTo: false)
+            : collection)
+        .where('isArchived', isEqualTo: false)
         .snapshots()
         .listen((e) {
           final ordens = e.docs
               .map((e) => OrdemModel.fromMap(e.data()))
               .toList();
-          final ordensArquivadas = ordens.where((e) => e.isArchived).toList();
-          ordensArquivadasStream.add(ordensArquivadas);
-
           final ordensNaoArquivadas = ordens
               .where((e) => !e.isArchived)
               .toList();
@@ -126,7 +131,7 @@ class OrdemCollection {
 
           ordensNaoArquivadasStream.add(ordensNaoArquivadas);
 
-          dataStream.add([...ordensArquivadas, ...ordensNaoArquivadas]);
+          dataStream.add(ordensNaoArquivadas);
         });
   }
 
@@ -137,7 +142,8 @@ class OrdemCollection {
         .map((doc) => OrdemModel.fromMap(doc.data()!));
   }
 
-  OrdemModel getById(String id) => data.firstWhere((e) => e.id == id);
+  OrdemModel getById(String id) => ([...data, ...ordensArquivadas])
+      .firstWhere((e) => e.id == id);
 
   Future<OrdemModel?> add(OrdemModel model) async {
     await collection.doc(model.id).set(model.toMap());
