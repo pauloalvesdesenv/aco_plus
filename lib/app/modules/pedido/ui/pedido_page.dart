@@ -4,6 +4,7 @@ import 'package:aco_plus/app/core/components/app_scaffold.dart';
 import 'package:aco_plus/app/core/components/divisor.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/components/w.dart';
+import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/notificacao/notificacao_controller.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_anexos_widget.dart';
@@ -46,6 +47,7 @@ class _PedidoPageState extends State<PedidoPage>
     with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
+    setWebTitle('Pedido');
     pedidoCtrl.onInitPage(widget.pedido).then((_) {
       notificacaoCtrl.onSetPedidoViewed(widget.pedido);
     });
@@ -120,7 +122,7 @@ class _PedidoPageState extends State<PedidoPage>
                     PedidoProdutosWidget(pedido),
                     const Divisor(),
                   ],
-                  
+
                   if (!pedido.isAguardandoEntradaProducao())
                     Column(
                       children: [

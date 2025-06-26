@@ -37,6 +37,7 @@ class OrdemCreatePage extends StatefulWidget {
 class _OrdemCreatePageState extends State<OrdemCreatePage> {
   @override
   void initState() {
+    setWebTitle('Nova Ordem');
     ordemCtrl.onInitCreatePage(widget.ordem);
     super.initState();
   }
@@ -48,8 +49,7 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => pop(context),
-          icon: Icon(Icons.arrow_back, color: AppColors.
-          white),
+          icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
         title: Text(
           ordemCtrl.form.isEdit
@@ -105,13 +105,13 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
                     Builder(
                       builder: (context) {
                         final materiasPrimas = [
-                            MateriaPrimaModel.empty(),
-                            ...FirestoreClient.materiaPrimas.data.where(
-                              (e) =>
-                                  e.produto.id == form.produto?.id &&
-                                  e.status == MateriaPrimaStatus.disponivel,
-                            ),
-                          ];
+                          MateriaPrimaModel.empty(),
+                          ...FirestoreClient.materiaPrimas.data.where(
+                            (e) =>
+                                e.produto.id == form.produto?.id &&
+                                e.status == MateriaPrimaStatus.disponivel,
+                          ),
+                        ];
                         return AppDropDown<MateriaPrimaModel?>(
                           disable: form.produto == null,
                           label: 'Materia Prima',
@@ -126,7 +126,7 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
                             ordemCtrl.formStream.update();
                           },
                         );
-                      }
+                      },
                     ),
                     const H(16),
                     AppField(
@@ -351,12 +351,12 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
                           ],
                         ),
                         if (produto.pedido.deliveryAt != null)
-                        Text(
-                          'Previsão de Entrega: ${produto.pedido.deliveryAt.text()}',
-                          style: AppCss.minimumRegular
-                              .copyWith(fontSize: 12)
-                              .setColor(AppColors.neutralDark),
-                        ),
+                          Text(
+                            'Previsão de Entrega: ${produto.pedido.deliveryAt.text()}',
+                            style: AppCss.minimumRegular
+                                .copyWith(fontSize: 12)
+                                .setColor(AppColors.neutralDark),
+                          ),
                       ],
                     ),
                   ),

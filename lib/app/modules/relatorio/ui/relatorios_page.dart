@@ -17,6 +17,12 @@ class RelatoriosPage extends StatefulWidget {
 
 class _RelatoriosPageState extends State<RelatoriosPage> {
   @override
+  void initState() {
+    setWebTitle('Relatórios');
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AppScaffold(
       resizeAvoid: true,

@@ -24,6 +24,7 @@ class ChecklistCreatePage extends StatefulWidget {
 class _ChecklistCreatePageState extends State<ChecklistCreatePage> {
   @override
   void initState() {
+    setWebTitle('Novo Modelo de Checklist');
     checklistCtrl.init(widget.checklist);
     super.initState();
   }

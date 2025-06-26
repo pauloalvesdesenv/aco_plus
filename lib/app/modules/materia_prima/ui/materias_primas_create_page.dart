@@ -32,6 +32,7 @@ class MateriaPrimaCreatePage extends StatefulWidget {
 class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
   @override
   void initState() {
+    setWebTitle('Nova Matéria Prima');
     materiaPrimaCtrl.init(widget.materiaPrima);
     super.initState();
   }

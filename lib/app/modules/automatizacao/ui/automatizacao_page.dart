@@ -7,6 +7,7 @@ import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/components/w.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
+import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/automatizacao/ui/automatizacao_step_bottom.dart';
 import 'package:aco_plus/app/modules/automatizacao/ui/automatizacao_steps_bottom.dart';
 import 'package:flutter/material.dart';
@@ -167,6 +168,12 @@ class _AutomatizacaoMultiplesWidget extends StatefulWidget {
 class _AutomatizacaoMultiplesWidgetState
     extends State<_AutomatizacaoMultiplesWidget> {
   @override
+  void initState() {
+    setWebTitle('Automatização de Etapas');
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -207,9 +214,7 @@ class _AutomatizacaoMultiplesWidgetState
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: step.color.withValues(
-                          alpha: 0.1,
-                        ),
+                        color: step.color.withValues(alpha: 0.1),
                       ),
                       child: Text(
                         step.name,

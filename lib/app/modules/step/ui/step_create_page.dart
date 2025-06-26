@@ -29,6 +29,7 @@ class StepCreatePage extends StatefulWidget {
 class _StepCreatePageState extends State<StepCreatePage> {
   @override
   void initState() {
+    setWebTitle('Nova Etapa');
     stepCtrl.init(widget.step);
     super.initState();
   }

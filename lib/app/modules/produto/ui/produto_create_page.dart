@@ -23,6 +23,7 @@ class ProdutoCreatePage extends StatefulWidget {
 class _ProdutoCreatePageState extends State<ProdutoCreatePage> {
   @override
   void initState() {
+    setWebTitle('Novo Produto');
     produtoCtrl.init(widget.produto);
     super.initState();
   }

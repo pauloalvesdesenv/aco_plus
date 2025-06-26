@@ -36,6 +36,7 @@ class PedidosPage extends StatefulWidget {
 class _PedidosPageState extends State<PedidosPage> {
   @override
   void initState() {
+    setWebTitle('Pedidos');
     pedidoCtrl.onInit();
     super.initState();
   }

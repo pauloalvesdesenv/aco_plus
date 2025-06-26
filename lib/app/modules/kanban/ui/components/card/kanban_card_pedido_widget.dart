@@ -9,6 +9,7 @@ import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/modules/kanban/kanban_controller.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_details_widget.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_notificao_widget.dart';
+import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_products_widget.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_tags_widget.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_users_widget.dart';
 import 'package:aco_plus/app/modules/notificacao/notificacao_controller.dart';
@@ -108,6 +109,8 @@ class KanbanCardPedidoWidget extends StatelessWidget {
                       KanbanCardUsersWidget(pedido, viewMode: viewMode),
                     ],
                   ),
+                  if (viewMode == WidgetViewMode.expanded)
+                    KanbanCardProductsWidget(pedido: pedido),
                 ],
               ),
             ),

@@ -24,6 +24,7 @@ class TagCreatePage extends StatefulWidget {
 class _TagCreatePageState extends State<TagCreatePage> {
   @override
   void initState() {
+    setWebTitle('Nova Etiqueta');
     tagCtrl.init(widget.tag);
     super.initState();
   }

@@ -31,8 +31,9 @@ class RelatoriosOrdemPage extends StatefulWidget {
 class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
   @override
   void initState() {
+    setWebTitle('Relatórios de Ordens');
     relatorioCtrl.ordemViewModelStream.add(RelatorioOrdemViewModel());
-    relatorioCtrl.onCreateRelatorio();
+    relatorioCtrl.onCreateRelatorioOrdem();
     super.initState();
   }
 

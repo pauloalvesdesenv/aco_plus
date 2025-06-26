@@ -14,7 +14,7 @@ class KanbanCardTagsWidget extends StatelessWidget {
   });
 
   bool get isCollapsed => viewMode == WidgetViewMode.minified;
-  bool get isExpanded => viewMode == WidgetViewMode.normal;
+  bool get isNormal => viewMode != WidgetViewMode.minified;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class KanbanCardTagsWidget extends StatelessWidget {
         color: e.color,
         borderRadius: BorderRadius.circular(4),
       ),
-      child: isExpanded
+      child: isNormal
           ? Text(
               e.nome,
               style: TextStyle(

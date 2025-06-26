@@ -4,6 +4,7 @@ import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/services/download_file_url_service/download_file_url_service.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
+import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/backup/backup_controller.dart';
 import 'package:aco_plus/app/modules/backup/backup_view_model.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class BackupsPage extends StatefulWidget {
 class _BackupsPageState extends State<BackupsPage> {
   @override
   void initState() {
+    setWebTitle('Backup');
     backupCtrl.onInit();
     super.initState();
   }

@@ -33,6 +33,7 @@ class ClienteCreatePage extends StatefulWidget {
 class _ClienteCreatePageState extends State<ClienteCreatePage> {
   @override
   void initState() {
+    setWebTitle('Novo Cliente');
     clienteCtrl.init(widget.cliente);
     super.initState();
   }

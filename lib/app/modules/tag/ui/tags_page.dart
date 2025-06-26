@@ -24,6 +24,7 @@ class TagsPage extends StatefulWidget {
 class _TagsPageState extends State<TagsPage> {
   @override
   void initState() {
+    setWebTitle('Etiquetas');
     tagCtrl.onInit();
     super.initState();
   }

@@ -9,8 +9,19 @@ import 'package:aco_plus/app/modules/tag/ui/tags_page.dart';
 import 'package:aco_plus/app/modules/usuario/ui/usuarios_page.dart';
 import 'package:flutter/material.dart';
 
-class ConfigPage extends StatelessWidget {
+class ConfigPage extends StatefulWidget {
   const ConfigPage({super.key});
+
+  @override
+  State<ConfigPage> createState() => _ConfigPageState();
+}
+
+class _ConfigPageState extends State<ConfigPage> {
+  @override
+  void initState() {
+    setWebTitle('Configurações');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

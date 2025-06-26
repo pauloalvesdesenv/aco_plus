@@ -23,6 +23,7 @@ class FabricanteCreatePage extends StatefulWidget {
 class _FabricanteCreatePageState extends State<FabricanteCreatePage> {
   @override
   void initState() {
+    setWebTitle('Novo Fabricante');
     fabricanteCtrl.init(widget.fabricante);
     super.initState();
   }

@@ -45,6 +45,7 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
 
   @override
   void initState() {
+    setWebTitle('Novo Pedido');
     pedidoCtrl.onInitCreatePage(widget.pedido);
     super.initState();
   }

@@ -27,6 +27,7 @@ class UsuarioCreatePage extends StatefulWidget {
 class _UsuarioCreatePageState extends State<UsuarioCreatePage> {
   @override
   void initState() {
+    setWebTitle('Novo Usuário');
     usuarioCtrl.init(widget.usuario);
     super.initState();
   }

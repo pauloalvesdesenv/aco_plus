@@ -2,6 +2,7 @@ import 'package:aco_plus/app/app_controller.dart';
 import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/dialogs/info_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const String empty = '';
 
@@ -58,4 +59,10 @@ Future<bool> onDeleteProcess({
   } else {
     return await showConfirmDialog(deleteTitle, deleteMessage);
   }
+}
+
+void setWebTitle(String title) {
+  SystemChrome.setApplicationSwitcherDescription(
+    ApplicationSwitcherDescription(label: title),
+  );
 }
