@@ -162,7 +162,7 @@ class OrdemController {
     form.id =
         'OP${form.produto!.descricao.replaceAll('m', '').replaceAll('.', '')}-${[...FirestoreClient.ordens.ordensNaoArquivadas, ...FirestoreClient.ordens.ordensArquivadas].length + 1}_${HashService.get}';
 
-    final ordemCriada = form.toOrdemModel();
+    final ordemCriada = form.toOrdemModelCreate();
     onValid(ordemCriada);
     if (ordemCriada.produtos.isEmpty) {
       if (!await showConfirmDialog(
@@ -201,7 +201,7 @@ class OrdemController {
 
   Future<void> onEdit(value, OrdemModel ordem) async {
     await FirestoreClient.pedidos.fetch();
-    final ordemEditada = form.toOrdemModel();
+    final ordemEditada = form.toOrdemModelCreate();
     onValid(ordemEditada);
     if (ordemEditada.produtos.isEmpty) {
       if (!await showConfirmDialog('A ordem vazia.', 'Deseja Continuar?')) {

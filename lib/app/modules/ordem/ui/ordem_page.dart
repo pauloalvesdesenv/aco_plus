@@ -20,6 +20,7 @@ import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/ordem/ordem_controller.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_create_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_exportar_pdf_tipo_bottom.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem_timeline_widget.dart';
 import 'package:aco_plus/app/modules/ordem/view_models/ordem_view_model.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
@@ -122,6 +123,7 @@ class _OrdemPageState extends State<OrdemPage> {
             child: Column(
               children: [
                 _descriptionWidget(ordem),
+                if (ordem.history.isNotEmpty) OrdemTimelineWidget(ordem: ordem),
                 const Divisor(),
                 _statusWidget(ordem),
                 for (final produto in ordem.produtos)
@@ -311,7 +313,8 @@ class _OrdemPageState extends State<OrdemPage> {
       child: ListTile(
         title: Row(
           children: [
-            if (produto.pedido.tags.isNotEmpty) _tagWidget(produto.pedido.tags.first),
+            if (produto.pedido.tags.isNotEmpty)
+              _tagWidget(produto.pedido.tags.first),
             Text(produto.pedido.localizador, style: AppCss.minimumBold),
           ],
         ),

@@ -1,3 +1,4 @@
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/ordem_history_type_enum.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_arquivada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_concluida_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_congelada_model.dart';
@@ -7,18 +8,6 @@ import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/hist
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_editada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_status_produto_model.dart';
-
-enum OrdemHistoryTypeEnum {
-  criada,
-  editada,
-  congelada,
-  descongelada,
-  statusProdutoAlterada,
-  materiaPrimaEditada,
-  concluida,
-  arquivada,
-  desarquivada,
-}
 
 class OrdemHistoryModel {
   final OrdemHistoryTypeEnum type;

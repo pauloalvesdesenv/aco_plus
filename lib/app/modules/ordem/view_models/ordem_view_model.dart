@@ -1,5 +1,8 @@
 import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/ordem_history_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/ordem_history_type_enum.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_criada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
@@ -9,6 +12,7 @@ import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/enums/sort_type.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
 import 'package:aco_plus/app/core/services/hash_service.dart';
+import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
 
 enum OrdemExportarPdfTipo { relatorio, etiquetas }
@@ -96,10 +100,10 @@ class OrdemCreateModel {
     }
   }
 
-  OrdemModel toOrdemModel() {
+  OrdemModel toOrdemModelCreate() {
     return OrdemModel(
       id: id,
-      createdAt: createdAt ?? DateTime.now(),
+      createdAt: DateTime.now(),
       produto: produto!,
       produtos: produtos
           .map(
@@ -116,14 +120,50 @@ class OrdemCreateModel {
             ),
           )
           .toList(),
-      freezed: isCreate ? OrdemFreezedModel.static() : freezed.toOrdemFreeze(),
-      beltIndex: isCreate
-          ? FirestoreClient.ordens.ordensNaoCongeladas.length
-          : beltIndex,
-      materiaPrima: materiaPrima?.id == 'register_unavailable'
-          ? null
-          : materiaPrima,
+      freezed: OrdemFreezedModel.static(),
+      beltIndex: FirestoreClient.ordens.ordensNaoCongeladas.length,
+      materiaPrima: materiaPrima,
       updatedAt: DateTime.now(),
+      history: [
+        OrdemHistoryModel(
+          type: OrdemHistoryTypeEnum.criada,
+          message: 'Ordem criada',
+          createdAt: DateTime.now(),
+          data: OrdemHistoryTypeCriadaModel(
+            user: usuario,
+            createdAt: DateTime.now(),
+            materiaPrima: materiaPrima!,
+          ),
+        ),
+      ],
+    );
+  }
+
+  OrdemModel toOrdemModelEdit(OrdemModel ordem) {
+    return OrdemModel(
+      id: id,
+      createdAt: ordem.createdAt,
+      produto: produto!,
+      produtos: produtos
+          .map(
+            (e) => e.copyWith(
+              statusess: [
+                ...e.statusess,
+                if (e.statusess.last.status !=
+                    PedidoProdutoStatus.aguardandoProducao)
+                  if (e.isSelected && e.isAvailableToChanges)
+                    PedidoProdutoStatusModel.create(
+                      PedidoProdutoStatus.aguardandoProducao,
+                    ),
+              ],
+            ),
+          )
+          .toList(),
+      freezed: freezed.toOrdemFreeze(),
+      beltIndex: beltIndex,
+      materiaPrima: materiaPrima,
+      updatedAt: DateTime.now(),
+      history: ordem.history,
     );
   }
 }
