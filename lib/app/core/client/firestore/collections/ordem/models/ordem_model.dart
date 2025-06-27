@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/ordem_history_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
@@ -22,6 +22,7 @@ class OrdemModel {
   final OrdemFreezedModel freezed;
   bool isArchived;
   int? beltIndex;
+  List<OrdemHistoryModel> history;
 
   String get localizator => id.contains('_') ? id.split('_').first : id;
 
@@ -154,25 +155,24 @@ class OrdemModel {
     this.materiaPrima,
     this.beltIndex,
     this.endAt,
+    required this.history,
   });
 
-  Map<String, dynamic> toMap() {
-    var map = {
-      'id': id,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'endAt': endAt?.millisecondsSinceEpoch,
-      'produto': produto.toMap(),
-      'idPedidosProdutos': produtos
-          .map((x) => {'pedidoId': x.pedidoId, 'produtoId': x.id})
-          .toList(),
-      'freezed': freezed.toMap(),
-      'beltIndex': beltIndex,
-      'materiaPrima': materiaPrima?.toMap(),
-      'isArchived': isArchived,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
-    };
-    return map;
-  }
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'createdAt': createdAt.millisecondsSinceEpoch,
+    'endAt': endAt?.millisecondsSinceEpoch,
+    'produto': produto.toMap(),
+    'idPedidosProdutos': produtos
+        .map((x) => {'pedidoId': x.pedidoId, 'produtoId': x.id})
+        .toList(),
+    'freezed': freezed.toMap(),
+    'beltIndex': beltIndex,
+    'materiaPrima': materiaPrima?.toMap(),
+    'isArchived': isArchived,
+    'updatedAt': updatedAt.millisecondsSinceEpoch,
+    'history': history.map((e) => e.toJson()).toList(),
+  };
 
   factory OrdemModel.fromMap(Map<String, dynamic> map) {
     return OrdemModel(
@@ -201,6 +201,11 @@ class OrdemModel {
       updatedAt: map['updatedAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'])
           : DateTime.now(),
+      history: map['history'] != null
+          ? List<OrdemHistoryModel>.from(
+              map['history'].map((e) => OrdemHistoryModel.fromJson(e)),
+            )
+          : [],
     );
   }
 
@@ -218,6 +223,7 @@ class OrdemModel {
     OrdemFreezedModel? freezed,
     MateriaPrimaModel? materiaPrima,
     DateTime? updatedAt,
+    List<OrdemHistoryModel>? history,
   }) {
     return OrdemModel(
       id: id ?? this.id,
@@ -228,6 +234,7 @@ class OrdemModel {
       freezed: freezed ?? this.freezed,
       materiaPrima: materiaPrima ?? this.materiaPrima,
       updatedAt: updatedAt ?? this.updatedAt,
+      history: history ?? this.history,
     );
   }
 }
