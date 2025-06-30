@@ -139,6 +139,7 @@ class OrdemCollection {
     return collection
         .doc(id)
         .snapshots()
+        .where((e) => e.data() != null)
         .map((doc) => OrdemModel.fromMap(doc.data()!));
   }
 

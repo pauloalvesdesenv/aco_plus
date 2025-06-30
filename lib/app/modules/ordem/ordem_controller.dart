@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_status_produtos.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
@@ -19,6 +20,7 @@ import 'package:aco_plus/app/core/services/notification_service.dart';
 import 'package:aco_plus/app/core/services/pdf_download_service/pdf_download_service_mobile.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/automatizacao/automatizacao_controller.dart';
+import 'package:aco_plus/app/modules/ordem/ordem_timeline_register.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_etiquetas_pdf_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_produto_status_bottom.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_produtos_status_bottom.dart';
@@ -201,7 +203,7 @@ class OrdemController {
 
   Future<void> onEdit(value, OrdemModel ordem) async {
     await FirestoreClient.pedidos.fetch();
-    final ordemEditada = form.toOrdemModelCreate();
+    final ordemEditada = form.toOrdemModelEdit(ordem);
     onValid(ordemEditada);
     if (ordemEditada.produtos.isEmpty) {
       if (!await showConfirmDialog('A ordem vazia.', 'Deseja Continuar?')) {
@@ -218,11 +220,13 @@ class OrdemController {
       }
     }
     for (PedidoProdutoModel produto in ordemEditada.produtos) {
-      if (ordemEditada.materiaPrima?.id != produto.materiaPrima?.id) {
-        await FirestoreClient.pedidos.updateProdutoMateriaPrima(
-          produto,
-          ordemEditada.materiaPrima!,
-        );
+      if (produto.status.status != PedidoProdutoStatus.pronto) {
+        if (ordemEditada.materiaPrima?.id != produto.materiaPrima?.id) {
+          await FirestoreClient.pedidos.updateProdutoMateriaPrima(
+            produto,
+            ordemEditada.materiaPrima!,
+          );
+        }
       }
       await FirestoreClient.pedidos.updateProdutoStatus(
         produto,
@@ -233,6 +237,7 @@ class OrdemController {
     await FirestoreClient.ordens.update(ordemEditada);
     await FirestoreClient.pedidos.fetch();
     await automatizacaoCtrl.onSetStepByPedidoStatus(ordemEditada.pedidos);
+    await OrdemTimelineRegister.editada(ordemEditada, ordem);
     Navigator.pop(value);
     Navigator.pop(value);
     NotificationService.showPositive(
@@ -380,8 +385,14 @@ class OrdemController {
     showLoadingDialog();
     for (final produto
         in produtos.where((e) => e.status.status != status).toList()) {
-      await onChangeProdutoStatus(produto, status);
+      await onChangeProdutoStatus(produto, status, true);
     }
+    await OrdemTimelineRegister.statusProdutoAlterada(
+      ordem,
+      OrdemStatusProdutos(status: status, produtos: produtos),
+    );
+    final updatedOrdem = getOrdemById(ordem.id);
+    if (updatedOrdem.status != ordem.status) await OrdemTimelineRegister.statusOrdem(updatedOrdem);
     Navigator.pop(contextGlobal);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
     onUpdateAt(ordem);
@@ -403,7 +414,7 @@ class OrdemController {
       return;
     }
 
-    await onChangeProdutoStatus(produto, status);
+    await onChangeProdutoStatus(produto, status, false);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
     onUpdateAt(ordem);
   }
@@ -422,7 +433,7 @@ class OrdemController {
       return;
     }
     showLoadingDialog();
-    await onChangeProdutoStatus(produto, status);
+    await onChangeProdutoStatus(produto, status, false);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
     onUpdateAt(ordem);
     Navigator.pop(contextGlobal);
@@ -431,12 +442,21 @@ class OrdemController {
   Future<void> onChangeProdutoStatus(
     PedidoProdutoModel produto,
     PedidoProdutoStatus status,
+    bool isAll,
   ) async {
     await FirestoreClient.pedidos.updateProdutoStatus(produto, status);
     final pedido = await FirestoreClient.pedidos.updatePedidoStatus(produto);
     if (pedido != null) await updateFeaturesByPedidoStatus(pedido);
+    if (!isAll) {
+      await OrdemTimelineRegister.statusProdutoAlterada(
+        ordem,
+        OrdemStatusProdutos(status: status, produtos: [produto]),
+      );
+    }
     await FirestoreClient.ordens.fetch();
-    setOrdem(getOrdemById(ordem.id));
+    final updatedOrdem = getOrdemById(ordem.id);
+    if (!isAll && updatedOrdem.status != ordem.status) await OrdemTimelineRegister.statusOrdem(updatedOrdem);
+    setOrdem(updatedOrdem);
   }
 
   Future<void> updateFeaturesByPedidoStatus(PedidoModel pedido) async {
@@ -459,6 +479,7 @@ class OrdemController {
       }
       ordem.freezed.isFreezed = false;
       ordem.freezed.reason.controller.clear();
+      await OrdemTimelineRegister.descongelada(ordem);
     } else {
       if (!await showConfirmDialog(
         'Deseja congelar a ordem?',
@@ -467,6 +488,7 @@ class OrdemController {
         return;
       }
       ordem.freezed.isFreezed = true;
+      await OrdemTimelineRegister.congelada(ordem);
     }
     await FirestoreClient.ordens.update(ordem);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
@@ -539,6 +561,7 @@ class OrdemController {
     showLoadingDialog();
     await FirestoreClient.ordens.update(ordem);
     await FirestoreClient.ordens.fetch();
+    await OrdemTimelineRegister.arquivada(ordem);
     Navigator.pop(contextGlobal);
     Navigator.pop(context);
     NotificationService.showPositive(
@@ -570,6 +593,7 @@ class OrdemController {
     for (var i = 0; i < pop; i++) {
       Navigator.pop(context);
     }
+    await OrdemTimelineRegister.desarquivada(ordem);
     NotificationService.showPositive(
       'Ordem Desarquivada!',
       'Acesse a lista de ordens para visualizar a ordem',

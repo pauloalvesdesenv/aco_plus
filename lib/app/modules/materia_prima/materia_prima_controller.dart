@@ -10,6 +10,7 @@ import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:aco_plus/app/core/services/notification_service.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/materia_prima/materia_prima_view_model.dart';
+import 'package:aco_plus/app/modules/ordem/ordem_timeline_register.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:overlay_support/overlay_support.dart';
 
@@ -86,17 +87,23 @@ class MateriaPrimaController {
         )) {
           ordem.materiaPrima = materiaPrimaCreate;
           await FirestoreClient.ordens.update(ordem);
-          for (var produto in ordem.produtos.where(
+          final produtosAlterarMateriaPrima = ordem.produtos.where(
             (e) =>
                 e.materiaPrima == null &&
                 e.status.status != PedidoProdutoStatus.pronto,
-          )) {
+          ).toList();
+          for (var produto in produtosAlterarMateriaPrima) {
             produto.materiaPrima = materiaPrimaCreate;
             await FirestoreClient.pedidos.updateProdutoMateriaPrima(
               produto,
               materiaPrimaCreate,
             );
           }
+          await OrdemTimelineRegister.materiaPrimaEditada(
+            ordem,
+            materiaPrimaCreate,
+            produtosAlterarMateriaPrima,
+          );
         }
       }
       await FirestoreClient.ordens.fetch();

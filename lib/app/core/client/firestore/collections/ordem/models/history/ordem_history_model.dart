@@ -47,8 +47,8 @@ class OrdemHistoryModel {
       case OrdemHistoryTypeEnum.materiaPrimaEditada:
         data = OrdemHistoryTypeMateriaPrimaModel.fromJson(json['data']);
         break;
-      case OrdemHistoryTypeEnum.concluida:
-        data = OrdemHistoryTypeConcluidaModel.fromJson(json['data']);
+      case OrdemHistoryTypeEnum.statusOrdem:
+        data = OrdemHistoryTypeStatusOrdemModel.fromJson(json['data']);
         break;
       case OrdemHistoryTypeEnum.arquivada:
         data = OrdemHistoryTypeArquivadaModel.fromJson(json['data']);

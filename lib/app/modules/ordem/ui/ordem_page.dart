@@ -20,7 +20,7 @@ import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/ordem/ordem_controller.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_create_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_exportar_pdf_tipo_bottom.dart';
-import 'package:aco_plus/app/modules/ordem/ui/ordem_timeline_widget.dart';
+import 'package:aco_plus/app/modules/ordem/ui/components/timeline/ordem_timeline_widget.dart';
 import 'package:aco_plus/app/modules/ordem/view_models/ordem_view_model.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
@@ -123,6 +123,7 @@ class _OrdemPageState extends State<OrdemPage> {
             child: Column(
               children: [
                 _descriptionWidget(ordem),
+                if (ordem.history.isNotEmpty) const Divisor(),
                 if (ordem.history.isNotEmpty) OrdemTimelineWidget(ordem: ordem),
                 const Divisor(),
                 _statusWidget(ordem),
@@ -142,7 +143,7 @@ class _OrdemPageState extends State<OrdemPage> {
 
   Padding _descriptionWidget(OrdemModel ordem) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
