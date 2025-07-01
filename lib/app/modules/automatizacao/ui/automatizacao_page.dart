@@ -204,27 +204,34 @@ class _AutomatizacaoMultiplesWidgetState
                 ],
               ),
             ),
-            Row(
-              children: widget.automatizacaoItem.steps!
-                  .map(
-                    (step) => Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: step.color.withValues(alpha: 0.1),
-                      ),
-                      child: Text(
-                        step.name,
-                        style: AppCss.minimumRegular.copyWith(
-                          color: Colors.black87,
+            Expanded(
+              flex: 2,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: widget.automatizacaoItem.steps!
+                      .map(
+                        (step) => Container(
+                          margin: const EdgeInsets.only(right: 5),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: step.color.withValues(alpha: 0.1),
+                          ),
+                          child: Text(
+                            step.name,
+                            style: AppCss.minimumRegular.copyWith(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )
-                  .toList(),
+                      )
+                      .toList(),
+                ),
+              ),
             ),
             const W(8),
             InkWell(

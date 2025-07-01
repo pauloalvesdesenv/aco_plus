@@ -29,6 +29,7 @@ class KanbanUtils {
   late InfoPopupController controller;
   DateTime focusedDay = DateTime.now();
   UsuarioModel? usuario;
+  TextController usuarioEC = TextController();
   PageController? pageController;
 
   void cancelTimer() {
@@ -44,6 +45,9 @@ class KanbanUtils {
       qtde++;
     }
     if (cliente != null) {
+      qtde++;
+    }
+    if (usuario != null) {
       qtde++;
     }
     return qtde;

@@ -110,6 +110,7 @@ class _KanbanFilterWidgetState extends State<KanbanFilterWidget> {
                       hasFilter: true,
                       hint: 'Selecionar Usuario',
                       item: utils.usuario,
+                      controller: utils.usuarioEC,
                       itens: FirestoreClient.usuarios.data,
                       itemLabel: (e) => e?.nome ?? 'Selecionar usuario',
                       onSelect: (e) {
