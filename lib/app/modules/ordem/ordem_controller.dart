@@ -161,8 +161,16 @@ class OrdemController {
   }
 
   Future<void> onCreate(value) async {
+    String descricao = form.produto!.descricao
+        .replaceAll('m', '')
+        .replaceAll('.', '');
+    descricao = descricao.length > 2 ? descricao.substring(0, 2) : descricao;
+    if (descricao.length == 1) {
+      descricao = '${descricao}0';
+    }
+
     form.id =
-        'OP${form.produto!.descricao.replaceAll('m', '').replaceAll('.', '')}-${[...FirestoreClient.ordens.ordensNaoArquivadas, ...FirestoreClient.ordens.ordensArquivadas].length + 1}_${HashService.get}';
+        'OP$descricao-${[...FirestoreClient.ordens.ordensNaoArquivadas, ...FirestoreClient.ordens.ordensArquivadas].length + 1}_${HashService.get}';
 
     final ordemCriada = form.toOrdemModelCreate();
     onValid(ordemCriada);
@@ -392,7 +400,9 @@ class OrdemController {
       OrdemStatusProdutos(status: status, produtos: produtos),
     );
     final updatedOrdem = getOrdemById(ordem.id);
-    if (updatedOrdem.status != ordem.status) await OrdemTimelineRegister.statusOrdem(updatedOrdem);
+    if (updatedOrdem.status != ordem.status) {
+      await OrdemTimelineRegister.statusOrdem(updatedOrdem);
+    }
     Navigator.pop(contextGlobal);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
     onUpdateAt(ordem);
@@ -455,7 +465,9 @@ class OrdemController {
     }
     await FirestoreClient.ordens.fetch();
     final updatedOrdem = getOrdemById(ordem.id);
-    if (!isAll && updatedOrdem.status != ordem.status) await OrdemTimelineRegister.statusOrdem(updatedOrdem);
+    if (!isAll && updatedOrdem.status != ordem.status) {
+      await OrdemTimelineRegister.statusOrdem(updatedOrdem);
+    }
     setOrdem(updatedOrdem);
   }
 

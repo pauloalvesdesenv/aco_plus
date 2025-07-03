@@ -47,7 +47,9 @@ class _PedidoPageState extends State<PedidoPage>
     with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
-    setWebTitle('Pedido');
+    if (widget.reason != PedidoInitReason.kanban) {
+      setWebTitle('Pedido ${widget.pedido.localizador}');
+    }
     pedidoCtrl.onInitPage(widget.pedido).then((_) {
       notificacaoCtrl.onSetPedidoViewed(widget.pedido);
     });

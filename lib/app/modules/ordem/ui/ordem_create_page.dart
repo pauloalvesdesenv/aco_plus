@@ -13,6 +13,7 @@ import 'package:aco_plus/app/core/components/done_button.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/components/w.dart';
+import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/enums/sort_type.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/extensions/double_ext.dart';
@@ -48,7 +49,14 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
       resizeAvoid: true,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => pop(context),
+          onPressed: () async {
+            if (await showConfirmDialog(
+              'Deseja realmente sair?',
+              'Os dados da ordem serão perdidos.',
+            )) {
+              pop(context);
+            }
+          },
           icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
         title: Text(

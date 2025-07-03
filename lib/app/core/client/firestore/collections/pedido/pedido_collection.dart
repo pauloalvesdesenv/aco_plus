@@ -149,12 +149,12 @@ class PedidoCollection {
     MateriaPrimaModel? materiaPrima,
   ) async {
     final pedido = getById(produto.pedidoId);
-
-    final pedidoProduto = pedido.produtos.firstWhere(
-      (element) => element.id == produto.id,
-    );
-
-    pedidoProduto.materiaPrima = materiaPrima;
+    for (final produtoInFor in pedido.produtos) {
+      if (produtoInFor.id == produto.id) {
+        produtoInFor.materiaPrima = materiaPrima;
+        break;
+      }
+    }
 
     return await collection.doc(pedido.id).update(pedido.toMap());
   }

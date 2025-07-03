@@ -172,7 +172,7 @@ class _OrderCreatePedidosSelecionadosBottomState
                       ],
                     ),
                   ),
-                  TextButton.icon(
+                  if(isEnable) TextButton.icon(
                     onPressed: () {},
                     icon: const Icon(Icons.remove),
                     label: const Text('Remover'),

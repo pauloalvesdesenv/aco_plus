@@ -17,10 +17,11 @@ import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
+import 'package:aco_plus/app/modules/materia_prima/ui/materias_primas_create_page.dart';
 import 'package:aco_plus/app/modules/ordem/ordem_controller.dart';
+import 'package:aco_plus/app/modules/ordem/ui/components/timeline/ordem_timeline_widget.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_create_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_exportar_pdf_tipo_bottom.dart';
-import 'package:aco_plus/app/modules/ordem/ui/components/timeline/ordem_timeline_widget.dart';
 import 'package:aco_plus/app/modules/ordem/view_models/ordem_view_model.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
@@ -157,11 +158,23 @@ class _OrdemPageState extends State<OrdemPage> {
               ItemLabel('Finalizada', ordem.endAt.text()),
           ]),
           const H(16),
-          ItemLabel(
-            'Matéria Prima',
-            ordem.materiaPrima != null
-                ? '${ordem.materiaPrima?.fabricanteModel.nome} - ${ordem.materiaPrima?.produto.labelMinified.replaceAll(' - ', ' ')}'
-                : 'Não especificado',
+          InkWell(
+            onTap: () => ordem.materiaPrima != null
+                ? push(
+                    context,
+                    MateriaPrimaCreatePage(
+                      materiaPrima: FirestoreClient.materiaPrimas.getById(
+                        ordem.materiaPrima!.id,
+                      ),
+                    ),
+                  )
+                : null,
+            child: ItemLabel(
+              'Matéria Prima',
+              ordem.materiaPrima != null
+                  ? ordem.materiaPrima!.label
+                  : 'Não especificado',
+            ),
           ),
         ],
       ),
@@ -342,11 +355,21 @@ class _OrdemPageState extends State<OrdemPage> {
                     .setColor(AppColors.neutralDark),
               ),
             if (produto.materiaPrima != null)
-              Text(
-                'Materia Prima: ${produto.materiaPrima?.fabricanteModel.nome} - ${produto.materiaPrima?.produto.labelMinified.replaceAll(' - ', ' ')}',
-                style: AppCss.minimumRegular
-                    .copyWith(fontSize: 12)
-                    .setColor(AppColors.neutralDark),
+              InkWell(
+                onTap: () => push(
+                  context,
+                  MateriaPrimaCreatePage(
+                    materiaPrima: FirestoreClient.materiaPrimas.getById(
+                      produto.materiaPrima!.id,
+                    ),
+                  ),
+                ),
+                child: Text(
+                  'Materia Prima: ${produto.materiaPrima!.label}',
+                  style: AppCss.minimumRegular
+                      .copyWith(fontSize: 12)
+                      .setColor(AppColors.neutralDark),
+                ),
               ),
           ],
         ),
@@ -354,13 +377,11 @@ class _OrdemPageState extends State<OrdemPage> {
             ? Row(
                 mainAxisSize: MainAxisSize.min,
                 children:
-                    (produto.status.status ==
-                                PedidoProdutoStatus.aguardandoProducao
-                            ? [PedidoProdutoStatus.aguardandoProducao]
-                            : [
-                                PedidoProdutoStatus.produzindo,
-                                PedidoProdutoStatus.pronto,
-                              ])
+                    [
+                          PedidoProdutoStatus.aguardandoProducao,
+                          PedidoProdutoStatus.produzindo,
+                          PedidoProdutoStatus.pronto,
+                        ]
                         .map(
                           (status) => InkWell(
                             onTap: status == produto.status.status

@@ -186,8 +186,7 @@ class MateriaPrimaController {
           }
           for (final produto in ordem.produtos.where(
             (e) =>
-                e.status.status != PedidoProdutoStatus.pronto &&
-                e.status.status != PedidoProdutoStatus.separado,
+                e.status.status != PedidoProdutoStatus.pronto,
           )) {
             if (produto.materiaPrima?.id == materiaPrima.id) {
               await FirestoreClient.pedidos.updateProdutoMateriaPrima(
