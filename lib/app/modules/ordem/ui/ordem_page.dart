@@ -38,6 +38,7 @@ class OrdemPage extends StatefulWidget {
 class _OrdemPageState extends State<OrdemPage> {
   @override
   void initState() {
+    setWebTitle('Ordem');
     ordemCtrl.onInitPage(widget.ordemId);
     super.initState();
   }

@@ -4,7 +4,7 @@ import 'package:aco_plus/app/modules/version/ui/version_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VersionCollection {
-  static int version = 419;
+  static int version = 420;
   static final VersionCollection _instance = VersionCollection._();
 
   VersionCollection._();

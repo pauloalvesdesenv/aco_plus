@@ -442,6 +442,16 @@ class OrdemController {
       );
       return;
     }
+    if (status == PedidoProdutoStatus.produzindo) {
+      if (ordem.produtos.any(
+        (e) => e.status.status == PedidoProdutoStatus.produzindo,
+      )) {
+        showInfoDialog(
+          'Não é possível produzir mais de um produto ao mesmo tempo.',
+        );
+        return;
+      }
+    }
     showLoadingDialog();
     await onChangeProdutoStatus(produto, status, false);
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);

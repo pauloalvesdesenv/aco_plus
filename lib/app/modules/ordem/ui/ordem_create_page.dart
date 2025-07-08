@@ -38,7 +38,7 @@ class OrdemCreatePage extends StatefulWidget {
 class _OrdemCreatePageState extends State<OrdemCreatePage> {
   @override
   void initState() {
-    setWebTitle('Nova Ordem');
+    setWebTitle(widget.ordem != null ? 'Editar Ordem' : 'Nova Ordem');
     ordemCtrl.onInitCreatePage(widget.ordem);
     super.initState();
   }
