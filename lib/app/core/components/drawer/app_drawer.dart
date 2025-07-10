@@ -153,7 +153,11 @@ class AppDrawerNotOperatorList extends StatelessWidget {
         AppDrawerDropdown(
           icon: Icons.analytics_outlined,
           title: 'Relatórios',
-          items: [AppModule.pedidoRelatorio, AppModule.ordemRelatorio],
+          items: [
+            AppModule.pedidoRelatorio,
+            AppModule.ordemRelatorio,
+            AppModule.producaoRelatorio,
+          ],
           module: module,
           notificacoes: notificacoes,
         ),

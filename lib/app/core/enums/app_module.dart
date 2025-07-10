@@ -8,6 +8,7 @@ import 'package:aco_plus/app/modules/pedido/ui/pedidos_page.dart';
 import 'package:aco_plus/app/modules/produto/ui/produtos_page.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorios_ordem_page.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/pedido/relatorios_pedido_page.dart';
+import 'package:aco_plus/app/modules/relatorio/ui/producao/relatorios_producao_page.dart';
 import 'package:aco_plus/app/modules/step/ui/steps_page.dart';
 import 'package:aco_plus/app/modules/tag/ui/tags_page.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
@@ -21,6 +22,7 @@ enum AppModule {
   ordens,
   pedidoRelatorio,
   ordemRelatorio,
+  producaoRelatorio,
   cliente,
   steps,
   tags,
@@ -44,6 +46,8 @@ extension AppModuleExt on AppModule {
         return const RelatoriosPedidoPage();
       case AppModule.ordemRelatorio:
         return const RelatoriosOrdemPage();
+      case AppModule.producaoRelatorio:
+        return const RelatoriosProducaoPage();
       case AppModule.steps:
         return const StepsPage();
       case AppModule.tags:
@@ -75,6 +79,8 @@ extension AppModuleExt on AppModule {
         return Icons.shopping_cart_outlined;
       case AppModule.ordemRelatorio:
         return Icons.work_outline;
+      case AppModule.producaoRelatorio:
+        return Icons.timer_outlined;
       case AppModule.steps:
         return Icons.list_alt_outlined;
       case AppModule.tags:
@@ -103,9 +109,11 @@ extension AppModuleExt on AppModule {
             ? 'Lista'
             : 'Ordens';
       case AppModule.ordemRelatorio:
-        return 'Ordens de Produção';
+        return 'Ordens';
       case AppModule.pedidoRelatorio:
         return 'Pedidos';
+      case AppModule.producaoRelatorio:
+        return 'Produção';
       case AppModule.steps:
         return 'Etapas';
       case AppModule.kanban:

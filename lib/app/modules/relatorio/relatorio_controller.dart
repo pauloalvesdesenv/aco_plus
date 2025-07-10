@@ -15,6 +15,7 @@ import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordem_pdf_stat
 import 'package:aco_plus/app/modules/relatorio/ui/pedido/relatorio_pedido_pdf_page.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_pedido_view_model.dart';
+import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_producao_view_model.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -27,6 +28,7 @@ class PedidoController {
 
   factory PedidoController() => _instance;
 
+  ///RELATORIO DE PEDIDO
   final AppStream<RelatorioPedidoViewModel> pedidoViewModelStream =
       AppStream<RelatorioPedidoViewModel>();
   RelatorioPedidoViewModel get pedidoViewModel => pedidoViewModelStream.value;
@@ -220,6 +222,7 @@ class PedidoController {
     return double.parse(qtde.toStringAsFixed(2));
   }
 
+  ///RELATORIO DE ORDEM
   final AppStream<RelatorioOrdemViewModel> ordemViewModelStream =
       AppStream<RelatorioOrdemViewModel>();
   RelatorioOrdemViewModel get ordemViewModel => ordemViewModelStream.value;
@@ -358,7 +361,9 @@ class PedidoController {
     return pedidoProdutos;
   }
 
-  Future<void> onExportRelatorioOrdemPDF(RelatorioOrdensPdfExportarTipo tipo) async {
+  Future<void> onExportRelatorioOrdemPDF(
+    RelatorioOrdensPdfExportarTipo tipo,
+  ) async {
     final pdf = pw.Document();
 
     final img = await rootBundle.load('assets/images/logo.png');
@@ -393,7 +398,12 @@ class PedidoController {
     final img = await rootBundle.load('assets/images/logo.png');
     final imageBytes = img.buffer.asUint8List();
 
-    pdf.addPage(RelatorioOrdemPdfOrdemPage(relatorio, RelatorioOrdensPdfExportarTipo.completo).build(imageBytes));
+    pdf.addPage(
+      RelatorioOrdemPdfOrdemPage(
+        relatorio,
+        RelatorioOrdensPdfExportarTipo.completo,
+      ).build(imageBytes),
+    );
 
     final name =
         "m2_relatorio_ordem_${ordemViewModel.relatorio!.ordem.localizator.toLowerCase()}_${DateTime.now().toFileName()}.pdf";
@@ -418,5 +428,244 @@ class PedidoController {
         'Verifique o filtro informado',
       );
     }
+  }
+
+  //RELATORIO DE PRODUÇÃO
+  final AppStream<RelatorioProducaoViewModel> producaoViewModelStream =
+      AppStream<RelatorioProducaoViewModel>();
+  RelatorioProducaoViewModel get producaoViewModel =>
+      producaoViewModelStream.value;
+
+  List<PedidoProdutoModel> getOrdemTotalTempoProduto() {
+    List<PedidoProdutoModel> pedidoProdutos = [];
+    final types = getOrdemTiposProdutosId();
+    for (var type in types) {
+      double qtde = 0;
+      for (var ordem in producaoViewModel.relatorio!.ordens) {
+        for (var produto in ordem.produtos) {
+          if (produto.produto.id == type.id) {
+            qtde = qtde + produto.qtde;
+          }
+        }
+      }
+      pedidoProdutos.add(
+        PedidoProdutoModel(
+          id: 'total',
+          produto: type,
+          qtde: qtde,
+          statusess: [],
+          clienteId: '',
+          obraId: '',
+          pedidoId: '',
+        ),
+      );
+    }
+    pedidoProdutos.sort((a, b) => a.produto.number.compareTo(b.produto.number));
+    return pedidoProdutos;
+  }
+
+  List<ProdutoModel> getOrdemTiposProdutosId() {
+    List<ProdutoModel> produtos = [];
+    for (var ordem in producaoViewModel.relatorio!.ordens) {
+      for (var produto in ordem.produtos) {
+        if (produtos.map((e) => e.id).contains(produto.produto.id) == false) {
+          if (produto.produto.nome != 'Produto não encontrado') {
+            produtos.add(produto.produto);
+          }
+        }
+      }
+    }
+    return produtos.toList();
+  }
+
+  void onCreateRelatorioProducao() {
+    List<OrdemModel> ordens = FirestoreClient.ordens.data
+        .map(
+          (o) => o.copyWith(
+            produto: o.produto.copyWith(),
+            produtos: o.produtos
+                .map(
+                  (p) => p.copyWith(
+                    statusess: p.statusess.map((s) => s.copyWith()).toList(),
+                  ),
+                )
+                .toList(),
+          ),
+        )
+        .toList();
+
+    if (producaoViewModel.produtos.isNotEmpty) {
+      ordens = ordens
+          .where(
+            (e) => producaoViewModel.produtos
+                .map((e) => e.id)
+                .contains(e.produto.id),
+          )
+          .toList();
+    }
+
+    if (producaoViewModel.localizadorEC.text.isNotEmpty) {
+      ordens = ordens
+          .where(
+            (e) => e.localizator.toCompare.contains(
+              producaoViewModel.localizadorEC.text.toCompare,
+            ),
+          )
+          .toList();
+    }
+
+    if (producaoViewModel.dates != null) {
+      ordens = ordens
+          .where(
+            (e) =>
+                e.createdAt.isAfter(producaoViewModel.dates!.start) &&
+                e.createdAt.isBefore(producaoViewModel.dates!.end),
+          )
+          .toList();
+    }
+
+    final model = RelatorioProducaoModel(
+      ordens: ordens,
+      dates: producaoViewModel.dates,
+      localizador: producaoViewModel.localizadorEC.text,
+    );
+
+    producaoViewModel.relatorio = model;
+    producaoViewModelStream.update();
+  }
+
+  // bool _whereProductStatus(
+  //   PedidoProdutoModel produto,
+  //   List<RelatorioOrdemStatus> status,
+  // ) {
+  //   final productStatus = produto.statusess.last.status;
+  //   bool isAvailable = false;
+  //   for (var status in status) {
+  //     switch (status) {
+  //       case RelatorioOrdemStatus.AGUARDANDO_PRODUCAO:
+  //         isAvailable = [
+  //           PedidoProdutoStatus.separado,
+  //           PedidoProdutoStatus.aguardandoProducao,
+  //         ].contains(productStatus);
+  //       case RelatorioOrdemStatus.EM_PRODUCAO:
+  //         isAvailable = productStatus == PedidoProdutoStatus.produzindo;
+  //       case RelatorioOrdemStatus.PRODUZIDAS:
+  //         isAvailable = productStatus == PedidoProdutoStatus.pronto;
+  //     }
+  //   }
+  //   return isAvailable;
+  // }
+
+  // double getOrdemTotal() {
+  //   double qtde = 0;
+  //   for (var orden in ordemViewModel.relatorio!.ordens) {
+  //     for (var produto in orden.produtos) {
+  //       qtde = qtde + produto.qtde;
+  //     }
+  //   }
+  //   return double.parse(qtde.toStringAsFixed(2));
+  // }
+
+  // List<ProdutoModel> getTiposProdutosId() {
+  //   List<ProdutoModel> produtos = [];
+  //   for (var ordem in ordemViewModel.relatorio!.ordens) {
+  //     for (var produto in ordem.produtos) {
+  //       if (produtos.map((e) => e.id).contains(produto.produto.id) == false) {
+  //         if (produto.produto.nome != 'Produto não encontrado') {
+  //           produtos.add(produto.produto);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return produtos.toList();
+  // }
+
+  // List<PedidoProdutoModel> getOrdemTotalProduto() {
+  //   List<PedidoProdutoModel> pedidoProdutos = [];
+  //   final types = getTiposProdutosId();
+  //   for (var type in types) {
+  //     double qtde = 0;
+  //     for (var ordem in ordemViewModel.relatorio!.ordens) {
+  //       for (var produto in ordem.produtos) {
+  //         if (produto.produto.id == type.id) {
+  //           qtde = qtde + produto.qtde;
+  //         }
+  //       }
+  //     }
+  //     pedidoProdutos.add(
+  //       PedidoProdutoModel(
+  //         id: 'total',
+  //         produto: type,
+  //         qtde: qtde,
+  //         statusess: [],
+  //         clienteId: '',
+  //         obraId: '',
+  //         pedidoId: '',
+  //       ),
+  //     );
+  //   }
+  //   pedidoProdutos.sort((a, b) => a.produto.number.compareTo(b.produto.number));
+  //   return pedidoProdutos;
+  // }
+
+  Future<void> onExportRelatorioProducaoPDF(
+    RelatorioProducaoModel model,
+  ) async {
+    // final pdf = pw.Document();
+
+    // final img = await rootBundle.load('assets/images/logo.png');
+    // final imageBytes = img.buffer.asUint8List();
+
+    // var isOrdemType = ordemViewModel.type == RelatorioOrdemType.ORDEM;
+
+    // pdf.addPage(
+    //   (isOrdemType
+    //       ? RelatorioOrdemPdfOrdemPage(
+    //           ordemViewModel.relatorio!,
+    //           tipo,
+    //         ).build(imageBytes)
+    //       : RelatorioOrdemPdfStatusPage(
+    //           ordemViewModel.relatorio!,
+    //           tipo,
+    //         ).build(imageBytes)),
+    // );
+
+    // final name = isOrdemType
+    //     ? "m2_relatorio_ordem_${ordemViewModel.relatorio!.ordem.localizator.toLowerCase()}${DateTime.now().toFileName()}.pdf"
+    //     : "m2_relatorio_bitola_status_${ordemViewModel.status.map((e) => e.label).join('_').toLowerCase()}${DateTime.now().toFileName()}.pdf";
+
+    // await downloadPDF(name, '/relatorio/ordem/', await pdf.save());
+  }
+
+  Duration getOrdensTempoProducao(List<OrdemModel> ordens) {
+    List<Duration> durations = [];
+    for (var ordem in ordens) {
+      final duration = ordem.durations;
+      if (duration != null) {
+        durations.add(
+          (duration.endedAt ?? DateTime.now()).difference(duration.startedAt),
+        );
+      }
+    }
+    if (durations.isEmpty) return Duration.zero;
+    if (durations.length == 1) return durations.first;
+
+    return durations.reduce((a, b) => a + b);
+  }
+
+  Duration getOrdensTempPorBitola(ProdutoModel produto, List<OrdemModel> ordens) {
+    List<Duration> durations = [];
+    for (var ordem in ordens.where((ordem) => ordem.produto.id == produto.id)) {
+      final duration = ordem.durations;
+      if (duration != null) {
+        durations.add(
+          (duration.endedAt ?? DateTime.now()).difference(duration.startedAt),
+        );
+      }
+    }
+    if (durations.isEmpty) return Duration.zero;
+    if (durations.length == 1) return durations.first;
+
+    return durations.reduce((a, b) => a + b);
   }
 }

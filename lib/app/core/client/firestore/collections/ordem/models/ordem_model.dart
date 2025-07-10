@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/ordem_history_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_durations_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
@@ -143,6 +144,8 @@ class OrdemModel {
       return PedidoProdutoStatus.aguardandoProducao;
     }
   }
+
+  OrdemDurationsModel? get durations => OrdemDurationsModel.getByOrdem(this);
 
   OrdemModel({
     required this.id,

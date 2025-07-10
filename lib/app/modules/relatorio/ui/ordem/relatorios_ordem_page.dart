@@ -229,9 +229,7 @@ class _RelatoriosOrdemPageState extends State<RelatoriosOrdemPage> {
                         child: IconButton(
                           onPressed: () {
                             model.dates = null;
-                            relatorioCtrl.onExportRelatorioPedidoPDF(
-                              relatorioCtrl.pedidoViewModel,
-                            );
+                            relatorioCtrl.onCreateRelatorio();
                             relatorioCtrl.ordemViewModelStream.update();
                           },
                           style: ButtonStyle(
