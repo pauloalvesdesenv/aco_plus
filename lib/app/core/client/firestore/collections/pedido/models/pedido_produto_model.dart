@@ -2,6 +2,11 @@ import 'dart:convert';
 
 import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/ordem_history_type_enum.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_despausada_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_pausada_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_status_produto_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
@@ -9,6 +14,39 @@ import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/enums/obra_status.dart';
 import 'package:aco_plus/app/core/services/hash_service.dart';
 import 'package:collection/collection.dart';
+
+class PedidoProdutoTurno {
+  final PedidoProdutoHistory start;
+  final PedidoProdutoHistory? end;
+
+  PedidoProdutoTurno({required this.start, this.end});
+}
+
+enum PedidoProdutoHistoryType {
+  pause,
+  unpause;
+
+  String get label {
+    switch (this) {
+      case PedidoProdutoHistoryType.pause:
+        return 'Iniciado ás';
+      case PedidoProdutoHistoryType.unpause:
+        return 'Finalizado ás';
+    }
+  }
+}
+
+class PedidoProdutoHistory {
+  final PedidoProdutoHistoryType type;
+  final DateTime date;
+  final Duration duration;
+
+  PedidoProdutoHistory({
+    required this.type,
+    required this.date,
+    required this.duration,
+  });
+}
 
 class PedidoProdutoModel {
   final String id;
@@ -22,6 +60,61 @@ class PedidoProdutoModel {
   bool isAvailable = true;
   bool isPaused = false;
   MateriaPrimaModel? materiaPrima;
+
+  List<PedidoProdutoTurno> getTurnos(OrdemModel ordem) {
+    final turnos = <PedidoProdutoTurno>[];
+
+    final alteracoesStatus =
+        ordem.history
+            .where(
+              (e) =>
+                  e.type == OrdemHistoryTypeEnum.statusProdutoAlterada ||
+                  e.type == OrdemHistoryTypeEnum.pausada ||
+                  e.type == OrdemHistoryTypeEnum.despausada,
+            )
+            .where((e) {
+              switch (e.type) {
+                case OrdemHistoryTypeEnum.statusProdutoAlterada:
+                  final data = e.data as OrdemHistoryTypeStatusProdutoModel;
+                  return data.statusProdutos.produtos.any((e) => e.id == id);
+                case OrdemHistoryTypeEnum.pausada:
+                  final data = e.data as OrdemHistoryTypePausadaModel;
+                  return data.pedidoProdutoId == id;
+                case OrdemHistoryTypeEnum.despausada:
+                  final data = e.data as OrdemHistoryTypeDespausadaModel;
+                  return data.pedidoProdutoId == id;
+                default:
+                  return false;
+              }
+            })
+            .toList()
+          ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    
+
+    return [
+      PedidoProdutoTurno(
+        start: PedidoProdutoHistory(
+          type: PedidoProdutoHistoryType.pause,
+          date: DateTime.now(),
+          duration: Duration.zero,
+        ),
+        end: PedidoProdutoHistory(
+          type: PedidoProdutoHistoryType.unpause,
+          date: DateTime.now(),
+          duration: Duration.zero,
+        ),
+      ),
+
+      PedidoProdutoTurno(
+        start: PedidoProdutoHistory(
+          type: PedidoProdutoHistoryType.pause,
+          date: DateTime.now(),
+          duration: Duration.zero,
+        ),
+      ),
+    ];
+  }
 
   factory PedidoProdutoModel.empty(PedidoModel pedido) => PedidoProdutoModel(
     id: HashService.get,

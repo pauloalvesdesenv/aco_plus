@@ -1,5 +1,5 @@
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
-import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/app_drop_down_list.dart';
@@ -9,14 +9,15 @@ import 'package:aco_plus/app/core/components/divisor.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
-import 'package:aco_plus/app/core/extensions/duration_ext.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/base/base_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
+import 'package:aco_plus/app/modules/relatorio/ui/components/relatorio_expandable_widget.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_producao_view_model.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -77,38 +78,16 @@ class _RelatoriosProducaoPageState extends State<RelatoriosProducaoPage> {
           children: [
             _filterWidget(model),
             Divisor(color: Colors.grey[700]!, height: 1.5),
-            if (model.relatorio != null || model.relatorio!.ordens.isNotEmpty) ...[
-              itemInfo(
-                'Tempo de produção',
-                relatorioCtrl.getOrdensTempoProducao(model.relatorio!.ordens).text(),
-                labelStyle: AppCss.mediumBold,
-                valueStyle: AppCss.mediumBold,
-                padding: const EdgeInsets.all(16),
-              ),
-              Divisor(color: Colors.grey[700]!),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text('Totais por Bitola', style: AppCss.mediumBold),
-              ),
-              const Divisor(),
-              for (final produto in relatorioCtrl.getOrdemTotalTempoProduto())
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: itemInfo(produto.produto.descricao, relatorioCtrl.getOrdensTempPorBitola(produto.produto, model.relatorio!.ordens).text()),
-                    ),
-                    const Divisor(),
-                  ],
-                ),
-            ],
-            Divisor(color: Colors.grey[700]!),
-            if (model.relatorio != null || model.relatorio!.ordens.isNotEmpty)
-              Column(
-                children: model.relatorio!.ordens
-                    .map((e) => itemRelatorio(model, e))
-                    .toList(),
-              ),
+            itemInfo(
+              'Total',
+              '10h 2min',
+              valueStyle: AppCss.minimumBold.copyWith(fontSize: 16),
+              labelStyle: AppCss.minimumBold.copyWith(fontSize: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
+            Divisor(color: Colors.grey[700]!, height: 1.5),
+            for (final produto in model.produtos)
+              _itemProdutoWidget(model, produto, model.relatorio!.ordens),
           ],
         ),
       ),
@@ -201,96 +180,72 @@ class _RelatoriosProducaoPageState extends State<RelatoriosProducaoPage> {
     );
   }
 
-  Widget itemRelatorio(RelatorioProducaoViewModel model, OrdemModel ordem) {
-    final durations = ordem.durations;
-    if (durations == null) return const SizedBox.shrink();
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border(bottom: BorderSide(color: Colors.grey[700]!, width: 1)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(ordem.localizator, style: AppCss.mediumBold),
-                    if (ordem.materiaPrima != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Text(
-                          '${ordem.materiaPrima!.fabricanteModel.nome} - ${ordem.materiaPrima!.corridaLote}',
-                          style: AppCss.minimumRegular,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: ordem.status.color.withValues(alpha: 0.06),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  ordem.status.label,
-                  style: AppCss.minimumRegular
-                      .setColor(ordem.status.color)
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          Divisor(color: Colors.grey[200]),
-          itemInfo('Iniciada em', durations.startedAt.textHour()),
-          Divisor(color: Colors.grey[200]),
-          itemInfo(
-            'Concluida em',
-            durations.endedAt?.textHour() ?? 'Não concluida',
-          ),
-          Divisor(color: Colors.grey[200]),
-          itemInfo(
-            'Tempo de produção',
-            (durations.endedAt ?? DateTime.now())
-                .difference(durations.startedAt)
-                .text(),
-          ),
-          // for (final produto in ordem.produtos)
-          //   Column(
-          //     children: [
-          //       itemInfo(
-          //         '${produto.pedido.tipo.name.toUpperCase()} - ${produto.pedido.localizador} - ${produto.cliente.nome}${produto.obra.descricao == 'Indefinido' ? ' - ${produto.obra.descricao}' : ''}',
-          //         produto.qtde.toKg(),
-          //         color: produto.status.status.color.withValues(alpha: 0.06),
-          //       ),
-          //       if (produto.pedido.deliveryAt == null)
-          //         Divisor(color: Colors.grey[200]),
-          //       if (produto.pedido.deliveryAt != null) ...[
-          //         itemInfo(
-          //           'Previsão de Entrega',
-          //           '${produto.pedido.deliveryAt?.text()}',
-          //           color: produto.status.status.color.withValues(alpha: 0.06),
-          //         ),
-          //         Divisor(color: Colors.grey[200]),
-          //       ],
-          //       if (produto.materiaPrima != null &&
-          //           produto.materiaPrima?.id != ordem.materiaPrima?.id) ...[
-          //         itemInfo(
-          //           'Materia Prima',
-          //           '${produto.materiaPrima?.fabricanteModel.nome} - ${produto.materiaPrima?.corridaLote}',
-          //         ),
-          //         Divisor(color: Colors.grey[200]),
-          //       ],
-          //     ],
-          //   ),
-        ],
-      ),
+  Widget _itemProdutoWidget(
+    RelatorioProducaoViewModel model,
+    ProdutoModel produto,
+    List<OrdemModel> ordens,
+  ) {
+    return RelatorioExpandableWidget(
+      title: 'Produto ${produto.descricao}',
+      value: '10h 2min',
+      color: Colors.grey[100]!,
+      children: ordens.map((e) => _itemOrdemWidget(model, e)).toList(),
+    );
+  }
+
+  Widget _itemOrdemWidget(RelatorioProducaoViewModel model, OrdemModel ordem) {
+    return RelatorioExpandableWidget(
+      title: 'Ordem ${ordem.localizator}',
+      value: '4h 2min',
+      color: Colors.grey[200]!,
+      children: ordem.produtos
+          .map((e) => _itemPedidoProdutoWidget(model, e))
+          .toList(),
+    );
+  }
+
+  Widget _itemPedidoProdutoWidget(
+    RelatorioProducaoViewModel model,
+    PedidoProdutoModel produto,
+  ) {
+    return RelatorioExpandableWidget(
+      title: 'Pedido ${produto.pedido.localizador}',
+      value: '4h 2min',
+      color: Colors.grey[300]!,
+      children: produto.turnos
+          .mapIndexed(
+            (index, e) => _itemPedidoProdutoTurnoWidget(model, e, index),
+          )
+          .toList(),
+    );
+  }
+
+  Widget _itemPedidoProdutoTurnoWidget(
+    RelatorioProducaoViewModel model,
+    PedidoProdutoTurno turno,
+    int index,
+  ) {
+    return RelatorioExpandableWidget(
+      color: Colors.grey[400]!,
+      title: 'Turno ${index + 1}',
+      value: '4h 2min',
+      children: [_itemPedidoProdutoTurnoHistoryWidget(model, turno)],
+    );
+  }
+
+  Widget _itemPedidoProdutoTurnoHistoryWidget(
+    RelatorioProducaoViewModel model,
+    PedidoProdutoTurno turno,
+  ) {
+    return Column(
+      children: [
+        itemInfo(turno.start.type.label, turno.start.date.textHour()),
+        Divisor(color: Colors.grey[700]!),
+        itemInfo(
+          turno.end?.type.label ?? 'Em produção',
+          (turno.end?.date ?? DateTime.now()).textHour(),
+        ),
+      ],
     );
   }
 

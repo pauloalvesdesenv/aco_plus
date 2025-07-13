@@ -56,7 +56,7 @@ extension RelatorioProducaoStatusExt on RelatorioProducaoStatus {
 class RelatorioProducaoViewModel {
   late List<ProdutoModel> produtos;
   DateTimeRange? dates = DateTimeRange(
-    start: DateTime.now(),
+    start: DateTime.now().subtract(const Duration(days: 5)),
     end: DateTime.now(),
   );
   TextController localizadorEC = TextController();
