@@ -98,6 +98,7 @@ class MateriaPrimaController {
               produto,
               materiaPrimaCreate,
             );
+            await FirestoreClient.ordens.update(ordem);
           }
           await OrdemTimelineRegister.materiaPrimaEditada(
             ordem,
@@ -193,12 +194,15 @@ class MateriaPrimaController {
                 produto,
                 null,
               );
+              await FirestoreClient.ordens.update(ordem);
             }
           }
         }
         materiaPrima.status = MateriaPrimaStatus.finalizada;
         await FirestoreClient.materiaPrimas.update(materiaPrima);
         await FirestoreClient.materiaPrimas.fetch();
+        await FirestoreClient.pedidos.fetch();
+        await FirestoreClient.ordens.fetch();
         NotificationService.showPositive(
           'Matéria Prima finalizada',
           'Operação realizada com sucesso',

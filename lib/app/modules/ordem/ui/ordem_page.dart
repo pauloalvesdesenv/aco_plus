@@ -1,4 +1,6 @@
+import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/tag/models/tag_model.dart';
@@ -24,6 +26,7 @@ import 'package:aco_plus/app/modules/ordem/ui/ordem_create_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_exportar_pdf_tipo_bottom.dart';
 import 'package:aco_plus/app/modules/ordem/view_models/ordem_view_model.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
@@ -52,63 +55,73 @@ class _OrdemPageState extends State<OrdemPage> {
   @override
   Widget build(BuildContext context) {
     return StreamOut(
-      stream: ordemCtrl.ordemStream.listen,
-      builder: (_, ordem) => AppScaffold(
-        resizeAvoid: true,
-        appBar: AppBar(
-          actions: usuario.isOperador
-              ? []
-              : [
-                  if (!ordem.isArchived)
-                    IconButton(
-                      onPressed: () async =>
-                          ordemCtrl.onArchive(context, ordem),
-                      icon: Icon(Icons.archive, color: AppColors.white),
-                    ),
-                  if (ordem.isArchived)
-                    IconButton(
-                      onPressed: () async =>
-                          ordemCtrl.onUnarchive(context, ordem, 2),
-                      icon: Icon(Icons.unarchive, color: AppColors.white),
-                    ),
-                  IconButton(
-                    onPressed: () async {
-                      final tipo = await showOrdemExportarPdfTipoBottom();
-                      if (tipo != null) {
-                        if (tipo == OrdemExportarPdfTipo.relatorio) {
-                          await ordemCtrl.onGenerateRelatorioPDF(ordem);
-                        } else {
-                          await ordemCtrl.onGenerateEtiquetasPDF(ordem);
-                        }
-                      }
-                    },
-                    icon: Icon(Icons.picture_as_pdf, color: AppColors.white),
-                  ),
-                  IconButton(
-                    onPressed: () async =>
-                        push(context, OrdemCreatePage(ordem: ordem)),
-                    icon: Icon(Icons.edit, color: AppColors.white),
-                  ),
-                  IconButton(
-                    onPressed: () async => ordemCtrl.onDelete(context, ordem),
-                    icon: Icon(Icons.delete, color: AppColors.white),
-                  ),
-                ],
-          title: Text(
-            'Ordem ${ordem.localizator}',
-            style: AppCss.largeBold.setColor(AppColors.white),
-          ),
-          backgroundColor: AppColors.primaryMain,
-        ),
-        body: StreamOut(
+      stream: FirestoreClient.materiaPrimas.dataStream.listen,
+      builder: (_, materiasPrimas) => StreamOut(
+        stream: FirestoreClient.pedidos.dataStream.listen,
+        builder: (_, pedidos) => StreamOut(
           stream: ordemCtrl.ordemStream.listen,
-          builder: (_, form) => body(form),
+          builder: (_, ordem) => AppScaffold(
+            resizeAvoid: true,
+            appBar: AppBar(
+              actions: usuario.isOperador
+                  ? []
+                  : [
+                      if (!ordem.isArchived)
+                        IconButton(
+                          onPressed: () async =>
+                              ordemCtrl.onArchive(context, ordem),
+                          icon: Icon(Icons.archive, color: AppColors.white),
+                        ),
+                      if (ordem.isArchived)
+                        IconButton(
+                          onPressed: () async =>
+                              ordemCtrl.onUnarchive(context, ordem, 2),
+                          icon: Icon(Icons.unarchive, color: AppColors.white),
+                        ),
+                      IconButton(
+                        onPressed: () async {
+                          final tipo = await showOrdemExportarPdfTipoBottom();
+                          if (tipo != null) {
+                            if (tipo == OrdemExportarPdfTipo.relatorio) {
+                              await ordemCtrl.onGenerateRelatorioPDF(ordem);
+                            } else {
+                              await ordemCtrl.onGenerateEtiquetasPDF(ordem);
+                            }
+                          }
+                        },
+                        icon: Icon(
+                          Icons.picture_as_pdf,
+                          color: AppColors.white,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async =>
+                            push(context, OrdemCreatePage(ordem: ordem)),
+                        icon: Icon(Icons.edit, color: AppColors.white),
+                      ),
+                      IconButton(
+                        onPressed: () async =>
+                            ordemCtrl.onDelete(context, ordem),
+                        icon: Icon(Icons.delete, color: AppColors.white),
+                      ),
+                    ],
+              title: Text(
+                'Ordem ${ordem.localizator}',
+                style: AppCss.largeBold.setColor(AppColors.white),
+              ),
+              backgroundColor: AppColors.primaryMain,
+            ),
+            body: StreamOut(
+              stream: ordemCtrl.ordemStream.listen,
+              builder: (_, form) => body(pedidos, form),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget body(OrdemModel ordem) {
+  Widget body(List<PedidoModel> pedidos, OrdemModel ordem) {
     return RefreshIndicator(
       onRefresh: () async {
         await FirestoreClient.ordens.fetch();
@@ -130,7 +143,7 @@ class _OrdemPageState extends State<OrdemPage> {
                 const Divisor(),
                 _statusWidget(ordem),
                 for (final produto in ordem.produtos)
-                  _produtoWidget(ordem, produto),
+                  _produtoWidget(pedidos, ordem, produto),
                 if (usuario.isNotOperador)
                   if (!ordem.freezed.isFreezed &&
                       ordem.status != PedidoProdutoStatus.pronto)
@@ -320,7 +333,19 @@ class _OrdemPageState extends State<OrdemPage> {
     );
   }
 
-  Widget _produtoWidget(OrdemModel ordem, PedidoProdutoModel produto) {
+  Widget _produtoWidget(
+    List<PedidoModel> pedidos,
+    OrdemModel ordem,
+    PedidoProdutoModel produto,
+  ) {
+    MateriaPrimaModel? materiaPrima;
+    for (var pedido in pedidos) {
+      if (pedido.id == produto.pedidoId) {
+        materiaPrima = pedido.produtos
+            .firstWhereOrNull((e) => e.id == produto.id)
+            ?.materiaPrima;
+      }
+    }
     return Container(
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
@@ -355,18 +380,18 @@ class _OrdemPageState extends State<OrdemPage> {
                     .copyWith(fontSize: 12)
                     .setColor(AppColors.neutralDark),
               ),
-            if (produto.materiaPrima != null)
+            if (materiaPrima != null)
               InkWell(
                 onTap: () => push(
                   context,
                   MateriaPrimaCreatePage(
                     materiaPrima: FirestoreClient.materiaPrimas.getById(
-                      produto.materiaPrima!.id,
+                      materiaPrima!.id,
                     ),
                   ),
                 ),
                 child: Text(
-                  'Materia Prima: ${produto.materiaPrima!.label}',
+                  'Materia Prima: ${materiaPrima.label}',
                   style: AppCss.minimumRegular
                       .copyWith(fontSize: 12)
                       .setColor(AppColors.neutralDark),

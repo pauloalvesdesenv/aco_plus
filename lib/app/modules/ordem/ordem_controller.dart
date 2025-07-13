@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/enums/materia_prima_status.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_status_produtos.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
@@ -28,6 +29,7 @@ import 'package:aco_plus/app/modules/ordem/view_models/ordem_view_model.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -259,6 +261,9 @@ class OrdemController {
     if (form.produto == null) {
       throw Exception('Selecione o produto');
     }
+    if (form.materiaPrima == null) {
+      throw Exception('Selecione a matéria prima');
+    }
   }
 
   Future<void> onDelete(value, OrdemModel ordem) async {
@@ -464,6 +469,20 @@ class OrdemController {
     PedidoProdutoStatus status,
     bool isAll,
   ) async {
+    if (status == PedidoProdutoStatus.aguardandoProducao) {
+      final materiaPrima = FirestoreClient.materiaPrimas.data.firstWhereOrNull(
+        (e) => e.id == produto.materiaPrima?.id,
+      );
+      if (materiaPrima != null &&
+          materiaPrima.status == MateriaPrimaStatus.finalizada) {
+        if (!await showConfirmDialog(
+          'A matéria prima ${materiaPrima.corridaLote} está finalizada, lembre-se que deve alterar a matéria prima para produzir novamente.',
+          'Deseja continuar?',
+        )) {
+          return;
+        }
+      }
+    }
     await FirestoreClient.pedidos.updateProdutoStatus(produto, status);
     final pedido = await FirestoreClient.pedidos.updatePedidoStatus(produto);
     if (pedido != null) await updateFeaturesByPedidoStatus(pedido);

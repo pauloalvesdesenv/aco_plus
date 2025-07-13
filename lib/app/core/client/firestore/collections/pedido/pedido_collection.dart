@@ -6,6 +6,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/ped
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_status_model.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
+import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 
@@ -35,12 +36,14 @@ class PedidoCollection {
   CollectionReference<Map<String, dynamic>> get collection =>
       FirebaseFirestore.instance.collection(name);
 
-      Future<void> startOnlyArquivadas() async {
+  Future<void> startOnlyArquivadas() async {
     final data = await FirebaseFirestore.instance
         .collection(name)
         .where('isArchived', isEqualTo: true)
         .get();
-    final pedidos = data.docs.map((e) => PedidoModel.fromMap(e.data())).toList();
+    final pedidos = data.docs
+        .map((e) => PedidoModel.fromMap(e.data()))
+        .toList();
     pedidosArchivedsStream.add(pedidos);
   }
 
@@ -54,7 +57,10 @@ class PedidoCollection {
   Future<void> start({bool lock = true, GetOptions? options}) async {
     if (_isStarted && lock) return;
     _isStarted = true;
-    final data = await FirebaseFirestore.instance.collection(name).where('isArchived', isEqualTo: false).get();
+    final data = await FirebaseFirestore.instance
+        .collection(name)
+        .where('isArchived', isEqualTo: false)
+        .get();
     final pedidos = data.docs
         .map((e) => PedidoModel.fromMap(e.data()))
         .toList();
@@ -63,6 +69,14 @@ class PedidoCollection {
     pedidosPrioridadeStream.add(
       pedidos.where((e) => e.prioridade != null).toList(),
     );
+    if (pedidoCtrl.pedidoStream.controller.hasValue) {
+      final pedido = pedidos.firstWhereOrNull(
+        (e) => e.id == pedidoCtrl.pedidoStream.value.id,
+      );
+      if (pedido != null) {
+        pedidoCtrl.pedidoStream.add(pedido);
+      }
+    }
   }
 
   bool _isListen = false;
@@ -97,7 +111,8 @@ class PedidoCollection {
                 whereNotIn: whereNotIn,
                 isNull: isNull,
               )
-            : collection).where('isArchived', isEqualTo: false)
+            : collection)
+        .where('isArchived', isEqualTo: false)
         .snapshots()
         .listen((e) {
           final data = e.docs
@@ -110,6 +125,14 @@ class PedidoCollection {
           pedidosPrioridadeStream.add(
             data.where((e) => e.prioridade != null).toList(),
           );
+          if (pedidoCtrl.pedidoStream.controller.hasValue) {
+            final pedido = data.firstWhereOrNull(
+              (e) => e.id == pedidoCtrl.pedidoStream.value.id,
+            );
+            if (pedido != null) {
+              pedidoCtrl.pedidoStream.add(pedido);
+            }
+          }
         });
   }
 
@@ -144,7 +167,7 @@ class PedidoCollection {
     await batch.commit();
   }
 
-   Future<void> updateProdutoMateriaPrima(
+  Future<void> updateProdutoMateriaPrima(
     PedidoProdutoModel produto,
     MateriaPrimaModel? materiaPrima,
   ) async {

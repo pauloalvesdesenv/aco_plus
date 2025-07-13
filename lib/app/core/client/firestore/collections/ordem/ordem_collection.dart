@@ -1,6 +1,9 @@
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
+import 'package:aco_plus/app/modules/ordem/ordem_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 
 class OrdemCollection {
   static final OrdemCollection _instance = OrdemCollection._();
@@ -71,6 +74,15 @@ class OrdemCollection {
     ordensNaoArquivadasStream.add(ordensNaoArquivadas);
 
     dataStream.add(ordensNaoArquivadas);
+
+    if (ordemCtrl.ordemStream.controller.hasValue) {
+      final ordem = ordensNaoArquivadas.firstWhereOrNull(
+        (e) => e.id == ordemCtrl.ordemStream.value.id,
+      );
+      if (ordem != null) {
+        ordemCtrl.ordemStream.add(ordem);
+      }
+    }
   }
 
   bool _isListen = false;
@@ -108,7 +120,7 @@ class OrdemCollection {
             : collection)
         .where('isArchived', isEqualTo: false)
         .snapshots()
-        .listen((e) {
+        .listen((e) async {
           final ordens = e.docs
               .map((e) => OrdemModel.fromMap(e.data()))
               .toList();
@@ -132,6 +144,32 @@ class OrdemCollection {
           ordensNaoArquivadasStream.add(ordensNaoArquivadas);
 
           dataStream.add(ordensNaoArquivadas);
+
+          if (ordemCtrl.ordemStream.controller.hasValue) {
+            final ordem = ordensNaoArquivadas.firstWhereOrNull(
+              (e) => e.id == ordemCtrl.ordemStream.value.id,
+            );
+            if (ordem != null) {
+              for (var produto in ordem.produtos) {
+                final pedidoData =
+                    (await FirebaseFirestore.instance
+                            .collection('pedidos')
+                            .doc(produto.pedidoId)
+                            .get())
+                        .data();
+
+                if (pedidoData != null) {
+                  final pedido = PedidoModel.fromMap(pedidoData);
+
+                  final newMateriaPrima = pedido.produtos
+                      .firstWhereOrNull((e) => e.id == produto.id)
+                      ?.materiaPrima;
+                  produto.materiaPrima = newMateriaPrima;
+                }
+              }
+              ordemCtrl.ordemStream.add(ordem);
+            }
+          }
         });
   }
 
@@ -143,8 +181,8 @@ class OrdemCollection {
         .map((doc) => OrdemModel.fromMap(doc.data()!));
   }
 
-  OrdemModel getById(String id) => ([...data, ...ordensArquivadas])
-      .firstWhere((e) => e.id == id);
+  OrdemModel getById(String id) =>
+      ([...data, ...ordensArquivadas]).firstWhere((e) => e.id == id);
 
   Future<OrdemModel?> add(OrdemModel model) async {
     await collection.doc(model.id).set(model.toMap());
