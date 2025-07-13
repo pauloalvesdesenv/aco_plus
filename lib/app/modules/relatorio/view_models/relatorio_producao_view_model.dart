@@ -1,4 +1,5 @@
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
@@ -72,10 +73,12 @@ class RelatorioProducaoModel {
   late DateTimeRange? dates;
   late String localizador;
   final DateTime createdAt = DateTime.now();
+  final List<PedidoProdutoTurno> turnos;
 
   RelatorioProducaoModel({
     required this.ordens,
     required this.dates,
     required this.localizador,
+    required this.turnos,
   });
 }

@@ -9,6 +9,7 @@ import 'package:aco_plus/app/core/components/divisor.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
+import 'package:aco_plus/app/core/extensions/duration_ext.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
@@ -78,16 +79,7 @@ class _RelatoriosProducaoPageState extends State<RelatoriosProducaoPage> {
           children: [
             _filterWidget(model),
             Divisor(color: Colors.grey[700]!, height: 1.5),
-            itemInfo(
-              'Total',
-              '10h 2min',
-              valueStyle: AppCss.minimumBold.copyWith(fontSize: 16),
-              labelStyle: AppCss.minimumBold.copyWith(fontSize: 16),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            ),
-            Divisor(color: Colors.grey[700]!, height: 1.5),
-            for (final produto in model.produtos)
-              _itemProdutoWidget(model, produto, model.relatorio!.ordens),
+            _itemTotalWidget(model),
           ],
         ),
       ),
@@ -180,63 +172,98 @@ class _RelatoriosProducaoPageState extends State<RelatoriosProducaoPage> {
     );
   }
 
+  Widget _itemTotalWidget(RelatorioProducaoViewModel model) {
+    return Column(
+      children: [
+        itemInfo(
+          'Total',
+          relatorioCtrl.getTempoProducao(model.relatorio!.turnos).text(),
+          valueStyle: AppCss.minimumBold.copyWith(fontSize: 16),
+          labelStyle: AppCss.minimumBold.copyWith(fontSize: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+        Divisor(color: Colors.grey[700]!, height: 1.5),
+        for (final produto in model.produtos)
+          _itemProdutoWidget(
+            model.relatorio!.turnos,
+            produto,
+            model.relatorio!.ordens,
+          ),
+      ],
+    );
+  }
+
   Widget _itemProdutoWidget(
-    RelatorioProducaoViewModel model,
+    List<PedidoProdutoTurno> turnos,
     ProdutoModel produto,
     List<OrdemModel> ordens,
   ) {
     return RelatorioExpandableWidget(
       title: 'Produto ${produto.descricao}',
-      value: '10h 2min',
+      value: relatorioCtrl
+          .getTempoProducao(
+            turnos.where((e) => e.produtoId == produto.id).toList(),
+          )
+          .text(),
       color: Colors.grey[100]!,
-      children: ordens.map((e) => _itemOrdemWidget(model, e)).toList(),
+      children: ordens.map((e) => _itemOrdemWidget(turnos, e)).toList(),
     );
   }
 
-  Widget _itemOrdemWidget(RelatorioProducaoViewModel model, OrdemModel ordem) {
+  Widget _itemOrdemWidget(List<PedidoProdutoTurno> turnos, OrdemModel ordem) {
     return RelatorioExpandableWidget(
       title: 'Ordem ${ordem.localizator}',
-      value: '4h 2min',
+      value: relatorioCtrl
+          .getTempoProducao(
+            turnos.where((e) => e.ordemId == ordem.id).toList(),
+          )
+          .text(),
       color: Colors.grey[200]!,
       children: ordem.produtos
-          .map((e) => _itemPedidoProdutoWidget(model, e))
+          .map((e) => _itemPedidoProdutoWidget(turnos, ordem, e))
           .toList(),
     );
   }
 
   Widget _itemPedidoProdutoWidget(
-    RelatorioProducaoViewModel model,
-    PedidoProdutoModel produto,
+    List<PedidoProdutoTurno> turnos,
+    OrdemModel ordem,
+    PedidoProdutoModel pedidoProduto,
   ) {
     return RelatorioExpandableWidget(
-      title: 'Pedido ${produto.pedido.localizador}',
-      value: '4h 2min',
+      title: 'Pedido ${pedidoProduto.pedido.localizador}',
+      value: relatorioCtrl
+          .getTempoProducao(
+            turnos.where((e) => e.pedidoProdutoId == pedidoProduto.id).toList(),
+          )
+          .text(),
       color: Colors.grey[300]!,
-      children: produto.turnos
+      children: pedidoProduto
+          .getTurnos(ordem)
           .mapIndexed(
-            (index, e) => _itemPedidoProdutoTurnoWidget(model, e, index),
+            (index, e) => _itemPedidoProdutoTurnoWidget(e, index),
           )
           .toList(),
     );
   }
 
   Widget _itemPedidoProdutoTurnoWidget(
-    RelatorioProducaoViewModel model,
     PedidoProdutoTurno turno,
     int index,
   ) {
     return RelatorioExpandableWidget(
       color: Colors.grey[400]!,
       title: 'Turno ${index + 1}',
-      value: '4h 2min',
-      children: [_itemPedidoProdutoTurnoHistoryWidget(model, turno)],
+      value: relatorioCtrl
+          .getTempoProducao(
+            [turno],
+          )
+          .text(),
+      children: [_itemPedidoProdutoTurnoHistoryWidget(turno)],
     );
   }
 
-  Widget _itemPedidoProdutoTurnoHistoryWidget(
-    RelatorioProducaoViewModel model,
-    PedidoProdutoTurno turno,
-  ) {
+  Widget _itemPedidoProdutoTurnoHistoryWidget(PedidoProdutoTurno turno) {
     return Column(
       children: [
         itemInfo(turno.start.type.label, turno.start.date.textHour()),

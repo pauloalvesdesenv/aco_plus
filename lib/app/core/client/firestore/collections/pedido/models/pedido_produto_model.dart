@@ -16,10 +16,23 @@ import 'package:aco_plus/app/core/services/hash_service.dart';
 import 'package:collection/collection.dart';
 
 class PedidoProdutoTurno {
+  final String produtoId;
+  final String pedidoId;
+  final String pedidoProdutoId;
+  final String ordemId;
+  final Duration duration;
   final PedidoProdutoHistory start;
   final PedidoProdutoHistory? end;
 
-  PedidoProdutoTurno({required this.start, this.end});
+  PedidoProdutoTurno({
+    required this.produtoId,
+    required this.pedidoId,
+    required this.pedidoProdutoId,
+    required this.ordemId,
+    required this.start,
+    required this.duration,
+    this.end,
+  });
 }
 
 enum PedidoProdutoHistoryType {
@@ -39,13 +52,8 @@ enum PedidoProdutoHistoryType {
 class PedidoProdutoHistory {
   final PedidoProdutoHistoryType type;
   final DateTime date;
-  final Duration duration;
 
-  PedidoProdutoHistory({
-    required this.type,
-    required this.date,
-    required this.duration,
-  });
+  PedidoProdutoHistory({required this.type, required this.date});
 }
 
 class PedidoProdutoModel {
@@ -90,30 +98,130 @@ class PedidoProdutoModel {
             .toList()
           ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    
+    // Variáveis para controlar o estado atual
+    DateTime? inicioTurnoAtual;
+    bool estaProduzindo = false;
+    bool estaPausado = false;
 
-    return [
-      PedidoProdutoTurno(
-        start: PedidoProdutoHistory(
-          type: PedidoProdutoHistoryType.pause,
-          date: DateTime.now(),
-          duration: Duration.zero,
-        ),
-        end: PedidoProdutoHistory(
-          type: PedidoProdutoHistoryType.unpause,
-          date: DateTime.now(),
-          duration: Duration.zero,
-        ),
-      ),
+    for (final evento in alteracoesStatus) {
+      switch (evento.type) {
+        case OrdemHistoryTypeEnum.statusProdutoAlterada:
+          final data = evento.data as OrdemHistoryTypeStatusProdutoModel;
+          final novoStatus = data.statusProdutos.status;
 
-      PedidoProdutoTurno(
-        start: PedidoProdutoHistory(
-          type: PedidoProdutoHistoryType.pause,
-          date: DateTime.now(),
-          duration: Duration.zero,
+          // Verifica se o produto está começando a produzir
+          if (novoStatus == PedidoProdutoStatus.produzindo && !estaProduzindo) {
+            // Início de novo turno
+            inicioTurnoAtual = evento.createdAt;
+            estaProduzindo = true;
+            estaPausado = false;
+          }
+          // Verifica se o produto ficou pronto
+          else if (novoStatus == PedidoProdutoStatus.pronto && estaProduzindo) {
+            // Fim do turno atual
+            if (inicioTurnoAtual != null) {
+              final duracao = evento.createdAt.difference(inicioTurnoAtual);
+
+              turnos.add(
+                PedidoProdutoTurno(
+                  duration: duracao,
+                  start: PedidoProdutoHistory(
+                    type: PedidoProdutoHistoryType.pause,
+                    date: inicioTurnoAtual,
+                  ),
+                  end: PedidoProdutoHistory(
+                    type: PedidoProdutoHistoryType.unpause,
+                    date: evento.createdAt,
+                  ),
+                  produtoId: produto.id,
+                  pedidoId: pedidoId,
+                  pedidoProdutoId: id,
+                  ordemId: ordem.id,
+                ),
+              );
+            }
+
+            // Reset do estado
+            inicioTurnoAtual = null;
+            estaProduzindo = false;
+            estaPausado = false;
+          }
+          // Verifica se saiu do status produzindo para outro status que não seja pronto
+          else if (estaProduzindo &&
+              novoStatus != PedidoProdutoStatus.produzindo &&
+              novoStatus != PedidoProdutoStatus.pronto) {
+            // Produto saiu de produzindo sem ficar pronto - interrompe o turno atual
+            estaProduzindo = false;
+            inicioTurnoAtual = null;
+            estaPausado = false;
+          }
+
+          break;
+
+        case OrdemHistoryTypeEnum.pausada:
+          if (estaProduzindo && !estaPausado) {
+            // Pausa durante a produção - finaliza o turno atual
+            if (inicioTurnoAtual != null) {
+              final duracao = evento.createdAt.difference(inicioTurnoAtual);
+
+              turnos.add(
+                PedidoProdutoTurno(
+                  duration: duracao,
+                  start: PedidoProdutoHistory(
+                    type: PedidoProdutoHistoryType.pause,
+                    date: inicioTurnoAtual,
+                  ),
+                  end: PedidoProdutoHistory(
+                    type: PedidoProdutoHistoryType.unpause,
+                    date: evento.createdAt,
+                  ),
+                  produtoId: produto.id,
+                  pedidoId: pedidoId,
+                  pedidoProdutoId: id,
+                  ordemId: ordem.id,
+                ),
+              );
+            }
+
+            estaPausado = true;
+            inicioTurnoAtual = null;
+          }
+          break;
+
+        case OrdemHistoryTypeEnum.despausada:
+          if (estaProduzindo && estaPausado) {
+            // Despausa durante a produção - inicia novo turno
+            inicioTurnoAtual = evento.createdAt;
+            estaPausado = false;
+          }
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    // Se ainda está produzindo, adiciona o turno em andamento
+    if (estaProduzindo && inicioTurnoAtual != null && !estaPausado) {
+      final duracao = DateTime.now().difference(inicioTurnoAtual);
+
+      turnos.add(
+        PedidoProdutoTurno(
+          duration: duracao,
+          start: PedidoProdutoHistory(
+            type: PedidoProdutoHistoryType.pause,
+            date: inicioTurnoAtual,
+          ),
+          // end é null para indicar que ainda está em andamento
+          produtoId: produto.id,
+          pedidoId: pedidoId,
+          pedidoProdutoId: id,
+          ordemId: ordem.id,
         ),
-      ),
-    ];
+      );
+    }
+
+    return turnos;
   }
 
   factory PedidoProdutoModel.empty(PedidoModel pedido) => PedidoProdutoModel(

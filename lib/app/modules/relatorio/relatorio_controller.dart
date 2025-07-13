@@ -524,14 +524,28 @@ class PedidoController {
           .toList();
     }
 
+    final List<PedidoProdutoTurno> turnos = [];
+    for (final ordem in ordens) {
+      for (final produto in ordem.produtos) {
+        turnos.addAll(produto.getTurnos(ordem));
+      }
+    }
+
     final model = RelatorioProducaoModel(
       ordens: ordens,
       dates: producaoViewModel.dates,
       localizador: producaoViewModel.localizadorEC.text,
+      turnos: turnos,
     );
 
     producaoViewModel.relatorio = model;
     producaoViewModelStream.update();
+  }
+
+  Duration getTempoProducao(List<PedidoProdutoTurno> turnos) {
+    if (turnos.isEmpty) return Duration.zero;
+    if (turnos.length == 1) return turnos.first.duration;
+    return turnos.fold(Duration.zero, (previousValue, element) => previousValue + element.duration);
   }
 
   // bool _whereProductStatus(
