@@ -5,8 +5,10 @@ import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/hist
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_criada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_desarquivada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_descongelada_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_despausada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_editada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_materia_prima_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_pausada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_status_produto_model.dart';
 
 class OrdemHistoryModel {
@@ -55,6 +57,12 @@ class OrdemHistoryModel {
         break;
       case OrdemHistoryTypeEnum.desarquivada:
         data = OrdemHistoryTypeDesarquivadaModel.fromJson(json['data']);
+        break;
+      case OrdemHistoryTypeEnum.pausada:
+        data = OrdemHistoryTypePausadaModel.fromJson(json['data']);
+        break;
+      case OrdemHistoryTypeEnum.despausada:
+        data = OrdemHistoryTypeDespausadaModel.fromJson(json['data']);
         break;
     }
 

@@ -182,6 +182,21 @@ class PedidoCollection {
     return await collection.doc(pedido.id).update(pedido.toMap());
   }
 
+  Future<void> updateProdutoPause(
+    PedidoProdutoModel produto,
+    bool isPaused,
+  ) async {
+    final pedido = getById(produto.pedidoId);
+    for (final produtoInFor in pedido.produtos) {
+      if (produtoInFor.id == produto.id) {
+        produtoInFor.isPaused = isPaused;
+        break;
+      }
+    }
+
+    return await collection.doc(pedido.id).update(pedido.toMap());
+  }
+
   Future<void> updateProdutoStatus(
     PedidoProdutoModel produto,
     PedidoProdutoStatus status, {

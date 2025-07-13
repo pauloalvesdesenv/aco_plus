@@ -1,5 +1,5 @@
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_status_produto_model.dart';
-import 'package:aco_plus/app/modules/ordem/ui/components/timeline/ordem_timeline_card_label.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem/components/timeline/ordem_timeline_card_label.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 

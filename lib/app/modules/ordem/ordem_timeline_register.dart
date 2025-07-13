@@ -6,8 +6,10 @@ import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/hist
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_congelada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_desarquivada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_descongelada_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_despausada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_editada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_materia_prima_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_pausada_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/history/types/ordem_history_type_status_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_materia_prima_produtos.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
@@ -155,6 +157,46 @@ class OrdemTimelineRegister {
       data: OrdemHistoryTypeDesarquivadaModel(
         createdAt: DateTime.now(),
         user: usuario,
+      ),
+    );
+  }
+
+  static Future<void> produtoPausado(
+    OrdemModel ordem,
+    PedidoProdutoModel produto,
+    String motivo,
+  ) async {
+    OrdemTimelineRegister(ordem: ordem).register(
+      ordemId: ordem.id,
+      type: OrdemHistoryTypeEnum.pausada,
+      message: 'Produto pausado',
+      data: OrdemHistoryTypePausadaModel(
+        createdAt: DateTime.now(),
+        user: usuario,
+        motivo: motivo,
+        pedidoId: produto.pedidoId,
+        pedidoProdutoId: produto.id,
+        produtoId: produto.produto.id,
+        ordemId: ordem.id,
+      ),
+    );
+  }
+
+  static Future<void> produtoDespausado(
+    OrdemModel ordem,
+    PedidoProdutoModel produto,
+  ) async {
+    OrdemTimelineRegister(ordem: ordem).register(
+      ordemId: ordem.id,
+      type: OrdemHistoryTypeEnum.despausada,
+      message: 'Produto despausado',
+      data: OrdemHistoryTypeDespausadaModel(
+        createdAt: DateTime.now(),
+        user: usuario,
+        pedidoId: produto.pedidoId,
+        pedidoProdutoId: produto.id,
+        produtoId: produto.produto.id,
+        ordemId: ordem.id,
       ),
     );
   }

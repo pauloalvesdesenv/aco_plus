@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/enums/materia_prima_status.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_status_produtos.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
@@ -22,6 +23,7 @@ import 'package:aco_plus/app/core/services/pdf_download_service/pdf_download_ser
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/automatizacao/automatizacao_controller.dart';
 import 'package:aco_plus/app/modules/ordem/ordem_timeline_register.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem/components/produto/ordem_pedido_produto_pause_motivo_bottom.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_etiquetas_pdf_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_produto_status_bottom.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_produtos_status_bottom.dart';
@@ -644,5 +646,48 @@ class OrdemController {
   Future<void> onUpdateAt(OrdemModel ordem) async {
     ordem.updatedAt = DateTime.now();
     await FirestoreClient.ordens.update(ordem);
+  }
+
+  MateriaPrimaModel? getMateriaPrimaByPedidoProduto(
+    List<PedidoModel> pedidos,
+    PedidoProdutoModel produto,
+  ) {
+    MateriaPrimaModel? materiaPrima;
+    for (var pedido in pedidos) {
+      if (pedido.id == produto.pedidoId) {
+        materiaPrima = pedido.produtos
+            .firstWhereOrNull((e) => e.id == produto.id)
+            ?.materiaPrima;
+      }
+    }
+    return materiaPrima;
+  }
+
+  Future<void> onPauseProduto(
+    OrdemModel ordem,
+    PedidoProdutoModel produto,
+  ) async {
+    final motivo = await showOrdemPedidoProdutoPauseMotivoBottom();
+    if (motivo == null) return;
+    showLoadingDialog();
+    produto.isPaused = true;
+    await FirestoreClient.pedidos.updateProdutoPause(produto, true);
+    await OrdemTimelineRegister.produtoPausado(ordem, produto, motivo);
+    await FirestoreClient.pedidos.fetch();
+    await FirestoreClient.ordens.fetch();
+    Navigator.pop(contextGlobal);
+  }
+
+  Future<void> onUnpauseProduto(
+    OrdemModel ordem,
+    PedidoProdutoModel produto,
+  ) async {
+    showLoadingDialog();
+    produto.isPaused = false;
+    await FirestoreClient.pedidos.updateProdutoPause(produto, false);
+    await OrdemTimelineRegister.produtoDespausado(ordem, produto);
+    await FirestoreClient.pedidos.fetch();
+    await FirestoreClient.ordens.fetch();
+    Navigator.pop(contextGlobal);
   }
 }

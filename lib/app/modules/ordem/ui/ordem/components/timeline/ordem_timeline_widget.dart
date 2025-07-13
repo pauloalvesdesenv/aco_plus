@@ -6,8 +6,8 @@ import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/orde
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
-import 'package:aco_plus/app/modules/ordem/ui/components/timeline/type/ordem_timeline_create_details.dart';
-import 'package:aco_plus/app/modules/ordem/ui/components/timeline/type/ordem_timeline_status_produto_details.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem/components/timeline/type/ordem_timeline_create_details.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem/components/timeline/type/ordem_timeline_status_produto_details.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

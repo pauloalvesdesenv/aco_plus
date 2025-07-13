@@ -20,6 +20,7 @@ class PedidoProdutoModel {
   final double qtde;
   bool isSelected = true;
   bool isAvailable = true;
+  bool isPaused = false;
   MateriaPrimaModel? materiaPrima;
 
   factory PedidoProdutoModel.empty(PedidoModel pedido) => PedidoProdutoModel(
@@ -30,6 +31,7 @@ class PedidoProdutoModel {
     produto: ProdutoModel.empty(),
     statusess: [PedidoProdutoStatusModel.empty()],
     qtde: 0,
+    isPaused: false,
   );
   PedidoModel get pedido => FirestoreClient.pedidos.getById(pedidoId);
   bool get isAvailableToChanges => status.status.index < 2;
@@ -67,6 +69,7 @@ class PedidoProdutoModel {
     this.isAvailable = true,
     this.isSelected = true,
     this.materiaPrima,
+    this.isPaused = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -79,6 +82,7 @@ class PedidoProdutoModel {
       'statusess': statusess.map((x) => x.toMap()).toList(),
       'qtde': qtde,
       'materiaPrima': materiaPrima?.toMap(),
+      'isPaused': isPaused,
     };
   }
 
@@ -96,6 +100,7 @@ class PedidoProdutoModel {
       materiaPrima: map['materiaPrima'] != null
           ? MateriaPrimaModel.fromMap(map['materiaPrima'])
           : null,
+      isPaused: map['isPaused'] ?? false,
     );
   }
 
@@ -115,6 +120,7 @@ class PedidoProdutoModel {
     bool? isAvailable,
     bool? isSelected,
     MateriaPrimaModel? materiaPrima,
+    bool? isPaused,
   }) {
     return PedidoProdutoModel(
       id: id ?? this.id,
@@ -127,6 +133,7 @@ class PedidoProdutoModel {
       isAvailable: isAvailable ?? this.isAvailable,
       isSelected: isSelected ?? this.isSelected,
       materiaPrima: materiaPrima ?? this.materiaPrima,
+      isPaused: isPaused ?? this.isPaused,
     );
   }
 }

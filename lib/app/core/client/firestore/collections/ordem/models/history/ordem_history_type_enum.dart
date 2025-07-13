@@ -13,6 +13,8 @@ enum OrdemHistoryTypeEnum {
   statusOrdem, // OK
   arquivada, // OK
   desarquivada, // OK
+  pausada, // OK
+  despausada, // OK
 }
 
 extension OrdemHistoryTypeEnumExtension on OrdemHistoryTypeEnum {
@@ -44,6 +46,10 @@ extension OrdemHistoryTypeEnumExtension on OrdemHistoryTypeEnum {
         return Icons.archive;
       case OrdemHistoryTypeEnum.desarquivada:
         return Icons.archive;
+      case OrdemHistoryTypeEnum.pausada:
+        return Icons.pause;
+      case OrdemHistoryTypeEnum.despausada:
+        return Icons.play_arrow;
     }
   }
 
@@ -67,6 +73,10 @@ extension OrdemHistoryTypeEnumExtension on OrdemHistoryTypeEnum {
         return Colors.red;
       case OrdemHistoryTypeEnum.desarquivada:
         return Colors.green;
+      case OrdemHistoryTypeEnum.pausada:
+        return Colors.red;
+      case OrdemHistoryTypeEnum.despausada:
+        return Colors.green;
     }
   }
 
@@ -79,6 +89,7 @@ extension OrdemHistoryTypeEnumExtension on OrdemHistoryTypeEnum {
       case OrdemHistoryTypeEnum.congelada:
         return 'Ordem congelada';
       case OrdemHistoryTypeEnum.descongelada:
+        return 'Ordem descongelada';
       case OrdemHistoryTypeEnum.statusProdutoAlterada:
         return 'Status do produto alterado';
       case OrdemHistoryTypeEnum.materiaPrimaEditada:
@@ -89,6 +100,10 @@ extension OrdemHistoryTypeEnumExtension on OrdemHistoryTypeEnum {
         return 'Ordem arquivada';
       case OrdemHistoryTypeEnum.desarquivada:
         return 'Ordem desarquivada';
+      case OrdemHistoryTypeEnum.pausada:
+        return 'Ordem pausada';
+      case OrdemHistoryTypeEnum.despausada:
+        return 'Ordem despausada';
     }
   }
 }

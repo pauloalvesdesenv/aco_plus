@@ -21,7 +21,7 @@ import 'package:aco_plus/app/modules/graph/pedido_etapa/pedido_etapa_widget.dart
 import 'package:aco_plus/app/modules/graph/pedido_status/pedido_status_widget.dart';
 import 'package:aco_plus/app/modules/graph/produto_produzido/produto_produzido_widget.dart';
 import 'package:aco_plus/app/modules/graph/produto_status/produto_status_widget.dart';
-import 'package:aco_plus/app/modules/ordem/ui/ordem_page.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem/ordem_page.dart';
 import 'package:aco_plus/app/modules/pedido/ui/pedido_page.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
