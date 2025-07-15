@@ -15,6 +15,7 @@ import 'package:aco_plus/app/modules/ordem/ui/ordem/components/produto/status/or
 import 'package:aco_plus/app/modules/ordem/ui/ordem/components/produto/status/ordem_pedido_status_operator_widget.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class OrdemPedidoProdutoWidget extends StatelessWidget {
   final PedidoProdutoModel produto;
@@ -31,71 +32,66 @@ class OrdemPedidoProdutoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: produto.isPaused ? Colors.grey.withValues(alpha: 0.1) : null,
         border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
       ),
-      child: ListTile(
-        title: Row(
-          children: [
-            if(produto.isPaused) _pauseTagWidget(),
-            if (produto.pedido.tags.isNotEmpty)
-              _tagWidget(produto.pedido.tags.first),
-            Text(produto.pedido.localizador, style: AppCss.minimumBold),
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  children: [
+                    if (produto.isPaused) _pauseTagWidget(),
+                    if (produto.pedido.tags.isNotEmpty)
+                      _tagWidget(produto.pedido.tags.first),
+                    Text(produto.pedido.localizador, style: AppCss.minimumBold),
+                  ],
+                ),
+
                 Text(
                   produto.qtde.toKg(),
                   style: AppCss.minimumRegular.setSize(12),
                 ),
-              ],
-            ),
-            Text(
-              '${produto.cliente.nome} - ${produto.obra.descricao}',
-              style: AppCss.minimumRegular.setSize(12),
-            ),
-            if (produto.pedido.deliveryAt != null)
-              Text(
-                'Previsão de Entrega: ${produto.pedido.deliveryAt?.text()}',
-                style: AppCss.minimumRegular
-                    .copyWith(fontSize: 12)
-                    .setColor(AppColors.neutralDark),
-              ),
-            if (materiaPrima != null)
-              InkWell(
-                onTap: () => push(
-                  context,
-                  MateriaPrimaCreatePage(
-                    materiaPrima: FirestoreClient.materiaPrimas.getById(
-                      materiaPrima!.id,
+                Text(
+                  '${produto.cliente.nome} - ${produto.obra.descricao}',
+                  style: AppCss.minimumRegular.setSize(12),
+                ),
+                if (produto.pedido.deliveryAt != null)
+                  Text(
+                    'Previsão de Entrega: ${produto.pedido.deliveryAt?.text()}',
+                    style: AppCss.minimumRegular
+                        .copyWith(fontSize: 12)
+                        .setColor(AppColors.neutralDark),
+                  ),
+                if (materiaPrima != null)
+                  InkWell(
+                    onTap: () => push(
+                      context,
+                      MateriaPrimaCreatePage(
+                        materiaPrima: FirestoreClient.materiaPrimas.getById(
+                          materiaPrima!.id,
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      'Materia Prima: ${materiaPrima?.label}',
+                      style: AppCss.minimumRegular
+                          .copyWith(fontSize: 12)
+                          .setColor(AppColors.neutralDark),
                     ),
                   ),
-                ),
-                child: Text(
-                  'Materia Prima: ${materiaPrima?.label}',
-                  style: AppCss.minimumRegular
-                      .copyWith(fontSize: 12)
-                      .setColor(AppColors.neutralDark),
-                ),
-              ),
-          ],
-        ),
-        trailing: SizedBox(
-          width: 400,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              _statusWidget(),
-              if(produto.statusView.status == PedidoProdutoStatus.produzindo)
-                OrdemPedidoProdutoPauseWidget(ordem: ordem, produto: produto),
-            ],
+              ],
+            ),
           ),
-        ),
+          Gap(8),
+          _statusWidget(),
+          if (produto.statusView.status == PedidoProdutoStatus.produzindo)
+            OrdemPedidoProdutoPauseWidget(ordem: ordem, produto: produto),
+        ],
       ),
     );
   }

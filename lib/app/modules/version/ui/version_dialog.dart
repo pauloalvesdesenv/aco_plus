@@ -1,7 +1,11 @@
+import 'dart:html' as html;
+
 import 'package:aco_plus/app/core/client/firestore/collections/version/models/version_model.dart';
+import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 Future<void> showVersionDialog(VersionModel version) async => await showDialog(
   context: contextGlobal,
@@ -24,15 +28,27 @@ class _VersionDialogState extends State<VersionDialog> {
       onWillPop: () => Future.value(false),
       child: AlertDialog(
         title: const Text('Versão nova disponível'),
-        content: const Text('Atulize para continuar usando.'),
         actions: [
-          TextButton(
-            onPressed: () {
-              if (kIsWeb) {
-                // html.window.location.reload();
-              }
-            },
-            child: const Text('Atualizar'),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 340,
+                child: TextButton(
+                  onPressed: () {
+                    if (kIsWeb) {
+                      html.window.location.reload();
+                    }
+                  },
+                  child: const Text('Atualizar'),
+                ),
+              ),
+              Gap(8),
+              Text(
+                'Abra o site na guia anônima caso o botão não funcione.',
+                style: AppCss.minimumRegular.setSize(12),
+              ),
+            ],
           ),
         ],
       ),
