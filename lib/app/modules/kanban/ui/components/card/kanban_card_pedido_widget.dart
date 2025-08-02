@@ -7,6 +7,7 @@ import 'package:aco_plus/app/core/enums/widget_view_mode.dart';
 import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/modules/kanban/kanban_controller.dart';
+import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_comments_widget.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_details_widget.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_notificao_widget.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_products_widget.dart';
@@ -41,11 +42,7 @@ class KanbanCardPedidoWidget extends StatelessWidget {
             width: double.maxFinite,
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: notificacoes.isNotEmpty
-                  ? const Color.fromARGB(255, 255, 241, 240)
-                  : (pedido.prioridade == null
-                        ? Color(0xFFFFFFFF)
-                        : const Color.fromARGB(255, 255, 249, 239)),
+              color: _getColor(pedido),
               borderRadius: const BorderRadius.all(Radius.circular(6)),
               boxShadow: [
                 BoxShadow(
@@ -84,6 +81,10 @@ class KanbanCardPedidoWidget extends StatelessWidget {
                           ),
                         ),
                       ],
+                      if (pedido.comments.any((e) => e.isFixed)) ...[
+                        Icon(Icons.warning, color: Colors.orange),
+                        const W(4),
+                      ],
                       if (pedido.tags.isNotEmpty) ...[
                         Expanded(
                           child: KanbanCardTagsWidget(
@@ -109,8 +110,18 @@ class KanbanCardPedidoWidget extends StatelessWidget {
                       KanbanCardUsersWidget(pedido, viewMode: viewMode),
                     ],
                   ),
-                  if (viewMode == WidgetViewMode.expanded)
+                  if (viewMode == WidgetViewMode.expanded) ...[
                     KanbanCardProductsWidget(pedido: pedido),
+                    Builder(
+                      builder: (context) {
+                        final comments = pedido.comments
+                            .where((e) => e.isFixed)
+                            .toList();
+                        if (comments.isEmpty) return const SizedBox();
+                        return KanbanCardCommentsWidget(comments: comments);
+                      },
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -118,5 +129,15 @@ class KanbanCardPedidoWidget extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Color _getColor(PedidoModel pedido) {
+    if (pedido.comments.any((e) => e.isFixed)) {
+      return const Color.fromARGB(255, 255, 249, 239);
+    }
+    if (pedido.prioridade == null) {
+      return const Color(0xFFFFFFFF);
+    }
+    return const Color.fromARGB(255, 255, 249, 239);
   }
 }

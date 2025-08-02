@@ -1,5 +1,6 @@
 import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/tag/models/tag_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/models/usuario_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/components/app_drop_down.dart';
@@ -119,6 +120,26 @@ class _KanbanFilterWidgetState extends State<KanbanFilterWidget> {
                       },
                     ),
                     const Gap(8),
+                    AppDropDown<TagModel?>(
+                      hasFilter: true,
+                      hint: 'Selecionar Tag',
+                      item: utils.tag,
+                      controller: utils.tagEC,
+                      itens: FirestoreClient.tags.data,
+                      itemLabel: (e) => e?.nome ?? 'Selecionar tag',
+                      onSelect: (e) {
+                        utils.tag = e;
+                        kanbanCtrl.utilsStream.update();
+                      },
+                    ),
+                    const Gap(8),
+                    AppField(
+                      autoFocus: true,
+                      controller: utils.localidadeEC,
+                      hint: 'Buscar por cidade',
+                      onChanged: (_) => kanbanCtrl.utilsStream.update(),
+                    ),
+                    const H(8),
                     Builder(
                       builder: (context) {
                         final pedidos = getPedidosArchiveds(utils);

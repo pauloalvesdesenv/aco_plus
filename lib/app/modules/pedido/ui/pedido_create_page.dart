@@ -390,7 +390,9 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
                   .where((e) => e.status == ObraStatus.emAndamento)
                   .toList() ??
               [],
-          itemLabel: (e) => e?.descricao ?? 'Selecione',
+          itemLabel: (e) => e != null
+              ? '${e.descricao} - ${e.endereco?.localidade ?? 'Cidade não informada'}'
+              : 'Selecione',
           onSelect: (e) {
             form.obra = e;
             pedidoCtrl.formStream.update();

@@ -23,6 +23,7 @@ import 'package:aco_plus/app/modules/pedido/ui/components/pedido_tags_widget.dar
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_timeline_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_top_bar.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_users_widget.dart';
+import 'package:aco_plus/app/modules/pedido/ui/components/pedido_vinculados_widget.dart';
 import 'package:flutter/material.dart';
 
 enum PedidoInitReason { page, kanban, archived }
@@ -150,6 +151,11 @@ class _PedidoPageState extends State<PedidoPage>
                   PedidoAnexosWidget(pedido),
                   const Divisor(),
                   PedidoChecksWidget(pedido),
+                  const Divisor(),
+                  PedidoVinculadosWidget(
+                    pedido: pedido,
+                    vinculados: pedido.getPedidosVinculados(),
+                  ),
                   const Divisor(),
                   PedidoCommentsWidget(pedido),
                   const Divisor(),

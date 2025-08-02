@@ -8,6 +8,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/ped
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_step_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/step/models/step_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/tag/models/tag_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/enums/sort_type.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
@@ -24,6 +25,8 @@ class PedidoUtils {
   SortOrder sortOrder = SortOrder.asc;
   List<StepModel> steps = [];
   bool showFilter = false;
+  final TextController localidadeEC = TextController();
+  TagModel? tag;
 }
 
 class PedidoArquivedUtils {
@@ -54,7 +57,7 @@ class PedidoCreateModel {
   final TextController instrucoesFinanceiras = TextController();
   final TextController pedidoFinanceiro = TextController();
   final TextController planilhamento = TextController();
-
+  List<String> pedidosVinculados = [];
   late bool isEdit;
 
   PedidoCreateModel()
@@ -114,6 +117,7 @@ class PedidoCreateModel {
     instrucoesFinanceiras.text = pedido.instrucoesFinanceiras;
     pedidoFinanceiro.text = pedido.pedidoFinanceiro;
     planilhamento.text = pedido.planilhamento;
+    pedidosVinculados = pedido.pedidosVinculados;
   }
 
   PedidoModel toPedidoModel(PedidoModel? pedido) {
@@ -169,6 +173,7 @@ class PedidoCreateModel {
       pedidoFinanceiro: pedidoFinanceiro.text,
       planilhamento: planilhamento.text,
       prioridade: null,
+      pedidosVinculados: pedidosVinculados,
     );
   }
 }

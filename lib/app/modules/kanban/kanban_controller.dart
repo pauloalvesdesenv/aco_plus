@@ -9,8 +9,10 @@ import 'package:aco_plus/app/core/enums/sort_step_type.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:aco_plus/app/core/services/notification_service.dart';
+import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/kanban/kanban_view_model.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
+import 'package:aco_plus/app/modules/pedido/ui/pedidos_vinculados_move_select_dialog.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -137,6 +139,7 @@ class StepController {
     _onMovePedido(pedido, step, index);
     _onAddStep(pedido, step);
     onRemovePedidoFromPrioridadeIfNeeded(step, pedido);
+    onMovePedidosVinculados(step, await _getPedidosVinculadosToMove(pedido, step));
     utilsStream.update();
   }
 
@@ -221,6 +224,23 @@ class StepController {
       utils.cancelTimer();
     } else if (align != null && utils.timer == null) {
       _setTimerByAlign(align);
+    }
+  }
+
+  Future<List<PedidoModel>> _getPedidosVinculadosToMove(PedidoModel pedido, StepModel step) async {
+    final pedidosVinculados = pedido.getPedidosVinculados();
+    if (pedidosVinculados.isNotEmpty) {
+      final pedidosSelecionados = await showPedidosVinculadosMoveSelectDialog(pedido, step);
+      if (pedidosSelecionados != null && pedidosSelecionados.isNotEmpty) {
+        return pedidosSelecionados;
+      }
+    }
+    return [];
+  }
+
+  void onMovePedidosVinculados(StepModel step, List<PedidoModel> pedidos) {
+    for (PedidoModel pedido in pedidos) {
+      onAccept(step, pedido, 0, auto: true);
     }
   }
 

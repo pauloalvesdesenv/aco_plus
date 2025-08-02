@@ -23,6 +23,7 @@ import 'package:aco_plus/app/modules/pedido/ui/pedido_step_bottom.dart';
 import 'package:aco_plus/app/modules/pedido/view_models/pedido_prioridade_view_model.dart';
 import 'package:aco_plus/app/modules/pedido/view_models/pedido_view_model.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
+import 'package:aco_plus/app/modules/relatorio/ui/pedido/relatorio_pedido_pdf_page.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_pedido_view_model.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -205,9 +206,10 @@ class PedidoController {
   }
 
   OrdemModel? getOrdemByProduto(PedidoProdutoModel produto, bool isArquivada) {
-    return ([...FirestoreClient.ordens.data, if(isArquivada) ...FirestoreClient.ordens.ordensArquivadas]).firstWhereOrNull(
-      (e) => e.produtos.any((p) => p.id == produto.id),
-    );
+    return ([
+      ...FirestoreClient.ordens.data,
+      if (isArquivada) ...FirestoreClient.ordens.ordensArquivadas,
+    ]).firstWhereOrNull((e) => e.produtos.any((p) => p.id == produto.id));
   }
 
   Future<void> onInitPage(PedidoModel pedido) async {
@@ -231,8 +233,6 @@ class PedidoController {
     kanbanCtrl.onAccept(step, pedido, 0);
     pedidoStream.update();
   }
-
-
 
   void onSortPedidos(List<PedidoModel> pedidos) {
     bool isAsc = utils.sortOrder == SortOrder.asc;
@@ -404,11 +404,10 @@ class PedidoController {
 
     relatorioCtrl.pedidoViewModelStream.add(relatorio);
 
-    // relatorioCtrl.onCreateRelatorio();
-
     await relatorioCtrl.onExportRelatorioPedidoPDF(
       relatorio,
       name: pedido.localizador,
+      quantidade: RelatorioPedidoQuantidade.unico,
     );
   }
 
@@ -526,5 +525,36 @@ class PedidoController {
       'Pedido prioridade removida com sucesso',
       position: NotificationPosition.bottom,
     );
+  }
+
+  void onFixComment(PedidoModel pedido, int index) {
+    for (var i = 0; i < pedido.comments.length; i++) {
+      if (i == index) {
+        pedido.comments[i].isFixed = !pedido.comments[i].isFixed;
+      }
+    }
+    FirestoreClient.pedidos.update(pedido);
+    pedidoStream.update();
+  }
+
+  void onAddPedidoVinculado(PedidoModel pedido, PedidoModel pedidoVinculado) {
+    pedido.pedidosVinculados.add(pedidoVinculado.id);
+    FirestoreClient.pedidos.update(pedido);
+    pedidoStream.update();
+  }
+
+  Future<void> onRemovePedidoVinculado(
+    PedidoModel pedido,
+    PedidoModel pedidoVinculado,
+  ) async {
+    if (!await showConfirmDialog(
+      'Deseja remover o pedido da lista de vinculados?',
+      'O pedido será removido',
+    )) {
+      return;
+    }
+    pedido.pedidosVinculados.remove(pedidoVinculado.id);
+    FirestoreClient.pedidos.update(pedido);
+    pedidoStream.update();
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_tipo.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
@@ -8,6 +10,7 @@ import 'package:aco_plus/app/core/components/pdf_divisor.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
+import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_pedido_view_model.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +18,15 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+enum RelatorioPedidoQuantidade { todos, unico }
+
 class RelatorioPedidoPdfPage {
   final RelatorioPedidoModel model;
-  RelatorioPedidoPdfPage(this.model);
+  final RelatorioPedidoQuantidade quantidade;
+  RelatorioPedidoPdfPage(
+    this.model, {
+    this.quantidade = RelatorioPedidoQuantidade.todos,
+  });
 
   pw.Page build(Uint8List bytes) => pw.MultiPage(
     pageFormat: PdfPageFormat.a4,
@@ -111,14 +120,29 @@ class RelatorioPedidoPdfPage {
                     ? pw.SizedBox()
                     : pw.Column(
                         children: [
-                          _itemInfo(
-                            '${produto.produto.descricaoReplaced}mm',
-                            '(${produto.status.status.label}) ${produto.qtde}Kg',
-                            color: PdfColor.fromInt(
-                              produto.status.status.color
-                                  .withValues(alpha: 0.06)
-                                  .hashCode,
-                            ).shade(0.03),
+                          pw.Builder(
+                            builder: (context) {
+                              final ordem = pedidoCtrl.getOrdemByProduto(produto, true);
+                              return _itemInfo(
+                                '${produto.produto.descricaoReplaced}mm',
+                                '(${produto.status.status.label}) ${produto.qtde}Kg',
+                                color: PdfColor.fromInt(
+                                  produto.status.status.color
+                                      .withValues(alpha: 0.06)
+                                      .hashCode,
+                                ).shade(0.03),
+                                ordem:
+                                    produto.status.status ==
+                                        PedidoProdutoStatus.pronto
+                                    ? ordem
+                                    : null,
+                                materiaPrima:
+                                    produto.status.status ==
+                                        PedidoProdutoStatus.pronto
+                                    ? produto.materiaPrima
+                                    : null,
+                              );
+                            },
                           ),
                           PdfDivisor.build(color: Colors.grey[200]),
                           if (produto.produto.id !=
@@ -389,38 +413,94 @@ class RelatorioPedidoPdfPage {
     );
   }
 
-  pw.Widget _itemInfo(String label, String value, {PdfColor? color}) {
+  pw.Widget _itemInfo(
+    String label,
+    String value, {
+    PdfColor? color,
+    OrdemModel? ordem,
+    MateriaPrimaModel? materiaPrima,
+    pw.EdgeInsets? padding,
+  }) {
     return pw.Container(
       color: color,
       child: pw.Padding(
-        padding: const pw.EdgeInsets.symmetric(vertical: 8),
-        child: pw.Row(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
+        padding: padding ?? const pw.EdgeInsets.symmetric(vertical: 8),
+        child: pw.Column(
           children: [
-            pw.Expanded(
-              child: pw.Text(
-                label,
-                style: pw.TextStyle(
-                  font: pw.Font.times(),
-                  fontSize: 12,
-                  fontWeight: pw.FontWeight.bold,
-                  color: PdfColor.fromInt(Colors.grey[800]!.value),
+            pw.Row(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Expanded(
+                  child: pw.Text(
+                    label,
+                    style: pw.TextStyle(
+                      font: pw.Font.times(),
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColor.fromInt(Colors.grey[800]!.value),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            pw.Expanded(
-              flex: 2,
-              child: pw.Text(
-                value,
-                style: pw.TextStyle(
-                  font: pw.Font.times(),
-                  fontSize: 12,
-                  fontWeight: pw.FontWeight.normal,
-                  color: PdfColor.fromInt(Colors.grey[800]!.value),
+                pw.Expanded(
+                  flex: 2,
+                  child: pw.Text(
+                    value,
+                    style: pw.TextStyle(
+                      font: pw.Font.times(),
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.normal,
+                      color: PdfColor.fromInt(Colors.grey[800]!.value),
+                    ),
+                    textAlign: pw.TextAlign.end,
+                  ),
                 ),
-                textAlign: pw.TextAlign.end,
-              ),
+              ],
             ),
+            if (ordem != null) ...[
+              pw.SizedBox(height: 4),
+              pw.Padding(
+                padding: pw.EdgeInsets.symmetric(horizontal: 16),
+                child: PdfDivisor.build(color: Colors.grey[200]),
+              ),
+              pw.SizedBox(height: 4),
+              _itemInfo(
+                'Ordem',
+                ordem.localizator,
+                padding: pw.EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              ),
+            ],
+            if (materiaPrima != null) ...[
+              pw.Padding(
+                padding: pw.EdgeInsets.symmetric(horizontal: 16),
+                child: PdfDivisor.build(color: Colors.grey[200]),
+              ),
+              _itemInfo(
+                'Materia Prima',
+                '${materiaPrima.corridaLote} - ${materiaPrima.fabricanteModel.nome}'
+                    .toUpperCase(),
+                padding: pw.EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              ),
+              pw.Builder(
+                builder: (context) {
+                  if (materiaPrima.anexos.first.bytes == null) {
+                    return pw.SizedBox();
+                  }
+                  return pw.Row(
+                    children: [
+                      pw.Spacer(),
+                      pw.Image(
+                        pw.MemoryImage(
+                          materiaPrima.anexos.first.bytes ?? Uint8List(0),
+                        ),
+                        width: 100,
+                        height: 100,
+                      ),
+                      pw.SizedBox(width: 16),
+                    ],
+                  );
+                },
+              ),
+            ],
           ],
         ),
       ),

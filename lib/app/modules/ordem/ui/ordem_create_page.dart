@@ -358,6 +358,15 @@ class _OrdemCreatePageState extends State<OrdemCreatePage> {
                             ),
                           ],
                         ),
+                        Text(
+                          produto.pedido.descricao.isEmpty
+                              ? 'Sem descrição'
+                              : produto.pedido.descricao,
+                          style: AppCss.minimumRegular
+                              .copyWith(fontSize: 12)
+                              .setColor(AppColors.neutralDark),
+                        ),
+                        const H(2),
                         if (produto.pedido.deliveryAt != null)
                           Text(
                             'Previsão de Entrega: ${produto.pedido.deliveryAt.text()}',

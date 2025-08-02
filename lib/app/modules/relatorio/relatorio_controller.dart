@@ -10,12 +10,14 @@ import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
 import 'package:aco_plus/app/core/services/notification_service.dart';
 import 'package:aco_plus/app/core/services/pdf_download_service/pdf_download_service_mobile.dart';
+import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordem_pdf_ordem_page.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/ordem/relatorio_ordem_pdf_status_page.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/pedido/relatorio_pedido_pdf_page.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_ordem_view_model.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_pedido_view_model.dart';
 import 'package:aco_plus/app/modules/relatorio/view_models/relatorio_producao_view_model.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -147,6 +149,7 @@ class PedidoController {
 
   Future<void> onExportRelatorioPedidoPDF(
     RelatorioPedidoViewModel pedidoViewModel, {
+    RelatorioPedidoQuantidade quantidade = RelatorioPedidoQuantidade.todos,
     String? name,
   }) async {
     final pdf = pw.Document();
@@ -154,8 +157,32 @@ class PedidoController {
     final img = await rootBundle.load('assets/images/logo.png');
     final imageBytes = img.buffer.asUint8List();
 
+    if (quantidade == RelatorioPedidoQuantidade.unico) {
+      for (var pedido in pedidoViewModel.relatorio!.pedidos) {
+        for (var produto in pedido.produtos) {
+          if (produto.statusess.last.status == PedidoProdutoStatus.pronto) {
+            final ordem = pedidoCtrl.getOrdemByProduto(produto, true);
+            produto.materiaPrima = produto.materiaPrima ?? ordem?.materiaPrima;
+            if (produto.materiaPrima != null) {
+              for (var anexo in produto.materiaPrima!.anexos) {
+                final url = anexo.url;
+                final response = await Dio().get(
+                  url!,
+                  options: Options(responseType: ResponseType.bytes),
+                );
+                anexo.bytes = Uint8List.fromList(response.data);
+              }
+            }
+          }
+        }
+      }
+    }
+
     pdf.addPage(
-      RelatorioPedidoPdfPage(pedidoViewModel.relatorio!).build(imageBytes),
+      RelatorioPedidoPdfPage(
+        pedidoViewModel.relatorio!,
+        quantidade: quantidade,
+      ).build(imageBytes),
     );
 
     final String namePart =
@@ -545,7 +572,10 @@ class PedidoController {
   Duration getTempoProducao(List<PedidoProdutoTurno> turnos) {
     if (turnos.isEmpty) return Duration.zero;
     if (turnos.length == 1) return turnos.first.duration;
-    return turnos.fold(Duration.zero, (previousValue, element) => previousValue + element.duration);
+    return turnos.fold(
+      Duration.zero,
+      (previousValue, element) => previousValue + element.duration,
+    );
   }
 
   // bool _whereProductStatus(
@@ -667,7 +697,10 @@ class PedidoController {
     return durations.reduce((a, b) => a + b);
   }
 
-  Duration getOrdensTempPorBitola(ProdutoModel produto, List<OrdemModel> ordens) {
+  Duration getOrdensTempPorBitola(
+    ProdutoModel produto,
+    List<OrdemModel> ordens,
+  ) {
     List<Duration> durations = [];
     for (var ordem in ordens.where((ordem) => ordem.produto.id == produto.id)) {
       final duration = ordem.durations;

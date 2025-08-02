@@ -1,4 +1,4 @@
-import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_tipo.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/notificacao/notificacao_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/tag/models/tag_model.dart';
@@ -13,13 +13,17 @@ import 'package:aco_plus/app/modules/notificacao/notificacao_controller.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
 
+enum PedidoItemInfo { normal, minified, page }
+
 class PedidoItemWidget extends StatelessWidget {
   final PedidoModel pedido;
   final Function(PedidoModel) onTap;
+  final PedidoItemInfo info;
   const PedidoItemWidget({
     super.key,
     required this.pedido,
     required this.onTap,
+    this.info = PedidoItemInfo.normal,
   });
 
   @override
@@ -36,9 +40,7 @@ class PedidoItemWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: notificacoes.isNotEmpty
-                  ? const Color.fromARGB(255, 255, 241, 240)
-                  : null,
+              color: _getColor(pedido, notificacoes),
               border: Border(bottom: BorderSide(color: AppColors.neutralLight)),
             ),
             child: Row(
@@ -87,39 +89,43 @@ class PedidoItemWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                const W(8),
-                ColorFiltered(
-                  colorFilter: pedido.isAguardandoEntradaProducao()
-                      ? ColorFilter.mode(Colors.grey[200]!, BlendMode.srcIn)
-                      : const ColorFilter.mode(
-                          Colors.transparent,
-                          BlendMode.color,
+                if (info != PedidoItemInfo.minified) ...[
+                  const W(8),
+                  ColorFiltered(
+                    colorFilter: pedido.isAguardandoEntradaProducao()
+                        ? ColorFilter.mode(Colors.grey[200]!, BlendMode.srcIn)
+                        : const ColorFilter.mode(
+                            Colors.transparent,
+                            BlendMode.color,
+                          ),
+                    child: Row(
+                      children: [
+                        _progressChartWidget(
+                          PedidoProdutoStatus.aguardandoProducao,
+                          pedido.getPrcntgAguardandoProducao(),
                         ),
-                  child: Row(
-                    children: [
-                      _progressChartWidget(
-                        PedidoProdutoStatus.aguardandoProducao,
-                        pedido.getPrcntgAguardandoProducao(),
-                      ),
-                      const W(16),
-                      _progressChartWidget(
-                        PedidoProdutoStatus.produzindo,
-                        pedido.getPrcntgProduzindo(),
-                      ),
-                      const W(16),
-                      _progressChartWidget(
-                        PedidoProdutoStatus.pronto,
-                        pedido.getPrcntgPronto(),
-                      ),
-                    ],
+                        const W(16),
+                        _progressChartWidget(
+                          PedidoProdutoStatus.produzindo,
+                          pedido.getPrcntgProduzindo(),
+                        ),
+                        const W(16),
+                        _progressChartWidget(
+                          PedidoProdutoStatus.pronto,
+                          pedido.getPrcntgPronto(),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const W(16),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 14,
-                  color: AppColors.neutralMedium,
-                ),
+                ],
+                if (info != PedidoItemInfo.page) ...[
+                  const W(16),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: AppColors.neutralMedium,
+                  ),
+                ],
               ],
             ),
           ),
@@ -192,25 +198,6 @@ class PedidoItemWidget extends StatelessWidget {
     );
   }
 
-  Container _tipoWidget(PedidoModel pedido) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-      decoration: BoxDecoration(
-        color: pedido.tipo.backgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(4)),
-      ),
-      child: Row(
-        children: [
-          Text(
-            pedido.tipo.label,
-            style: AppCss.minimumBold.setSize(9).setColor(Colors.white),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _progressChartWidget(PedidoProdutoStatus status, double porcentagem) {
     return Stack(
       alignment: Alignment.center,
@@ -227,5 +214,18 @@ class PedidoItemWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Color _getColor(PedidoModel pedido, List<NotificacaoModel> notificacoes) {
+    if (notificacoes.isNotEmpty) {
+      return const Color.fromARGB(255, 255, 241, 240);
+    }
+    if (pedido.comments.any((e) => e.isFixed)) {
+      return const Color.fromARGB(255, 255, 249, 239);
+    }
+    if (pedido.prioridade == null) {
+      return const Color(0xFFFFFFFF);
+    }
+    return const Color.fromARGB(255, 255, 249, 239);
   }
 }

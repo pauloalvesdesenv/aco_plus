@@ -5,16 +5,19 @@ import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/w.dart';
 import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
+import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CommentWidget extends StatelessWidget {
+  final int index;
   final CommentModel comment;
   final void Function(CommentModel comment) onRemove;
 
   const CommentWidget({
+    required this.index,
     required this.comment,
     required this.onRemove,
     super.key,
@@ -43,6 +46,19 @@ class CommentWidget extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
+                  InkWell(
+                    onTap: () =>
+                        pedidoCtrl.onFixComment(pedidoCtrl.pedido, index),
+                    child: Icon(
+                      comment.isFixed
+                          ? Icons.push_pin
+                          : Icons.push_pin_outlined,
+                      color: comment.isFixed
+                          ? Colors.orange
+                          : Colors.grey[800],
+                      size: 22,
+                    ),
+                  ),
                 ],
               ),
               const H(8),

@@ -11,6 +11,7 @@ class CommentModel {
   final String? reaction;
   final List<UsuarioModel> mentioneds;
   final List<CommentModel> respostas;
+  bool isFixed;
   CommentModel({
     required this.user,
     required this.delta,
@@ -20,6 +21,7 @@ class CommentModel {
     required this.respostas,
     required this.mentioneds,
     this.reaction,
+    this.isFixed = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,6 +34,7 @@ class CommentModel {
       'reaction': reaction,
       'respostas': respostas.map((x) => x.toMap()).toList(),
       'mentioneds': mentioneds.map((x) => x.toMap()).toList(),
+      'isFixed': isFixed,
     };
   }
 
@@ -49,6 +52,7 @@ class CommentModel {
       mentioneds: List<UsuarioModel>.from(
         map['mentioneds']?.map((x) => UsuarioModel.fromMap(x)),
       ),
+      isFixed: map['isFixed'] ?? false,
     );
   }
 

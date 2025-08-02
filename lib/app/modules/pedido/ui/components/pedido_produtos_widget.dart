@@ -7,6 +7,8 @@ import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
+import 'package:aco_plus/app/modules/materia_prima/ui/materia_prima_bottom.dart';
+import 'package:aco_plus/app/modules/materia_prima/ui/materias_primas_create_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem/ordem_page.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:flutter/material.dart';
@@ -104,11 +106,26 @@ class PedidoProdutosWidget extends StatelessWidget {
                       produto.materiaPrima ?? ordem?.materiaPrima;
 
                   return materiaPrima != null
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            '${materiaPrima.fabricanteModel.nome} - ${materiaPrima.corridaLote}',
-                            style: AppCss.minimumBold,
+                      ? GestureDetector(
+                          onTap: () async {
+                            final result = await showMateriaPrimaBottom(
+                              materiaPrima,
+                            );
+                            if (result != null) {
+                              push(
+                                context,
+                                MateriaPrimaCreatePage(
+                                  materiaPrima: materiaPrima,
+                                ),
+                              );
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              '${materiaPrima.fabricanteModel.nome} - ${materiaPrima.corridaLote}',
+                              style: AppCss.minimumBold,
+                            ),
                           ),
                         )
                       : const SizedBox();

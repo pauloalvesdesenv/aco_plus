@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:aco_plus/app/core/client/firestore/collections/automatizacao/automatizacao_collection.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
@@ -47,6 +48,7 @@ class PedidoModel {
   final String instrucoesEntrega;
   final String instrucoesFinanceiras;
   PedidoPrioridadeModel? prioridade;
+  final List<String> pedidosVinculados;
 
   factory PedidoModel.empty() => PedidoModel(
     id: HashService.get,
@@ -74,6 +76,7 @@ class PedidoModel {
     instrucoesEntrega: '',
     instrucoesFinanceiras: '',
     prioridade: null,
+    pedidosVinculados: [],
   );
 
   String get filtro => localizador + pedidoFinanceiro;
@@ -155,7 +158,16 @@ class PedidoModel {
     required this.instrucoesEntrega,
     required this.instrucoesFinanceiras,
     required this.prioridade,
+    required this.pedidosVinculados,
   });
+
+  List<PedidoModel> getPedidosVinculados() {
+    log(pedidosVinculados.toString());
+
+    return FirestoreClient.pedidos.data
+        .where((e) => pedidosVinculados.contains(e.id))
+        .toList();
+  }
 
   List<PedidoProdutoStatus> get getStatusess {
     List<PedidoProdutoStatus> statusess = [];
@@ -242,6 +254,7 @@ class PedidoModel {
       'instrucoesEntrega': instrucoesEntrega,
       'instrucoesFinanceiras': instrucoesFinanceiras,
       'prioridade': prioridade?.toMap(),
+      'pedidosVinculados': pedidosVinculados,
     };
   }
 
@@ -304,6 +317,9 @@ class PedidoModel {
       prioridade: map['prioridade'] != null
           ? PedidoPrioridadeModel.fromMap(map['prioridade'])
           : null,
+      pedidosVinculados: map['pedidosVinculados'] != null
+          ? List<String>.from(map['pedidosVinculados'])
+          : [],
     );
   }
 
@@ -338,6 +354,7 @@ class PedidoModel {
     String? instrucoesEntrega,
     String? instrucoesFinanceiras,
     PedidoPrioridadeModel? prioridade,
+    List<String>? pedidosVinculados,
   }) {
     return PedidoModel(
       id: id ?? this.id,
@@ -366,11 +383,12 @@ class PedidoModel {
       instrucoesFinanceiras:
           instrucoesFinanceiras ?? this.instrucoesFinanceiras,
       prioridade: prioridade ?? this.prioridade,
+      pedidosVinculados: pedidosVinculados ?? this.pedidosVinculados,
     );
   }
 
   @override
   String toString() {
-    return 'PedidoModel(id: id, localizador: $localizador, descricao: $descricao, createdAt: $createdAt, deliveryAt: $deliveryAt, cliente: $cliente, obra: $obra, produtos: $produtos, tipo: $tipo, statusess: $statusess, steps: $steps)';
+    return 'PedidoModel(id: id, localizador: $localizador, descricao: $descricao, createdAt: $createdAt, deliveryAt: $deliveryAt, cliente: $cliente, obra: $obra, produtos: $produtos, tipo: $tipo, statusess: $statusess, steps: $steps, pedidosVinculados: $pedidosVinculados)';
   }
 }

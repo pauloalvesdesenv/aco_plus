@@ -66,6 +66,7 @@ class CommentsWidget extends StatelessWidget {
             ),
             ...items.reversed.map(
               (e) => CommentWidget(
+                index: items.indexOf(e),
                 comment: e,
                 onRemove: (comment) {
                   items.remove(comment);

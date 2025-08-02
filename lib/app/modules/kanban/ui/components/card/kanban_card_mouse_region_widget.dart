@@ -9,7 +9,7 @@ class _HoverTimer {
   Timer? _timer;
   void start(
     VoidCallback onTimeout, {
-    Duration duration = const Duration(seconds: 3),
+    Duration duration = const Duration(seconds: 2),
   }) {
     cancel();
     _timer = Timer(duration, onTimeout);

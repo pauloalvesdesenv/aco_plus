@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum MateriaPrimaStatus { disponivel, finalizada }
 
-extension PedidoStatusExtension on MateriaPrimaStatus {
+extension MateriaPrimaStatusExtension on MateriaPrimaStatus {
   String get label {
     switch (this) {
       case MateriaPrimaStatus.disponivel:

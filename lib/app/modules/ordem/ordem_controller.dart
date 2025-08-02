@@ -605,6 +605,7 @@ class OrdemController {
     await FirestoreClient.ordens.update(ordem);
     await FirestoreClient.ordens.fetch();
     await OrdemTimelineRegister.arquivada(ordem);
+    onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
     Navigator.pop(contextGlobal);
     Navigator.pop(context);
     NotificationService.showPositive(

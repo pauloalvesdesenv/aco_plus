@@ -3,12 +3,12 @@ import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/orde
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_produto_status_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/tag/models/tag_model.dart';
-import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/extensions/double_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
+import 'package:aco_plus/app/modules/materia_prima/ui/materia_prima_bottom.dart';
 import 'package:aco_plus/app/modules/materia_prima/ui/materias_primas_create_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem/components/produto/ordem_pedido_produto_pause_widget.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem/components/produto/status/ordem_pedido_status_normal_widget.dart';
@@ -69,14 +69,17 @@ class OrdemPedidoProdutoWidget extends StatelessWidget {
                   ),
                 if (materiaPrima != null)
                   InkWell(
-                    onTap: () => push(
-                      context,
-                      MateriaPrimaCreatePage(
-                        materiaPrima: FirestoreClient.materiaPrimas.getById(
-                          materiaPrima!.id,
-                        ),
-                      ),
-                    ),
+                    onTap: () async {
+                      final result = await showMateriaPrimaBottom(
+                        materiaPrima!,
+                      );
+                      if (result != null) {
+                        push(
+                          context,
+                          MateriaPrimaCreatePage(materiaPrima: materiaPrima),
+                        );
+                      }
+                    },
                     child: Text(
                       'Materia Prima: ${materiaPrima?.label}',
                       style: AppCss.minimumRegular

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aco_plus/app/core/client/firestore/collections/cliente/cliente_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/step/models/step_model.dart';
+import 'package:aco_plus/app/core/client/firestore/collections/tag/models/tag_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/models/usuario_model.dart';
 import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
@@ -31,6 +32,9 @@ class KanbanUtils {
   UsuarioModel? usuario;
   TextController usuarioEC = TextController();
   PageController? pageController;
+  TextController localidadeEC = TextController();
+  TagModel? tag;
+  TextController tagEC = TextController();
 
   void cancelTimer() {
     if (timer?.isActive ?? false) {
@@ -54,7 +58,11 @@ class KanbanUtils {
   }
 
   bool hasFilter() =>
-      search.text.isNotEmpty || cliente != null || usuario != null;
+      search.text.isNotEmpty ||
+      cliente != null ||
+      usuario != null ||
+      localidadeEC.text.isNotEmpty ||
+      tag != null;
 
   bool isPedidoVisibleFiltered(PedidoModel pedido) {
     if (!hasFilter()) return true;
@@ -68,6 +76,19 @@ class KanbanUtils {
     }
     if (usuario != null) {
       if (pedido.users.any((user) => user.id == usuario!.id)) {
+        return true;
+      }
+    }
+    if (localidadeEC.text.isNotEmpty) {
+      if (pedido.obra.endereco?.localidade.toCompare.contains(
+            localidadeEC.text.toCompare,
+          ) ??
+          false) {
+        return true;
+      }
+    }
+    if (tag != null) {
+      if (pedido.tags.any((tag) => tag.id == this.tag!.id)) {
         return true;
       }
     }
