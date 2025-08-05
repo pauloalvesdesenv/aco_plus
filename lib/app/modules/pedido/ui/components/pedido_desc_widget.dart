@@ -20,7 +20,12 @@ class PedidoDescWidget extends StatelessWidget {
         children: [
           RowItensLabel([
             ItemLabel('Cliente', pedido.cliente.nome),
-            ItemLabel('Obra', pedido.obra.descricao),
+            ItemLabel(
+              'Obra',
+              pedido.obra.endereco?.localidade != null
+                  ? '${pedido.obra.descricao} - ${pedido.obra.endereco?.localidade.toUpperCase()}'
+                  : pedido.obra.descricao,
+            ),
           ]),
           const H(16),
           RowItensLabel([

@@ -4,6 +4,7 @@ import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
@@ -72,9 +73,18 @@ class _AppDropDown<T> extends State<AppDropDown<T>> {
         focusObj: ___,
         label: widget.label,
         isDisable: widget.disable,
-        onChanged: (e) {
+        onChanged: (String value) {
           setState(() {
-            if (e.isEmpty) widget.onSelect.call(null);
+            if (value.isEmpty) {
+              widget.onSelect.call(null);
+            } else {
+              widget.onSelect.call(
+                widget.itens.firstWhereOrNull(
+                  (item) =>
+                      widget.itemLabel.call(item).toCompare == value.toCompare,
+                ),
+              );
+            }
           });
         },
         suffixIcon: widget.onCreated == null ? null : Icons.add,

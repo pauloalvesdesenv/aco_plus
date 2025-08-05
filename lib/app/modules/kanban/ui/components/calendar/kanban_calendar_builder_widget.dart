@@ -2,7 +2,8 @@ import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/ped
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/modules/kanban/kanban_controller.dart';
-import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_calendar_widget.dart';
+import 'package:aco_plus/app/modules/kanban/kanban_view_model.dart';
+import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_mouse_region_calendar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:separated_column/separated_column.dart';
@@ -15,12 +16,14 @@ class KanbanCalendarBuilderWidget extends StatefulWidget {
     required this.pedidos,
     required this.backgroundColor,
     required this.calendarFormat,
+    required this.utils,
   });
 
   final DateTime day;
   final List<PedidoModel> pedidos;
   final Color backgroundColor;
   final CalendarFormat calendarFormat;
+  final KanbanUtils utils;
   @override
   State<KanbanCalendarBuilderWidget> createState() =>
       _KanbanCalendarBuilderWidgetState();
@@ -89,7 +92,11 @@ class _KanbanCalendarBuilderWidgetState
                 separatorBuilder: (_, __) => const H(8),
                 children: widget.pedidos
                     .map(
-                      (e) => KanbanCardCalendarWidget(e, widget.calendarFormat),
+                      (e) => widget.utils.isPedidoVisibleFiltered(e) ? KanbanCardMouseRegionCalendarWidget(
+                              e,
+                              calendarFormat: widget.calendarFormat,
+                            )
+                          : const SizedBox(),
                     )
                     .toList(),
               ),

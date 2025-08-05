@@ -19,6 +19,7 @@ import 'package:aco_plus/app/core/components/archive/archive_model.dart';
 import 'package:aco_plus/app/core/components/checklist/check_item_model.dart';
 import 'package:aco_plus/app/core/components/comment/comment_model.dart';
 import 'package:aco_plus/app/core/services/hash_service.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 class PedidoModel {
@@ -269,7 +270,7 @@ class PedidoModel {
           ? DateTime.fromMillisecondsSinceEpoch(map['deliveryAt'])
           : null,
       cliente: ClienteModel.fromMap(map['cliente']),
-      obra: ObraModel.fromMap(map['obra']),
+      obra: getObra(map),
       tipo: PedidoTipo.values[map['tipo']],
       statusess: List<PedidoStatusModel>.from(
         map['status']?.map((x) => PedidoStatusModel.fromMap(x)) ?? [],
@@ -321,6 +322,27 @@ class PedidoModel {
           ? List<String>.from(map['pedidosVinculados'])
           : [],
     );
+  }
+
+  static ObraModel getObra(Map<String, dynamic> map) {
+    try {
+      if (map['obra'] != null) {
+        final clienteById = FirestoreClient.clientes.getById(
+          map['cliente']['id'],
+        );
+        final obra = clienteById.obras.firstWhereOrNull(
+          (e) => e.id == map['obra']['id'],
+        );
+        if (obra != null) {
+          return obra;
+        } else {
+          return ObraModel.fromMap(map['obra']);
+        }
+      }
+      return ObraModel.empty();
+    } catch (e) {
+      return ObraModel.empty();
+    }
   }
 
   String toJson() => json.encode(toMap());

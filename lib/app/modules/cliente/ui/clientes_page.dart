@@ -106,12 +106,6 @@ class _ClientesPageState extends State<ClientesPage> {
           Text(
             'Tel: ${usuario.telefone} - Qtd. Obras: ${usuario.obras.length}',
           ),
-          Text(
-            usuario.endereco.name,
-            style: AppCss.minimumRegular
-                .setSize(12)
-                .setColor(AppColors.neutralMedium),
-          ),
         ],
       ),
       trailing: Icon(

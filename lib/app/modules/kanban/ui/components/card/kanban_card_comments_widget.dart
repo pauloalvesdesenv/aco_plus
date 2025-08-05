@@ -1,4 +1,5 @@
 import 'package:aco_plus/app/core/components/comment/comment_model.dart';
+import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,22 @@ class KanbanCardCommentsWidget extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: comments.isEmpty ? 8 : 4),
       child: Column(
-        children: comments.map((comment) => _commentWidget(comment)).toList(),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Fixados',
+            style: AppCss.mediumRegular.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[700],
+            ),
+          ),
+          const H(2),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: comments.map((comment) => _commentWidget(comment)).toList(),
+          ),
+        ],
       ),
     );
   }

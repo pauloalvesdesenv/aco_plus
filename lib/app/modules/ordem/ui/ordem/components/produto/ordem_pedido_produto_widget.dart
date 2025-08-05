@@ -84,7 +84,8 @@ class OrdemPedidoProdutoWidget extends StatelessWidget {
                       'Materia Prima: ${materiaPrima?.label}',
                       style: AppCss.minimumRegular
                           .copyWith(fontSize: 12)
-                          .setColor(AppColors.neutralDark),
+                          .setColor(AppColors.neutralDark)
+                          .copyWith(decoration: TextDecoration.underline),
                     ),
                   ),
               ],

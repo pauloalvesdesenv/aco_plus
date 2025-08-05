@@ -13,6 +13,7 @@ import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_notif
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_products_widget.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_tags_widget.dart';
 import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_users_widget.dart';
+import 'package:aco_plus/app/modules/kanban/ui/components/card/kanban_card_vinculados_widget.dart';
 import 'package:aco_plus/app/modules/notificacao/notificacao_controller.dart';
 import 'package:aco_plus/app/modules/usuario/usuario_controller.dart';
 import 'package:flutter/material.dart';
@@ -93,6 +94,10 @@ class KanbanCardPedidoWidget extends StatelessWidget {
                           ),
                         ),
                         const W(8),
+                        if (pedido.pedidosVinculados.isNotEmpty) ...[
+                          Icon(Icons.link, color: Colors.grey[700], size: 16),
+                          const W(8),
+                        ],
                         Text(pedido.getQtdeTotal().toKg()),
                         if (notificacoes.isNotEmpty) ...[
                           const W(8),
@@ -121,6 +126,7 @@ class KanbanCardPedidoWidget extends StatelessWidget {
                         return KanbanCardCommentsWidget(comments: comments);
                       },
                     ),
+                    KanbanCardVinculadosWidget(pedido: pedido),
                   ],
                 ],
               ),
@@ -133,7 +139,7 @@ class KanbanCardPedidoWidget extends StatelessWidget {
 
   Color _getColor(PedidoModel pedido) {
     if (pedido.comments.any((e) => e.isFixed)) {
-      return const Color.fromARGB(255, 255, 249, 239);
+      return const Color.fromARGB(255, 255, 227, 177);
     }
     if (pedido.prioridade == null) {
       return const Color(0xFFFFFFFF);

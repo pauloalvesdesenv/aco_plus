@@ -119,32 +119,32 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
             clienteCtrl.formStream.update();
           },
         ),
-        const H(16),
-        InkWell(
-          onTap: () async {
-            final endereco = await push(
-              context,
-              EnderecoCreatePage(endereco: form.endereco),
-            );
-            if (endereco != null) {
-              form.endereco = endereco;
-              clienteCtrl.formStream.update();
-            }
-          },
-          child: IgnorePointer(
-            child: AppField(
-              label: 'Endereço',
-              required: false,
-              suffixIconSize: 12,
-              suffixIcon: Icons.arrow_forward_ios,
-              controller: TextController(
-                text: form.endereco?.name.toString() ?? '',
-              ),
-              onChanged: (_) => clienteCtrl.formStream.update(),
-              hint: 'Clique para adicionar',
-            ),
-          ),
-        ),
+        // const H(16),
+        // InkWell(
+        //   onTap: () async {
+        //     final endereco = await push(
+        //       context,
+        //       EnderecoCreatePage(endereco: form.endereco),
+        //     );
+        //     if (endereco != null) {
+        //       form.endereco = endereco;
+        //       clienteCtrl.formStream.update();
+        //     }
+        //   },
+        //   child: IgnorePointer(
+        //     child: AppField(
+        //       label: 'Endereço',
+        //       required: false,
+        //       suffixIconSize: 12,
+        //       suffixIcon: Icons.arrow_forward_ios,
+        //       controller: TextController(
+        //         text: form.endereco?.name.toString() ?? '',
+        //       ),
+        //       onChanged: (_) => clienteCtrl.formStream.update(),
+        //       hint: 'Clique para adicionar',
+        //     ),
+        //   ),
+        // ),
         const H(16),
         AppMultipleRegisters<ObraModel>(
           icon: Icons.construction,

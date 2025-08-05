@@ -4,6 +4,7 @@ import 'package:aco_plus/app/core/components/done_button.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
 import 'package:aco_plus/app/core/components/w.dart';
+import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/models/endereco_model.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
@@ -32,7 +33,14 @@ class _EnderecoCreatePageState extends State<EnderecoCreatePage> {
       resizeAvoid: true,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => pop(context),
+          onPressed: () async {
+            if (await showConfirmDialog(
+              'Deseja realmente sair?',
+              'Os dados do endereço serão perdidos.',
+            )) {
+              pop(context);
+            }
+          },
           icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
         title: Text(

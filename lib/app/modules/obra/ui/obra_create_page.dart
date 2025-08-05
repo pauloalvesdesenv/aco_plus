@@ -6,6 +6,7 @@ import 'package:aco_plus/app/core/components/app_scaffold.dart';
 import 'package:aco_plus/app/core/components/done_button.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
+import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/enums/obra_status.dart';
 import 'package:aco_plus/app/core/models/endereco_model.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
@@ -39,7 +40,14 @@ class _ObraCreatePageState extends State<ObraCreatePage> {
       resizeAvoid: true,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => pop(context),
+          onPressed: () async {
+            if (await showConfirmDialog(
+              'Deseja realmente sair?',
+              'Os dados da obra serão perdidos.',
+            )) {
+              pop(context);
+            }
+          },
           icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
         title: Text(

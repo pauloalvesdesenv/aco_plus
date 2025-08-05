@@ -121,8 +121,7 @@ class _KanbanFilterWidgetState extends State<KanbanFilterWidget> {
                     ),
                     const Gap(8),
                     AppDropDown<TagModel?>(
-                      hasFilter: true,
-                      hint: 'Selecionar Tag',
+                      hasFilter: true,                      hint: 'Selecionar Tag',
                       item: utils.tag,
                       controller: utils.tagEC,
                       itens: FirestoreClient.tags.data,

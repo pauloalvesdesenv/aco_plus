@@ -165,6 +165,8 @@ class OrdemController {
   }
 
   Future<void> onCreate(value) async {
+    onValid();
+
     String descricao = form.produto!.descricao
         .replaceAll('m', '')
         .replaceAll('.', '');
@@ -177,7 +179,6 @@ class OrdemController {
         'OP$descricao-${[...FirestoreClient.ordens.ordensNaoArquivadas, ...FirestoreClient.ordens.ordensArquivadas].length + 1}_${HashService.get}';
 
     final ordemCriada = form.toOrdemModelCreate();
-    onValid(ordemCriada);
     if (ordemCriada.produtos.isEmpty) {
       if (!await showConfirmDialog(
         'Você está criando uma ordem vazia.',
@@ -215,8 +216,8 @@ class OrdemController {
 
   Future<void> onEdit(value, OrdemModel ordem) async {
     await FirestoreClient.pedidos.fetch();
+    onValid();
     final ordemEditada = form.toOrdemModelEdit(ordem);
-    onValid(ordemEditada);
     if (ordemEditada.produtos.isEmpty) {
       if (!await showConfirmDialog('A ordem vazia.', 'Deseja Continuar?')) {
         return;
@@ -259,7 +260,7 @@ class OrdemController {
     );
   }
 
-  void onValid(OrdemModel ordem) {
+  void onValid() {
     if (form.produto == null) {
       throw Exception('Selecione o produto');
     }
@@ -605,6 +606,7 @@ class OrdemController {
     await FirestoreClient.ordens.update(ordem);
     await FirestoreClient.ordens.fetch();
     await OrdemTimelineRegister.arquivada(ordem);
+    await FirestoreClient.ordens.startOnlyArquivadas();
     onReorder(FirestoreClient.ordens.ordensNaoCongeladas);
     Navigator.pop(contextGlobal);
     Navigator.pop(context);
@@ -633,6 +635,7 @@ class OrdemController {
     showLoadingDialog();
     await FirestoreClient.ordens.update(ordem);
     await FirestoreClient.ordens.fetch();
+    await FirestoreClient.ordens.startOnlyArquivadas();
     Navigator.pop(contextGlobal);
     for (var i = 0; i < pop; i++) {
       Navigator.pop(context);

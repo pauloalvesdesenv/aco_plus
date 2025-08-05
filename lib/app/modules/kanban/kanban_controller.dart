@@ -229,7 +229,10 @@ class StepController {
 
   Future<List<PedidoModel>> _getPedidosVinculadosToMove(PedidoModel pedido, StepModel step) async {
     final pedidosVinculados = pedido.getPedidosVinculados();
-    if (pedidosVinculados.isNotEmpty) {
+    final pedidosVinculadosFiltrados = pedidosVinculados
+        .where((p) => p.step.id != step.id)
+        .toList();
+    if (pedidosVinculadosFiltrados.isNotEmpty) {
       final pedidosSelecionados = await showPedidosVinculadosMoveSelectDialog(pedido, step);
       if (pedidosSelecionados != null && pedidosSelecionados.isNotEmpty) {
         return pedidosSelecionados;

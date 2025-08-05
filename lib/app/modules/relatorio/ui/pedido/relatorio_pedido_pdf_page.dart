@@ -482,7 +482,8 @@ class RelatorioPedidoPdfPage {
               ),
               pw.Builder(
                 builder: (context) {
-                  if (materiaPrima.anexos.first.bytes == null) {
+                  if (materiaPrima.anexos.isEmpty ||
+                      materiaPrima.anexos.first.bytes == null) {
                     return pw.SizedBox();
                   }
                   return pw.Row(

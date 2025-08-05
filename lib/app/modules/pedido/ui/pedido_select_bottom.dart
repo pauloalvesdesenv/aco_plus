@@ -1,6 +1,7 @@
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_model.dart';
 import 'package:aco_plus/app/core/components/divisor.dart';
 import 'package:aco_plus/app/core/components/h.dart';
+import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
@@ -25,6 +26,35 @@ class PedidoSelectBottom extends StatefulWidget {
 }
 
 class _PedidoSelectBottomState extends State<PedidoSelectBottom> {
+  final TextEditingController _searchController = TextEditingController();
+  List<PedidoModel> _filteredPedidos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredPedidos = widget.pedidos;
+    _searchController.addListener(_filterPedidos);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterPedidos() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      if (query.isEmpty) {
+        _filteredPedidos = widget.pedidos;
+      } else {
+        _filteredPedidos = widget.pedidos.where((pedido) {
+          return pedido.localizador.toCompare.contains(query.toCompare);
+        }).toList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BottomSheet(
@@ -74,21 +104,56 @@ class _PedidoSelectBottomState extends State<PedidoSelectBottom> {
                           'Selecione um pedido para vincular',
                           style: AppCss.largeBold.setColor(AppColors.black),
                         ),
-                        const H(24),
+                        const H(16),
+                        // Search field
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xFFC3CBD3)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText:
+                                  'Buscar por localizador ou descrição...',
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: AppColors.neutralMedium,
+                              ),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const H(16),
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
                               border: Border.all(color: Color(0xFFC3CBD3)),
                             ),
-                            child: ListView.separated(
-                              itemCount: widget.pedidos.length,
-                              separatorBuilder: (_, __) => const Divisor(),
-                              itemBuilder: (_, i) => PedidoItemWidget(
-                                info: PedidoItemInfo.minified,
-                                onTap: (pedido) => Navigator.pop(context, pedido),
-                                pedido: widget.pedidos[i],
-                              ),
-                            ),
+                            child: _filteredPedidos.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'Nenhum pedido encontrado',
+                                      style: AppCss.mediumRegular.setColor(
+                                        AppColors.neutralMedium,
+                                      ),
+                                    ),
+                                  )
+                                : ListView.separated(
+                                    itemCount: _filteredPedidos.length,
+                                    separatorBuilder: (_, __) =>
+                                        const Divisor(),
+                                    itemBuilder: (_, i) => PedidoItemWidget(
+                                      info: PedidoItemInfo.minified,
+                                      onTap: (pedido) =>
+                                          Navigator.pop(context, pedido),
+                                      pedido: _filteredPedidos[i],
+                                    ),
+                                  ),
                           ),
                         ),
                       ],

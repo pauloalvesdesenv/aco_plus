@@ -113,8 +113,12 @@ class _KanbanTopbarConcreteWidgetState
                       onTap: () {
                         utils.search.text = '';
                         utils.cliente = null;
+                        utils.clienteEC.text = '';
                         utils.usuario = null;
                         utils.usuarioEC.text = '';
+                        utils.localidadeEC.text = '';
+                        utils.tag = null;
+                        utils.tagEC.text = '';
                         controller.dismissInfoPopup();
                         kanbanCtrl.utilsStream.update();
                       },

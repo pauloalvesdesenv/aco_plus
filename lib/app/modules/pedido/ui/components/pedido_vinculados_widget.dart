@@ -73,17 +73,22 @@ class PedidoVinculadosWidget extends StatelessWidget {
                             Expanded(
                               child: PedidoItemWidget(
                                 info: PedidoItemInfo.page,
-                                onTap: (pedido) => push(
-                                  PedidoPage(
-                                    reason: PedidoInitReason.page,
-                                    pedido: pedido,
-                                  ),
-                                ),
+                                onTap: (vinculado) async {
+                                  await push(
+                                    PedidoPage(
+                                      reason: PedidoInitReason.page,
+                                      pedido: vinculado,
+                                    ),
+                                  );
+                                  pedidoCtrl.pedidoStream.add(pedido);
+                                },
                                 pedido: vinculado,
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 14),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                              ),
                               child: InkWell(
                                 onTap: () => pedidoCtrl.onRemovePedidoVinculado(
                                   pedido,

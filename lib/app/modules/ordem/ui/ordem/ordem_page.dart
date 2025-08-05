@@ -15,10 +15,11 @@ import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
+import 'package:aco_plus/app/modules/materia_prima/ui/materia_prima_bottom.dart';
 import 'package:aco_plus/app/modules/materia_prima/ui/materias_primas_create_page.dart';
 import 'package:aco_plus/app/modules/ordem/ordem_controller.dart';
-import 'package:aco_plus/app/modules/ordem/ui/ordem/components/produto/ordem_pedido_produto_widget.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem/components/ordem_status_widget.dart';
+import 'package:aco_plus/app/modules/ordem/ui/ordem/components/produto/ordem_pedido_produto_widget.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem/components/timeline/ordem_timeline_widget.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_create_page.dart';
 import 'package:aco_plus/app/modules/ordem/ui/ordem_exportar_pdf_tipo_bottom.dart';
@@ -176,16 +177,13 @@ class _OrdemPageState extends State<OrdemPage> {
           ]),
           const H(16),
           InkWell(
-            onTap: () => ordem.materiaPrima != null
-                ? push(
-                    context,
-                    MateriaPrimaCreatePage(
-                      materiaPrima: FirestoreClient.materiaPrimas.getById(
-                        ordem.materiaPrima!.id,
-                      ),
-                    ),
-                  )
-                : null,
+            onTap: () async {
+              if (ordem.materiaPrima == null) return;
+              final result = await showMateriaPrimaBottom(ordem.materiaPrima!);
+              if (result != null) {
+                push(context, MateriaPrimaCreatePage(materiaPrima: result));
+              }
+            },
             child: ItemLabel(
               'Matéria Prima',
               ordem.materiaPrima != null

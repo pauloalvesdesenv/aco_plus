@@ -116,6 +116,7 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
                           KanbanCalendarWeekdayWidget(day),
                       defaultBuilder: (context, day, focusedDay) =>
                           KanbanCalendarBuilderWidget(
+                            utils: widget.utils,
                             day: day,
                             pedidos: getPedidos(day),
                             backgroundColor: [6, 7].contains(day.weekday)
@@ -125,6 +126,7 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
                           ),
                       todayBuilder: (context, day, focusedDay) =>
                           KanbanCalendarBuilderWidget(
+                            utils: widget.utils,
                             day: day,
                             pedidos: getPedidos(day),
                             backgroundColor: [6, 7].contains(day.weekday)
@@ -140,6 +142,7 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
                               color: Colors.grey.withValues(alpha: 0.9),
                             )
                           : KanbanCalendarBuilderWidget(
+                              utils: widget.utils,
                               day: day,
                               pedidos: getPedidos(day),
                               backgroundColor: [6, 7].contains(day.weekday)
@@ -149,6 +152,7 @@ class _KanbanCalendarWidgetState extends State<KanbanCalendarWidget> {
                             ),
                       disabledBuilder: (context, day, focusedDay) =>
                           KanbanCalendarBuilderWidget(
+                            utils: widget.utils,
                             day: day,
                             pedidos: getPedidos(day),
                             backgroundColor: const Color(0xFFE3EFF5),

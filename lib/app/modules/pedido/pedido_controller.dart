@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:aco_plus/app/core/client/firestore/collections/ordem/models/ordem_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/enums/pedido_prioridade_tipo.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/pedido/models/pedido_history_model.dart';
@@ -378,37 +380,45 @@ class PedidoController {
   }
 
   Future<void> onGeneratePDF(PedidoModel pedido) async {
-    final RelatorioPedidoViewModel relatorio = RelatorioPedidoViewModel();
-    relatorio.cliente = FirestoreClient.clientes.getById(pedido.cliente.id);
-    relatorio.produtos = pedido.produtos
-        .map((e) => e.copyWith())
-        .map((e) => e.produto)
-        .toList();
-    relatorio.status = pedido.produtos
-        .map((e) => e.copyWith())
-        .map((e) => e.status.status)
-        .toSet()
-        .toList();
+    showLoadingDialog();
+    try {
+      final RelatorioPedidoViewModel relatorio = RelatorioPedidoViewModel();
+      relatorio.cliente = FirestoreClient.clientes.getById(pedido.cliente.id);
+      relatorio.produtos = pedido.produtos
+          .map((e) => e.copyWith())
+          .map((e) => e.produto)
+          .toList();
+      relatorio.status = pedido.produtos
+          .map((e) => e.copyWith())
+          .map((e) => e.status.status)
+          .toSet()
+          .toList();
 
-    relatorio.tipo = RelatorioPedidoTipo.pedidos;
+      relatorio.tipo = RelatorioPedidoTipo.pedidos;
 
-    final model = RelatorioPedidoModel(
-      relatorio.cliente,
-      relatorio.status,
-      [pedido],
-      relatorio.tipo,
-      relatorio.produtos,
-    );
+      final model = RelatorioPedidoModel(
+        relatorio.cliente,
+        relatorio.status,
+        [pedido],
+        relatorio.tipo,
+        relatorio.produtos,
+      );
 
-    relatorio.relatorio = model;
+      relatorio.relatorio = model;
 
-    relatorioCtrl.pedidoViewModelStream.add(relatorio);
+      relatorioCtrl.pedidoViewModelStream.add(relatorio);
 
-    await relatorioCtrl.onExportRelatorioPedidoPDF(
-      relatorio,
-      name: pedido.localizador,
-      quantidade: RelatorioPedidoQuantidade.unico,
-    );
+      await relatorioCtrl.onExportRelatorioPedidoPDF(
+        relatorio,
+        name: pedido.localizador,
+        quantidade: RelatorioPedidoQuantidade.unico,
+      );
+    } catch (e, stackTrace) {
+      log(stackTrace.toString());
+      log(e.toString());
+      NotificationService.showNegative('Erro ao gerar relatório', e.toString());
+    }
+    Navigator.pop(contextGlobal);
   }
 
   //PEDIDO PRIORIDADE
@@ -539,7 +549,9 @@ class PedidoController {
 
   void onAddPedidoVinculado(PedidoModel pedido, PedidoModel pedidoVinculado) {
     pedido.pedidosVinculados.add(pedidoVinculado.id);
+    pedidoVinculado.pedidosVinculados.add(pedido.id);
     FirestoreClient.pedidos.update(pedido);
+    FirestoreClient.pedidos.update(pedidoVinculado);
     pedidoStream.update();
   }
 
@@ -554,7 +566,51 @@ class PedidoController {
       return;
     }
     pedido.pedidosVinculados.remove(pedidoVinculado.id);
+    pedidoVinculado.pedidosVinculados.remove(pedido.id);
     FirestoreClient.pedidos.update(pedido);
+    FirestoreClient.pedidos.update(pedidoVinculado);
     pedidoStream.update();
   }
+
+
+  void onSortPedidosArchiveds(List<PedidoModel> pedidos) {
+    bool isAsc = utilsArquiveds.sortOrder == SortOrder.asc;
+    switch (utilsArquiveds.sortType) {
+      case SortType.localizator:
+        pedidos.sort(
+          (a, b) => isAsc
+              ? a.localizador.compareTo(b.localizador)
+              : b.localizador.compareTo(a.localizador),
+        );
+        break;
+      case SortType.alfabetic:
+        pedidos.sort(
+          (a, b) => isAsc
+              ? a.localizador.compareTo(b.localizador)
+              : b.localizador.compareTo(a.localizador),
+        );
+        break;
+      case SortType.deliveryAt:
+        pedidos.sort((a, b) {
+          final aDelivery = a.deliveryAt;
+          final bDelivery = b.deliveryAt;
+          if (aDelivery == null && bDelivery == null) return 0;
+          if (aDelivery == null) return 1;
+          if (bDelivery == null) return -1;
+          return isAsc
+              ? aDelivery.compareTo(bDelivery)
+              : bDelivery.compareTo(aDelivery);
+        });
+        break;
+      case SortType.createdAt:
+        pedidos.sort(
+          (a, b) => isAsc
+              ? a.createdAt.compareTo(b.createdAt)
+              : b.createdAt.compareTo(a.createdAt),
+        );
+        break;
+      default:
+    }
+  }
+
 }

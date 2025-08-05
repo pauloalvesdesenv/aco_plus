@@ -54,6 +54,15 @@ class KanbanUtils {
     if (usuario != null) {
       qtde++;
     }
+    if (localidadeEC.text.isNotEmpty) {
+      qtde++;
+    }
+    if (tag != null) {
+      qtde++;
+    }
+    if (usuarioEC.text.isNotEmpty) {
+      qtde++;
+    }
     return qtde;
   }
 
@@ -62,7 +71,8 @@ class KanbanUtils {
       cliente != null ||
       usuario != null ||
       localidadeEC.text.isNotEmpty ||
-      tag != null;
+      tag != null ||
+      usuarioEC.text.isNotEmpty;
 
   bool isPedidoVisibleFiltered(PedidoModel pedido) {
     if (!hasFilter()) return true;

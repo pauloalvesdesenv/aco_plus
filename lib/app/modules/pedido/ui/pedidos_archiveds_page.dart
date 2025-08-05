@@ -72,6 +72,7 @@ class _PedidoArchivedsPageState extends State<PedidosArchivedsPage> {
                       .toList(),
                 )
                 .toList();
+            pedidoCtrl.onSortPedidosArchiveds(pedidos);
             return Column(
               children: [
                 if (utils.showFilter)
