@@ -68,7 +68,7 @@ class ObraModel {
   final String id;
   final String descricao;
   final String telefoneFixo;
-  final EnderecoModel? endereco;
+  EnderecoModel? endereco;
   final ObraStatus status;
 
   factory ObraModel.empty() => ObraModel(

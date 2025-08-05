@@ -4,6 +4,8 @@ import 'package:aco_plus/app/core/components/item_label.dart';
 import 'package:aco_plus/app/core/components/row_itens_label.dart';
 import 'package:aco_plus/app/core/extensions/date_ext.dart';
 import 'package:aco_plus/app/core/services/notification_service.dart';
+import 'package:aco_plus/app/core/utils/global_resource.dart';
+import 'package:aco_plus/app/modules/endereco/endereco_create_page.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +27,13 @@ class PedidoDescWidget extends StatelessWidget {
               pedido.obra.endereco?.localidade != null
                   ? '${pedido.obra.descricao} - ${pedido.obra.endereco?.localidade.toUpperCase()}'
                   : pedido.obra.descricao,
+              isEditable: true,
+              onEdit: () async {
+                final endereco = await push(context, EnderecoCreatePage(endereco: pedido.obra.endereco));
+                if (endereco != null) {
+                  await pedidoCtrl.onUpdateObraEndereco(pedido, endereco);
+                }
+              },
             ),
           ]),
           const H(16),

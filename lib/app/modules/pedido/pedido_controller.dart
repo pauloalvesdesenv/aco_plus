@@ -16,6 +16,7 @@ import 'package:aco_plus/app/core/dialogs/loading_dialog.dart';
 import 'package:aco_plus/app/core/enums/sort_type.dart';
 import 'package:aco_plus/app/core/extensions/string_ext.dart';
 import 'package:aco_plus/app/core/models/app_stream.dart';
+import 'package:aco_plus/app/core/models/endereco_model.dart';
 import 'package:aco_plus/app/core/services/notification_service.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/automatizacao/automatizacao_controller.dart';
@@ -572,7 +573,6 @@ class PedidoController {
     pedidoStream.update();
   }
 
-
   void onSortPedidosArchiveds(List<PedidoModel> pedidos) {
     bool isAsc = utilsArquiveds.sortOrder == SortOrder.asc;
     switch (utilsArquiveds.sortType) {
@@ -613,4 +613,25 @@ class PedidoController {
     }
   }
 
+  Future<void> onUpdateObraEndereco(
+    PedidoModel pedido,
+    EnderecoModel endereco,
+  ) async {
+    showLoadingDialog();
+    try {
+      final cliente = FirestoreClient.clientes.getById(pedido.cliente.id);
+      cliente.obras.firstWhere((e) => e.id == pedido.obra.id).endereco =
+          endereco;
+      await FirestoreClient.clientes.update(cliente);
+      pedido.obra.endereco = endereco;
+      await FirestoreClient.pedidos.update(pedido);
+      pedidoStream.update();
+    } catch (e) {
+      NotificationService.showNegative(
+        'Erro ao atualizar endereço',
+        e.toString(),
+      );
+    }
+    Navigator.pop(contextGlobal);
+  }
 }
