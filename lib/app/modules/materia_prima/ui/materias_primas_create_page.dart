@@ -3,6 +3,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/enu
 import 'package:aco_plus/app/core/client/firestore/collections/materia_prima/models/materia_prima_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_model.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
+import 'package:aco_plus/app/core/components/app_barcode_scanner_page.dart';
 import 'package:aco_plus/app/core/components/app_drop_down.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
 import 'package:aco_plus/app/core/components/app_scaffold.dart';
@@ -11,6 +12,7 @@ import 'package:aco_plus/app/core/components/archive/ui/archives_widget.dart';
 import 'package:aco_plus/app/core/components/done_button.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/components/stream_out.dart';
+import 'package:aco_plus/app/core/components/w.dart';
 import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
@@ -121,10 +123,30 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
         ),
         const H(16),
         if (usuario.isNotOperador) ...[
-          AppField(
-            label: 'Corrida/Lote',
-            controller: form.corridaLote,
-            onChanged: (_) => materiaPrimaCtrl.formStream.update(),
+          Row(
+            children: [
+              Expanded(
+                child: AppField(
+                  label: 'Corrida/Lote',
+                  controller: form.corridaLote,
+                  onChanged: (_) => materiaPrimaCtrl.formStream.update(),
+                ),
+              ),
+              const W(16),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: IconButton(
+                  onPressed: () async {
+                    final result = await push(AppBarcodeScannerPage());
+                    if (result != null) {
+                      form.corridaLote.text = result;
+                      materiaPrimaCtrl.formStream.update();
+                    }
+                  },
+                  icon: const Icon(Icons.qr_code_scanner),
+                ),
+              ),
+            ],
           ),
           const H(16),
           AppDropDown<MateriaPrimaStatus?>(

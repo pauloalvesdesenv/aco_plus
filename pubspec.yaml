@@ -68,6 +68,7 @@ dependencies:
   http: any
   image_picker: ^1.1.2
   timeline_tile: ^2.0.0
+  mobile_scanner: ^7.0.1
 
   # f pub run flutter_launcher_icons && dart run flutter_native_splash:create
 
