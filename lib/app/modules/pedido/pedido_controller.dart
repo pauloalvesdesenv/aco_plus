@@ -24,6 +24,7 @@ import 'package:aco_plus/app/modules/kanban/kanban_controller.dart';
 import 'package:aco_plus/app/modules/pedido/ui/pedido_status_bottom.dart';
 import 'package:aco_plus/app/modules/pedido/ui/pedido_step_bottom.dart';
 import 'package:aco_plus/app/modules/pedido/view_models/pedido_prioridade_view_model.dart';
+import 'package:aco_plus/app/modules/pedido/view_models/pedido_produto_view_model.dart';
 import 'package:aco_plus/app/modules/pedido/view_models/pedido_view_model.dart';
 import 'package:aco_plus/app/modules/relatorio/relatorio_controller.dart';
 import 'package:aco_plus/app/modules/relatorio/ui/pedido/relatorio_pedido_pdf_page.dart';
@@ -60,10 +61,39 @@ class PedidoController {
       AppStream<PedidoCreateModel>();
   PedidoCreateModel get form => formStream.value;
 
-  void onInitCreatePage(PedidoModel? pedido) {
+  void onInitCreatePage(PedidoModel? pedido, PedidoModel? pai) {
     formStream.add(
-      pedido != null ? PedidoCreateModel.edit(pedido) : PedidoCreateModel(),
+      pedido != null ? PedidoCreateModel.edit(pedido) : PedidoCreateModel(pai),
     );
+    if (pai != null) {
+      _preencherValoresPedidoPai(pai);
+    }
+  }
+
+  void _preencherValoresPedidoPai(PedidoModel pai) {
+    form.localizador.text = '${pai.localizador} - Filho';
+    form.planilhamento.text = pai.planilhamento;
+    form.tipo = pai.tipo;
+    form.descricao.text = pai.descricao;
+    form.cliente = FirestoreClient.clientes.getById(pai.cliente.id);
+    form.obra = FirestoreClient.clientes.getById(pai.cliente.id).obras.first;
+    form.step = FirestoreClient.steps.getById(pai.step.id);
+    if (pai.checklistId != null) {
+      form.checklist = FirestoreClient.checklists.getById(pai.checklistId!);
+    }
+    form.deliveryAt = pai.deliveryAt;
+    form.pedidoFinanceiro.text = pai.pedidoFinanceiro;
+    form.instrucoesFinanceiras.text = pai.instrucoesFinanceiras;
+    form.instrucoesEntrega.text = pai.instrucoesEntrega;
+
+    for (final produto in pai.produtos) {
+      final produtoBase = FirestoreClient.produtos.getById(produto.produto.id);
+      final create = PedidoProdutoCreateModel();
+      create.produtoModel = produtoBase;
+      create.produtoEC.text = produtoBase.descricaoReplaced;
+      create.qtde.text = produto.qtde.toString();
+      form.produtos.add(create);
+    }
   }
 
   List<PedidoModel> getPedidosFiltered(
@@ -127,6 +157,11 @@ class PedidoController {
       } else {
         PedidoModel pedidoModel = form.toPedidoModel(pedido);
         await FirestoreClient.pedidos.add(pedidoModel);
+        if (form.pai != null) {
+          final pai = FirestoreClient.pedidos.getById(form.pai!);
+          pai.pedidosFilhos.add(pedidoModel.id);
+          await FirestoreClient.pedidos.update(pai);
+        }
         await FirestoreClient.pedidos.fetch();
       }
       if (isFromOrder) {

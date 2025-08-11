@@ -18,6 +18,7 @@ import 'package:aco_plus/app/core/components/w.dart';
 import 'package:aco_plus/app/core/dialogs/confirm_dialog.dart';
 import 'package:aco_plus/app/core/enums/obra_status.dart';
 import 'package:aco_plus/app/core/formatters/uper_case_formatter.dart';
+import 'package:aco_plus/app/core/models/text_controller.dart';
 import 'package:aco_plus/app/core/services/notification_service.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
@@ -33,7 +34,8 @@ import 'package:overlay_support/overlay_support.dart';
 
 class PedidoCreatePage extends StatefulWidget {
   final PedidoModel? pedido;
-  const PedidoCreatePage({this.pedido, super.key});
+  final PedidoModel? pai;
+  const PedidoCreatePage({this.pedido, this.pai, super.key});
 
   @override
   State<PedidoCreatePage> createState() => _PedidoCreatePageState();
@@ -46,8 +48,15 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
   @override
   void initState() {
     setWebTitle('Novo Pedido');
-    pedidoCtrl.onInitCreatePage(widget.pedido);
+    pedidoCtrl.onInitCreatePage(widget.pedido, widget.pai);
     super.initState();
+  }
+
+  String _getTitle(PedidoCreateModel form) {
+    if (widget.pai != null) {
+      return form.isEdit ? 'Editar Pedido Filho' : 'Adicionar Pedido Filho';
+    }
+    return form.isEdit ? 'Editar Pedido' : 'Adicionar Pedido';
   }
 
   @override
@@ -67,7 +76,7 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
           icon: Icon(Icons.arrow_back, color: AppColors.white),
         ),
         title: Text(
-          '${pedidoCtrl.form.isEdit ? 'Editar' : 'Adicionar'} Pedido',
+          _getTitle(pedidoCtrl.form),
           style: AppCss.largeBold.setColor(AppColors.white),
         ),
         actions: [
@@ -316,6 +325,14 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
       subtitle: Text(form.getDetails(), style: AppCss.minimumRegular),
       childrenPadding: const EdgeInsets.all(16),
       children: [
+        if (widget.pai != null) ...[
+          AppField(
+            label: 'Pedido Pai',
+            controller: TextController(text: widget.pai?.localizador),
+            onChanged: (_) => pedidoCtrl.formStream.update(),
+          ),
+          const H(16),
+        ],
         AppField(
           label: 'Localizador',
           inputFormatters: [UpperCaseFormatter()],

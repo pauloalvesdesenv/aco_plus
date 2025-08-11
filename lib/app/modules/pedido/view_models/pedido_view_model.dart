@@ -58,14 +58,18 @@ class PedidoCreateModel {
   final TextController pedidoFinanceiro = TextController();
   final TextController planilhamento = TextController();
   List<String> pedidosVinculados = [];
+  List<String> pedidosFilhos = [];
+  String? pai;
+  bool isFilho = false;
   late bool isEdit;
 
-  PedidoCreateModel()
+  PedidoCreateModel(PedidoModel? pai)
     : id = HashService.get,
       isEdit = false,
       step = FirestoreClient.steps.data.firstWhereOrNull(
         (e) => e.id == FirestoreClient.automatizacao.data.criacaoPedido.step!.id,
-      );
+      ),
+      pai = pai?.id;
 
   String getDetails() {
     List<String> localizador = [];
@@ -118,6 +122,9 @@ class PedidoCreateModel {
     pedidoFinanceiro.text = pedido.pedidoFinanceiro;
     planilhamento.text = pedido.planilhamento;
     pedidosVinculados = pedido.pedidosVinculados;
+    pedidosFilhos = pedido.pedidosFilhos;
+    pai = pedido.pai;
+    isFilho = pedido.isFilho;
   }
 
   PedidoModel toPedidoModel(PedidoModel? pedido) {
@@ -174,6 +181,9 @@ class PedidoCreateModel {
       planilhamento: planilhamento.text,
       prioridade: null,
       pedidosVinculados: pedidosVinculados,
+      pedidosFilhos: pedidosFilhos,
+      pai: pai,
+      isFilho: isFilho,
     );
   }
 }

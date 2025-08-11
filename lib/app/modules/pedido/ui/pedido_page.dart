@@ -7,6 +7,8 @@ import 'package:aco_plus/app/core/components/w.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/notificacao/notificacao_controller.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
+import 'package:aco_plus/app/modules/pedido/ui/components/pai_pedido_corte_dobra_widget.dart';
+import 'package:aco_plus/app/modules/pedido/ui/components/pai_pedido_produtos_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_anexos_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_armacao_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_checks_widget.dart';
@@ -14,6 +16,7 @@ import 'package:aco_plus/app/modules/pedido/ui/components/pedido_comentarios_wid
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_corte_dobra_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_desc_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_entrega_widget.dart';
+import 'package:aco_plus/app/modules/pedido/ui/components/pedido_filhos_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_financ_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_prioridade_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_produtos_widget.dart';
@@ -119,26 +122,35 @@ class _PedidoPageState extends State<PedidoPage>
                   const Divisor(),
                   PedidoStepsWidget(pedido),
                   const Divisor(),
-                  PedidoStatusWidget(pedido),
-                  const Divisor(),
-                  if (pedido.isAguardandoEntradaProducao()) ...[
-                    PedidoProdutosWidget(pedido),
+                  if (pedido.pedidosFilhos.isEmpty) ...[
+                    PedidoStatusWidget(pedido),
+                    const Divisor(),
+                    if (pedido.isAguardandoEntradaProducao()) ...[
+                      PedidoProdutosWidget(pedido),
+                      const Divisor(),
+                    ],
+                    if (!pedido.isAguardandoEntradaProducao())
+                      Column(
+                        children: [
+                          PedidoCorteDobraWidget(pedido),
+                          const Divisor(),
+                          PedidoProdutosWidget(pedido),
+                          const Divisor(),
+                          if (pedido.tipo == PedidoTipo.cda) ...[
+                            PedidoArmacaoWidget(pedido),
+                            const Divisor(),
+                          ],
+                        ],
+                      ),
+                  ],
+
+                  if (pedido.pedidosFilhos.isNotEmpty) ...[
+                    PaiPedidoCorteDobraWidget(pedido),
+                    const Divisor(),
+                    PaiPedidoProdutosWidget(pedido),
                     const Divisor(),
                   ],
 
-                  if (!pedido.isAguardandoEntradaProducao())
-                    Column(
-                      children: [
-                        PedidoCorteDobraWidget(pedido),
-                        const Divisor(),
-                        PedidoProdutosWidget(pedido),
-                        const Divisor(),
-                        if (pedido.tipo == PedidoTipo.cda) ...[
-                          PedidoArmacaoWidget(pedido),
-                          const Divisor(),
-                        ],
-                      ],
-                    ),
                   if (pedido.instrucoesEntrega.isNotEmpty) ...[
                     PedidoEntregaWidget(pedido),
                     const Divisor(),
@@ -152,11 +164,20 @@ class _PedidoPageState extends State<PedidoPage>
                   const Divisor(),
                   PedidoChecksWidget(pedido),
                   const Divisor(),
-                  PedidoVinculadosWidget(
-                    pedido: pedido,
-                    vinculados: pedido.getPedidosVinculados(),
-                  ),
-                  const Divisor(),
+                  if (pedido.pedidosFilhos.isEmpty) ...[
+                    PedidoVinculadosWidget(
+                      pedido: pedido,
+                      vinculados: pedido.getPedidosVinculados(),
+                    ),
+                    const Divisor(),
+                  ],
+                  if (pedido.pedidosFilhos.isNotEmpty) ...[
+                    PedidoFilhosWidget(
+                      pedido: pedido,
+                      filhos: pedido.getPedidosFilhos(),
+                    ),
+                    const Divisor(),
+                  ],
                   PedidoCommentsWidget(pedido),
                   const Divisor(),
                   if (pedido.histories.isNotEmpty)

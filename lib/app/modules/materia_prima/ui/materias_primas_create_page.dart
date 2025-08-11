@@ -122,7 +122,6 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
           },
         ),
         const H(16),
-        if (usuario.isNotOperador) ...[
           Row(
             children: [
               Expanded(
@@ -161,7 +160,6 @@ class _MateriaPrimaCreatePageState extends State<MateriaPrimaCreatePage> {
             },
           ),
           const H(16),
-        ],
         usuario.isOperador
             ? ArchiveSimpleWidget(
                 label: 'Fotografar Etiqueta',

@@ -12,19 +12,22 @@ class PedidoFinancWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Financeiro', style: AppCss.largeBold),
-          if (pedido.pedidoFinanceiro.isNotEmpty) ...[
-            const H(16),
-            ItemLabel('Pedido Financeiro', pedido.pedidoFinanceiro),
+      child: SizedBox(
+        width: double.maxFinite,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Financeiro', style: AppCss.largeBold),
+            if (pedido.pedidoFinanceiro.isNotEmpty) ...[
+              const H(16),
+              ItemLabel('Pedido Financeiro', pedido.pedidoFinanceiro),
+            ],
+            if (pedido.instrucoesFinanceiras.isNotEmpty) ...[
+              const H(16),
+              ItemLabel('Instruções Financeiras', pedido.instrucoesFinanceiras),
+            ],
           ],
-          if (pedido.instrucoesFinanceiras.isNotEmpty) ...[
-            const H(16),
-            ItemLabel('Instruções Financeiras', pedido.instrucoesFinanceiras),
-          ],
-        ],
+        ),
       ),
     );
   }

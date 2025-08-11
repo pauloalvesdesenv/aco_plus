@@ -52,6 +52,15 @@ class PedidoTopBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         const Spacer(),
+        const W(12),
+        Tooltip(
+          message: 'Cria Pedido Filho',
+          child: InkWell(
+            onTap: () async => push(context, PedidoCreatePage(pai: pedido)),
+            child: Icon(Icons.add, color: AppColors.white),
+          ),
+        ),
+        const W(12),
         Tooltip(
           message: 'Acompanhar pedido',
           child: InkWell(
@@ -129,6 +138,13 @@ class PedidoTopBar extends StatelessWidget implements PreferredSizeWidget {
     backgroundColor: AppColors.primaryMain,
     actions: [
       const W(12),
+      Tooltip(
+        message: 'Cria Pedido Filho',
+        child: IconButton(
+          onPressed: () => push(context, PedidoCreatePage(pai: pedido)),
+          icon: Icon(Icons.add, color: AppColors.white),
+        ),
+      ),
       Tooltip(
         message: 'Acompanhar pedido',
         child: IconButton(

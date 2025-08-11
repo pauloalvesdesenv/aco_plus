@@ -452,7 +452,7 @@ class OrdemController {
     }
     if (status == PedidoProdutoStatus.produzindo) {
       if (ordem.produtos.any(
-        (e) => e.status.status == PedidoProdutoStatus.produzindo,
+        (e) => e.status.status == PedidoProdutoStatus.produzindo && !e.isPaused,
       )) {
         showInfoDialog(
           'Não é possível produzir mais de um produto ao mesmo tempo.',

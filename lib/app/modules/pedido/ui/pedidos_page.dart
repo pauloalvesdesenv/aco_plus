@@ -117,7 +117,6 @@ class _PedidosPageState extends State<PedidosPage> {
                   .where((pedido) => pedido.tags.any((tag) => tag.id == utils.tag!.id))
                   .toList();
             }
-            pedidoCtrl.onSortPedidos(pedidos);
             return RefreshIndicator(
               onRefresh: () async => await FirestoreClient.pedidos.fetch(),
               child: ListView(

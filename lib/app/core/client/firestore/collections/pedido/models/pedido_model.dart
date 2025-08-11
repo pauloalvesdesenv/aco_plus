@@ -50,6 +50,9 @@ class PedidoModel {
   final String instrucoesFinanceiras;
   PedidoPrioridadeModel? prioridade;
   final List<String> pedidosVinculados;
+  final List<String> pedidosFilhos;
+  String? pai;
+  bool isFilho = false;
 
   factory PedidoModel.empty() => PedidoModel(
     id: HashService.get,
@@ -78,6 +81,9 @@ class PedidoModel {
     instrucoesFinanceiras: '',
     prioridade: null,
     pedidosVinculados: [],
+    pedidosFilhos: [],
+    pai: '',
+    isFilho: false,
   );
 
   String get filtro => localizador + pedidoFinanceiro;
@@ -160,13 +166,62 @@ class PedidoModel {
     required this.instrucoesFinanceiras,
     required this.prioridade,
     required this.pedidosVinculados,
+    required this.pedidosFilhos,
+    required this.pai,
+    required this.isFilho,
   });
 
-  List<PedidoModel> getPedidosVinculados() {
-    log(pedidosVinculados.toString());
+  double getQtdeDirecionada(PedidoProdutoModel produto) {
+    double qtde = 0.0;
+    for (final filho in getPedidosFilhos()) {
+      for (final prodFilho in filho.produtos) {
+        if (prodFilho.produto.id == produto.produto.id) {
+          qtde += prodFilho.qtde;
+        }
+      }
+    }
+    return qtde;
+  }
 
+  PedidoProdutoStatus getPedidoProdutoStatus(PedidoProdutoModel produto) {
+    PedidoProdutoStatus status = PedidoProdutoStatus.aguardandoProducao;
+    final produtos = getProdutos().where(
+      (e) => e.produto.id == produto.produto.id,
+    );
+    if (produtos.every(
+      (e) => e.statusess.last.status == PedidoProdutoStatus.aguardandoProducao,
+    )) {
+      status = PedidoProdutoStatus.aguardandoProducao;
+    }
+    if (produtos.any(
+      (e) => e.statusess.last.status == PedidoProdutoStatus.produzindo,
+    )) {
+      status = PedidoProdutoStatus.produzindo;
+    }
+    if (produtos.every(
+      (e) => e.statusess.last.status == PedidoProdutoStatus.pronto,
+    )) {
+      return status;
+    }
+    return status;
+  }
+
+  List<PedidoProdutoModel> getProdutos() {
+    if (pedidosFilhos.isNotEmpty) {
+      return getPedidosFilhos().expand((e) => e.produtos).toList();
+    }
+    return produtos;
+  }
+
+  List<PedidoModel> getPedidosVinculados() {
     return FirestoreClient.pedidos.data
         .where((e) => pedidosVinculados.contains(e.id))
+        .toList();
+  }
+
+  List<PedidoModel> getPedidosFilhos() {
+    return FirestoreClient.pedidos.data
+        .where((e) => pedidosFilhos.contains(e.id))
         .toList();
   }
 
@@ -179,14 +234,14 @@ class PedidoModel {
   }
 
   double getQtdeTotal() {
-    return produtos.fold(
+    return getProdutos().fold(
       0,
       (previousValue, element) => previousValue + element.qtde,
     );
   }
 
   double getQtdeAguardandoProducao() {
-    return produtos
+    return getProdutos()
         .where(
           (e) =>
               e.statusess.last.getStatusView() ==
@@ -196,13 +251,13 @@ class PedidoModel {
   }
 
   double getQtdeProduzindo() {
-    return produtos
+    return getProdutos()
         .where((e) => e.statusess.last.status == PedidoProdutoStatus.produzindo)
         .fold(0, (previousValue, element) => previousValue + element.qtde);
   }
 
   double getQtdePronto() {
-    return produtos
+    return getProdutos()
         .where((e) => e.statusess.last.status == PedidoProdutoStatus.pronto)
         .fold(0, (previousValue, element) => previousValue + element.qtde);
   }
@@ -256,6 +311,9 @@ class PedidoModel {
       'instrucoesFinanceiras': instrucoesFinanceiras,
       'prioridade': prioridade?.toMap(),
       'pedidosVinculados': pedidosVinculados,
+      'pedidosFilhos': pedidosFilhos,
+      'pai': pai,
+      'isFilho': isFilho,
     };
   }
 
@@ -321,6 +379,11 @@ class PedidoModel {
       pedidosVinculados: map['pedidosVinculados'] != null
           ? List<String>.from(map['pedidosVinculados'])
           : [],
+      pedidosFilhos: map['pedidosFilhos'] != null
+          ? List<String>.from(map['pedidosFilhos'])
+          : [],
+      pai: map['pai'] ?? '',
+      isFilho: map['isFilho'] ?? false,
     );
   }
 
@@ -377,6 +440,9 @@ class PedidoModel {
     String? instrucoesFinanceiras,
     PedidoPrioridadeModel? prioridade,
     List<String>? pedidosVinculados,
+    List<String>? pedidosFilhos,
+    String? pai,
+    bool? isFilho,
   }) {
     return PedidoModel(
       id: id ?? this.id,
@@ -406,6 +472,9 @@ class PedidoModel {
           instrucoesFinanceiras ?? this.instrucoesFinanceiras,
       prioridade: prioridade ?? this.prioridade,
       pedidosVinculados: pedidosVinculados ?? this.pedidosVinculados,
+      pedidosFilhos: pedidosFilhos ?? this.pedidosFilhos,
+      pai: pai ?? this.pai,
+      isFilho: isFilho ?? this.isFilho,
     );
   }
 

@@ -34,6 +34,19 @@ extension PedidoProdutoStatusExt on PedidoProdutoStatus {
         return Colors.green;
     }
   }
+
+  Color getColorPedidoProdutoPai() {
+    switch (this) {
+      case PedidoProdutoStatus.separado:
+        return Colors.white;
+      case PedidoProdutoStatus.aguardandoProducao:
+        return Colors.white;
+      case PedidoProdutoStatus.produzindo:
+        return Colors.white;
+      case PedidoProdutoStatus.pronto:
+        return Colors.green;
+    }
+  }
 }
 
 class PedidoProdutoStatusModel {
