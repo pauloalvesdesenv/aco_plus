@@ -214,15 +214,14 @@ class PedidoModel {
   }
 
   List<PedidoModel> getPedidosVinculados() {
-    return FirestoreClient.pedidos.data
-        .where((e) => pedidosVinculados.contains(e.id))
-        .toList();
+    return pedidosVinculados.map((e) => FirestoreClient.pedidos.getById(e)).toList();
+    // return FirestoreClient.pedidos.data
+    //     .where((e) => pedidosVinculados.contains(e.id))
+    //     .toList();
   }
 
   List<PedidoModel> getPedidosFilhos() {
-    return FirestoreClient.pedidos.data
-        .where((e) => pedidosFilhos.contains(e.id))
-        .toList();
+    return pedidosFilhos.map((e) => FirestoreClient.pedidos.getById(e)).toList();
   }
 
   List<PedidoProdutoStatus> get getStatusess {

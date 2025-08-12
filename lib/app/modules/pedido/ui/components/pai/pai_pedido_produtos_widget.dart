@@ -22,13 +22,10 @@ class PaiPedidoProdutosWidget extends StatefulWidget {
 class _PaiPedidoProdutosWidgetState extends State<PaiPedidoProdutosWidget> {
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      ignoring: widget.pedido.isAguardandoEntradaProducao(),
-      child: Column(
-        children: widget.pedido.produtos
-            .map((produto) => PaiPedidoProdutoWidget(widget.pedido, produto))
-            .toList(),
-      ),
+    return Column(
+      children: widget.pedido.produtos
+          .map((produto) => PaiPedidoProdutoWidget(widget.pedido, produto))
+          .toList(),
     );
   }
 

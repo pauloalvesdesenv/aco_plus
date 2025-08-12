@@ -19,23 +19,24 @@ class PaiPedidoProdutoWidget extends StatefulWidget {
 }
 
 class _PaiPedidoProdutoWidgetState extends State<PaiPedidoProdutoWidget> {
-
   bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
     final backgroundColor = widget.pedido
-                .getPedidoProdutoStatus(widget.produto)
-                .getColorPedidoProdutoPai(isExpanded)
-                .withValues(alpha: 0.1);
+        .getPedidoProdutoStatus(widget.produto)
+        .getColorPedidoProdutoPai(isExpanded)
+        .withValues(alpha: 0.1);
     return Column(
       children: [
-      InkWell(
-        onTap: widget.pedido.getPedidosFilhos().isEmpty ? null : () {
-          setState(() {
-            isExpanded = !isExpanded;
-          });
-        },
+        InkWell(
+          onTap: widget.pedido.getPedidosFilhos().isEmpty
+              ? null
+              : () {
+                  setState(() {
+                    isExpanded = !isExpanded;
+                  });
+                },
           child: Container(
             color: backgroundColor,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -52,20 +53,45 @@ class _PaiPedidoProdutoWidgetState extends State<PaiPedidoProdutoWidget> {
                     final direcionado = widget.pedido.getQtdeDirecionada(
                       widget.produto,
                     );
-                    if (direcionado <= 0) {
+
+                    if (isExpanded || direcionado <= 0) {
                       return Text(
                         '${widget.produto.qtde}Kg',
                         style: AppCss.mediumBold,
                       );
                     }
-                    return Text(
-                      '${widget.produto.qtde}Kg',
-                      style: AppCss.mediumBold.copyWith(
-                        color: Colors.grey[700],
-                        decorationThickness: 1.6,
-                        decoration: TextDecoration.lineThrough,
-                        decorationColor: Colors.grey[700],
-                      ),
+
+                    return Row(
+                      children: [
+                        Text(
+                          '${widget.produto.qtde}Kg',
+                          style: AppCss.mediumBold,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '-${direcionado}Kg',
+                          style: AppCss.mediumBold.copyWith(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          '=',
+                          style: AppCss.mediumBold.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${widget.produto.qtde - direcionado}Kg',
+                          style: AppCss.mediumBold.copyWith(
+                            color: Colors.green,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
@@ -73,25 +99,26 @@ class _PaiPedidoProdutoWidgetState extends State<PaiPedidoProdutoWidget> {
             ),
           ),
         ),
-        if(isExpanded)...[
-
-        for (final filho in widget.pedido.getPedidosFilhos().where(
-          (e) =>
-              e.produtos.any((p) => p.produto.id == widget.produto.produto.id),
-        ))
-          _filhoWidget(filho, widget.produto),
-        Builder(
-          builder: (context) {
-            if (widget.pedido.getQtdeDirecionada(widget.produto) <= 0) {
-              return SizedBox.shrink();
-            }
-            return _restanteWidget(backgroundColor,
-              (widget.produto.qtde -
-                      widget.pedido.getQtdeDirecionada(widget.produto))
-                  .toInt(),
-            );
-          },
-        ),
+        if (isExpanded) ...[
+          for (final filho in widget.pedido.getPedidosFilhos().where(
+            (e) => e.produtos.any(
+              (p) => p.produto.id == widget.produto.produto.id,
+            ),
+          ))
+            _filhoWidget(filho, widget.produto),
+          Builder(
+            builder: (context) {
+              if (widget.pedido.getQtdeDirecionada(widget.produto) <= 0) {
+                return SizedBox.shrink();
+              }
+              return _restanteWidget(
+                backgroundColor,
+                (widget.produto.qtde -
+                        widget.pedido.getQtdeDirecionada(widget.produto))
+                    .toInt(),
+              );
+            },
+          ),
         ],
         const Divisor(),
       ],
@@ -134,7 +161,10 @@ class _PaiPedidoProdutoWidgetState extends State<PaiPedidoProdutoWidget> {
   Widget _restanteWidget(Color color, int qtde) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: color),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: color,
+      ),
       child: Row(
         children: [
           Expanded(child: Text('Restante', style: AppCss.minimumRegular)),
