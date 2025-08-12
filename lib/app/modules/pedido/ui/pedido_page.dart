@@ -7,8 +7,10 @@ import 'package:aco_plus/app/core/components/w.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
 import 'package:aco_plus/app/modules/notificacao/notificacao_controller.dart';
 import 'package:aco_plus/app/modules/pedido/pedido_controller.dart';
-import 'package:aco_plus/app/modules/pedido/ui/components/pai_pedido_corte_dobra_widget.dart';
-import 'package:aco_plus/app/modules/pedido/ui/components/pai_pedido_produtos_widget.dart';
+import 'package:aco_plus/app/modules/pedido/ui/components/pai/pai_pedido_corte_dobra_widget.dart';
+import 'package:aco_plus/app/modules/pedido/ui/components/pai/pai_pedido_filho_sinalizador_widget.dart';
+import 'package:aco_plus/app/modules/pedido/ui/components/pai/pai_pedido_produtos_widget.dart';
+import 'package:aco_plus/app/modules/pedido/ui/components/pai/pai_pedido_sinalizador_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_anexos_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_armacao_widget.dart';
 import 'package:aco_plus/app/modules/pedido/ui/components/pedido_checks_widget.dart';
@@ -107,6 +109,10 @@ class _PedidoPageState extends State<PedidoPage>
         Expanded(
           child: ListView(
             children: [
+              if (pedido.getPedidosFilhos().isNotEmpty)
+                PaiPedidoSinalizadorWidget(),
+              if (pedido.pai != null && pedido.pai != '')
+                PaiPedidoFilhoSinalizadorWidget(),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -149,6 +155,11 @@ class _PedidoPageState extends State<PedidoPage>
                     const Divisor(),
                     PaiPedidoProdutosWidget(pedido),
                     const Divisor(),
+                    PedidoFilhosWidget(
+                      pedido: pedido,
+                      filhos: pedido.getPedidosFilhos(),
+                    ),
+                    const Divisor(),
                   ],
 
                   if (pedido.instrucoesEntrega.isNotEmpty) ...[
@@ -168,13 +179,6 @@ class _PedidoPageState extends State<PedidoPage>
                     PedidoVinculadosWidget(
                       pedido: pedido,
                       vinculados: pedido.getPedidosVinculados(),
-                    ),
-                    const Divisor(),
-                  ],
-                  if (pedido.pedidosFilhos.isNotEmpty) ...[
-                    PedidoFilhosWidget(
-                      pedido: pedido,
-                      filhos: pedido.getPedidosFilhos(),
                     ),
                     const Divisor(),
                   ],

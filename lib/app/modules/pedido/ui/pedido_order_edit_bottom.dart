@@ -5,6 +5,7 @@ import 'package:aco_plus/app/core/components/app_text_button.dart';
 import 'package:aco_plus/app/core/components/h.dart';
 import 'package:aco_plus/app/core/extensions/text_controller_ext.dart';
 import 'package:aco_plus/app/core/models/text_controller.dart';
+import 'package:aco_plus/app/core/services/notification_service.dart';
 import 'package:aco_plus/app/core/utils/app_colors.dart';
 import 'package:aco_plus/app/core/utils/app_css.dart';
 import 'package:aco_plus/app/core/utils/global_resource.dart';
@@ -14,16 +15,18 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 Future<double?> showPedidoOrderEditBottom(
   PedidoProdutoCreateModel produto,
+  double? qtdeDisponivel,
 ) async => showModalBottomSheet(
   backgroundColor: AppColors.white,
   context: contextGlobal,
   isScrollControlled: true,
-  builder: (_) => PedidoOrderEditBottom(produto),
+  builder: (_) => PedidoOrderEditBottom(produto, qtdeDisponivel),
 );
 
 class PedidoOrderEditBottom extends StatefulWidget {
   final PedidoProdutoCreateModel produto;
-  const PedidoOrderEditBottom(this.produto, {super.key});
+  final double? qtdeDisponivel;
+  const PedidoOrderEditBottom(this.produto, this.qtdeDisponivel, {super.key});
 
   @override
   State<PedidoOrderEditBottom> createState() => _PedidoOrderEditBottomState();
@@ -111,12 +114,33 @@ class _PedidoOrderEditBottomState extends State<PedidoOrderEditBottom> {
                         }
                       },
                     ),
+                    if (widget.qtdeDisponivel != null)
+                      Container(
+                        margin: const EdgeInsets.only(top: 2),
+                        child: Row(
+                          children: [
+                            const Spacer(),
+                            Text(
+                              'Quantidade disponível: ${widget.qtdeDisponivel}Kg',
+                              style: AppCss.minimumRegular.copyWith(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     const H(16),
                     AppTextButton(
-                      isEnable: widget.produto.qtde.doubleValue > 0,
+                      isEnable:
+                          widget.produto.qtde.doubleValue > 0,
                       label: 'Confirmar',
-                      onPressed: () =>
-                          Navigator.pop(context, qtdeEC.doubleValue),
+                      onPressed: () {
+                        if (widget.qtdeDisponivel == null || qtdeEC.doubleValue <= widget.qtdeDisponivel!) {
+                          Navigator.pop(context, qtdeEC.doubleValue);
+                        } else {
+                          NotificationService.showNegative('Quantidade indisponível', 'A quantidade disponível é de ${widget.qtdeDisponivel}Kg');
+                        }
+                      },
                     ),
                   ],
                 ),

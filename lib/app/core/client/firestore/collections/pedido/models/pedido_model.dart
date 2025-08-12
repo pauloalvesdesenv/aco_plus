@@ -82,7 +82,7 @@ class PedidoModel {
     prioridade: null,
     pedidosVinculados: [],
     pedidosFilhos: [],
-    pai: '',
+    pai: null,
     isFilho: false,
   );
 
@@ -382,7 +382,7 @@ class PedidoModel {
       pedidosFilhos: map['pedidosFilhos'] != null
           ? List<String>.from(map['pedidosFilhos'])
           : [],
-      pai: map['pai'] ?? '',
+      pai: map['pai'],
       isFilho: map['isFilho'] ?? false,
     );
   }

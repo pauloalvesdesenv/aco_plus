@@ -88,10 +88,18 @@ class PedidoController {
 
     for (final produto in pai.produtos) {
       final produtoBase = FirestoreClient.produtos.getById(produto.produto.id);
-      final create = PedidoProdutoCreateModel();
+      // pega a quantidade de Kg disponível de acordo com o produto
+      final double qtdeTotal = produto.qtde;
+      final double qtdeDirecionada = pai.getQtdeDirecionada(produto);
+      final double qtdeDisponivel = qtdeTotal - qtdeDirecionada;
+      final create = PedidoProdutoCreateModel(
+        isEnabled: qtdeDisponivel > 0,
+        qtdeDisponivel: qtdeDisponivel,
+        isSelected: qtdeDisponivel > 0,
+      );
       create.produtoModel = produtoBase;
       create.produtoEC.text = produtoBase.descricaoReplaced;
-      create.qtde.text = produto.qtde.toString();
+      create.qtde.text = qtdeDisponivel.toString();
       form.produtos.add(create);
     }
   }

@@ -6,6 +6,7 @@ import 'package:aco_plus/app/core/client/firestore/collections/produto/produto_m
 import 'package:aco_plus/app/core/client/firestore/collections/step/models/step_model.dart';
 import 'package:aco_plus/app/core/client/firestore/collections/usuario/enums/user_permission_type.dart';
 import 'package:aco_plus/app/core/client/firestore/firestore_client.dart';
+import 'package:aco_plus/app/core/components/app_checkbox.dart';
 import 'package:aco_plus/app/core/components/app_drop_down.dart';
 import 'package:aco_plus/app/core/components/app_field.dart';
 import 'package:aco_plus/app/core/components/app_scaffold.dart';
@@ -107,7 +108,7 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
       children: [
         _pedidoDetalhesWidget(form),
         const Divisor(),
-        _produtoAddWidget(form),
+        if (widget.pai == null) _produtoAddWidget(form),
         for (PedidoProdutoCreateModel produto in form.produtos)
           _produtoItemWidget(form, produto),
       ],
@@ -121,10 +122,11 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
     return Builder(
       builder: (context) {
         bool isDisabled =
-            form.isEdit &&
-            FirestoreClient.ordens.data
-                .expand((e) => e.produtos.map((e) => e.id))
-                .any((e) => e == produto.id);
+            !produto.isEnabled ||
+            (form.isEdit &&
+                FirestoreClient.ordens.data
+                    .expand((e) => e.produtos.map((e) => e.id))
+                    .any((e) => e == produto.id));
         return ColorFiltered(
           colorFilter: isDisabled
               ? ColorFilter.mode(
@@ -170,7 +172,9 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
                                   horizontal: 16,
                                 ),
                                 child: Text(
-                                  'Produto já foi adicionado há uma ordem',
+                                  !produto.isEnabled
+                                      ? 'Quantidade já direcionada'
+                                      : 'Produto já foi adicionado há uma ordem',
                                   style: AppCss.mediumRegular.copyWith(
                                     color: Colors.red[500]!,
                                     fontSize: 12,
@@ -180,14 +184,30 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
                               ),
                           ],
                         ),
-                        Text('Quantidade: ${produto.qtde.text} Kg'),
+                        Text('Quantidade: ${produto.qtde.text}Kg'),
+                        Builder(
+                          builder: (context) {
+                            if ((produto.qtdeDisponivel ?? 0) <= 0) {
+                              return SizedBox.shrink();
+                            }
+                            return Text(
+                              'Quantidade disponível: ${produto.qtdeDisponivel}Kg',
+                              style: AppCss.minimumRegular.copyWith(
+                                color: Colors.green,
+                              ),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
                   if (!isDisabled) ...[
                     IconButton(
                       onPressed: () async {
-                        final qtde = await showPedidoOrderEditBottom(produto);
+                        final qtde = await showPedidoOrderEditBottom(
+                          produto,
+                          produto.qtdeDisponivel,
+                        );
                         if (qtde != null) {
                           produto.qtde.text = qtde.toString();
                           pedidoCtrl.formStream.update();
@@ -201,27 +221,36 @@ class _PedidoCreatePageState extends State<PedidoCreatePage> {
                       icon: const Icon(Icons.edit, color: Colors.red),
                     ),
                     const W(8),
-                    IconButton(
-                      onPressed: () {
-                        showConfirmDialog(
-                          'Deseja remover bitola?',
-                          'A bitola será removida do pedido',
-                        ).then((value) {
-                          if (value) {
-                            form.produtos.remove(produto);
-                            pedidoCtrl.formStream.update();
-                          }
-                        });
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(
-                          Colors.transparent,
+                    if (widget.pai == null)
+                      IconButton(
+                        onPressed: () {
+                          showConfirmDialog(
+                            'Deseja remover bitola?',
+                            'A bitola será removida do pedido',
+                          ).then((value) {
+                            if (value) {
+                              form.produtos.remove(produto);
+                              pedidoCtrl.formStream.update();
+                            }
+                          });
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(
+                            Colors.transparent,
+                          ),
                         ),
+                        icon: const Icon(Icons.delete, color: Colors.red),
                       ),
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                    ),
-                    const W(16),
+                    if (widget.pai != null)
+                      AppCheckbox(
+                        value: produto.isSelected,
+                        onChanged: (value) {
+                          produto.isSelected = value;
+                          pedidoCtrl.formStream.update();
+                        },
+                      ),
                   ],
+                  const W(16),
                 ],
               ),
             ),

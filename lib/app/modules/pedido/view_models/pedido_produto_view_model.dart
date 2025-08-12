@@ -12,12 +12,15 @@ class PedidoProdutoCreateModel {
   TextController produtoEC = TextController();
   TextController qtde = TextController();
   List<PedidoProdutoStatusModel> statusess = [];
+  final bool isEnabled;
+  final double? qtdeDisponivel;
+  bool isSelected = true;
 
   bool get isEnable => produtoModel != null && qtde.doubleValue > 0;
 
   late bool isEdit;
 
-  PedidoProdutoCreateModel() : id = HashService.get, isEdit = false {
+  PedidoProdutoCreateModel({this.isEnabled = true, this.qtdeDisponivel, this.isSelected = true}) : id = HashService.get, isEdit = false {
     statusess = [
       PedidoProdutoStatusModel(
         id: HashService.get,
@@ -27,7 +30,7 @@ class PedidoProdutoCreateModel {
     ];
   }
 
-  PedidoProdutoCreateModel.edit(PedidoProdutoModel produto)
+  PedidoProdutoCreateModel.edit(PedidoProdutoModel produto, {this.isEnabled = true, this.qtdeDisponivel, this.isSelected = true})
     : id = produto.id,
       isEdit = true {
     produtoModel = produto.produto;

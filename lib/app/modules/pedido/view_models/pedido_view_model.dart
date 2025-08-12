@@ -147,7 +147,7 @@ class PedidoCreateModel {
       createdAt: pedido?.createdAt ?? DateTime.now(),
       cliente: cliente!,
       obra: obra!,
-      produtos: produtos
+      produtos: produtos.where((e) => e.isSelected).toList()
           .map((e) => e.toPedidoProdutoModel(id, cliente!, obra!).copyWith())
           .toList(),
       deliveryAt: deliveryAt,

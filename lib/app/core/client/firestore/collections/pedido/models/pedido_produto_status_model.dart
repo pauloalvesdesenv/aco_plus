@@ -35,14 +35,14 @@ extension PedidoProdutoStatusExt on PedidoProdutoStatus {
     }
   }
 
-  Color getColorPedidoProdutoPai() {
+  Color getColorPedidoProdutoPai(bool isExpanded) { 
     switch (this) {
       case PedidoProdutoStatus.separado:
-        return Colors.white;
+        return isExpanded ? Colors.grey : Colors.white;
       case PedidoProdutoStatus.aguardandoProducao:
-        return Colors.white;
+        return isExpanded ? Colors.grey : Colors.white;
       case PedidoProdutoStatus.produzindo:
-        return Colors.white;
+        return isExpanded ? Colors.grey : Colors.white;
       case PedidoProdutoStatus.pronto:
         return Colors.green;
     }
